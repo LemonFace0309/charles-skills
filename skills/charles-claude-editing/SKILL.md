@@ -95,7 +95,7 @@ Did I ask you to open on a split screen?
 * Only make the whole video a split screen when I ask
 * Add a transition into and out of a split (ex: a push)
 * When I ask you to open on a split (ex: me reading a Reddit post, a video demo showing something cool, tech news with a demo), put my first sentence on the seam as hook text, then the 2-3 word captions on the seam while the split is up
-* Motion graphics from the charles-arcade-motion skill fit any of these. Pick the layout first, then ask arcade for the asset at that size, with the area its text has to stay inside. You place what it renders
+* Motion graphics from the charles-arcade-motion skill fit any of these. Pick the layout first, then ask charles-arcade-motion for the asset at that size, with the area its text has to stay inside. You place what it renders
 
 
 # Music
