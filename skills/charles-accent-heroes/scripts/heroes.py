@@ -43,7 +43,7 @@ Output: a single desktop website hero, a flat full-bleed screenshot at 3:2, no b
 Brand: {brand}, {what}.
 Subject: {subject}
 Background: {background}
-Headline: "{headline}", set the way the reference sets its headline. {headline_note} Every letter stays whole and readable.
+{light}Headline: "{headline}", set the way the reference sets its headline. {headline_note} Every letter stays whole and readable.
 Small text and interface, placed where the reference places its equivalents: {ui}
 Colours: {colours}
 {photo}
@@ -57,7 +57,7 @@ Brand: {brand}, {what}.
 Subject: {subject}
 Composition: {layout}.
 Background: {background}
-Headline: "{headline}". {headline_note} Every letter stays whole and readable.
+{light}Headline: "{headline}". {headline_note} Every letter stays whole and readable.
 Small text and interface, small, quiet and crisp: {ui}
 Colours: {colours}
 {photo}
@@ -65,8 +65,8 @@ Colours: {colours}
 Craft: award-winning art direction, the kind of hero that wins Awwwards Site of the Day; precise kerning and alignment on a 12-column grid with generous margins.
 Spell every word exactly as written. Add no other text, numbers, logos or watermarks."""
 
-PHOTO = ("Photographed, not rendered: any person has real skin with pores, real light (a hard on-camera flash or window light) and "
-         "film grain; objects keep real proportions and crisp small parts.")
+PHOTO = ("Photographed, not rendered: any person has real skin with pores and film grain; objects keep real proportions and crisp "
+         "small parts.")
 
 # craft.md's layouts. With a reference they only feed the variety check; without one, they become the composition.
 LAYOUTS = {
@@ -77,7 +77,8 @@ LAYOUTS = {
     "vertical": "the headline set vertically or on a curve beside the subject",
     "macro": "an extreme close-up of the subject filling the frame, the headline over a quiet part of it",
 }
-REQUIRED = ("brand", "what", "layout", "subject", "background", "headline", "headline_note", "ui", "palette", "variations")
+REQUIRED = ("brand", "what", "layout", "subject", "background", "light", "headline", "headline_note", "ui", "palette", "variations")
+VARIATIONS = 5  # renders per page: most pages have one standout render, and three left it out too often
 
 # A fix keeps the render and changes one named thing: an edit holds the composition, a re-roll throws it away.
 FIX = ("Edit this website hero. Keep the typography, the headline, every small text, the layout, the colours and the background exactly "
@@ -86,20 +87,29 @@ FIX = ("Edit this website hero. Keep the typography, the headline, every small t
 
 def colours_line(c):
     (fn, fh), (sn, sh), (an, ah) = c["palette"]
-    return (f"{fn} {fh} is the field; {sn} {sh} the type and quiet surfaces; {an} {ah} the one accent: the most saturated colour, "
-            "about 15 to 30% of the frame, part of the subject (its light, paint or material), glowing or vivid against the field, "
-            "and it may colour part of the headline.")
+    if c.get("route") == "tonal":
+        role = (f"{an} {ah} the one accent, in the field's own colour family but far brighter and more vivid: it is the light itself "
+                "(a glow, sun through haze, its reflection in metal), about 15 to 30% of the frame, and it may colour part of the headline.")
+    else:
+        role = (f"{an} {ah} the one accent: the most saturated colour, about 15 to 30% of the frame, part of the subject (its light, "
+                "paint or material), glowing or vivid against the field, and it may colour part of the headline.")
+    return f"{fn} {fh} is the field; {sn} {sh} the type and quiet surfaces; {role}"
+
+
+def light_line(c):
+    return f"Light: {c['light']}\n" if c.get("light") else ""
 
 
 def swipe_prompt(c, variation):
-    return SWIPE.format(brand=c["brand"], what=c["what"], subject=c["subject"], background=c.get("background", ""), headline=c["headline"],
-                        headline_note=c.get("headline_note", ""), ui=c["ui"], colours=colours_line(c), photo=PHOTO, variation=variation)
+    return SWIPE.format(brand=c["brand"], what=c["what"], subject=c["subject"], background=c.get("background", ""), light=light_line(c),
+                        headline=c["headline"], headline_note=c.get("headline_note", ""), ui=c["ui"], colours=colours_line(c), photo=PHOTO,
+                        variation=variation)
 
 
 def written_prompt(c, variation):
     return WRITTEN.format(brand=c["brand"], what=c["what"], subject=c["subject"], layout=LAYOUTS[c["layout"]],
-                          background=c.get("background", ""), headline=c["headline"], headline_note=c.get("headline_note", ""),
-                          ui=c["ui"], colours=colours_line(c), photo=PHOTO, variation=variation)
+                          background=c.get("background", ""), light=light_line(c), headline=c["headline"],
+                          headline_note=c.get("headline_note", ""), ui=c["ui"], colours=colours_line(c), photo=PHOTO, variation=variation)
 
 
 def ref_path(c, project):
@@ -267,10 +277,12 @@ def found(target, text):
     return True if ratio >= 0.9 else near  # 0.85 let one-letter slips through (BOUTQUES for BOUTIQUES)
 
 
-def palette_formula(palette):
+def palette_formula(palette, route=None):
     """The palette formula, measured on 21 award-style heroes: the two regular colours one dark and one light (lightness gap
     0.4 or more); the accent the most saturated (chroma about 0.2) and far around the wheel from any regular colour that has
-    real colour: 120-180° pops hardest, 75° is the minimum. Creams, greys, blacks and whites (chroma under 0.04) don't count."""
+    real colour: 120-180° pops hardest, 75° is the minimum. Creams, greys, blacks and whites (chroma under 0.04) don't count.
+    The tonal route drops the distance: the accent shares the field's family but reads as light, because it is at least 1.8
+    times as saturated as either regular colour and 0.3 lighter than the field (gold sunlight on gold-brown measured 2.1 and 0.41)."""
     (_, bh), (_, sh), (_, ah) = palette
     B, S, A = lch(bh), lch(sh), lch(ah)
     flags = []
@@ -283,8 +295,13 @@ def palette_formula(palette):
         flags.append("the accent isn't the most saturated of the three")
     gaps = [float(hue_dist(A[2], col[2])) for col in (B, S) if col[1] >= 0.04]
     gap = round(min(gaps)) if gaps else None
-    if gap is not None and gap < 75:
-        flags.append(f"the accent is only {gap}° from a regular colour (at least 75; 120-180 pops hardest)")
+    if route == "tonal":
+        if A[1] < 1.8 * max(B[1], S[1]):
+            flags.append(f"tonal accent's chroma is {A[1]:.2f}, under 1.8 times the regular colours' {max(B[1], S[1]):.2f}: it reads as a shade, not light")
+        if A[0] < B[0] + 0.3:
+            flags.append(f"tonal accent's lightness is {A[0]:.2f}, under the field's {B[0]:.2f} + 0.3: it reads as a shade, not light")
+    elif gap is not None and gap < 75:
+        flags.append(f"the accent is only {gap}° from a regular colour (at least 75; 120-180 pops hardest; or the tonal route)")
     return {"palette_flags": flags, "accent_gap": gap}
 
 
@@ -354,7 +371,8 @@ def take_of(p):
 
 
 def cmd_swipe(project, a):
-    """Three renders per page: from its reference screenshot when it has one, otherwise from its written layout."""
+    """One render per variation (five per page): from the page's reference screenshot when it has one, otherwise from its
+    written layout."""
     concepts = load(project)
     keys = a.concepts.split(",") if a.concepts else list(concepts)
     jobs = []
@@ -431,7 +449,7 @@ def cmd_check(project, a):
                 continue
             h = circular_mean(hues[k]) if k in hues else lch(c["palette"][2][1])[2]
             table.append({"key": k, "source": src_name, "hue": round(h) % 360, "ref": c.get("ref") or "-", "layout": c.get("layout") or "-",
-                          **palette_formula(c["palette"])})
+                          "route": c.get("route"), **palette_formula(c["palette"], c.get("route"))})
     # The spread rule is within the batch. Pages made before (--also) can already cover the wheel, so they are listed beside
     # each new accent that sits near them rather than flagged.
     new = [r for r in table if r["source"] == "new"]
@@ -443,6 +461,10 @@ def cmd_check(project, a):
             flags.append(f"{k}: missing {', '.join(missing)}")
         if c.get("layout") and c["layout"] not in LAYOUTS:
             flags.append(f"{k}: layout {c['layout']} isn't one of {', '.join(LAYOUTS)}")
+        if c.get("route") not in (None, "tonal"):
+            flags.append(f"{k}: route {c['route']} isn't tonal (leave it out for the default)")
+        if c.get("variations") and len(c["variations"]) < VARIATIONS:
+            flags.append(f"{k}: {len(c['variations'])} variations ({VARIATIONS} per page)")
     for r in new:
         flags += [f"{r['key']}: {f}" for f in r["palette_flags"]]
         r["near"] = [s["key"] for s in others if float(hue_dist(r["hue"], s["hue"])) <= 15]
@@ -460,7 +482,8 @@ def cmd_check(project, a):
         flags.append(f"only {len(layouts)} layouts for {len(concepts)} pages (at least 4)")
     print("\nSET")
     for r in table:
-        gap = f"({r['accent_gap']}° from the others)" if r.get("accent_gap") is not None else "(the others neutral)"
+        gap = ("(tonal)" if r.get("route") == "tonal" else f"({r['accent_gap']}° from the others)" if r.get("accent_gap") is not None
+               else "(the others neutral)")
         ref = Path(r["ref"]).name if r["ref"] != "-" else "no reference"
         tail = (f"  near {', '.join(r['near'])}" if r.get("near") else "") if r["source"] == "new" else "  (made before)"
         print(f"  {r['key']:14s} accent {r['hue']:>3d}° {gap:22s} {r['layout']:14s} {ref}{tail}")

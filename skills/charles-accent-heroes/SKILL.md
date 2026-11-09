@@ -1,11 +1,11 @@
 ---
 name: charles-accent-heroes
-description: "Generate award-level landing-page hero graphics: one striking subject on a textured field, big type the subject acts on, a quiet real-site interface, and one bold accent colour far around the wheel from the other two. Each page is a close variation of a reference screenshot (or a written layout), rendered with GPT Image, checked, and fixed with targeted edits. Use when someone wants a website hero image, a landing-page or hero-section mockup, poster-like site graphics, or Awwwards-style hero art for a real or fictional business."
+description: "Generate award-level landing-page hero graphics: one striking subject big enough to leave the frame, under a named light, on a textured field; big type tied to the subject; a quiet real-site interface; and one bold accent colour far around the wheel from the other two. Each page is a close variation of a reference screenshot (or a written layout), rendered with GPT Image, checked, and fixed with targeted edits. Use when someone wants a website hero image, a landing-page or hero-section mockup, poster-like site graphics, or Awwwards-style hero art for a real or fictional business."
 ---
 
 # Accent heroes
 
-Images of a website's first screen that look like award-winning posters: one striking subject on a bold field, big type the subject acts on, a quiet but real interface, and one accent colour that makes the page pop. They are pictures of websites, not code: the image model composes type, subject and light in one pass, which is what lets a headline sit behind a face or catch an object's glow.
+Images of a website's first screen that look like award-winning posters: one striking subject on a bold field, big type tied to the subject, a quiet but real interface, and one accent colour that makes the page pop. They are pictures of websites, not code: the image model composes type, subject and light in one pass, which is what lets a headline sit behind a face or catch an object's glow.
 
 Read [references/craft.md](references/craft.md) before writing pages. It has the decision trees for type, headline and layout, the colour formula, and the tells that make a hero look generated.
 
@@ -14,12 +14,12 @@ Read [references/craft.md](references/craft.md) before writing pages. It has the
 Every page passes all eight. Each one exists because breaking it made real pages look generated or forgettable.
 
 1. **A real business, clear in a second.** A stranger names the offer from the picture, the wordmark and the button. The nav and button use the trade's own words (Retreats, Book a retreat). A clever metaphor that hides the business fails: nobody can tell what the page is for.
-2. **One poster subject.** One product or object shown spectacularly, or one stylised editorial portrait. Never a scene of people doing an activity, and never a wide landscape with a small subject: faces, hands and tiny figures are where image models give themselves away.
-3. **One bold accent.** The most vivid colour on the page, 120-180° around the wheel from the other two colours (75° at the very least), covering 15-30% of the frame. It is the subject's own main colour (its light, paint or material) and may spill onto the headline. Choose a cobalt parasol, not a cobalt-and-white one: a two-colour subject halves the accent. Never a thin line or a small object, because a polite accent leaves the page flat. When pushing the share further would add a tell, stop: a page that reads bold at 320 px beats a higher number.
-4. **A headline the subject acts on.** The subject lights, fills, crosses or moves through the type (craft.md's tree). Type that is only placed beside a picture reads as a template.
+2. **One poster subject, big enough to leave the frame.** One product, object or person. Either the frame crops it, or one long part of it (silk, a ribbon, a cable, light rays, glass tubes, a splash, petals) sweeps across the frame and off an edge. A whole product floating in the middle with a margin all round reads as a catalogue shot. Movement is welcome when it is shot as a poster: one dancer mid-leap or one kayaker mid-stroke, filling the frame on a plain field or a stage. Never a small figure in a wide scene: tiny faces, hands and crowds are where image models give themselves away.
+3. **One bold accent.** The most vivid colour on the page, 120-180° around the wheel from the other two colours (75° at the very least), covering 15-30% of the frame. It is the subject's own main colour (its light, paint or material) and may spill onto the headline. Choose a cobalt parasol, not a cobalt-and-white one: a two-colour subject halves the accent. Never a thin line or a small object, because a polite accent leaves the page flat. When pushing the share further would add a tell, stop: a page that reads bold at 320 px beats a higher number. The one exception to the distance is the tonal route: the accent is the light itself, in the field's own colour family but far brighter than anything else (craft.md).
+4. **A headline tied to the subject.** The subject lights, fills or crosses the type, or one word takes the subject's accent (craft.md's tree). A headline with no link to the picture reads as pasted on.
 5. **Type that runs behind the subject, evenly spaced.** Set the headline as if the subject stepped in front of it afterwards: with the subject removed, the words would sit perfectly spaced. Never open a gap in a word to make room for the subject; it reads as type that stops for a head. The subject may hide one letter of a word that can still be read (the middle V of VIVID), never more.
 6. **A material, not a flat colour.** The field is plaster, paper, ink, glass, metal or fabric from the brand's world. Flat digital colour is the first thing that looks generated.
-7. **Photographed, not rendered.** People get real skin, real light (hard flash or a window) and film grain. Objects keep real proportions and crisp small parts. No fire, lava or lightning unless it is the product.
+7. **Photographed, not rendered, under a named light.** Every page names one of craft.md's light setups. Light the model isn't told about comes out soft and even, the catalogue look of the flattest pages. People get real skin and film grain. Objects keep real proportions and crisp small parts. No fire, lava or lightning unless it is the product.
 8. **Three small captions at most**, each real information: a date, a spec, a price, a place. Slogans in every corner are filler.
 
 Never use a real brand's name, logo or product, or a real person.
@@ -63,11 +63,13 @@ One entry per page in `concepts.json`, keyed by a short page name:
 | `layout` | One of craft.md's layouts |
 | `subject` | The poster subject in one sentence, its materials and light named |
 | `background` | The field's material (bar 6) |
+| `light` | One of craft.md's light setups by name, and where it falls: "one stage spot from high left, the dancer lit, the stage falling to dark" |
 | `headline` | Two to four words: a plain promise, a name or a place. Never an idiom pun |
 | `headline_note` | The type system (craft.md's tree), which word takes the accent, what the subject does to the letters, and the one letter it hides. It goes into the image prompt word for word, so write it as an instruction to the model |
 | `ui` | Every small text, quoted: wordmark, nav, button, up to three captions |
 | `palette` | Three `[name, hex]`: field, second colour (type and quiet surfaces), accent |
-| `variations` | Three near neighbours of the same page: another pose or object, or another crop. Never another accent colour, because the prompt and the check hold every render to the page's palette. Never three different ideas either: the user picks one version of a page they like |
+| `route` | Leave it out, or `tonal` when the accent is the light itself in the field's colour family (craft.md) |
+| `variations` | Five near neighbours of the same page, each changing one thing: the crop (the whole subject, or cut by two edges), the moment (still, or the peak of its movement), the camera (lower or closer), or how far its long part sweeps. Five, because a standout render is rare and renders of one prompt differ a lot. Never another accent colour, because the prompt and the check hold every render to the page's palette. Never five different ideas either: the user picks one version of a page they like |
 
 Check the plan before spending anything:
 
@@ -83,7 +85,7 @@ With no renders yet it tests the palettes, the spread, the layouts, the referenc
 python3 -I <skill>/scripts/heroes.py render --project <folder>
 ```
 
-Three renders per page, twelve at a time, about a minute, about $0.05 each. `--dry-run` prints the prompts. Show the cost before a run over $5.
+Five renders per page, twelve at a time, about a minute a wave, about $0.05 each. `--dry-run` prints the prompts. Show the cost before a run over $5.
 
 ### 4. Check and fix
 
