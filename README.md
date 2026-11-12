@@ -9,6 +9,7 @@ Skills for Claude Code, Codex and other agents that read `SKILL.md`. If you came
 | [charles-ux-animation](skills/charles-ux-animation/SKILL.md) | The 20 principles of UX and animation as one procedure for building and reviewing how an interface moves and responds |
 | [charles-unreasonable-craft](skills/charles-unreasonable-craft/SKILL.md) | Pushes web and app design toward an award-level bar |
 | [charles-accent-heroes](skills/charles-accent-heroes/SKILL.md) | Makes award-level landing-page hero images with one bold accent colour, as close variations of reference screenshots. Needs Python and an OpenAI API key; the word check uses macOS |
+| [charles-store-screenshots](skills/charles-store-screenshots/SKILL.md) | Designs App Store screenshot sets: a two-frame hook, frames that bleed into each other and real app UI, rendered to exact iPhone, iPad and iPhone Duo sizes. Needs Python, Playwright and Chrome; generated art needs an OpenAI API key |
 | [charles-storage-cleanup](skills/charles-storage-cleanup/SKILL.md) | Finds what's filling a Mac and removes what's safely disposable. Ask for a report first if you want to review before anything is deleted |
 | [charles-claude-editing](skills/charles-claude-editing/SKILL.md) | Edits talking-head footage into Reels and TikToks. Written for my own workflow, so its music and sound paths need changing |
 | [charles-arcade-motion](skills/charles-arcade-motion/SKILL.md) | Makes pixel-art motion graphics timed to a voiceover. The sprite library isn't included, so you generate your own cast |
@@ -38,6 +39,7 @@ Start a new session, then ask for it by name:
 /charles-unslop this login page
 /charles-polish the checkout flow, then verify the motion frame by frame
 /charles-accent-heroes four landing-page heroes for a ceramics studio, from my reference folder
+/charles-store-screenshots three App Store screenshot sets for my habit tracker, from the captures in ./shots
 /charles-ux-animation the add-to-cart flow
 ```
 
