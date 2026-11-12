@@ -47,7 +47,7 @@ Pick one per set, and use a different one for each version.
 - **Type on a seam** is cut only between words.
 - **A recurring line** (a path, graph, route or thread) passing through every seam is the strongest continuity device. It also makes a good signature move.
 - **Light** comes from one direction across the whole strip, and every shadow agrees with it.
-- **A person in a seam photo stays whole.** The store leaves a gap between screenshots, so the seam must fall only on background, never on the person or what they hold. Find where they end, for example from a cutout mask, and keep at least 10% of the photo's width clear of them. Crop so they fill one side and only plain background crosses. To make room, move that frame's screen aside to open a margin; a seam photo never covers the UI. When the subject fills the photo edge to edge, as a barbell lift does, keep the whole print inside one frame and let something else cross the seam, such as the tape holding it.
+- **A seam never crosses a face.** The store leaves a gap between screenshots that cuts a strip out of anything on the seam. A photo of a person can straddle a seam, and their body or the bar can take the cut, but their face can't. Note where each face sits across its photo and keep the seam at least 10% of the photo's width away from it. Face detectors miss profiles and fire on hands and shoes, so mark faces by eye. Seam photos sit in the gutter between screens, never over the UI. Two prints stacked on one seam make a good accent.
 
 ## Type
 
