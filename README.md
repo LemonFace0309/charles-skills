@@ -6,7 +6,7 @@ Skills for Claude Code, Codex and other agents that read `SKILL.md`. If you came
 | --- | --- |
 | [charles-unslop](skills/charles-unslop/SKILL.md) | Turns AI-looking UI into a designed interface with one real idea |
 | [charles-polish](skills/charles-polish/SKILL.md) | Hill-climbs working UI, fixes the details, and checks motion frame by frame |
-| [charles-ux-animation](skills/charles-ux-animation/SKILL.md) | The 20 principles of UX and animation as one procedure for building and reviewing how an interface moves and responds |
+| [charles-ux-animation](skills/charles-ux-animation/SKILL.md) | The 20 principles of UX and animation as one procedure for building and reviewing how an interface moves and responds, with Emil Kowalski's animation rules, Interface Craft's motion techniques and 13 more laws of UX |
 | [charles-unreasonable-craft](skills/charles-unreasonable-craft/SKILL.md) | Pushes web and app design toward an award-level bar |
 | [charles-accent-heroes](skills/charles-accent-heroes/SKILL.md) | Makes award-level landing-page hero images with one bold accent colour, as close variations of reference screenshots. Needs Python and an OpenAI API key; the word check uses macOS |
 | [charles-store-screenshots](skills/charles-store-screenshots/SKILL.md) | Designs App Store screenshot sets: a two-frame hook, frames that bleed into each other and real app UI, rendered to exact iPhone, iPad and iPhone Duo sizes. Needs Python, Playwright and Chrome; generated art needs an OpenAI API key |
@@ -49,5 +49,5 @@ Codex uses `$charles-unslop` instead of the slash.
 
 - `charles-unslop` is adapted from [unslop](https://github.com/heydamir/unslop) by Damir Sokolovsky, CC BY 4.0, and draws on Emil Kowalski's unslop design skill.
 - `charles-polish` is built from Emil Kowalski's UI polish and animation skills and Josh Puckett's Interface Craft.
-- `charles-ux-animation` is built on Disney's 12 principles of animation (Frank Thomas and Ollie Johnston, *The Illusion of Life*), Raphael Salaja's [userinterface.wiki](https://www.userinterface.wiki), Jon Yablonski's [Laws of UX](https://lawsofux.com), and Emil Kowalski's rule on frequency of use.
+- `charles-ux-animation` is built on Disney's 12 principles of animation (Frank Thomas and Ollie Johnston, *The Illusion of Life*), Raphael Salaja's [userinterface.wiki](https://www.userinterface.wiki), Jon Yablonski's [Laws of UX](https://lawsofux.com), Emil Kowalski's animation skill and his rule on frequency of use, and Josh Puckett's Interface Craft.
 - Fonts in `charles-arcade-motion/template/assets/fonts` are under the SIL Open Font License, with each licence beside its font.

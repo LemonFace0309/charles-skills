@@ -1,6 +1,6 @@
 # charles-ux-animation
 
-The 20 principles of UX and animation from my reel, as a procedure your agent walks every time it builds or reviews an interaction. It decides whether something should move at all, where the eye goes, how it moves, and whether people can hit it, choose it and read it.
+The 20 principles of UX and animation from my reel, as a procedure your agent walks every time it builds or reviews an interaction. It decides whether something should move at all, where the eye goes, how it moves, whether people can find, hit and choose it, and whether they can finish.
 
 1. Squash & stretch
 2. Anticipation wind-up
@@ -23,6 +23,8 @@ The 20 principles of UX and animation from my reel, as a procedure your agent wa
 19. Jakob's law
 20. Frequency of use
 
+On top of the 20, it carries Emil Kowalski's rules for interface animation (durations, curves, springs, enter and exit recipes, reduced motion), the motion techniques from Josh Puckett's Interface Craft (arcs, compound motion, interruptible gestures, rubber banding, storyboards), and 13 more laws of UX: proximity, similarity, uniform connectedness, Prägnanz, Von Restorff, serial position, peak-end, Zeigarnik, goal gradient, Tesler's, Parkinson's, Occam's razor and Pareto.
+
 ## Install
 
 Run this in your project:
@@ -41,4 +43,4 @@ Codex uses `$charles-ux-animation` instead of the slash. To install by hand, and
 
 ## Credits
 
-1–12 are Disney's principles of animation from *The Illusion of Life* by Frank Thomas and Ollie Johnston. Most of the list comes from Raphael Salaja's [userinterface.wiki](https://www.userinterface.wiki), the laws go deeper on Jon Yablonski's [Laws of UX](https://lawsofux.com), and #20 is Emil Kowalski's rule.
+1–12 are Disney's principles of animation from *The Illusion of Life* by Frank Thomas and Ollie Johnston. Most of the list comes from Raphael Salaja's [userinterface.wiki](https://www.userinterface.wiki), and the laws go deeper on Jon Yablonski's [Laws of UX](https://lawsofux.com). #20 and the animation rules and recipes are Emil Kowalski's ([animations.dev](https://animations.dev)), and the motion techniques come from Josh Puckett's [Interface Craft](https://interfacecraft.dev).
