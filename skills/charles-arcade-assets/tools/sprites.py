@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Sprite utilities for the charles-arcade-motion skill. Run with the repo venv: .venv/bin/python tools/sprites.py ...
+"""Sprite utilities for the charles-arcade-assets skill. Run with the repo venv: .venv/bin/python tools/sprites.py ...
 
   key    in.png out.png [--screen magenta|green] [--min-part 0.0005]
          screen background -> transparent, screen colour pulled out of the edge (despill), dust and the

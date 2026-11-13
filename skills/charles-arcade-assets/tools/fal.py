@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""fal.ai client for the charles-arcade-motion skill (Python standard library only).
+"""fal.ai client for the charles-arcade-assets skill (Python standard library only).
 
   fal.py image  --prompt "..." [--ref a.png --ref b.png] [--aspect 9:16] [--res 2K] --out art/scene.png
   fal.py video  --image art/scene.png [--end art/scene_b.png] --prompt "..." [--model minimax] [--duration 5] --out clips/fight.mp4

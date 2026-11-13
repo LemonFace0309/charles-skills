@@ -1,5 +1,5 @@
 ---
-name: charles-arcade-motion
+name: charles-arcade-assets
 description: "Make retro pixel-art, video-game style motion design timed to a voiceover, on any topic - a flat pixel mascot (or a cast made for the topic) acting out every line, pixel scenes, rebuilt app UI and the real pages, logos, covers and photos the words name, with counters, charts, stamps and hand-drawn marks landing on the word - rendered to video with HyperFrames from generated art (fal) and code. Use whenever Charles asks for \"arcade\", game-style, pixel, retro, opusjake-style or \"fun\" motion graphics or animations, for parts of a video he is editing (often from charles-claude-editing, which picks the layout and asks for an asset at that size: a 2:1 card above his face, a tall card, a split panel, an overlay or a new screen), or for a whole voiceover or reel."
 ---
 
@@ -11,7 +11,7 @@ the word. Something new is on screen about every second and something moves insi
 should look like a polished indie game and a clean product demo, never like AI slop: crisp pixels, one
 consistent look and cast, real things shown as they are, exact text, deliberate motion.
 
-`T` below is this skill's folder (`skills/charles-arcade-motion`); run commands from the repo root unless noted. Write
+`T` below is this skill's folder (`skills/charles-arcade-assets`); run commands from the repo root unless noted. Write
 commands out in full: zsh does not split a variable such as `F="python3 x.py"` into a command and its arguments.
 
 # What you are making

@@ -43,7 +43,7 @@
   const dirOf = (who) => (String(who).includes("/") ? String(who).replace(/\/?$/, "/") : `assets/cast/${who}/`);
   function prep(d, dir) {
     const [W, H] = d.canvas, ref = d.ref || (d.poses.includes("idle") ? "idle" : d.poses[0]);
-    if (!d.anchors) console.warn(`cast: ${dir}cast.json has no anchors: run .venv/bin/python skills/charles-arcade-motion/tools/cast.py measure ${dir.replace(/\/$/, "")}`);
+    if (!d.anchors) console.warn(`cast: ${dir}cast.json has no anchors: run .venv/bin/python skills/charles-arcade-assets/tools/cast.py measure ${dir.replace(/\/$/, "")}`);
     const height = d.height || d.body_px || H * 0.9, A = {};
     const guess = { feet: [W / 2, H - 2], head: [W / 2, H - 2 - height], face: [W / 2, H - 2 - height * 0.62],
       hand_r: [W * 0.76, H - 2 - height * 0.38], hand_l: [W * 0.24, H - 2 - height * 0.38], head_w: W * 0.6, scale: 1 };

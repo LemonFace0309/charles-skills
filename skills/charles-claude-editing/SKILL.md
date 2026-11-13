@@ -74,6 +74,7 @@ Did I ask you to open on a split screen?
 * Web pages: dark mode, starting at the visual part, not the intro text. Keep the content inside the 80 px side margins. Light mode pages w/ text running into the screen edge look ugly
 * For big claims, show the source (official release, headline) with the words I'm saying highlighted
 * Make your own motion graphics and recordings instead of using templates. When I explain a concept, build a visual for it (text, diagrams, graphs, beautiful animations). This is especially potent in educational videos
+* When I explain a term, a fix, a technique, a number or a mechanism, ask charles-explainers-assets for the visual at the slot's size, with its text area, my word times and the change words. Place what it returns, and put clicks on its cues
 * When you show a list or sequence as a row of pictures, don't use icons. Use organic-looking images you find online, cropped into squares/rectangles
 * Graphs and charts are okay. Screenshots of real ones from other sources are great. If you make one yourself, it has to look professional and clean, and be accurate and detailed, w/ well timed animations. A sloppy one comes across as AI slop
 * If I read out a list, put it up as an overlay with blur, each item revealed as I say it (plain caption-style text, not a screenshot). If I read it slowly (more than ~4 s between items), take the overlay down between items and bring it back for the next one, so it stays engaging
@@ -95,7 +96,8 @@ Did I ask you to open on a split screen?
 * Only make the whole video a split screen when I ask
 * Add a transition into and out of a split (ex: a push)
 * When I ask you to open on a split (ex: me reading a Reddit post, a video demo showing something cool, tech news with a demo), put my first sentence on the seam as hook text, then the 2-3 word captions on the seam while the split is up
-* Motion graphics from the charles-arcade-motion skill fit any of these. Pick the layout first, then ask charles-arcade-motion for the asset at that size, with the area its text has to stay inside. You place what it renders
+* Motion graphics from the charles-arcade-assets skill fit any of these. Pick the layout first, then ask charles-arcade-assets for the asset at that size, with the area its text has to stay inside. You place what it renders
+* Teaching visuals from charles-explainers-assets fit the same way: pick the layout and slot first, then ask for the visual at that size
 
 
 # Music

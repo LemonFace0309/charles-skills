@@ -21,7 +21,7 @@ import argparse, json, os, re, shutil, subprocess, sys
 from pathlib import Path
 
 SKILL = Path(__file__).resolve().parent.parent
-T = "skills/charles-arcade-motion"
+T = "skills/charles-arcade-assets"
 HF = "npx --yes hyperframes@0.8.217"
 SHARED = ("art", "cast", "clips", "logos")
 

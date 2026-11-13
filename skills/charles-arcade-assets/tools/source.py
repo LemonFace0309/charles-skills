@@ -40,7 +40,7 @@ import urllib.request
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
-UA = "charles-arcade-motion/1.0 (video editing tool)"
+UA = "charles-arcade-assets/1.0 (video editing tool)"
 BROWSER_UA = ("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) "
               "Chrome/130.0.0.0 Safari/537.36")
 SIMPLE_ICONS = "13.0.0"
