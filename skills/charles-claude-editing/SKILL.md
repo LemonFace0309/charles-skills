@@ -116,6 +116,16 @@ Did I ask you to open on a split screen?
 * Keep them at or under my voice level
 
 
+# Export
+
+* Small text anywhere on screen (a UI demo, a website, code, a tweet, a screenshot) means a 2160x3840 export. At 1080 wide, ~10 px UI text goes soft once the phone stretches it to fill the screen, and it looked blurry in Photos
+* Capture screens at 2x and keep them at 2x the whole way. Never shrink a capture to 1080 wide and let it get scaled back up. Draw captions and the hook at 2x too. My footage is 1080x1920, so it gets scaled up once and that's fine
+* Every position in this file is on the 1080x1920 grid. At 2160x3840, double it
+* H.264, CRF 16 at 2160x3840 (about 25 Mbps), AAC 256k. Less smears fine text and grain
+* A talking head with only captions and the hook can stay 1080x1920
+* Save every finished reel to my Apple Photos. I post from my phone, so that's where I check it. Replace an old version rather than leaving both
+
+
 # News Videos
 
 * If I ask for a hook title, put the key words in CAPS, in larger text than usual (ex: "Samsung EXPOSED to be SPYING on users", or "Microsoft offers voluntary / TERMINATION / to 60,000 amid AI adoption")
