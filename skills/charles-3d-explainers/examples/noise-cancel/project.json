@@ -1,0 +1,161 @@
+{
+  "size": [
+    1080,
+    1920
+  ],
+  "fps": 30,
+  "samples": 16,
+  "palette": "night-amber",
+  "words": "words.json",
+  "duration": 37.033,
+  "title": {
+    "html": "Silence made\nof [[sound]]",
+    "until": 1.15,
+    "outDur": 0.25
+  },
+  "post": {
+    "captionShade": 0.45
+  },
+  "captions": {
+    "highlight": [
+      {
+        "match": "pressure wave",
+        "color": "#55adf6"
+      },
+      {
+        "match": "inverted wave",
+        "color": "#f4b744"
+      },
+      {
+        "match": "destructive interference",
+        "color": "#f4f4f4"
+      },
+      {
+        "match": "voice",
+        "color": "#dfe6ff"
+      },
+      {
+        "match": "delay",
+        "color": "#f4b744"
+      }
+    ],
+    "mode": "chunk"
+  },
+  "shots": [
+    {
+      "id": "hero",
+      "file": "shots/hero.js",
+      "start": 0
+    },
+    {
+      "id": "cup",
+      "file": "shots/cup.js",
+      "start": 1.26,
+      "in": {
+        "type": "zoom",
+        "dur": 0.5
+      }
+    },
+    {
+      "id": "hook",
+      "file": "shots/hook.js",
+      "start": 2.1,
+      "in": {
+        "type": "zoom",
+        "dur": 0.5,
+        "out": true
+      }
+    },
+    {
+      "id": "cabin",
+      "file": "shots/cabin.js",
+      "start": 3.88,
+      "in": {
+        "type": "zoom",
+        "dur": 0.6,
+        "out": true
+      }
+    },
+    {
+      "id": "air",
+      "file": "shots/air.js",
+      "start": 7.52,
+      "in": {
+        "type": "whip",
+        "dur": 0.4
+      }
+    },
+    {
+      "id": "mic",
+      "file": "shots/mic.js",
+      "start": 10.98,
+      "in": {
+        "type": "zoom",
+        "dur": 0.6
+      }
+    },
+    {
+      "id": "chip",
+      "file": "shots/chip.js",
+      "start": 13.28,
+      "in": {
+        "type": "zoom",
+        "dur": 0.5
+      }
+    },
+    {
+      "id": "ear",
+      "file": "shots/ear.js",
+      "start": 17.6,
+      "in": {
+        "type": "whip",
+        "dur": 0.4
+      }
+    },
+    {
+      "id": "changing",
+      "file": "shots/changing.js",
+      "start": 24.66,
+      "in": {
+        "type": "light",
+        "dur": 0.5,
+        "at": [
+          0.5,
+          0.48
+        ]
+      }
+    },
+    {
+      "id": "adjust",
+      "file": "shots/adjust.js",
+      "start": 26.22,
+      "in": {
+        "type": "zoom",
+        "dur": 0.5
+      }
+    },
+    {
+      "id": "voice",
+      "file": "shots/voice.js",
+      "start": 29.7,
+      "in": {
+        "type": "zoom",
+        "dur": 0.6,
+        "out": true
+      }
+    },
+    {
+      "id": "ending",
+      "file": "shots/ending.js",
+      "start": 32.28,
+      "in": {
+        "type": "whip",
+        "dur": 0.4,
+        "dir": [
+          0,
+          1
+        ]
+      }
+    }
+  ]
+}

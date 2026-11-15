@@ -1,0 +1,17 @@
+{
+  "name": "charles-3d-explainers-kit",
+  "private": true,
+  "type": "module",
+  "description": "Frame-stepped three.js renderer for charles-3d-explainers. Runs on Bun with Google Chrome.",
+  "dependencies": {
+    "@fontsource/barlow-condensed": "5.2.6",
+    "@fontsource/inter": "5.2.8",
+    "@gltf-transform/core": "4.5.1",
+    "@gltf-transform/extensions": "4.5.1",
+    "@gltf-transform/functions": "4.5.1",
+    "gsap": "3.13.0",
+    "meshoptimizer": "1.3.0",
+    "playwright-core": "1.63.0",
+    "three": "0.180.0"
+  }
+}

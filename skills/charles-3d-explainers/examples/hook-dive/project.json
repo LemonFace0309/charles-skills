@@ -1,0 +1,15 @@
+{
+  "size": [1080, 1920],
+  "fps": 30,
+  "samples": 16,
+  "palette": "night-amber",
+  "words": "words.json",
+  "duration": 3.4,
+  "title": { "html": "How does [[sand]]\nthink?", "style": "cond", "until": 1.15, "outDur": 0.25 },
+  "captions": { "highlight": ["melted"], "mode": "chunk" },
+  "shots": [
+    { "id": "hero", "file": "shots/hero.js", "start": 0 },
+    { "id": "surface", "file": "shots/surface.js", "start": 1.26, "in": { "type": "zoom", "dur": 0.5 }, "tone": "warm" },
+    { "id": "first", "file": "shots/first.js", "start": 2.04, "in": { "type": "zoom", "dur": 0.5, "out": true } }
+  ]
+}

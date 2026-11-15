@@ -1,0 +1,112 @@
+@font-face { font-family: Inter; font-weight: 400; src: url(../fonts/Inter-400.woff2) format('woff2'); }
+@font-face { font-family: Inter; font-weight: 500; src: url(../fonts/Inter-500.woff2) format('woff2'); }
+@font-face { font-family: Inter; font-weight: 600; src: url(../fonts/Inter-600.woff2) format('woff2'); }
+@font-face { font-family: Inter; font-weight: 700; src: url(../fonts/Inter-700.woff2) format('woff2'); }
+@font-face { font-family: Inter; font-weight: 800; src: url(../fonts/Inter-800.woff2) format('woff2'); }
+@font-face { font-family: Inter; font-weight: 900; src: url(../fonts/Inter-900.woff2) format('woff2'); }
+@font-face { font-family: 'Barlow Condensed'; font-weight: 500; src: url(../fonts/BarlowCondensed-500.woff2) format('woff2'); }
+@font-face { font-family: 'Barlow Condensed'; font-weight: 600; src: url(../fonts/BarlowCondensed-600.woff2) format('woff2'); }
+@font-face { font-family: 'Barlow Condensed'; font-weight: 700; src: url(../fonts/BarlowCondensed-700.woff2) format('woff2'); }
+@font-face { font-family: 'Barlow Condensed'; font-weight: 800; src: url(../fonts/BarlowCondensed-800.woff2) format('woff2'); }
+/* Greek (λ, Δ, μ, π, Ω): the Inter files above are Latin only. */
+@font-face { font-family: Inter; font-weight: 400; src: url(../fonts/Inter-greek-400.woff2) format('woff2'); unicode-range: U+0370-03FF, U+1F00-1FFF; }
+@font-face { font-family: Inter; font-weight: 500; src: url(../fonts/Inter-greek-500.woff2) format('woff2'); unicode-range: U+0370-03FF, U+1F00-1FFF; }
+@font-face { font-family: Inter; font-weight: 600; src: url(../fonts/Inter-greek-600.woff2) format('woff2'); unicode-range: U+0370-03FF, U+1F00-1FFF; }
+@font-face { font-family: Inter; font-weight: 700; src: url(../fonts/Inter-greek-700.woff2) format('woff2'); unicode-range: U+0370-03FF, U+1F00-1FFF; }
+@font-face { font-family: Inter; font-weight: 800; src: url(../fonts/Inter-greek-800.woff2) format('woff2'); unicode-range: U+0370-03FF, U+1F00-1FFF; }
+
+:root {
+  --accent: #ffb43c; --ink: #16110a; --text: #ffffff; --glow: #5aa8ff;
+  --sans: Inter, system-ui, sans-serif; --cond: 'Barlow Condensed', Inter, sans-serif;
+  --shadow: 0 2px 3px rgba(0,0,0,.35), 0 4px 22px rgba(0,0,0,.45);
+}
+html, body { margin: 0; padding: 0; background: #000; overflow: hidden; }
+#stage { position: fixed; left: 0; top: 0; z-index: 1; }
+#stage canvas { display: block; }
+/* The overlay is laid out in project pixels (1080 x 1920 for a reel) and scaled for drafts. Sizes are look.md's at
+   1080 wide; --u (width / 1080, set by ui.js) scales them for other sizes. */
+#ui { --u: 1; position: fixed; left: 0; top: 0; z-index: 2; width: 1080px; height: 1920px; transform-origin: 0 0; pointer-events: none;
+  font-family: var(--sans); color: var(--text); -webkit-font-smoothing: antialiased; font-feature-settings: 'ss01', 'cv11'; }
+#ui * { box-sizing: border-box; }
+.layer { position: absolute; inset: 0; }
+
+/* Captions: one line (sometimes two), centred at y ~1430, at most one highlighted word or phrase. Boxes hug their text
+   (centred, at most 900 px wide) so --audit measures the words, not the band. */
+.cap { position: absolute; left: 0; right: 0; margin: 0 auto; width: fit-content; max-width: calc(900px * var(--u)); text-align: center; font-weight: 700;
+  font-size: calc(66px * var(--u)); line-height: 1.12; letter-spacing: -0.018em; text-shadow: var(--shadow); text-wrap: balance; isolation: isolate; }
+.cap .w { display: inline; }
+.cap .w.off { opacity: 0; }
+/* A highlight: the fill (ink on a pill, or the accent for 'text') sweeps in exactly with the pill's edge (--p), so no
+   letter is ever dark on dark. The pill's side padding is reserved from the start, so the line never reflows; the
+   -0.1 em margin takes back half of it, or the gap before the pill reads as a double space. A highlight's color and ink
+   arrive inline as --accent and --ink. */
+.cap .hl { position: relative; white-space: nowrap; padding: 0 .22em; margin: 0 -.1em; --fill: var(--ink); color: transparent; text-shadow: none;
+  background: linear-gradient(90deg, var(--fill) calc(var(--p, 1) * 100%), var(--text) 0); -webkit-background-clip: text; background-clip: text; }
+.cap .hl::before { content: ''; position: absolute; inset: .045em 0; z-index: -1; background: var(--accent); border-radius: .18em;
+  transform-origin: 0 50%; transform: scaleX(var(--p, 1)); box-shadow: 0 6px 24px rgba(0,0,0,.25); }
+/* the drop shadow, under the letters not yet on the pill (a copy of the text: a text-shadow would paint over the fill) */
+.cap .hl::after { content: attr(data-txt); position: absolute; left: 0; top: 0; padding: inherit; line-height: normal; z-index: -1;
+  color: transparent; text-shadow: var(--shadow);
+  clip-path: inset(-1em calc((var(--p, 1) - 1) * 1em) -1em calc(var(--p, 1) * 100% - (1 - min(1, var(--p, 1) * 1000)) * 1em)); }
+.cap .hl.text { padding: 0; margin: 0; --fill: var(--accent); } /* no reserved padding: nothing to take back */
+.cap .hl.text::before { display: none; }
+.cap .hl.text::after { clip-path: none; }
+
+/* Hook title: frame 0, top of the screen, 2-3 lines, one pill or one accent word. ui.js sizes it to its longest line. */
+.title { position: absolute; left: 0; right: 0; margin: 0 auto; width: fit-content; max-width: calc(940px * var(--u)); text-align: center; font-weight: 800;
+  font-size: calc(84px * var(--u)); line-height: 1; letter-spacing: -0.03em; text-shadow: var(--shadow); text-wrap: balance; }
+.title .ln { display: block; position: relative; }
+.title .pill { position: relative; color: var(--ink); text-shadow: none; padding: 0 .24em; white-space: nowrap; z-index: 0; }
+.title .pill::before { content: ''; position: absolute; inset: -.02em 0; background: var(--accent); border-radius: .2em; z-index: -1; }
+.title .acc { color: var(--accent); }
+.title .sub { display: block; font-weight: 600; font-size: max(.45em, calc(40px * var(--u))); letter-spacing: -0.01em; margin-top: .28em; opacity: .92; }
+/* The condensed headline (title style 'cond'): Barlow Condensed 800 capitals in the accent with a 0.12 em glow, and a
+   white Inter sub-line at 0.32 x (40 px at least). {{accent}} turns white in it; a pill stays the accent, ink letters. */
+.title.cond { font-family: var(--cond); font-weight: 800; text-transform: uppercase; letter-spacing: 0; line-height: .95; color: var(--accent);
+  text-shadow: 0 0 .12em color-mix(in srgb, var(--accent) 55%, transparent), var(--shadow); }
+.title.cond .acc { color: #fff; }
+.title.cond .pill::before { inset: .13em 0 .04em; } /* capitals have no descenders: 0.16 em above the caps and below the baseline */
+.title.cond .sub { font-family: var(--sans); color: #fff; text-transform: none; font-size: max(.32em, calc(40px * var(--u))); text-shadow: var(--shadow); }
+
+/* Hero text: the number, the term or the equation at the top. ui.js sizes it by its length. */
+.hero { position: absolute; left: 0; right: 0; margin: 0 auto; width: fit-content; text-align: center; font-weight: 800; letter-spacing: -0.035em; line-height: 1;
+  text-shadow: var(--shadow); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.hero .unit { font-size: .4em; font-weight: 700; letter-spacing: -0.01em; margin-left: .25em; opacity: .9; }
+.hero .sub { display: block; font-size: clamp(calc(40px * var(--u)), .3em, calc(64px * var(--u))); font-weight: 600; letter-spacing: 0; margin-top: .3em; opacity: .8; }
+.hero.cond { font-family: var(--cond); letter-spacing: -0.01em; font-weight: 700; }
+.hero .acc { color: var(--accent); }
+.hero .dim { opacity: .45; }
+
+/* HUD counter: a running clock or tally that stays on screen across shots, in the cool secondary. */
+.hud { position: absolute; font-family: var(--cond); font-weight: 700; font-size: calc(88px * var(--u)); line-height: 1; letter-spacing: 0;
+  font-variant-numeric: tabular-nums; color: var(--hud, #77d9fc);
+  text-shadow: 0 0 18px color-mix(in srgb, var(--hud, #77d9fc) 50%, transparent), 0 0 2px rgba(0,0,0,.4); }
+.hud .unit { font-size: max(.4em, calc(36px * var(--u))); margin-left: .15em; } /* 26 px at .3em was under the 40 px reading floor */
+.hud .sub { display: block; font-family: var(--sans); font-size: max(.3em, calc(40px * var(--u))); font-weight: 600; letter-spacing: 0; opacity: .75; margin-top: .2em; text-shadow: var(--shadow); color: #fff; }
+
+/* Labels pinned to a point in the 3D scene: a dot on the point, the text beside it, a leader line only when asked. */
+.lbl { position: absolute; font-weight: 700; font-size: calc(46px * var(--u)); line-height: 1.1; letter-spacing: -0.015em; text-shadow: var(--shadow); white-space: nowrap; }
+.lbl .sub { display: block; font-size: max(.74em, calc(34px * var(--u))); font-weight: 500; letter-spacing: -0.005em; opacity: .72; margin-top: .08em; }
+.lbl.card { background: rgba(10,14,22,.62); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,.14); padding: .26em .4em .3em;
+  border-radius: .35em; text-shadow: none; box-shadow: 0 10px 40px rgba(0,0,0,.35); }
+.lbl.tag { background: var(--accent); color: var(--ink); text-shadow: none; padding: .15em .35em .2em; border-radius: .25em; font-weight: 800; font-size: calc(40px * var(--u)); }
+svg.leaders { position: absolute; left: 0; top: 0; overflow: visible; }
+svg.leaders line { stroke: rgba(255,255,255,.8); stroke-width: calc(2px * var(--u)); stroke-linecap: round; filter: drop-shadow(0 1px 2px rgba(0,0,0,.5)); }
+svg.leaders circle { fill: #fff; filter: drop-shadow(0 0 6px rgba(255,255,255,.75)); }
+
+/* Scale bar (ui.scaleBar): its length written above a white bar with end ticks; ui.js sets the bar's width (--sw is its
+   thickness). The two label spans share one grid cell, so one can lift out as the next rises in. */
+.sbar { position: absolute; display: flex; flex-direction: column; align-items: center; gap: calc(12px * var(--u)); font-weight: 700;
+  font-size: calc(42px * var(--u)); line-height: 1; letter-spacing: -0.01em; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.sbar.left { align-items: flex-start; }
+.sbar .sb-l { display: grid; justify-items: center; }
+.sbar.left .sb-l { justify-items: start; }
+.sbar .sb-l span { grid-area: 1 / 1; }
+.sbar .sb-b { position: relative; height: var(--sw); background: #fff; border-radius: var(--sw); box-shadow: 0 1px 3px rgba(0,0,0,.45), 0 2px 14px rgba(0,0,0,.35); }
+.sbar .sb-b::before, .sbar .sb-b::after { content: ''; position: absolute; top: 50%; width: var(--sw); height: calc(14px * var(--u));
+  transform: translateY(-50%); background: #fff; border-radius: var(--sw); }
+.sbar .sb-b::before { left: 0; }
+.sbar .sb-b::after { right: 0; }
+
+/* Free text, doodles and small type. */
+.txt { position: absolute; text-shadow: var(--shadow); }

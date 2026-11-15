@@ -14,6 +14,7 @@ Skills for Claude Code, Codex and other agents that read `SKILL.md`. If you came
 | [charles-claude-editing](skills/charles-claude-editing/SKILL.md) | Edits talking-head footage into Reels and TikToks. Written for my own workflow, so its music and sound paths need changing |
 | [charles-arcade-assets](skills/charles-arcade-assets/SKILL.md) | Makes pixel-art motion graphics timed to a voiceover. The sprite library isn't included, so you generate your own cast. Formerly charles-arcade-motion |
 | [charles-explainers-assets](skills/charles-explainers-assets/SKILL.md) | Builds the visual that teaches each line of a reel: a fix flipping from before to after on the word, a principle side by side without it and with it, a coloured agent cursor making the change, the code under it and a definition tab above. Needs Bun, Chrome and ffmpeg |
+| [charles-3d-explainers](skills/charles-3d-explainers/SKILL.md) | Makes premium 3D explainer reels from a voiceover, and 3D cutaways for talking-head videos: a diving hook, one running example, every clause shown on its word, real depth of field and motion blur. Needs Bun, Chrome and ffmpeg; the optional AI tools (3D models, plates, character beats) need a fal.ai key |
 
 ## Install
 
@@ -42,6 +43,7 @@ Start a new session, then ask for it by name:
 /charles-accent-heroes four landing-page heroes for a ceramics studio, from my reference folder
 /charles-store-screenshots three App Store screenshot sets for my habit tracker, from the captures in ./shots
 /charles-ux-animation the add-to-cart flow
+/charles-3d-explainers a 40 s reel on how GPS finds you, from voiceover.m4a
 ```
 
 Codex uses `$charles-unslop` instead of the slash.
@@ -51,4 +53,4 @@ Codex uses `$charles-unslop` instead of the slash.
 - `charles-unslop` is adapted from [unslop](https://github.com/heydamir/unslop) by Damir Sokolovsky, CC BY 4.0, and draws on Emil Kowalski's unslop design skill.
 - `charles-polish` is built from Emil Kowalski's UI polish and animation skills and Josh Puckett's Interface Craft.
 - `charles-ux-animation` is built on Disney's 12 principles of animation (Frank Thomas and Ollie Johnston, *The Illusion of Life*), Raphael Salaja's [userinterface.wiki](https://www.userinterface.wiki), Jon Yablonski's [Laws of UX](https://lawsofux.com), Emil Kowalski's animation skill and his rule on frequency of use, and Josh Puckett's Interface Craft.
-- Fonts in `charles-arcade-assets/template/assets/fonts` and `charles-explainers-assets/kit/fonts` are under the SIL Open Font License, with each licence beside its font.
+- Fonts in `charles-arcade-assets/template/assets/fonts`, `charles-explainers-assets/kit/fonts` and `charles-3d-explainers/kit/fonts` are under the SIL Open Font License, with each licence beside its font. The Earth textures and the 3D models in `charles-3d-explainers/kit` carry their sources and licences in a `NOTICE.md` beside them.

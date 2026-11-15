@@ -1,0 +1,593 @@
+{
+ "text": "Noise-cancelling headphones erase sound by adding more sound. On a plane, the cabin hums at about 80 decibels. That hum is a pressure wave, air squeezing and stretching. Microphones on your headphones catch it. A chip flips the wave upside down, so every squeeze becomes a stretch. The speaker plays this inverted wave into your ear. The two waves cancel out. That's destructive interference. The hum keeps changing, so some headphones adjust 50,000 times a second. But the flight attendant's voice still gets through. Voices are higher. Their waves are shorter, so the tiniest delay ruins the match.",
+ "words": [
+  {
+   "text": "Noise-cancelling",
+   "start": 0.34,
+   "end": 1.18,
+   "type": "word"
+  },
+  {
+   "text": "headphones",
+   "start": 1.26,
+   "end": 1.7,
+   "type": "word"
+  },
+  {
+   "text": "erase",
+   "start": 1.74,
+   "end": 2.02,
+   "type": "word"
+  },
+  {
+   "text": "sound",
+   "start": 2.1,
+   "end": 2.34,
+   "type": "word"
+  },
+  {
+   "text": "by",
+   "start": 2.38,
+   "end": 2.5,
+   "type": "word"
+  },
+  {
+   "text": "adding",
+   "start": 2.54,
+   "end": 2.74,
+   "type": "word"
+  },
+  {
+   "text": "more",
+   "start": 2.78,
+   "end": 2.94,
+   "type": "word"
+  },
+  {
+   "text": "sound.",
+   "start": 3,
+   "end": 3.26,
+   "type": "word"
+  },
+  {
+   "text": "On",
+   "start": 3.88,
+   "end": 3.94,
+   "type": "word"
+  },
+  {
+   "text": "a",
+   "start": 4,
+   "end": 4.059,
+   "type": "word"
+  },
+  {
+   "text": "plane,",
+   "start": 4.1,
+   "end": 4.46,
+   "type": "word"
+  },
+  {
+   "text": "the",
+   "start": 4.88,
+   "end": 4.96,
+   "type": "word"
+  },
+  {
+   "text": "cabin",
+   "start": 5.04,
+   "end": 5.34,
+   "type": "word"
+  },
+  {
+   "text": "hums",
+   "start": 5.44,
+   "end": 5.72,
+   "type": "word"
+  },
+  {
+   "text": "at",
+   "start": 5.76,
+   "end": 5.82,
+   "type": "word"
+  },
+  {
+   "text": "about",
+   "start": 5.88,
+   "end": 6.12,
+   "type": "word"
+  },
+  {
+   "text": "80",
+   "start": 6.18,
+   "end": 6.34,
+   "type": "word"
+  },
+  {
+   "text": "decibels.",
+   "start": 6.44,
+   "end": 6.98,
+   "type": "word"
+  },
+  {
+   "text": "That",
+   "start": 7.52,
+   "end": 7.62,
+   "type": "word"
+  },
+  {
+   "text": "hum",
+   "start": 7.66,
+   "end": 7.8,
+   "type": "word"
+  },
+  {
+   "text": "is",
+   "start": 7.84,
+   "end": 7.92,
+   "type": "word"
+  },
+  {
+   "text": "a",
+   "start": 7.96,
+   "end": 8.02,
+   "type": "word"
+  },
+  {
+   "text": "pressure",
+   "start": 8.08,
+   "end": 8.38,
+   "type": "word"
+  },
+  {
+   "text": "wave,",
+   "start": 8.48,
+   "end": 8.74,
+   "type": "word"
+  },
+  {
+   "text": "air",
+   "start": 9.16,
+   "end": 9.34,
+   "type": "word"
+  },
+  {
+   "text": "squeezing",
+   "start": 9.38,
+   "end": 9.8,
+   "type": "word"
+  },
+  {
+   "text": "and",
+   "start": 9.82,
+   "end": 9.9,
+   "type": "word"
+  },
+  {
+   "text": "stretching.",
+   "start": 10,
+   "end": 10.4,
+   "type": "word"
+  },
+  {
+   "text": "Microphones",
+   "start": 10.98,
+   "end": 11.54,
+   "type": "word"
+  },
+  {
+   "text": "on",
+   "start": 11.58,
+   "end": 11.64,
+   "type": "word"
+  },
+  {
+   "text": "your",
+   "start": 11.68,
+   "end": 11.76,
+   "type": "word"
+  },
+  {
+   "text": "headphones",
+   "start": 11.8,
+   "end": 12.28,
+   "type": "word"
+  },
+  {
+   "text": "catch",
+   "start": 12.38,
+   "end": 12.6,
+   "type": "word"
+  },
+  {
+   "text": "it.",
+   "start": 12.64,
+   "end": 12.74,
+   "type": "word"
+  },
+  {
+   "text": "A",
+   "start": 13.28,
+   "end": 13.34,
+   "type": "word"
+  },
+  {
+   "text": "chip",
+   "start": 13.4,
+   "end": 13.6,
+   "type": "word"
+  },
+  {
+   "text": "flips",
+   "start": 13.7,
+   "end": 14,
+   "type": "word"
+  },
+  {
+   "text": "the",
+   "start": 14.04,
+   "end": 14.12,
+   "type": "word"
+  },
+  {
+   "text": "wave",
+   "start": 14.16,
+   "end": 14.34,
+   "type": "word"
+  },
+  {
+   "text": "upside",
+   "start": 14.4,
+   "end": 14.76,
+   "type": "word"
+  },
+  {
+   "text": "down,",
+   "start": 14.8,
+   "end": 15.06,
+   "type": "word"
+  },
+  {
+   "text": "so",
+   "start": 15.44,
+   "end": 15.58,
+   "type": "word"
+  },
+  {
+   "text": "every",
+   "start": 15.64,
+   "end": 15.8,
+   "type": "word"
+  },
+  {
+   "text": "squeeze",
+   "start": 15.88,
+   "end": 16.2,
+   "type": "word"
+  },
+  {
+   "text": "becomes",
+   "start": 16.219,
+   "end": 16.52,
+   "type": "word"
+  },
+  {
+   "text": "a",
+   "start": 16.56,
+   "end": 16.62,
+   "type": "word"
+  },
+  {
+   "text": "stretch.",
+   "start": 16.68,
+   "end": 17.04,
+   "type": "word"
+  },
+  {
+   "text": "The",
+   "start": 17.6,
+   "end": 17.68,
+   "type": "word"
+  },
+  {
+   "text": "speaker",
+   "start": 17.76,
+   "end": 18.02,
+   "type": "word"
+  },
+  {
+   "text": "plays",
+   "start": 18.12,
+   "end": 18.42,
+   "type": "word"
+  },
+  {
+   "text": "this",
+   "start": 18.48,
+   "end": 18.62,
+   "type": "word"
+  },
+  {
+   "text": "inverted",
+   "start": 18.68,
+   "end": 19.1,
+   "type": "word"
+  },
+  {
+   "text": "wave",
+   "start": 19.18,
+   "end": 19.4,
+   "type": "word"
+  },
+  {
+   "text": "into",
+   "start": 19.44,
+   "end": 19.66,
+   "type": "word"
+  },
+  {
+   "text": "your",
+   "start": 19.7,
+   "end": 19.86,
+   "type": "word"
+  },
+  {
+   "text": "ear.",
+   "start": 19.94,
+   "end": 20.16,
+   "type": "word"
+  },
+  {
+   "text": "The",
+   "start": 20.68,
+   "end": 20.78,
+   "type": "word"
+  },
+  {
+   "text": "two",
+   "start": 20.84,
+   "end": 20.96,
+   "type": "word"
+  },
+  {
+   "text": "waves",
+   "start": 21.06,
+   "end": 21.36,
+   "type": "word"
+  },
+  {
+   "text": "cancel",
+   "start": 21.42,
+   "end": 21.8,
+   "type": "word"
+  },
+  {
+   "text": "out.",
+   "start": 21.9,
+   "end": 22.12,
+   "type": "word"
+  },
+  {
+   "text": "That's",
+   "start": 22.62,
+   "end": 22.84,
+   "type": "word"
+  },
+  {
+   "text": "destructive",
+   "start": 22.88,
+   "end": 23.48,
+   "type": "word"
+  },
+  {
+   "text": "interference.",
+   "start": 23.54,
+   "end": 24.14,
+   "type": "word"
+  },
+  {
+   "text": "The",
+   "start": 24.66,
+   "end": 24.74,
+   "type": "word"
+  },
+  {
+   "text": "hum",
+   "start": 24.78,
+   "end": 24.96,
+   "type": "word"
+  },
+  {
+   "text": "keeps",
+   "start": 25.08,
+   "end": 25.3,
+   "type": "word"
+  },
+  {
+   "text": "changing,",
+   "start": 25.36,
+   "end": 25.78,
+   "type": "word"
+  },
+  {
+   "text": "so",
+   "start": 26.22,
+   "end": 26.36,
+   "type": "word"
+  },
+  {
+   "text": "some",
+   "start": 26.44,
+   "end": 26.64,
+   "type": "word"
+  },
+  {
+   "text": "headphones",
+   "start": 26.68,
+   "end": 27.1,
+   "type": "word"
+  },
+  {
+   "text": "adjust",
+   "start": 27.16,
+   "end": 27.48,
+   "type": "word"
+  },
+  {
+   "text": "50,000",
+   "start": 27.6,
+   "end": 28.32,
+   "type": "word"
+  },
+  {
+   "text": "times",
+   "start": 28.4,
+   "end": 28.62,
+   "type": "word"
+  },
+  {
+   "text": "a",
+   "start": 28.66,
+   "end": 28.72,
+   "type": "word"
+  },
+  {
+   "text": "second.",
+   "start": 28.76,
+   "end": 29.1,
+   "type": "word"
+  },
+  {
+   "text": "But",
+   "start": 29.7,
+   "end": 29.78,
+   "type": "word"
+  },
+  {
+   "text": "the",
+   "start": 29.82,
+   "end": 29.92,
+   "type": "word"
+  },
+  {
+   "text": "flight",
+   "start": 29.96,
+   "end": 30.16,
+   "type": "word"
+  },
+  {
+   "text": "attendant's",
+   "start": 30.2,
+   "end": 30.64,
+   "type": "word"
+  },
+  {
+   "text": "voice",
+   "start": 30.68,
+   "end": 30.9,
+   "type": "word"
+  },
+  {
+   "text": "still",
+   "start": 30.96,
+   "end": 31.14,
+   "type": "word"
+  },
+  {
+   "text": "gets",
+   "start": 31.16,
+   "end": 31.34,
+   "type": "word"
+  },
+  {
+   "text": "through.",
+   "start": 31.38,
+   "end": 31.66,
+   "type": "word"
+  },
+  {
+   "text": "Voices",
+   "start": 32.28,
+   "end": 32.64,
+   "type": "word"
+  },
+  {
+   "text": "are",
+   "start": 32.659,
+   "end": 32.78,
+   "type": "word"
+  },
+  {
+   "text": "higher.",
+   "start": 32.84,
+   "end": 33.18,
+   "type": "word"
+  },
+  {
+   "text": "Their",
+   "start": 33.32,
+   "end": 33.46,
+   "type": "word"
+  },
+  {
+   "text": "waves",
+   "start": 33.5,
+   "end": 33.72,
+   "type": "word"
+  },
+  {
+   "text": "are",
+   "start": 33.74,
+   "end": 33.88,
+   "type": "word"
+  },
+  {
+   "text": "shorter,",
+   "start": 33.96,
+   "end": 34.32,
+   "type": "word"
+  },
+  {
+   "text": "so",
+   "start": 34.5,
+   "end": 34.6,
+   "type": "word"
+  },
+  {
+   "text": "the",
+   "start": 34.64,
+   "end": 34.74,
+   "type": "word"
+  },
+  {
+   "text": "tiniest",
+   "start": 34.8,
+   "end": 35.24,
+   "type": "word"
+  },
+  {
+   "text": "delay",
+   "start": 35.28,
+   "end": 35.58,
+   "type": "word"
+  },
+  {
+   "text": "ruins",
+   "start": 35.7,
+   "end": 35.96,
+   "type": "word"
+  },
+  {
+   "text": "the",
+   "start": 35.98,
+   "end": 36.06,
+   "type": "word"
+  },
+  {
+   "text": "match.",
+   "start": 36.1,
+   "end": 36.42,
+   "type": "word"
+  }
+ ]
+}

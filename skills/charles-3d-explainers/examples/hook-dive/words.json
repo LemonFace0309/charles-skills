@@ -1,0 +1,15 @@
+{
+ "text": "This grain of sand, melted down, grows one perfect crystal.",
+ "words": [
+  { "text": "This", "start": 0.25, "end": 0.41, "type": "word" },
+  { "text": "grain", "start": 0.45, "end": 0.74, "type": "word" },
+  { "text": "of", "start": 0.77, "end": 0.84, "type": "word" },
+  { "text": "sand,", "start": 0.87, "end": 1.17, "type": "word" },
+  { "text": "melted", "start": 1.26, "end": 1.57, "type": "word" },
+  { "text": "down,", "start": 1.61, "end": 1.9, "type": "word" },
+  { "text": "grows", "start": 2.04, "end": 2.31, "type": "word" },
+  { "text": "one", "start": 2.35, "end": 2.48, "type": "word" },
+  { "text": "perfect", "start": 2.52, "end": 2.87, "type": "word" },
+  { "text": "crystal.", "start": 2.91, "end": 3.34, "type": "word" }
+ ]
+}
