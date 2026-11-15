@@ -9,6 +9,7 @@ Skills for Claude Code, Codex and other agents that read `SKILL.md`. If you came
 | [charles-ux-animation](skills/charles-ux-animation/SKILL.md) | Builds and reviews how an interface moves and responds, using the 20 principles of UX and animation |
 | [charles-unreasonable-craft](skills/charles-unreasonable-craft/SKILL.md) | Holds a site or app design to the bar of an Awwwards Site of the Day and an Apple Design Award |
 | [charles-accent-heroes](skills/charles-accent-heroes/SKILL.md) | Makes poster-like landing-page hero images with one bold accent colour |
+| [charles-color-analysis](skills/charles-color-analysis/SKILL.md) | Critiques the colour of a graphic, landing page, app screen or palette, with exact fixes and before/after previews. Needs Python with numpy and Pillow; reading text in images uses macOS, and rendering pages uses Chrome |
 | [charles-store-screenshots](skills/charles-store-screenshots/SKILL.md) | Designs App Store screenshot sets and renders them at Apple's exact sizes |
 | [charles-storage-cleanup](skills/charles-storage-cleanup/SKILL.md) | Finds what's filling a Mac and removes what's safe to delete |
 | [charles-claude-editing](skills/charles-claude-editing/SKILL.md) | Edits talking-head footage into Reels and TikToks |
