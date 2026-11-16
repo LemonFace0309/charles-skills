@@ -17,6 +17,15 @@ One fix from my animation hacks reel, before and after the word, with its CSS un
 
 Bun, Google Chrome and ffmpeg.
 
+## Install
+
+```bash
+npx skills add LemonFace0309/charles-skills --skill charles-explainers-assets
+```
+
+Add `-g` to install it for every project, or copy this folder into `~/.claude/skills/` (Claude Code) or
+`~/.agents/skills/` (Codex).
+
 ## Use
 
 ```text

@@ -10,6 +10,15 @@ The 20 cards from the reel:
 
 ![The 20 principles as cards from my reel, most shown before and after](examples/principles.jpg)
 
+## Install
+
+```bash
+npx skills add LemonFace0309/charles-skills --skill charles-ux-animation
+```
+
+Add `-g` to install it for every project, or copy this folder into `~/.claude/skills/` (Claude Code) or
+`~/.agents/skills/` (Codex).
+
 ## Use
 
 ```text

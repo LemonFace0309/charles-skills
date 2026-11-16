@@ -8,6 +8,15 @@ it has confirmed is disposable without asking again, so ask for a report first i
 
 macOS and Python 3.
 
+## Install
+
+```bash
+npx skills add LemonFace0309/charles-skills --skill charles-storage-cleanup
+```
+
+Add `-g` to install it for every project, or copy this folder into `~/.claude/skills/` (Claude Code) or
+`~/.agents/skills/` (Codex).
+
 ## Use
 
 ```text

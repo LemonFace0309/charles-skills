@@ -22,6 +22,15 @@ Six heroes it made:
 Python 3 with numpy, requests and Pillow, and an OpenAI API key (`OPENAI_API_KEY`). Renders cost about $0.05 each. The
 check that reads every word back only runs on macOS.
 
+## Install
+
+```bash
+npx skills add LemonFace0309/charles-skills --skill charles-accent-heroes
+```
+
+Add `-g` to install it for every project, or copy this folder into `~/.claude/skills/` (Claude Code) or
+`~/.agents/skills/` (Codex).
+
 ## Use
 
 ```text

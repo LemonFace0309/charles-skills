@@ -14,6 +14,15 @@ Fixes from my "20 Ways to Unslop AI Designs" reel, on pages that AI models built
 
 ![Add specificity to your headline: "Curiosity, meet clarity." becomes "Cited answers from papers."](examples/specific-headline.jpg)
 
+## Install
+
+```bash
+npx skills add LemonFace0309/charles-skills --skill charles-unslop
+```
+
+Add `-g` to install it for every project, or copy this folder into `~/.claude/skills/` (Claude Code) or
+`~/.agents/skills/` (Codex).
+
 ## Use
 
 ```text

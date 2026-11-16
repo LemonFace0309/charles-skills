@@ -9,6 +9,15 @@ exact iPhone, iPad and iPhone Duo sizes, and checked at search-result size.
 Python 3 with Playwright, Pillow and requests, and Google Chrome. Generated art needs an OpenAI API key
 (`OPENAI_API_KEY`), and photo cutouts need a fal.ai key (`FAL_KEY`).
 
+## Install
+
+```bash
+npx skills add LemonFace0309/charles-skills --skill charles-store-screenshots
+```
+
+Add `-g` to install it for every project, or copy this folder into `~/.claude/skills/` (Claude Code) or
+`~/.agents/skills/` (Codex).
+
 ## Use
 
 ```text

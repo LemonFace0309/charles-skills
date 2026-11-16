@@ -10,6 +10,15 @@ A music library in `assets/music/<mood>/` and sound effects in `assets/sound-eff
 workflow, so change those paths, and the step that saves each reel to Apple Photos, to fit yours. For motion graphics,
 also install charles-arcade-assets and charles-explainers-assets.
 
+## Install
+
+```bash
+npx skills add LemonFace0309/charles-skills --skill charles-claude-editing
+```
+
+Add `-g` to install it for every project, or copy this folder into `~/.claude/skills/` (Claude Code) or
+`~/.agents/skills/` (Codex).
+
 ## Use
 
 ```text

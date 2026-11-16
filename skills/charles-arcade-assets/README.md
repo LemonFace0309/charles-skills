@@ -9,6 +9,15 @@ split panel or overlay at the size your edit needs.
 Node 22+, Python 3 with Pillow and numpy, ffmpeg, Google Chrome, and a fal.ai key (`FAL_KEY`) for the art. It renders
 with HyperFrames, which runs through npx. My sprite library isn't included, so you generate your own cast.
 
+## Install
+
+```bash
+npx skills add LemonFace0309/charles-skills --skill charles-arcade-assets
+```
+
+Add `-g` to install it for every project, or copy this folder into `~/.claude/skills/` (Claude Code) or
+`~/.agents/skills/` (Codex).
+
 ## Use
 
 ```text

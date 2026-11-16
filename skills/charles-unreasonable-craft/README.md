@@ -10,6 +10,15 @@ Node 18+, ffmpeg and Google Chrome for its capture scripts, and Xcode for iOS ap
 interface-craft skill next to it. Generated assets use whichever API keys you have (fal, OpenAI, Gemini, ElevenLabs,
 Replicate).
 
+## Install
+
+```bash
+npx skills add LemonFace0309/charles-skills --skill charles-unreasonable-craft
+```
+
+Add `-g` to install it for every project, or copy this folder into `~/.claude/skills/` (Claude Code) or
+`~/.agents/skills/` (Codex).
+
 ## Use
 
 ```text

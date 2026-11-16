@@ -18,6 +18,15 @@ Projects to copy: [`examples/noise-cancel`](examples/noise-cancel) (a whole 37 s
 
 Bun, Google Chrome and ffmpeg. The optional AI helpers (3D models, plates, character beats) need a fal.ai key.
 
+## Install
+
+```bash
+npx skills add LemonFace0309/charles-skills --skill charles-3d-explainers
+```
+
+Add `-g` to install it for every project, or copy this folder into `~/.claude/skills/` (Claude Code) or
+`~/.agents/skills/` (Codex).
+
 ## Use
 
 ```text
