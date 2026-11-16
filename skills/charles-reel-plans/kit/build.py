@@ -127,7 +127,7 @@ def measurer(size):
 
 
 def list_block(plan, beats):
-    L = {"row0": 368, "pitch": 35, "size": 30, "number_width": 49, "col_gap": 40, "stopwatch": [60, 800], **plan["list"]}
+    L = {"row0": 372, "pitch": 35, "size": 30, "number_width": 49, "col_gap": 40, "stopwatch": [60, 800], **plan["list"]}
     rows = [{"number": b["number"], "label": b["label"]} for b in beats if b.get("row") is not None]
     per_col = L.get("per_col") or math.ceil(len(rows) / 2)
     width = measurer(L["size"])
@@ -159,8 +159,9 @@ def hook_block(plan, beats, until_default, length_for_sub):
     if sub and "{under}" in sub:        # "(20 years in under {under} seconds)": the next 5 s up from where the list ends
         sub = sub.replace("{under}", str(5 * math.ceil(length_for_sub / 5 - 1e-9)))
     if style == "title":
-        return {"style": "title", "lines": lines, "sub": sub, "y": hk.get("y", 256), "size": hk.get("size", 45),
-                "sub_size": hk.get("sub_size", 36), "sub_gap": hk.get("sub_gap", 8), "until": None}
+        # 56 and 40 rather than 22 Backgrounds' 45 and 36: "this text hook should probably be a little bigger" (16 Nov 2026)
+        return {"style": "title", "lines": lines, "sub": sub, "y": hk.get("y", 256), "size": hk.get("size", 56),
+                "sub_size": hk.get("sub_size", 40), "sub_gap": hk.get("sub_gap", 2), "until": None}
     return {"style": "tiktok", "lines": lines, "y": hk.get("y", 280), "size": hk.get("size", 72), "pad": hk.get("pad", 30),
             "until": hk.get("until", until_default)}
 
@@ -381,8 +382,9 @@ def norm(text):
 
 
 def script_for(plan, vd, beats, hook):
-    """The script as he reads it: SCRIPT.md line for line, in his notes' format, each spoken line tied to the plan's line
-    it is, so the page can jump there and light it up while it plays. Without a SCRIPT.md, the same format from the plan."""
+    """The script as he reads it: SCRIPT.md line for line, in his notes' format, each spoken line tied to the plan's lines
+    it covers (`i` the first, `last` the last), so the page can jump there and keep it lit while any of them plays.
+    Without a SCRIPT.md, the same format from the plan."""
     path = vd / plan.get("script", "SCRIPT.md")
     if path.exists():
         lines = path.read_text().strip("\n").split("\n")
@@ -409,10 +411,10 @@ def script_for(plan, vd, beats, hook):
                 if len(n) >= 20 and n in says[k]:                                   # lines the plan keeps as one
                     i, j = k, k
                     break
-        out.append({"text": line, "i": i})
+        out.append({"text": line, "i": i, "last": None if i is None else max(i, j - 1)})
     for a, b in zip(out, out[1:]):      # a label line (*4. Your 60 = background*) goes with the line it introduces
         if a["i"] is None and b["i"] is not None and re.fullmatch(r"\*[^*].*\*", a["text"].strip()):
-            a["i"] = b["i"]
+            a["i"], a["last"] = b["i"], b["last"]
     return out
 
 

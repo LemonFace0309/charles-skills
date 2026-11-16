@@ -276,7 +276,7 @@
     // published page can see into its frame, so this is how a session proves the music works. Viewers never see it.
     if (location.hash === "#check") {
       const dot = h("span", { class: "heard-dot", title: "music" });
-      $(".bar").append(dot);
+      $("#full").before(dot);          // before full screen, so the button stays where it always is
       audio.addEventListener("playing", () => dot.classList.add("on"));
       ["pause", "waiting", "ended", "emptied", "error"].forEach((ev) => audio.addEventListener(ev, () => dot.classList.remove("on")));
     }
@@ -308,6 +308,7 @@
     lastTs = null;
     if (on && t >= total) t = 0;       // play at the end starts it over
     syncAudio(true);
+    syncClip();                        // a clip stops with the reel (the 3D film ran on under a paused clock)
     if (on) requestAnimationFrame(tick);
   }
 
@@ -317,7 +318,10 @@
     else syncAudio(true);
     render();
   }
-  const seekBeat = (i) => seek(beats[i].start + 0.01, { pause: true });
+  // A jump lands a little into its line, so a card that builds in from blank has built (the design laws session saw empty
+  // cards when it jumped while paused).
+  const into = (i) => beats[i].start + Math.min(0.6, beats[i].dur * 0.45);
+  const seekBeat = (i) => seek(into(i), { pause: true });
 
   /* ---- the play bar, full screen, the toggles and the music ------------------------------------------------------ */
   $("#t-total").textContent = `${secs(total)} s`;
@@ -391,7 +395,7 @@
   const narrow = matchMedia("(max-width: 980px)");
   function jumpTo(i) {
     document.body.classList.add("started");
-    seek(beats[i].start + 0.01);
+    seek(into(i));
     if (narrow.matches) $("#player").scrollIntoView({ block: "start" });
   }
   const hideSection = (id) => {
@@ -438,7 +442,7 @@
     if (ln.i != null) {
       el.classList.add("seekable");
       el.addEventListener("click", () => jumpTo(ln.i));
-      tie(el, ln.i);
+      for (let k = ln.i; k <= (ln.last ?? ln.i); k += 1) tie(el, k);   // lit through every beat of its sentence
     }
     scriptBox.append(el);
   });
@@ -460,11 +464,16 @@
   // The assets, in the order the reel shows them. Sources are web pages or paths in the repository; a published copy
   // has no repository next to it, so there only web pages are links.
   const hrefFor = (link) => (/^https?:/.test(link || "") ? link : V.site ? null : link || null);
+  // sources.json's codes (references/sourcing.md) as the names he'd say
+  const SOURCES = { wayback: "Wayback Machine", "live-capture": "Live site", commons: "Wikimedia Commons", enwiki: "Wikipedia",
+    press: "Press image", own: "Own capture", other: "Source", "x-post": "X post" };
+  const sourceName = (s) => SOURCES[s] || (s ? s[0].toUpperCase() + s.slice(1).replace(/-/g, " ") : "");
   const metaOf = (m) => {
     if (!m) return [];
     const href = hrefFor(m.link);
     const parts = [];
-    if (m.source || href) parts.push(href ? h("a", { href, target: "_blank", rel: "noopener", text: m.source || "source" }) : m.source);
+    const name = sourceName(m.source);
+    if (name || href) parts.push(href ? h("a", { href, target: "_blank", rel: "noopener", text: name || "Source" }) : name);
     if (m.license) parts.push(m.license);
     return parts.flatMap((x, k) => (k ? [" · ", x] : [x]));
   };
