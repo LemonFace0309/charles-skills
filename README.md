@@ -16,6 +16,7 @@ Skills for Claude Code, Codex and other agents that read `SKILL.md`. If you came
 | [charles-arcade-assets](skills/charles-arcade-assets/SKILL.md) | Makes pixel-art motion graphics timed to a voiceover |
 | [charles-explainers-assets](skills/charles-explainers-assets/SKILL.md) | Makes the visual that teaches each line of a reel, timed to the words |
 | [charles-3d-explainers](skills/charles-3d-explainers/SKILL.md) | Makes 3D explainer reels from a voiceover, and 3D cutaways for talking-head videos |
+| [charles-reel-plans](skills/charles-reel-plans/SKILL.md) | Plans a reel before it's filmed: the script, real assets, the caption, the music and a shareable mockup page |
 
 ## Install
 
@@ -46,6 +47,7 @@ Start a new session, then ask for it by name:
 /charles-store-screenshots three App Store screenshot sets for my habit tracker, from the captures in ./shots
 /charles-ux-animation the add-to-cart flow
 /charles-3d-explainers a 40 s reel on how GPS finds you, from voiceover.m4a
+/charles-reel-plans an evolution of design reel, from this post, structured like my 22 Backgrounds reel
 ```
 
 Codex uses `$charles-unslop` instead of the slash.
