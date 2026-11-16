@@ -77,7 +77,7 @@ The boxes `page.js` draws, from charles-claude-editing's layouts and reelkit's n
 
 These are list_reel.py's numbers (`videos/eradicating-ai-slop/backgrounds/`), with the rows 4 px lower to clear the bigger subtitle. Rows run from y 372 every 35 px in two columns, the left one holding half the rows rounded up. The years or numbers show at 60% white from the first frame, each label fills in on its line, and the newest is orange (255, 150, 60). The stopwatch is digital-7 (mono) at 84 px in red (255, 42, 42) on a 246 × 96 plate, and it stops when the last numbered line ends. `zone` is where any collage corner may go. `safe` is what counts as seen: left of x 70 or right of 950 sits under the buttons, and below 1500 under the caption. `seed` is the collage search's.
 
-For the edit, list_reel.py takes `labels` from the beats' labels in order, `title` and `sub` from the hook (with `{under}` filled in), `layout` from this block (`size` is its `list_size`), `collage` from `zone`, `safe`, `seed` and the composites file, and `music` from `music`.
+For the edit, list_reel.py takes `labels` from the beats' labels in order, `title` and `sub` from the hook (with `{under}` filled in), `layout` from this block (`size` is its `list_size`), `collage` from `zone`, `safe`, `seed` and the composites file, and `music` from `music`. Its `title_size`, `sub_size` and `sub_gap` come from the hook's `size`, `sub_size` and `sub_gap`. Write all three into `reel.json` even when the plan leaves them to the kit's defaults (56, 40 and 2), because list_reel.py's own defaults for the subtitle are the older 36 and 8, and the edit would come out smaller than the page shows.
 
 ## Timing
 
