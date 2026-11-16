@@ -1,19 +1,13 @@
 # charles-polish
 
-Hill-climbs working UI, fixes the details, and checks motion frame by frame.
+Takes an interface that already works and improves it level by level: it fixes the details people feel (states, hit
+areas, contrast, layout shift, type), makes the motion correct, and checks every animation frame by frame. If the
+screen still looks AI-made, run charles-unslop first.
 
-## Install
-
-Run this in your project:
-
-```bash
-npx skills add LemonFace0309/charles-skills --skill charles-polish
-```
-
-Add `-g` to install it for every project. Then start a new session and ask for it:
+## Use
 
 ```text
 /charles-polish this login page
+/charles-polish the checkout flow, then verify the motion frame by frame
+/charles-polish review the settings screen without changing anything
 ```
-
-Codex uses `$charles-polish` instead of the slash. To install by hand, and to see my other skills, read the [main README](../../README.md).

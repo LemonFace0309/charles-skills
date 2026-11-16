@@ -4,17 +4,17 @@ Skills for Claude Code, Codex and other agents that read `SKILL.md`. If you came
 
 | Skill | What it does |
 | --- | --- |
-| [charles-unslop](skills/charles-unslop/SKILL.md) | Turns AI-looking UI into a designed interface with one real idea |
-| [charles-polish](skills/charles-polish/SKILL.md) | Hill-climbs working UI, fixes the details, and checks motion frame by frame |
-| [charles-ux-animation](skills/charles-ux-animation/SKILL.md) | The 20 principles of UX and animation as one procedure for building and reviewing how an interface moves and responds, with Emil Kowalski's animation rules, Interface Craft's motion techniques and 13 more laws of UX |
-| [charles-unreasonable-craft](skills/charles-unreasonable-craft/SKILL.md) | Pushes web and app design toward an award-level bar |
-| [charles-accent-heroes](skills/charles-accent-heroes/SKILL.md) | Makes award-level landing-page hero images with one bold accent colour, as close variations of reference screenshots. Needs Python and an OpenAI API key; the word check uses macOS |
-| [charles-store-screenshots](skills/charles-store-screenshots/SKILL.md) | Designs App Store screenshot sets: a two-frame hook, frames that bleed into each other and real app UI, rendered to exact iPhone, iPad and iPhone Duo sizes. Needs Python, Playwright and Chrome; generated art needs an OpenAI API key |
-| [charles-storage-cleanup](skills/charles-storage-cleanup/SKILL.md) | Finds what's filling a Mac and removes what's safely disposable. Ask for a report first if you want to review before anything is deleted |
-| [charles-claude-editing](skills/charles-claude-editing/SKILL.md) | Edits talking-head footage into Reels and TikToks. Written for my own workflow, so its music and sound paths need changing |
-| [charles-arcade-assets](skills/charles-arcade-assets/SKILL.md) | Makes pixel-art motion graphics timed to a voiceover. The sprite library isn't included, so you generate your own cast. Formerly charles-arcade-motion |
-| [charles-explainers-assets](skills/charles-explainers-assets/SKILL.md) | Builds the visual that teaches each line of a reel: a fix flipping from before to after on the word, a principle side by side without it and with it, a coloured agent cursor making the change, the code under it and a definition tab above. Needs Bun, Chrome and ffmpeg |
-| [charles-3d-explainers](skills/charles-3d-explainers/SKILL.md) | Makes premium 3D explainer reels from a voiceover, and 3D cutaways for talking-head videos: a diving hook, one running example, every clause shown on its word, real depth of field and motion blur. Needs Bun, Chrome and ffmpeg; the optional AI tools (3D models, plates, character beats) need a fal.ai key |
+| [charles-unslop](skills/charles-unslop/SKILL.md) | Turns UI that looks AI-made into a designed screen with its own point of view |
+| [charles-polish](skills/charles-polish/SKILL.md) | Takes UI that works and fixes the details and motion, checked frame by frame |
+| [charles-ux-animation](skills/charles-ux-animation/SKILL.md) | Builds and reviews how an interface moves and responds, using the 20 principles of UX and animation |
+| [charles-unreasonable-craft](skills/charles-unreasonable-craft/SKILL.md) | Holds a site or app design to the bar of an Awwwards Site of the Day and an Apple Design Award |
+| [charles-accent-heroes](skills/charles-accent-heroes/SKILL.md) | Makes poster-like landing-page hero images with one bold accent colour |
+| [charles-store-screenshots](skills/charles-store-screenshots/SKILL.md) | Designs App Store screenshot sets and renders them at Apple's exact sizes |
+| [charles-storage-cleanup](skills/charles-storage-cleanup/SKILL.md) | Finds what's filling a Mac and removes what's safe to delete |
+| [charles-claude-editing](skills/charles-claude-editing/SKILL.md) | Edits talking-head footage into Reels and TikToks |
+| [charles-arcade-assets](skills/charles-arcade-assets/SKILL.md) | Makes pixel-art motion graphics timed to a voiceover |
+| [charles-explainers-assets](skills/charles-explainers-assets/SKILL.md) | Makes the visual that teaches each line of a reel, timed to the words |
+| [charles-3d-explainers](skills/charles-3d-explainers/SKILL.md) | Makes 3D explainer reels from a voiceover, and 3D cutaways for talking-head videos |
 
 ## Install
 

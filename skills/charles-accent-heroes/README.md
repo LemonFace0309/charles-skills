@@ -1,6 +1,12 @@
 # charles-accent-heroes
 
-Makes award-level landing-page hero images with one bold accent colour, as close variations of reference screenshots.
+Makes landing-page hero images that read like posters: one striking subject, big type tied to it, a quiet interface and
+one bold accent colour. Each page is a close variation of a reference screenshot you give it, rendered with GPT Image,
+then checked and fixed with small edits.
+
+## Examples
+
+Six heroes it made:
 
 <p align="center">
 <img src="gallery/vanta.jpg" width="49%" alt="Vanta, electric motorcycles: white and graphite, with a line of signal red">
@@ -11,18 +17,14 @@ Makes award-level landing-page hero images with one bold accent colour, as close
 <img src="gallery/still-waters.jpg" width="49%" alt="Still Waters retreats: brown and pale gold, with glowing gold">
 </p>
 
-## Install
+## Needs
 
-Run this in your project:
+Python 3 with numpy, requests and Pillow, and an OpenAI API key (`OPENAI_API_KEY`). Renders cost about $0.05 each. The
+check that reads every word back only runs on macOS.
 
-```bash
-npx skills add LemonFace0309/charles-skills --skill charles-accent-heroes
-```
-
-Add `-g` to install it for every project. It needs Python 3 and an OpenAI API key (`OPENAI_API_KEY`). The check that reads every word back only runs on macOS. Then start a new session and ask for it:
+## Use
 
 ```text
 /charles-accent-heroes four heroes for a ceramics studio, from my reference folder
+/charles-accent-heroes one hero for my dance studio, from the screenshots in ./refs
 ```
-
-Codex uses `$charles-accent-heroes` instead of the slash. To install by hand, and to see my other skills, read the [main README](../../README.md).
