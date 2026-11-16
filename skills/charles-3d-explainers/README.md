@@ -11,8 +11,10 @@ Two of my reels, re-edited with 3D cutaways (click to play):
 
 [![I reverse engineered Tinder, with 3D cutaways](examples/reels/tinder-3d.jpg)](examples/reels/tinder-3d.mp4)
 
-Projects to copy: [`examples/noise-cancel`](examples/noise-cancel) (a whole 37 s reel) and
-[`examples/hook-dive`](examples/hook-dive) (a 3 s diving hook).
+A whole reel made from scratch, on how noise-cancelling headphones work ([`examples/noise-cancel`](examples/noise-cancel),
+a project to copy, with [`examples/hook-dive`](examples/hook-dive) for the 3 s diving hook):
+
+[![Noise-cancelling headphones, a 37 s 3D explainer](examples/noise-cancel/poster.jpg)](examples/noise-cancel)
 
 ## Needs
 
