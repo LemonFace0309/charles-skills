@@ -212,7 +212,9 @@ The voice names a part or a detail ("the microphones", "one packet")?
                                                          still at phone size; a part without them stays CLOSE, lit
                                                          and labelled, until you model them. Cut in when the next
                                                          named part is 1.5 s or more away; nearer parts share one
-                                                         setup, with a rack and a label each
+                                                         setup, with a rack and a label each. Never an insert on
+                                                         a thing a receipt shows full-frame within 3 s of it: it
+                                                         only repeats the receipt
 The first setup in a new place (a cabin, a room, the inside of a machine)?
                                                        → WIDE LOW: fov 50 to 70, the camera at 20 to 40% of the
                                                          space's height, the far end and the ceiling in frame
@@ -238,7 +240,9 @@ count. When a pick breaks a check, change its height first, then its size.
   35 degrees (Transition tree). At least one INSERT or CLOSE in every three setups, at most one WIDE in three (a scale
   journey excepted), never three in a row at one height. Why: in the story reels every new setup changes size or
   height, and that change is an event that needs no text.
-- A LOW setup at least every 20 s. Why: 38% of the reference frames look up; the test reel had none in 37 s.
+- A LOW setup at least every 20 s of 3D (in a reel with cutaways, count only cutaway time). A subject lying flat on a
+  surface has no underside to see: give the LOW to the next setup that stands up. Why: 38% of the reference frames
+  look up; the test reel had none in 37 s.
 - Never reuse a setup (one subject at one size and height) later in the reel: a repeated action gets a new angle.
   Why: in a blind test round a reel filmed "press play" twice with the same hand-held phone shot, 10 s apart; the judge
   read it as a replay, and the large CG hand as clay.
@@ -253,10 +257,13 @@ count. When a pick breaks a check, change its height first, then its size.
 - Why inserts stop at modelled detail: in the same test a 4 mm microphone port on a plain shell, framed as an insert,
   came out as a flat field with a glowing blob, and at 11 cm still a grey slab; the close-up it replaced was clearer.
 - Foreground: one setup in three or four looks past a broad, dark near object of the same world (a seat back, the
-  other cup, a casing edge; never a cable, a fin or a rim, whose blur renders as stepped copies), defocused at the left
-  or right edge, filling 10 to 30% of the frame, its blur clear of the subject on a 16-sample still. Never white or
-  lit, and never in the caption or bottom band (y 1320 to 1920): in the test round a white case blurred across the
-  bottom read as glare under the captions. Why: depth in one frame, and the parallax makes any move read.
+  other cup, a casing edge, a server rack's side; never a cable, a fin or a rim, whose blur renders as stepped
+  copies), defocused at the left or right edge, filling 10 to 30% of the frame, its blur clear of the subject on a
+  16-sample still. Standing on the same ground as the subject, it runs the frame's full height at that edge: that is
+  fine, as long as it stays out from behind the caption text (x 200 to 880, y 1320 to 1500). Something overhead (a
+  shelf, a lamp, a branch) can frame the top edge instead. Never white or lit: in a test round a white case blurred
+  across the bottom read as glare under the captions. Why: depth in one frame, and the parallax makes any move read;
+  four makers who read this rule as "out of the whole bottom band" could not place one anywhere.
 - Lens: a branch without a fov uses 24 to 35. Cameras start at fov 35 and `cam.frame` assumes 30: pass the same `fov`
   to `cam.frame` and to the move.
 
@@ -417,7 +424,7 @@ staircase). Never the same transition three times in a row unless the story repe
 2. A stretch lasts 2 to 8 s, with a new framing every 1 to 1.5 s, one subject per framing, literal to the words.
 3. One project per stretch on the edit's own voice: `new.mjs --audio <edit's voice track> --from <s> --to <s>`, so
    every `k.word` is right. Captions off (the edit's captions run over the clip, so keep y 1300 to 1500 free of key
-   detail); no title.
+   detail); no title. check.mjs's `hook` line is for a reel's opening: on a cutaway, ignore it.
 4. One palette for every cutaway in a reel. Match the creator's world: a dark studio world for a tech topic.
 5. Deliver the clips at the slot size plus a cut list (in and out on the edit's timeline). Cuts land on word onsets,
    and the face returns on a word onset too.
