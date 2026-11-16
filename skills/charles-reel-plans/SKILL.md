@@ -87,14 +87,15 @@ Write `research/REFERENCE.md`: each beat with its time, its words and what's on 
 
 ```
 What structure does the reference have?
-├── Items said one after another against a timer ("20 ___ in under N seconds") → "list": a fixed title and subtitle, a
-│   two-column list that is the captions, the red stopwatch, 2-4 real images under his chin per item, a sign-off question
+├── Items said one after another against a timer ("20 ___ in under N seconds") → "list" (playbook: formats/list/README.md):
+│   a fixed title and subtitle, a two-column list that is the captions, the red stopwatch, 2-4 real images under his chin
+│   per item, a sign-off question
 ├── It matches another row of formats/README.md → that format: its playbook's fixed lines and layout, as plan beats
 └── Anything else → "talk": 2-3 word captions and one asset per line in one of the layouts below. Add a TikTok-style hook
     title over the first sentence only when he asked for a hook
 ```
 
-Give each line of a talk reel a `place`. These are charles-claude-editing's layouts with reelkit's numbers (`references/plan.md` has the boxes):
+Give each line of a talk reel a `place`. These are charles-claude-editing's layouts with reelkit's numbers (`tools/reelkit/`; `references/plan.md` has the boxes):
 
 ```
 What does this line show?
@@ -166,5 +167,6 @@ That writes `build/plan.html` (it opens from disk), `build/music/` (each track c
 ## 11. Hand over
 
 - README: the brief, the files, the link, the music pick, and what's checked and what isn't. Timing is always an estimate until there's a cut.
+- Make sure the format's playbook (`formats/<format>/README.md`) lists the video as in production. Once it's posted, its row there gets the plays and what it taught (AGENTS.md).
 - In your reply, give the link first. Then say what he films (how many lines, about how long), the judgement calls he might overrule, and what isn't checked.
 - After filming, the editing session writes `edit/cuts.json` and rebuilds, and the page switches to the cut's real times.
