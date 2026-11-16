@@ -57,7 +57,9 @@ Walk these steps in order, every time. Never render a final before step 7 passes
    and look at 30 fps strips around every cut (`--strip <t> --span 0.8 --fps 30`).
 7. **Review** with the checklist at the end, at phone size. Anything that fails goes back to step 4. Note what you
    changed in `plan.md` so the next pass does not undo it. Then render 16-sample stills of every shot you changed
-   since its last stills.
+   since its last stills. Last, `bun K/render.mjs <dir> --draft --samples 16 --audit` and check.mjs on it: a 1-sample
+   draft has no depth of field, and in a test round three of four finals failed a `static` run, a 2.2 s gap or the
+   caption-band audit that their 1-sample drafts had passed.
 8. **Final.** `bun K/render.mjs <dir> --audit`, then `check.mjs` on the final and a contact sheet. A final whose audit
    or check.mjs prints a `hook`, `static`, `dark` or text-over-subject line is not done.
 
@@ -190,11 +192,14 @@ Walk it for each setup; the first yes wins.
 
 ```
 The hook, through its dive?                            → the Hook rules decide
-A teaching frame (the beat carries the mechanism)?     → square-on to the change, EYE at its height, the parts at 0.5
+A teaching frame (the beat carries the mechanism: flips, pulls, crosses), even with many things in frame?
+                                                       → square-on to the change, EYE at its height, the parts at 0.5
                                                          to 0.8 of the width; vary the setups around it, never this one
-The viewer's own action ("you open", "you tap")?       → POV, CLOSE HIGH: from the viewer's eyes behind the hand,
-                                                         looking down 30 to 45 degrees at the device, the hand under
-                                                         30% of the frame height
+The viewer's own action ("you open", "you tap")?       → POV, CLOSE HIGH: from the viewer's eyes, looking down 30 to
+                                                         45 degrees at the device; the hand only as a thumb entering
+                                                         from the frame edge, under 15% of the frame height, or the
+                                                         device on a surface with no hand. Once per reel: the same
+                                                         action later gets a new angle (a macro on the button)
 Something flat must be read (a page, a screen on a desk, a flat map; a 3D chart stays HIGH)?
                                                        → INSERT TOP-DOWN: the readable part as big as fits between
                                                          y 240 and 1300, held 1.5 to 2 s. The pose carries `up`, the
@@ -226,13 +231,17 @@ Two things acting on each other, nothing travelling between them (a key and a lo
 Otherwise                                              → EYE, one size away from the setup before
 ```
 
-Then check the run of setups, not each one alone. When a pick breaks a check, change its height first, then its size.
+Then check the run of setups, not each one alone; the hook and the teaching frames keep their own rules and do not
+count. When a pick breaks a check, change its height first, then its size.
 
 - Never two setups in a row at the same size and height; on one subject a cut changes the size 1.5 times or the angle
   35 degrees (Transition tree). At least one INSERT or CLOSE in every three setups, at most one WIDE in three (a scale
   journey excepted), never three in a row at one height. Why: in the story reels every new setup changes size or
   height, and that change is an event that needs no text.
 - A LOW setup at least every 20 s. Why: 38% of the reference frames look up; the test reel had none in 37 s.
+- Never reuse a setup (one subject at one size and height) later in the reel: a repeated action gets a new angle.
+  Why: in a blind test round a reel filmed "press play" twice with the same hand-held phone shot, 10 s apart; the judge
+  read it as a replay, and the large CG hand as clay.
 - Something fails, breaks or goes wrong: add `roll` 10 to 20 (degrees) to the pose `cam.apply` gets, or to the keys
   of a `cam.path`, for that setup only, at most once per 20 s. Why: the story reels roll only in danger (7% of
   frames, in three of the ten).
@@ -244,9 +253,10 @@ Then check the run of setups, not each one alone. When a pick breaks a check, ch
 - Why inserts stop at modelled detail: in the same test a 4 mm microphone port on a plain shell, framed as an insert,
   came out as a flat field with a glowing blob, and at 11 cm still a grey slab; the close-up it replaced was clearer.
 - Foreground: one setup in three or four looks past a broad, dark near object of the same world (a seat back, the
-  other cup, a casing edge; never a cable, a fin or a rim, whose blur renders as stepped copies), defocused at a side
-  edge, filling 10 to 30% of the frame, its blur clear of the subject on a 16-sample still. Why: depth in one frame,
-  and the parallax makes any move read.
+  other cup, a casing edge; never a cable, a fin or a rim, whose blur renders as stepped copies), defocused at the left
+  or right edge, filling 10 to 30% of the frame, its blur clear of the subject on a 16-sample still. Never white or
+  lit, and never in the caption or bottom band (y 1320 to 1920): in the test round a white case blurred across the
+  bottom read as glare under the captions. Why: depth in one frame, and the parallax makes any move read.
 - Lens: a branch without a fov uses 24 to 35. Cameras start at fov 35 and `cam.frame` assumes 30: pass the same `fov`
   to `cam.frame` and to the move.
 
