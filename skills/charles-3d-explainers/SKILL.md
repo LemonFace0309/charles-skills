@@ -196,9 +196,10 @@ A teaching frame (the beat carries the mechanism: flips, pulls, crosses), even w
                                                        → square-on to the change, EYE at its height, the parts at 0.5
                                                          to 0.8 of the width; vary the setups around it, never this one
 The viewer's own action ("you open", "you tap")?       → POV, CLOSE HIGH: from the viewer's eyes, looking down 30 to
-                                                         45 degrees at the device; the hand only as a thumb entering
-                                                         from the frame edge, under 15% of the frame height, or the
-                                                         device on a surface with no hand. Once per reel: the same
+                                                         45 degrees at a device held up, 45 to 60 at one lying flat
+                                                         (either way its screen stays within 45 degrees of square);
+                                                         the hand only as a thumb entering from the frame edge, under
+                                                         15% of the frame height, or no hand. Once per reel: the same
                                                          action later gets a new angle (a macro on the button)
 Something flat must be read (a page, a screen on a desk, a flat map; a 3D chart stays HIGH)?
                                                        → INSERT TOP-DOWN: the readable part as big as fits between
@@ -233,6 +234,23 @@ Two things acting on each other, nothing travelling between them (a key and a lo
 Otherwise                                              → EYE, one size away from the setup before
 ```
 
+Then check each setup on a 16-sample still at phone size. The tree picks where the camera stands; this check makes
+sure the viewer can still see what is going on:
+
+1. The face that carries the meaning (a screen, a card's face, a dial, the side with the numbers) is within 45
+   degrees of square to the lens. Past 60 it turns into a sliver.
+2. The subject's outline (a phone's rounded rectangle, a card's corners, a tower's top) is whole, or one side is
+   cropped by at most a quarter of it. A tighter crop shows a texture, not a thing.
+3. Nothing covers more than a tenth of the subject: no label, plate, icon, line or other prop on it. A label sits
+   beside its anchor, 30 to 150 px off.
+4. Nothing else in frame is bigger than the subject, except a dark, defocused foreground at the left or right edge.
+
+When a still fails, keep the setup's height and move the camera around the subject (change its azimuth) until the
+face reads and nothing covers it; if that cannot work, back off one size. Why: in a remake made with this tree, three
+setups followed it into frames nobody could read: a phone seen edge-on behind its own like and share buttons, a
+first-person crop with a plate over the video the line was about, and a low shot over a nightstand where a box
+filled 40% of the frame and the unplugged phone lay flat at a grazing angle.
+
 Then check the run of setups, not each one alone; the hook and the teaching frames keep their own rules and do not
 count. When a pick breaks a check, change its height first, then its size.
 
@@ -250,10 +268,10 @@ count. When a pick breaks a check, change its height first, then its size.
   of a `cam.path`, for that setup only, at most once per 20 s. Why: the story reels roll only in danger (7% of
   frames, in three of the ten).
 - Make the angle visible. A low or high angle shows a floor, a ceiling or a near object at a slant, with its verticals
-  converging. A flat thing (a panel, a screen, a wall) within 30 degrees of square reads as a diagram from any height:
-  see it 45 to 60 degrees off square with its surroundings in frame, unless it must be read (a top-down insert, a POV
-  shot, a device screen) or is a teaching frame. Why: in the test reel a call panel 30 degrees off square read as a
-  flat icon; at about 50, with the bins and its speaker grille around it, it read as a panel in a cabin.
+  converging. A flat thing that is context (a panel, a wall, a table top) within 30 degrees of square reads as a
+  diagram from any height: see it 45 to 60 degrees off square with its surroundings in frame. A face that carries the
+  meaning follows check 1 above instead. Why: in the test reel a call panel 30 degrees off square read as a flat icon;
+  at about 50, with the bins and its speaker grille around it, it read as a panel in a cabin.
 - Why inserts stop at modelled detail: in the same test a 4 mm microphone port on a plain shell, framed as an insert,
   came out as a flat field with a glowing blob, and at 11 cm still a grey slab; the close-up it replaced was clearer.
 - Foreground: one setup in three or four looks past a broad, dark near object of the same world (a seat back, the
@@ -293,9 +311,20 @@ New angle on the same subject, in a fast run?   → whip (transition tree)
 
 Always: ease in and out (except the hook's first move), `drift` 0.4 to 0.6 on every shot so no frame freezes, the
 subject's silhouette (a CLOSE or INSERT: its focal detail) inside x 200 to 880, y 560 to 1280 and never in
-the caption band (y 1320 to 1500), and cut while the camera moves. Why: a locked-off camera reads as a slideshow, a
-cut from a moving camera into a moving camera reads as one flow, and a subject behind the caption is unreadable twice
-over.
+the caption band (y 1320 to 1500). Why: a locked-off camera reads as a slideshow, and a subject behind the caption is
+unreadable twice over.
+
+Land the move before a hard cut. An eased move (a crane, an orbit, a push to a framing) reaches its end pose by
+`k.out - 0.2`, so the last frames only drift. `k.out` is when the shot is last seen: its end, or a cutaway's out point
+(`cutOut`) when that comes first. Key a move to `k.dur + 0.3` only when a whip or a zoom follows, which carries it,
+or when the next shot keeps moving the same way at least half as fast; in a cutaway the last shot's `k.dur` runs on
+into the 0.5 s handle after the out point. A constant slow orbit (a linear ramp) is ambient and may run through the
+cut. check.mjs warns when a cut or the out point lands while the camera still travels; it measures the camera alone,
+so rings rippling or a popup slamming in at the cut never count. Why: a cut from a drift, or from a move into a move
+that continues it, reads as one flow; a cut in the tail of a move that is still landing reads as a shot cut off
+before the camera arrived (in the remade Instagram reel, a crane over the carousel still at a fifth of its top speed,
+cut to a still square-on frame; across both remade reels, 8 of 15 cutaways keyed their last move to `k.dur + 0.3`
+and cut back to the face with the camera at more than half its top speed).
 
 ## Transition tree
 
@@ -422,9 +451,12 @@ staircase). Never the same transition three times in a row unless the story repe
    screen for at least a third of the runtime. Why: the face carries the connection; the cutaways carry the
    explanation.
 2. A stretch lasts 2 to 8 s, with a new framing every 1 to 1.5 s, one subject per framing, literal to the words.
-3. One project per stretch on the edit's own voice: `new.mjs --audio <edit's voice track> --from <s> --to <s>`, so
-   every `k.word` is right. Captions off (the edit's captions run over the clip, so keep y 1300 to 1500 free of key
-   detail); no title. check.mjs's `hook` line is for a reel's opening: on a cutaway, ignore it.
+3. One project per stretch on the edit's own voice: `new.mjs --audio <edit's voice track> --from <s> --to <s>
+   --cut-out <out point>`, so every `k.word` is right. `--cut-out` writes the out point as project.json `cutOut` in
+   project time (on an existing project, set it by hand: the out point minus `--from`); it sets the last shot's
+   `k.out`, so its move lands before the face returns, and check.mjs tests the camera there. Captions off (the edit's
+   captions run over the clip, so keep y 1300 to 1500 free of key detail); no title. check.mjs's `hook` line is for a
+   reel's opening: on a cutaway, ignore it.
 4. One palette for every cutaway in a reel. Match the creator's world: a dark studio world for a tech topic.
 5. Deliver the clips at the slot size plus a cut list (in and out on the edit's timeline). Cuts land on word onsets,
    and the face returns on a word onset too.
@@ -483,8 +515,8 @@ A real brand, product UI or logo?                              → the real logo
    most; text that must be read is 40 px or more, on device screens too; every number on screen agrees.
 7. Frame 0 is the finished beauty shot with its headline and caption, the camera is moving, the dive starts by
    2.0 s, and the end returns to the opening image (or holds the payoff when the voice ends mid-sentence).
-8. 30 fps strips around every cut and transition: no pops, the new subject appears where the eye already was, and
-   no crossfade double-exposes one subject.
+8. 30 fps strips around every cut and transition: no pops, the new subject appears where the eye already was, no
+   crossfade double-exposes one subject, and no move is cut off while it is still landing (check.mjs warns).
 9. At phone size (390 px wide), does it look like an expensive render, or like a three.js demo? Fix everything that
    fails before calling it done.
 10. Every explanation beat is in the running example's world: no void shot over 4 s, no field filling the frame

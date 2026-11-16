@@ -172,6 +172,34 @@ export class Engine {
     return D;
   }
 
+  // How far the camera alone moved the picture since dt ago, in px at 1080 wide: the largest screen path of ten world
+  // points fixed at the earlier pose, five at the subject's depth (the point cam.apply looked at, else the focus
+  // distance: a rack focus must not change the reading) and five 50 times further (the background), so a pan, an
+  // orbit, a push and a zoom all count and moving props never do. render.mjs logs it for every frame and check.mjs
+  // reads it to tell a camera still travelling at a cut from content in motion (rings rippling, a popup slamming in).
+  // Call it with the scene at lt; it leaves the scene at lt.
+  cameraPx(S, lt, dt) {
+    const cam = S.camera;
+    if (!cam.isPerspectiveCamera) return 0;
+    S.update(lt - dt, lt - dt); cam.updateMatrixWorld(true); cam.updateProjectionMatrix();
+    const o = cam.getWorldPosition(new THREE.Vector3()), fwd = cam.getWorldDirection(new THREE.Vector3()), pts = [];
+    const L = cam.userData.look, dL = L ? L.clone().sub(o).dot(fwd) : 0, f = dL > 1e-3 ? dL : this.lensOf(S, lt - dt).f;
+    for (const [x, y] of [[0, 0], [-0.8, -0.8], [0.8, -0.8], [-0.8, 0.8], [0.8, 0.8]]) {
+      const d = new THREE.Vector3(x, y, 0.5).unproject(cam).sub(o).normalize(), along = Math.max(1e-3, d.dot(fwd));
+      pts.push(o.clone().addScaledVector(d, f / along), o.clone().addScaledVector(d, (50 * f) / along));
+    }
+    const a = pts.map((p) => p.clone().project(cam));
+    S.update(lt, lt); cam.updateMatrixWorld(true); cam.updateProjectionMatrix();
+    const o2 = cam.getWorldPosition(new THREE.Vector3()), fwd2 = cam.getWorldDirection(new THREE.Vector3());
+    let D = 0;
+    pts.forEach((p, i) => {
+      if (p.clone().sub(o2).dot(fwd2) <= 0) return; // behind the camera now
+      const q = p.clone().project(cam);
+      D = Math.max(D, Math.hypot((q.x - a[i].x) * 0.5 * this.W, (q.y - a[i].y) * 0.5 * this.H));
+    });
+    return (D * 1080) / this.W;
+  }
+
   // The additive, depth-less glows alone (no backdrop, nothing opaque), at half size, for the bokeh fill's glow guard.
   // An object opts out with userData.noGlowMask; camera-locked quads (renderOrder <= -100) never count.
   renderGlow(S, cam) {

@@ -159,6 +159,9 @@ async function boot() {
       THREE, gsap, U, ...U, look, glow, fx, cam, props, mat: look.mat,
       W, H, aspect: W / H, fps, pal, scene, camera, tl,
       start: S.start, end: S.end, dur: S.end - S.start, id: S.def.id, params: S.def.params || {},
+      // shot time when the shot is last seen: its end, or a cutaway's out point (project.json cutOut) when that comes first
+      // (the handles after it never show). A move that ends on a hard cut lands by k.out - 0.2
+      out: Math.min(S.end, Number.isFinite(project.cutOut) ? project.cutOut : Infinity) - S.start,
       renderer: engine.renderer,
       get lens() { return S.lens; }, set lens(v) { S.lens = v; },
       get post() { return S.post; }, set post(v) { S.post = v; },
@@ -309,6 +312,7 @@ async function boot() {
   // per shot: the largest screen motion while the shutter was open (px) and the sub-frames the motion floor asked for
   window.__motion = () => Object.fromEntries(shots.filter((S) => S.maxMotionPx > 0).map((S) => [S.def.id, { px: Math.round(S.maxMotionPx), n: S.maxMotionN || 0 }]));
   window.__info = { duration, fps, W, H, w, h, scale, samples, shots: defs.map((d) => ({ id: d.id, start: d.start, end: d.end, in: d.in, tone: d.tone ?? null })), words: words.length };
+  const camLog = (window.__camLog = []);
   window.__seek = async (t, frameIndex = Math.round(t * fps)) => {
     const act = activeAt(t);
     let fade = null; // fadeIn / fadeOut: the picture and the type fade together
@@ -322,6 +326,8 @@ async function boot() {
       return errors.length;
     }
     for (const a of act) await ensure(a.S);
+    // the camera's own speed this frame, per active shot (render.mjs writes it to the log; check.mjs reads it)
+    for (const a of act) camLog.push({ i: frameIndex, shot: a.S.def.id, px: +engine.cameraPx(a.S, t - a.S.start, 1 / fps).toFixed(2) });
     for (const a of act) for (const sc of a.S.screens) await sc.render(t - a.S.start);
     let tex, P;
     if (act.length === 1) {

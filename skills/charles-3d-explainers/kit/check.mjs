@@ -9,7 +9,10 @@
                object entering), a calm part of the frame starts moving, a cut or a transition. Reported per second,
                with lulls (more than 1.5 s with nothing new)
      cuts      hard cuts (the whole picture changes in one frame, or in a dark or plain world its correlation with the
-               frame before drops far below its neighbours'), the shot list, median shot length
+               frame before drops far below its neighbours'), the shot list, median shot length; WARNING for a planned
+               hard cut that lands while the camera still travels into a calmer shot (cut off before it arrived),
+               and for a cutaway's out point (project.json `cutOut`, project time); measured on the camera alone
+               (<video>.log.json `camera`), or on the picture's motion when the render predates that log
      flashes   single frames that differ from the frames on both sides (a flash, a dark frame, a stray frame)
      pops      something that appears, vanishes or jumps in one frame without easing
      hitches   a repeated frame in the middle of motion (a stutter)
@@ -69,6 +72,8 @@ export const LIMITS = {
   calm: 1.2,         // ...after staying below this for 0.3 s
   pop: 10,           // a region that changes this much in one frame, 4x more than the frames around it, popped
   cutFrac: 0.3,      // a hard cut changes at least this fraction of the pixels in one frame
+  cutOffMove: 2.5,   // motion (mean grey change a frame, outside the caption band) at a cut that reads as a camera still travelling (a drift is under 1)
+  cutOffCam: 3,      // the camera's own speed at a cut (px a frame at 1080 wide, render.mjs `camera`), above the shot's slowest, that reads as still travelling; a drift is under 1
 };
 
 function median(a) { if (!a.length) return 0; const s = Float64Array.from(a).sort(); const m = s.length >> 1; return s.length % 2 ? s[m] : (s[m - 1] + s[m]) / 2; }
@@ -320,6 +325,50 @@ export async function analyse(videoFile, o = {}) {
   const lens = seen.length ? seen.map((s) => s.end - s.start) : bounds.slice(1).map((b, k) => b - bounds[k]).filter((x) => x > 0.05);
   const planned = seen.map((s) => ({ id: s.id, start: r2(s.start), end: r2(s.end), dur: r2(s.end - s.start), in: s.in.type, inDur: s.in.dur, detected: s === shots[0] || s.start <= T0 + 1e-6 ? null : s.in.type === 'cut' ? cuts.some((c) => Math.abs(c.t - s.start) <= 1.5 / fps) : null }));
   const unplanned = shots.length ? cuts.filter((c) => !shots.some((s, k) => k > 0 && Math.abs(c.t - s.start) <= Math.max(1.5 / fps, s.in.dur / 2 + 1 / fps))) : [];
+  // cut-off moves: a planned hard cut that lands while the outgoing camera move is still travelling (its last three
+  // frames still move at least the floor, and at least 15% of the top speed of its last 1.2 s) into a shot at least
+  // twice as calm: it reads as a shot cut off before the camera arrived. A whip or zoom carries a move on purpose.
+  // Measured on the camera alone when the render logged it (render.mjs `camera`, px a frame at 1080 wide: rings
+  // rippling or a popup slamming in are content, not a move), and then above the shot's own slowest speed: a constant
+  // slow orbit is ambient (it never arrives anywhere), an eased move on top of it is the one that lands. Without the
+  // log, on the picture's motion outside the caption band.
+  let lg = null;
+  try { lg = JSON.parse(fs.readFileSync(path.join(path.dirname(videoFile), path.basename(videoFile, path.extname(videoFile)) + '.log.json'), 'utf8')); } catch {}
+  const camOf = new Map(), f0 = Math.round(T0 * fps);
+  if (Array.isArray(lg?.camera)) for (const c of lg.camera) { if (!camOf.has(c.shot)) camOf.set(c.shot, new Map()); camOf.get(c.shot).set(c.i, c.px); }
+  const byCam = camOf.size > 0;
+  const speed = (id, i) => (byCam ? camOf.get(id)?.get(f0 + i) : DM[i]);
+  const mean = (id, a, b) => { let s = 0, n = 0; for (let i = a; i <= b; i++) { const v = speed(id, i); if (v != null) { s += v; n++; } } return n ? s / n : 0; };
+  const top = (id, a, b) => { let m = 0; for (let i = Math.max(1, a); i <= b; i++) { const v = speed(id, i); if (v != null) m = Math.max(m, v); } return m; };
+  const floor = byCam ? LIMITS.cutOffCam : LIMITS.cutOffMove, back = Math.round(1.2 * fps);
+  const base = (id) => { if (!byCam) return 0; let m = Infinity; for (const v of camOf.get(id)?.values() || []) m = Math.min(m, v); return Number.isFinite(m) ? m : 0; };
+  const landing = (out, peak, b) => out - b >= floor && out - b >= 0.15 * (peak - b);
+  const cutOff = [], cutMotion = [];
+  for (const s of seen) {
+    if (s === shots[0] || s.in.type !== 'cut' || s.start <= T0 + 1e-6) continue;
+    const i0 = Math.round((s.start - T0) * fps);
+    if (i0 < 6 || i0 + 9 >= N) continue;
+    const prev = shots[shots.indexOf(s) - 1];
+    let ic = i0;
+    if (!byCam) for (let i = i0 - 2; i <= i0 + 2; i++) if (DM[i] > DM[ic]) ic = i; // the cut's own frame: the biggest change near the planned start
+    const out = mean(prev.id, ic - 3, ic - 1), peak = top(prev.id, ic - 1 - back, ic - 1), into = byCam ? mean(s.id, ic, ic + 5) : mean(null, ic + 1, ic + 6), b = base(prev.id);
+    const row = { t: r2(s.start), id: s.id, from: prev.id, out: r2(out), base: r2(b), peak: r2(peak), into: r2(into), by: byCam ? 'camera' : 'pixels' };
+    cutMotion.push(row);
+    if (landing(out, peak, b) && into < 0.5 * out) cutOff.push(row);
+  }
+  // a cutaway's out point (project.json "cutOut": the moment, in project time, where the edit cuts back to the face):
+  // the face after it is calm, so a camera still travelling there reads as cut off too; the handles past it don't count
+  const cutOutT = proj?.project.cutOut;
+  if (Number.isFinite(cutOutT) && cutOutT - 0.3 > T0 && cutOutT < T1) {
+    const ic = Math.round((cutOutT - T0) * fps), last = [...shots].reverse().find((x) => x.start <= cutOutT - 1 / fps) || shots[0];
+    if (ic >= 4 && ic <= N) {
+      const out = mean(last?.id, ic - 3, ic - 1), peak = top(last?.id, ic - 1 - back, ic - 1), b = base(last?.id);
+      const row = { t: r2(cutOutT), id: null, from: last?.id ?? null, out: r2(out), base: r2(b), peak: r2(peak), into: null, by: byCam ? 'camera' : 'pixels' };
+      cutMotion.push(row);
+      if (landing(out, peak, b)) cutOff.push(row);
+    }
+  }
+  if (process.env.CHECK_CUT_MOTION) for (const c of cutMotion) console.error(`cut-motion ${c.t} ${c.from}->${c.id ?? 'cutOut'} out ${c.out} base ${c.base} peak ${c.peak} into ${c.into} (${c.by})`);
 
   // black and blown-out spans, with fades noted
   const fadeIn = proj?.project.fadeIn || 0, fadeOut = proj?.project.fadeOut || 0;
@@ -391,7 +440,7 @@ export async function analyse(videoFile, o = {}) {
   // k.word as log.json `words`; a line that starts drawing 0.28 s before its word is that word's beat) or inside a
   // planned transition is the beat, not a glitch. Without a log: one on a word onset (0.12 s before to 0.05 s after).
   let timed = null, renderSamples = null;
-  try { const lg = JSON.parse(fs.readFileSync(path.join(path.dirname(videoFile), path.basename(videoFile, path.extname(videoFile)) + '.log.json'), 'utf8')); renderSamples = Number.isFinite(lg.samples) ? lg.samples : null; if (Array.isArray(lg.words) && lg.words.length) timed = lg.words.filter((x) => Number.isFinite(x.t)); } catch {}
+  if (lg) { renderSamples = Number.isFinite(lg.samples) ? lg.samples : null; if (Array.isArray(lg.words) && lg.words.length) timed = lg.words.filter((x) => Number.isFinite(x.t)); }
   const inTransition = (tt) => shots.find((s, k) => k > 0 && s.in.dur > 0 && Math.abs(tt - s.start) <= s.in.dur / 2 + 1 / fps);
   const planOf = (tt) => {
     if (timed) {
@@ -416,7 +465,7 @@ export async function analyse(videoFile, o = {}) {
       flashes: flashes.filter((f) => !f.planned).length, pops: popsM.filter((p) => p.kind !== 'jump inside motion' && !p.planned).length, jumps: popsM.filter((p) => p.kind === 'jump inside motion' && !p.planned).length, planned: [...flashes, ...popsM].filter((x) => x.planned).length, hitches: hitches.length, blackFrames: black.reduce((a, b) => a + b.frames, 0), blownFrames: blown.reduce((a, b) => a + b.frames, 0),
       hook: hook ? hook.motion : null, staticRuns: staticOut.runs.length, darkFrames: dark.frames.length, flicker: captions ? captions.flicker.length : null, dangling: captions ? captions.dangling.length : null,
     },
-    renderSamples, hook, static: staticOut, perSecond, dark, plannedFrom, stale, events: evT, lulls, eventsPer3s: perWindow, cuts, unplannedCuts: unplanned, shots: planned, shotLengths: lens.map(r2), flashes, pops: popsM, hitches, black, blown, captions,
+    renderSamples, cutOff, hook, static: staticOut, perSecond, dark, plannedFrom, stale, events: evT, lulls, eventsPer3s: perWindow, cuts, unplannedCuts: unplanned, shots: planned, shotLengths: lens.map(r2), flashes, pops: popsM, hitches, black, blown, captions,
     series: { luma: Array.from(Y, r2), change: Array.from(D1, r2), motion: Array.from(DM, r2), moved: Array.from(moveW, r2) },
   };
 }
@@ -438,6 +487,13 @@ export function report(r) {
   if (r.unplannedCuts.length) L.push(`  WARNING   hard cut${r.unplannedCuts.length > 1 ? 's' : ''} inside a shot (a camera jump or a glitch?): ${r.unplannedCuts.map((c) => fmt(c.t)).join(', ')} s`);
   const missed = r.shots.filter((x) => x.detected === false);
   for (const x of missed) L.push(`  WARNING   cut at ${fmt(x.start)} s (into ${x.id}) changes too little: change the size 1.5x or the angle 35 degrees, or keep one move`);
+  for (const c of r.cutOff || []) {
+    const share = Math.round((100 * (c.out - (c.base || 0))) / Math.max(c.peak - (c.base || 0), 1e-6));
+    const how = c.by === 'camera' ? `${c.from}'s camera still moves ${c.out} px a frame${c.base >= 0.5 ? ` (${r2(c.out - c.base)} above its steady ${c.base})` : ''}, ${share}% of its top speed` : `motion ${c.out}, ${share}% of its top speed; measured on the whole picture, so a moving prop counts too: re-render with this kit to measure the camera alone`;
+    L.push(c.id == null
+      ? `  WARNING   the cutaway's out point (cutOut ${fmt(c.t)} s) lands while the camera still travels (${how}): the face after it will read it as cut off; land the last move 0.2 s before cutOut`
+      : `  WARNING   cut at ${fmt(c.t)} s (into ${c.id}) lands while the camera still travels (${how}) into a calmer shot (${c.into}): it reads as cut off before the camera arrived; land the move 0.2 s before the cut, or carry it through a whip`);
+  }
   const unpl = r.flashes.filter((f) => !f.planned);
   L.push(`  flashes   ${unpl.length ? unpl.map((f) => `${fmt(f.t)} s ${f.kind}`).join('; ') : 'none'}`);
   const list = (ps) => ps.slice(0, 8).map((p) => `${fmt(p.t)} s (${p.where})`).join(', ') + (ps.length > 8 ? ` and ${ps.length - 8} more` : '');

@@ -21,8 +21,11 @@ const V = (a) => (a && a.isVector3 ? a.clone() : new THREE.Vector3(...a));
 export function path(keys, { ease = 'inOutSine', flow = false, curve = 'centripetal', tension = 0.5 } = {}) {
   const anyUp = keys.some((k) => k.up != null);
   const ks = keys.map((k) => ({ ...k, pos: V(k.pos), look: V(k.look || [0, 0, 0]), up: anyUp ? V(k.up || [0, 1, 0]).normalize() : null }));
-  const posC = ks.length > 1 ? new THREE.CatmullRomCurve3(ks.map((k) => k.pos), false, curve, tension) : null;
-  const lookC = ks.length > 1 ? new THREE.CatmullRomCurve3(ks.map((k) => k.look), false, curve, tension) : null;
+  // two keys are a straight line: three.js's CatmullRomCurve3 builds both made-up end points of a two-point curve in one
+  // shared vector, so its middle came out as 2u^2 - u^3 (37% of the way at half time, then a rush 1.3x too fast)
+  const curveOf = (pts) => (pts.length === 2 ? new THREE.LineCurve3(pts[0], pts[1]) : new THREE.CatmullRomCurve3(pts, false, curve, tension));
+  const posC = ks.length > 1 ? curveOf(ks.map((k) => k.pos)) : null;
+  const lookC = ks.length > 1 ? curveOf(ks.map((k) => k.look)) : null;
   const n = ks.length - 1;
   const E = easeFn(ease), T = ks.map((k) => k.t);
   // flow: key time -> arc-length fraction of a spline (null when the spline has no length: it stays at its first key)
@@ -151,6 +154,7 @@ export function apply(camera, pose, { drift = 0.6, t = 0, seed = 0 } = {}) {
     camera.position.x += noise1(t * 0.23, seed + 1) * s; camera.position.y += noise1(t * 0.19, seed + 2) * s * 0.7; camera.position.z += noise1(t * 0.17, seed + 3) * s * 0.5;
   }
   camera.lookAt(pose.look);
+  (camera.userData.look ||= new THREE.Vector3()).copy(pose.look); // core.js cameraPx measures the move at the subject's depth
   if (pose.roll || drift > 0) camera.rotateOnAxis(_z, THREE.MathUtils.degToRad((pose.roll || 0) + (drift > 0 ? noise1(t * 0.13, seed + 4) * drift * 0.25 : 0)));
   if (pose.fov && camera.fov !== pose.fov) { camera.fov = pose.fov; camera.updateProjectionMatrix(); }
   return camera;

@@ -4,6 +4,7 @@
      bun <kit>/new.mjs <project-dir> --audio <file.(m4a|mp3|wav|mp4|mov)> [--palette night-amber] [--from s --to s]
      bun <kit>/new.mjs <project-dir> --audio take.mov --words take.words.json     reuse a transcript instead of Scribe
      bun <kit>/new.mjs <project-dir> --audio vo.m4a --script script.txt          captions read exactly as written
+     bun <kit>/new.mjs <project-dir> --audio edit.m4a --from 7.47 --to 12.93 --cut-out 12.43    a cutaway with handles
 
    Writes into <project-dir>:
      audio.m4a      the voiceover (cut to --from/--to), starting at 0
@@ -17,7 +18,10 @@
    project's audio, words and duration but keeps its shots, captions and other settings, and writes the new beat table
    to plan.new.md so a filled-in plan.md is never lost. --script puts the script's exact words (digits, names,
    punctuation) onto the recogniser's timings; the raw transcript is kept as words.scribe.json. --rescribe transcribes
-   again instead of using the cached transcript. --fps, --samples and --lang change the defaults. */
+   again instead of using the cached transcript. --fps, --samples and --lang change the defaults. --cut-out is a
+   cutaway's out point in the source file's time (where the edit cuts back to the face; --to runs on past it as a
+   handle): it is written as project.json `cutOut` in project time, which sets the last shot's k.out and check.mjs's
+   out-point test. */
 import fs from 'node:fs';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
@@ -29,7 +33,7 @@ const FF = fs.existsSync('/opt/homebrew/bin/ffmpeg') ? '/opt/homebrew/bin/ffmpeg
 const FP = fs.existsSync('/opt/homebrew/bin/ffprobe') ? '/opt/homebrew/bin/ffprobe' : 'ffprobe';
 const VIDEO_EXT = new Set(['.mp4', '.mov', '.m4v', '.webm', '.mkv']);
 
-const { pos, opt } = args(process.argv.slice(2), ['audio', 'palette', 'from', 'to', 'words', 'script', 'fps', 'samples', 'lang']);
+const { pos, opt } = args(process.argv.slice(2), ['audio', 'palette', 'from', 'to', 'words', 'script', 'fps', 'samples', 'lang', 'cut-out']);
 if (!pos[0] || !opt.audio) {
   console.error('usage: bun new.mjs <project-dir> --audio <file> [--palette night-amber] [--from s --to s] [--words words.json] [--force]');
   process.exit(1);
@@ -148,8 +152,10 @@ const fresh = {
   shots: [],
   source: { file: SRC, from: +from.toFixed(3), to: +(Number.isFinite(to) ? to : src.duration).toFixed(3) },
 };
+const cutOutAt = secs(opt['cut-out']);
+if (Number.isFinite(cutOutAt)) fresh.cutOut = +(cutOutAt - from).toFixed(3);
 // redoing an existing project: new audio, words, duration and source; everything else (shots, captions...) is kept
-const project = existing ? { ...fresh, ...existing, fps, palette, audio: fresh.audio, words: fresh.words, duration: fresh.duration, source: fresh.source, ...(opt.samples ? { samples: fresh.samples } : {}) } : fresh;
+const project = existing ? { ...fresh, ...existing, fps, palette, audio: fresh.audio, words: fresh.words, duration: fresh.duration, source: fresh.source, ...(opt.samples ? { samples: fresh.samples } : {}), ...(fresh.cutOut != null ? { cutOut: fresh.cutOut } : {}) } : fresh;
 // one key per line, values on one line, like the example projects
 const line = (v) => JSON.stringify(v, null, 1).replace(/\n\s*/g, ' ').replace(/\[ /g, '[').replace(/ \]/g, ']');
 const value = (v) => (Array.isArray(v) && v.length && v.every((x) => x && typeof x === 'object') ? `[\n${v.map((x) => `    ${line(x)}`).join(',\n')}\n  ]` : line(v));

@@ -255,14 +255,16 @@ fs.renameSync(part, out);
 const errs = await page.evaluate(() => window.__errors);
 const used = await page.evaluate(() => window.__samples?.() || {}), motion = await page.evaluate(() => window.__motion?.() || {});
 const wordLog = await page.evaluate(() => window.__wordLog || []);
+const camLog = await page.evaluate(() => window.__camLog || []);
 await browser.close(); cleanup();
 const rl = raisedLine(used, motion);
 if (rl) console.log(rl);
 if (errs.length || logs.length) { console.log('page errors/warnings:'); for (const e of [...new Set([...errs, ...logs])].slice(0, 40)) console.log('  ' + e); }
 if (audits.length) { console.log('layout audit:'); for (const a of [...new Set(audits)]) console.log('  ' + a); }
 // words: every word timing the shots and globals.js asked for ({ shot, phrase, nth, t, text }); check.mjs lists a pop
-// within 0.25 s of one of them as planned
-fs.writeFileSync(path.join(outDir, name + '.log.json'), JSON.stringify({ out, frames, samples, shotSamples: used, shotMotion: motion, scale, fps, from, to, seconds: (Date.now() - tStart) / 1000, errors: errs, logs, audits, words: wordLog }, null, 1));
+// within 0.25 s of one of them as planned. camera: the camera's own speed per frame and shot ({ i, shot, px }: px at
+// 1080 wide since the frame before, engine cameraPx); check.mjs tells a move cut off at a cut by it
+fs.writeFileSync(path.join(outDir, name + '.log.json'), JSON.stringify({ out, frames, samples, shotSamples: used, shotMotion: motion, scale, fps, from, to, seconds: (Date.now() - tStart) / 1000, errors: errs, logs, audits, words: wordLog, camera: camLog }, null, 1));
 if (isFinal && opt.audit && audits.length) {
   console.log(`FINAL HAS AUDIT ISSUES (${new Set(audits).size}): ${path.relative(process.cwd(), out)} is written, but fix the lines above and render again`);
   process.exit(3);
