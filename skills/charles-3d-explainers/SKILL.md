@@ -329,6 +329,10 @@ staircase). Never the same transition three times in a row unless the story repe
 4. One palette for every cutaway in a reel. Match the creator's world: a dark studio world for a tech topic.
 5. Deliver the clips at the slot size plus a cut list (in and out on the edit's timeline). Cuts land on word onsets,
    and the face returns on a word onset too.
+6. Keep his receipts: a screenshot, code or text he quotes stays on screen while he reads it; the 3D takes over after.
+   And on the face, a line that names a change over time ("16 years of retention optimization", "it used to...")
+   shows the change happening: the old thing whips out and the new one whips in on the words, with a whoosh, never
+   the old one alone as a static sticker. Why: the change is the point, and motion is what holds a talking-head beat.
 
 # Building shots (kit rules)
 
