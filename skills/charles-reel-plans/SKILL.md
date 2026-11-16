@@ -45,7 +45,9 @@ it builds and prints what fails.
   above or below it, never over it ✓. Censor words TikTok blocks, like s*****e, in captions and the hook ✓. A list reel's list
   is its captions, so only its sign-off gets word captions.
 - **Hook title:** only when he asks for one. Two lines at most ✓ (three only when a CAPS word gets its own), up for his
-  first sentence, 3-5 s ✓. When the reel opens on a split, it sits on the seam.
+  first sentence, 3-5 s ✓. When the reel opens on a split, it sits on the seam. It raises the stakes and opens a question the
+  reel answers. A label for the topic doesn't do that ("Both of these are 50% lightness" was "boring"). When nothing does,
+  leave the hook off, or use "<Topic> for dummies" ("if u can't just don't have a text hook", 16 Nov 2026).
 - **Assets:** the real thing, never stock or AI-made, unless AI art is the subject. Sticker-sized so he stays on screen,
   except tweets, recordings and code, which have to be big enough to read. Never over his eyes or the captions, always
   whole, sharp at the size it's drawn ✓, with no black bars, rounded corners, pop-ins or emoji tiles. Web pages in dark
@@ -151,7 +153,7 @@ Split a sentence into beats at its phrase breaks, so that no still stays up past
 
 - Put the caption in the README's Delivery section, ready to paste, and in your reply. It never goes in SCRIPT.md.
 - His captions are short: a hook line or a question, a credit line, then 4-5 hashtags ("Let me know if you want a part 2! Shoutout @ayoships for the format"). No em dashes, and no full stop at the end of a line.
-- Credit the idea and the format by name and handle, with the platform when it isn't Instagram ("S/o Damir Sokolovsky (@heydamir on X) for the idea"). Search for an Instagram account first and tag it if there is one.
+- Every caption option (`caption`, `caption_alt` and each of `options`) shouts out the original authors by name and handle: whoever had the idea, made the format, or made what the reel teaches from, with the platform when it isn't Instagram ("S/o Damir Sokolovsky (@heydamir on X) for the idea"). Search for an Instagram account first and tag it if there is one. Why: "Make sure in the captions of each of these videos we also s/o original authors" (16 Nov 2026). A shorter alternative that drops the credit gets posted without it.
 - Ask a different question from the sign-off, so the comments get two ways in. Add a shorter alternative, and an optional first comment crediting the artists whose work is on screen.
 - Never reuse a caption line or a hashtag set he's already posted (`repost/reels.json` has them).
 
