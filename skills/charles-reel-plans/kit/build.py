@@ -19,6 +19,7 @@ charles-claude-editing's rules.
 """
 import base64
 import copy
+import hashlib
 import html
 import json
 import math
@@ -634,7 +635,9 @@ def webp(src, out, longest, quality):
 def write_site(data, vd):
     """build/site/: index.html and media/ (the reel's images as WebP at the size the player shows, videos as small MP4s,
     the music clip, the clips' stills, and each collage image large and as a thumbnail), with files.json listing the
-    media for the publish."""
+    media for the publish. Clip encodes are kept in build/encoded/ by source and settings, so a rebuild copies the same
+    bytes instead of encoding again: VP9's WebM and VideoToolbox's HEVC come out different every run, which made
+    unchanged clips look changed and every rebuild slow."""
     site = vd / "build/site"
     if site.exists():
         shutil.rmtree(site)
@@ -642,6 +645,19 @@ def write_site(data, vd):
     d = copy.deepcopy(data)
     d["site"] = True
     done = {}
+
+    def encoded(src, out, args):
+        """ffmpeg `args` (with OUT where the output goes) run once per source file, its mtime and size, and the args."""
+        st = src.stat()
+        key = hashlib.sha1(json.dumps([str(src), st.st_mtime_ns, st.st_size, args]).encode()).hexdigest()[:20]
+        kept = vd / "build/encoded" / f"{key}{out.suffix}"
+        if not kept.exists():
+            kept.parent.mkdir(parents=True, exist_ok=True)
+            tmp = kept.with_name(f"{key}.part{out.suffix}")
+            subprocess.run([str(tmp) if a == "OUT" else a for a in args], check=True)
+            tmp.replace(kept)
+        out.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(kept, out)
 
     def put(page_src, size, quality, kind):
         """page_src is how the local page reaches the file (../<path in the video folder>)."""
@@ -652,10 +668,9 @@ def write_site(data, vd):
         rel = Path(page_src[3:]) if page_src.startswith("../") else Path(src.name)
         if src.suffix.lower() in VID:
             out = media / kind / rel.with_suffix(".mp4")
-            out.parent.mkdir(parents=True, exist_ok=True)
-            subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", str(src), "-an", "-vf", "scale='min(720,iw)':-2",
-                            "-c:v", "libx264", "-crf", "28", "-preset", "veryfast", "-pix_fmt", "yuv420p", "-movflags", "+faststart",
-                            str(out)], check=True)
+            encoded(src, out, ["ffmpeg", "-v", "error", "-y", "-i", str(src), "-an", "-vf", "scale='min(720,iw)':-2",
+                               "-c:v", "libx264", "-crf", "28", "-preset", "veryfast", "-pix_fmt", "yuv420p",
+                               "-movflags", "+faststart", "OUT"])
         elif src.suffix.lower() == ".mp3" or kind == "poster":
             out = media / kind / rel.name
             out.parent.mkdir(parents=True, exist_ok=True)
@@ -681,12 +696,12 @@ def write_site(data, vd):
         # scaled premultiplied, so the clear pixels' colour can't bleed into the edges as a dark fringe
         # (Color Design 101's 2x cards came out fringed when this scaled straight alpha)
         vf = "format=rgba,premultiply=inplace=1,scale='min(1080,iw)':-2:flags=lanczos,unpremultiply=inplace=1"
-        subprocess.run(["ffmpeg", "-v", "error", "-y", *dec, "-i", str(src), "-an", "-vf", vf, "-c:v", "libvpx-vp9",
-                        "-pix_fmt", "yuva420p", "-b:v", "0", "-crf", "34", "-row-mt", "1", "-auto-alt-ref", "0",
-                        "-deadline", "good", "-cpu-used", "4", str(webm)], check=True)
-        subprocess.run(["ffmpeg", "-v", "error", "-y", *dec, "-i", str(src), "-an", "-vf", vf + ",format=bgra",
-                        "-c:v", "hevc_videotoolbox", "-allow_sw", "1", "-alpha_quality", "0.75", "-q:v", "55",
-                        "-tag:v", "hvc1", "-movflags", "+faststart", str(hevc)], check=True)
+        encoded(src, webm, ["ffmpeg", "-v", "error", "-y", *dec, "-i", str(src), "-an", "-vf", vf, "-c:v", "libvpx-vp9",
+                            "-pix_fmt", "yuva420p", "-b:v", "0", "-crf", "34", "-row-mt", "1", "-auto-alt-ref", "0",
+                            "-deadline", "good", "-cpu-used", "4", "OUT"])
+        encoded(src, hevc, ["ffmpeg", "-v", "error", "-y", *dec, "-i", str(src), "-an", "-vf", vf + ",format=bgra",
+                            "-c:v", "hevc_videotoolbox", "-allow_sw", "1", "-alpha_quality", "0.75", "-q:v", "55",
+                            "-tag:v", "hvc1", "-movflags", "+faststart", "OUT"])
         done[key] = (str(webm.relative_to(site)), str(hevc.relative_to(site)))
         return done[key]
 
