@@ -36,6 +36,7 @@ export function dust({ count = 400, center = [0, 0, 0], size = [10, 6, 10], poin
     uniforms: { uFocus: { value: 10 }, uAperture: { value: 0 }, uTime: { value: 0 }, uRes: { value: 1 }, uDrift: { value: new THREE.Vector3(...drift) }, uColor: { value: new THREE.Color(color) }, uIntensity: { value: intensity } } });
   const p = new THREE.Points(g, m); p.frustumCulled = false;
   p.at = (t) => { m.uniforms.uTime.value = t; };
+  p.setIntensity = (i) => { m.uniforms.uIntensity.value = i; }; // pure: call it in update to fade the motes
   return p;
 }
 

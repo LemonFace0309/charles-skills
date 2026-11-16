@@ -228,6 +228,11 @@ export function captionChunks(words, cfg = {}) {
     }
   }
   if (cfg.numbers) for (const w of words) if (/\d/.test(w.text) && !marks.has(w)) marks.set(w, { style: cfg.numbers, first: true });
+  // a voiceover cut off mid-sentence ends on a word that leans on one never said ("...back into your song. But"): alone it
+  // would be a one-word chunk that flickers and dangles, so it is left uncaptioned (the voice still says it).
+  // cfg.trailing: 'keep' captions it anyway.
+  const last = words[words.length - 1];
+  if (cfg.trailing !== 'keep' && last && words.length > 1 && leans(last.text, null)) words = words.slice(0, -1);
   // a chunk whose every word `replace` turns into '' shows nothing: drop it, so no empty caption flickers or dangles
   const rep = cfg.replace || {};
   const shown = (w) => String(rep[w.text] ?? rep[w.text.toLowerCase()] ?? rep[w.n] ?? w.text).trim();
@@ -375,6 +380,12 @@ export class UI {
     this.layers.hero.appendChild(el);
     const isFn = typeof content === 'function';
     if (!isFn && !count) main.innerHTML = content;
+    // a count-up is a planned run of one-frame jumps: log its span next to the timed words, so check.mjs lists its
+    // steps and its landing as planned, not as glitches (a 0.3 s count lands 0.2 s after its word)
+    if (count && typeof window !== 'undefined' && Array.isArray(window.__wordLog)) {
+      const c0 = count.at ?? at, c1 = c0 + (count.dur ?? 1.1);
+      window.__wordLog.push({ shot: owner?.def?.id ?? 'globals', phrase: 'count-up', kind: 'count', t: +c0.toFixed(3), end: +c1.toFixed(3) });
+    }
     return this._add({ owner, at, until, el, update: (t, vis) => {
       const e = envelope(t, at, until, inDur, outDur);
       el.style.opacity = e.o * vis; el.style.transform = `translateY(${e.y}px)`; el.style.filter = e.b > 0.05 ? `blur(${e.b}px)` : 'none';

@@ -60,8 +60,9 @@ export function tube(curve, { radius = 0.02, color = accentDefault(), intensity 
   g.userData = { curve, sheath };
   g.draw = (p) => setRange(0, p);
   g.window = (a, b) => setRange(a, b);
-  g.setIntensity = (i, ci) => { sheath.material.color.copy(hot(color, i)); if (core) sheath.material.userData.core.value.copy(hot(coreColor, ci ?? i * 1.6)); };
-  g.setColor = (c, i = intensity) => { color = c; sheath.material.color.copy(hot(c, i)); };
+  // at intensity 0 the opaque sheath would be a black tube in front of the scene: it is hidden instead
+  g.setIntensity = (i, ci) => { sheath.material.color.copy(hot(color, i)); sheath.material.visible = i > 1e-4; if (core) sheath.material.userData.core.value.copy(hot(coreColor, ci ?? i * 1.6)); };
+  g.setColor = (c, i = intensity) => { color = c; sheath.material.color.copy(hot(c, i)); sheath.material.visible = i > 1e-4; };
   return g;
 }
 
@@ -74,7 +75,7 @@ export function line(points, { width = 0.02, color = accentDefault(), intensity 
   const l = new Line2(geo, m); l.computeLineDistances();
   const n = points.length - 1;
   l.draw = (p) => { geo.instanceCount = Math.max(0, Math.round(clamp(p) * n)); l.visible = geo.instanceCount > 0; };
-  l.setIntensity = (i) => m.color.copy(hot(color, i));
+  l.setIntensity = (i) => { m.color.copy(hot(color, i)); m.visible = i > 1e-4; }; // 0 hides it (never a black line)
   return l;
 }
 
@@ -179,7 +180,7 @@ export function arrow(from, to, { radius = 0.02, color = accentDefault(), intens
     tip.position.copy(P); tip.quaternion.setFromUnitVectors(Y, T.normalize());
     tip.scale.setScalar(Math.max(1e-4, smooth(clamp(p / 0.12)))); tip.visible = p > 0.001;
   };
-  g.setIntensity = (i) => { shaft.setIntensity(i); tip.material.color.copy(hot(color, i)); if (core) tip.material.userData.core.value.copy(hot(coreColor, i * 1.6)); };
+  g.setIntensity = (i) => { shaft.setIntensity(i); tip.material.color.copy(hot(color, i)); tip.material.visible = i > 1e-4; if (core) tip.material.userData.core.value.copy(hot(coreColor, i * 1.6)); };
   g.curve = path; g.shaft = shaft; g.head = tip;
   g.draw(1);
   return g;
@@ -222,9 +223,18 @@ export function arcCurve(a, b, { height = 0.3, sphere = null, samples = 64 } = {
 // to, envelope, fn }) rebuilds it from the construction options plus what you pass, so a field you leave out goes back
 // to its default (each call stands alone; pass every field that changes, each update). envelope: (u) => k scales the
 // height along it (u 0..1). fn: (x, u) => y draws any curve instead of the sine (x in world units from the middle;
-// e.g. the sum of two waves), still under the envelope.
-export function wave({ length = 4, amp = 0.25, wavelength = 1, radius = 0.018, color = accentDefault(), intensity = 4, segments = 300, radial = 8, axis = 'x', plane = 'y', core = true, coreColor = null, envelope = null, fn = null } = {}) {
+// e.g. the sum of two waves), still under the envelope. colors: [c0, c1, ...] spread evenly along the wave (u 0..1),
+// or (u) => colour, instead of one colour (a spectrum, or a 1 amber and a 0 blue on one wave); the core stays white.
+// wave.setColor(c, intensity?) changes the colour; setIntensity(0) hides it (never a black tube).
+export function wave({ length = 4, amp = 0.25, wavelength = 1, radius = 0.018, color = accentDefault(), intensity = 4, segments = 300, radial = 8, axis = 'x', plane = 'y', core = true, coreColor = null, envelope = null, fn = null, colors = null } = {}) {
   const g = new THREE.Group();
+  const stops = Array.isArray(colors) ? colors.map(C) : null;
+  const colorAt = !colors ? null : typeof colors === 'function' ? (u) => C(colors(u)) : (u) => {
+    if (stops.length === 1) return stops[0].clone();
+    const x = clamp(u) * (stops.length - 1), i = Math.min(stops.length - 2, Math.floor(x));
+    return stops[i].clone().lerp(stops[i + 1], x - i);
+  };
+  if (colorAt) color = '#ffffff';                     // the vertex colours carry the hue; the material carries intensity
   const coreC = coreColor ?? lighten(color, 0.85);
   const geo = new THREE.BufferGeometry();
   const pos = new Float32Array((segments + 1) * radial * 3), nor = new Float32Array(pos.length), idx = [];
@@ -233,7 +243,10 @@ export function wave({ length = 4, amp = 0.25, wavelength = 1, radius = 0.018, c
     idx.push(a, b, d, b, c, d);
   }
   geo.setIndex(idx); geo.setAttribute('position', new THREE.BufferAttribute(pos, 3)); geo.setAttribute('normal', new THREE.BufferAttribute(nor, 3));
+  const col = colorAt ? new Float32Array(pos.length) : null;
+  if (col) geo.setAttribute('color', new THREE.BufferAttribute(col, 3));
   const mesh = new THREE.Mesh(geo, glowMat(color, intensity, { core: core ? coreC : null })); mesh.frustumCulled = false; g.add(mesh);
+  if (col) mesh.material.vertexColors = true;
   const defaults = { phase: 0, amp, wavelength, length, from: 0, to: 1, envelope, fn };
   const cs = Array.from({ length: radial }, (_, i) => [Math.cos((i / radial) * Math.PI * 2), Math.sin((i / radial) * Math.PI * 2)]);
   const fill = (st) => {
@@ -244,6 +257,7 @@ export function wave({ length = 4, amp = 0.25, wavelength = 1, radius = 0.018, c
       if (st.fn) { y = st.fn(x, u) * env; dy = ((st.fn(x + h, u) - st.fn(x - h, u)) / (2 * h)) * env; }
       else { y = Math.sin(k * x - st.phase) * st.amp * env; dy = Math.cos(k * x - st.phase) * st.amp * env * k; }
       const tl = Math.hypot(1, dy), nx = -dy / tl, ny = 1 / tl; // in-plane normal; the other axis is +z
+      if (col) { const cc = colorAt(u); for (let i = 0; i < radial; i++) { const o = (j * radial + i) * 3; col[o] = cc.r; col[o + 1] = cc.g; col[o + 2] = cc.b; } }
       for (let i = 0; i < radial; i++) {
         const [c, s] = cs[i], o = (j * radial + i) * 3;
         nor[o] = nx * c; nor[o + 1] = ny * c; nor[o + 2] = s;
@@ -251,9 +265,12 @@ export function wave({ length = 4, amp = 0.25, wavelength = 1, radius = 0.018, c
       }
     }
     geo.attributes.position.needsUpdate = true; geo.attributes.normal.needsUpdate = true;
+    if (col) geo.attributes.color.needsUpdate = true;
   };
   g.set = (o = {}) => fill({ ...defaults, ...o });
-  g.setIntensity = (i) => { mesh.material.color.copy(hot(color, i)); if (core) mesh.material.userData.core.value.copy(hot(coreC, i * 1.6)); };
+  let level = intensity;
+  g.setIntensity = (i) => { level = i; mesh.material.color.copy(hot(color, i)); mesh.material.visible = i > 1e-4; if (core) mesh.material.userData.core.value.copy(hot(coreC, i * 1.6)); };
+  g.setColor = (c, i = level) => { color = c; level = i; mesh.material.color.copy(hot(c, i)); mesh.material.visible = i > 1e-4; if (core && !coreColor) mesh.material.userData.core.value.copy(hot(lighten(c, 0.85), i * 1.6)); };
   g.set();
   if (axis === 'y') g.rotation.z = Math.PI / 2; else if (axis === 'z') g.rotation.y = -Math.PI / 2;
   if (plane === 'z') g.rotation.x = Math.PI / 2;
@@ -502,13 +519,14 @@ export function waveField({ radius = 3, color = accentDefault(), wavelength = nu
 // wb.set({ time, speed, to, from, amp, wavelength, fn, a, b }) every update (each call stands alone): the crests travel
 // from a to b at `speed` (world units a second, default 2.5 wavelengths), `to` draws it out of a (0..1, the front
 // tapered), fn: (x, u) => y any shape instead of the sine (x from the middle; glow.fsk(bits) for bits). amp, wavelength
-// and radius default to 4.5%, 13% and 0.65% of the length. wb.setIntensity(i), wb.wave, wb.len.
-export function waveBetween(a, b, { up = [0, 1, 0], amp = null, wavelength = null, radius = null, speed = null, taper = 0.08, intensity = 5, color = accentDefault(), core = true, segments = 400 } = {}) {
+// and radius default to 4.5%, 13% and 0.65% of the length. colors: as glow.wave's, from a (u 0) to b (u 1).
+// wb.setIntensity(i), wb.setColor(c, i?), wb.wave, wb.len.
+export function waveBetween(a, b, { up = [0, 1, 0], amp = null, wavelength = null, radius = null, speed = null, taper = 0.08, intensity = 5, color = accentDefault(), colors = null, core = true, segments = 400 } = {}) {
   const read = (p, out) => (p?.isObject3D ? p.getWorldPosition(out) : out.copy(V(p)));
   const A = read(a, new THREE.Vector3()), B = read(b, new THREE.Vector3());
   let len = Math.max(1e-6, A.distanceTo(B));
   const amp0 = amp ?? len * 0.045, wl0 = wavelength ?? len * 0.13, sp0 = speed ?? wl0 * 2.5;
-  const w = wave({ length: len, amp: amp0, wavelength: wl0, radius: radius ?? len * 0.0065, intensity, segments, color, core });
+  const w = wave({ length: len, amp: amp0, wavelength: wl0, radius: radius ?? len * 0.0065, intensity, segments, color, colors, core });
   const g = new THREE.Group(); g.name = 'waveBetween'; g.add(w);
   const UP = V(up), X = new THREE.Vector3(), Yb = new THREE.Vector3(), Zb = new THREE.Vector3(), M = new THREE.Matrix4();
   const place = () => {
@@ -528,6 +546,7 @@ export function waveBetween(a, b, { up = [0, 1, 0], amp = null, wavelength = nul
     g.visible = to - from > 1e-3;
   };
   g.setIntensity = (i) => w.setIntensity(i);
+  g.setColor = (c, i) => w.setColor(c, i);
   g.wave = w;
   Object.defineProperty(g, 'len', { get: () => len });
   g.userData.radius = len / 2;

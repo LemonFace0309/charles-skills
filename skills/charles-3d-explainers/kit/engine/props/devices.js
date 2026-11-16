@@ -295,8 +295,12 @@ export function mapScreen({ w = 1179, h = 2556, seed = 3, accent = accentDefault
 // other bar fades: "turned into bits"), card 0..1 (the connected card), elapsed (seconds into the song) }).
 // timeline({ play, connect, wave, bits }) returns an update(t, root) that runs those beats at those shot times (omit
 // any): the press and ring on play, the card up 0.3 s from connect and away 1.1 s later. Options: w, h, title, artist,
-// device ('Earbuds': the card's title), accent, seed (the waveform), elapsed (42 s), length (213 s), background.
-export function nowPlayingScreen({ w = 1179, h = 2556, title = 'Night Drive', artist = 'Neon Coast', device = 'Earbuds', accent = accentDefault(), seed = 11, elapsed = 42, length = 213, background = '#060608' } = {}) {
+// device ('Earbuds': the card's title), accent, seed (the waveform), elapsed (42 s), length (213 s), background,
+// playAt: [u, v] screen fractions for the play button's centre (kept 140 px inside the screen's edges, still under the
+// thumb's pad), with the skip buttons hidden. The kit hand's thumb lands
+// near the screen's edge at mid-height, never on the bottom-centre controls: pass playAt: hand.thumbUV() so the press
+// lands on the button.
+export function nowPlayingScreen({ w = 1179, h = 2556, title = 'Night Drive', artist = 'Neon Coast', device = 'Earbuds', accent = accentDefault(), seed = 11, elapsed = 42, length = 213, background = '#060608', playAt = null } = {}) {
   const a = rgbOf(accent), R = rng(seed), seeds = Array.from({ length: 34 }, () => [0.25 + R() * 0.75, 1 + R() * 3, R() * TAU]);
   const mmss = (v) => `${Math.floor(v / 60)}:${String(Math.floor(v % 60)).padStart(2, '0')}`;
   const css = `${fitCss(w, h)} .app{position:absolute;inset:0;background:radial-gradient(120% 70% at 50% 18%,#2a1d14 0%,#0d0b0c 55%,${background} 100%);font-family:Inter;color:#f4efe8;overflow:hidden}
@@ -330,7 +334,7 @@ export function nowPlayingScreen({ w = 1179, h = 2556, title = 'Night Drive', ar
     <div class="meta"><div class="tt">${title}</div><div class="ar">${artist}</div></div>
     <div class="wave">${seeds.map(() => '<i></i>').join('')}</div>
     <div class="prog"><div class="fill"></div></div><div class="times"><span class="t0"></span><span class="t1"></span></div>
-    <div class="ctl">${skip(-1)}<div class="pp"><div class="ring"></div>${play}</div>${skip(1)}</div>
+    <div class="ctl"${playAt ? ' style="display:block"' : ''}>${playAt ? '' : skip(-1)}<div class="pp"${playAt ? ` style="position:absolute;left:${Math.round(Math.min(w - 140, Math.max(140, playAt[0] * w)) - 110 - 150)}px;top:${Math.round(Math.min(h - 140, Math.max(140, playAt[1] * h)) - 110 - 1960)}px"` : ''}><div class="ring"></div>${play}</div>${playAt ? '' : skip(1)}</div>
     <div class="card"><div class="cardT">${device}</div><div class="pods"><div class="bud" style="left:80px"><b></b><s></s></div><div class="bud" style="left:210px;transform:scaleX(-1)"><b></b><s></s></div></div>
       <div class="cardS"><span class="chk"><svg width="34" height="34" viewBox="0 0 34 34"><path d="M7 18 L14 25 L28 9" stroke="#141210" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Connected</div></div></div></div>`;
   const set = (root, { t = 0, playing = 1, press = 0, ring = 0, wave = null, bits = 0, card = 0, elapsed: el = elapsed } = {}) => {
@@ -1091,7 +1095,8 @@ function sevenSeg(g, text, cx, cy, h, color, ghost) {
 // cutaway: the camera can look straight in). The turntable is lit glass. mw.setOpen(0..1) swings the door (hinged
 // left); mw.setOn(0..1) lamp and cavity glow; mw.at(t) turns the plate (t = seconds of cooking: pass t - start to
 // start later); mw.setDisplay('1:25') (redraws only when it changes). mw.plate is a group on the turntable: add food
-// to it and it turns. Anchors: display, window, plate, cavity, and cavityCam: a camera spot in front of the opening
+// to it and it turns. Anchors: display, window, plate, cavity, waveguide (the cover on the cavity's right wall, where
+// the microwaves come in), and cavityCam: a camera spot in front of the opening
 // (0.7 m real from the plate, 24 degrees up), framing the food with the lit back wall behind it at fov 30
 // (cam.apply(camera, { pos: cavityCam world, look: plate world, fov: 30 }); with the door shut, open it or use door: false).
 export function microwaveOven(o = {}) {
@@ -1199,6 +1204,7 @@ export function microwaveOven(o = {}) {
   anchor(g, 'display', disp.position.clone().setZ(fz + DT + m(0.001)), g.anchors);
   if (door) anchor(door, 'window', new THREE.Vector3(wx, wy, DT), g.anchors); else anchor(g, 'window', new THREE.Vector3(cx, cy, fz), g.anchors);
   anchor(g, 'cavity', new THREE.Vector3(cx, cy, cz), g.anchors);
+  anchor(g, 'waveguide', wg.position.clone().add(new THREE.Vector3(-m(0.002), 0, 0)), g.anchors); // the cover on the right wall: where the microwaves come in
   anchor(plate, 'plate', new THREE.Vector3(), g.anchors);
   // a camera spot 0.7 m (real) from the plate, 24 degrees above it: into the food, the lit back wall behind it and
   // the oven's dark frame across the top of the picture
@@ -1349,6 +1355,10 @@ export function earbuds(o = {}) {
     g.updateMatrixWorld(true);
     return buds[1].getWorldPosition(R.clone());
   };
+  // setCase(false) hides the case (shell, lid, seam, LED) and keeps the buds: a close-up of lifted buds otherwise has the
+  // bright out-of-focus case right under them, in the caption band (pure: call it in update)
+  const caseParts = g.children.filter((c) => !buds.includes(c));
+  g.setCase = (v = true) => { for (const c of caseParts) c.visible = !!v; };
   g.lid = lid; g.buds = buds;
   g.userData = { perMetre: s, size: [W, Hb + Hl, D], footprint: [W, D] };
   g.setOpen(0); measureBounds(g); g.setOpen(open); g.setLed(led, ledIntensity);

@@ -365,6 +365,8 @@ function instanceLook(m) {
 // into lattices. shell: [rMin, rMax] fills a spherical shell around `center` instead of the box `size`, so a camera
 // orbiting a hero inside rMin sees molecules in every direction. Per molecule (set in update, pure: they overwrite):
 // cloud.setTint(i, color, k = 1) mixes its atoms towards a colour; cloud.setGlow(i, v, color = accent) makes them glow.
+// cloud.clearLine(from, to, radius) keeps a line of sight clear (below). Around a ball-and-stick hero (water(), scale 1),
+// match it: model 'ball' and scale 1, or the crowd reads as a different substance.
 export function moleculeCloud(o = {}) {
   const { kind = 'water', count = 300, size = [8, 5, 6], scale = 0.35, seed = 11, model = 'space', bondRadius = 0.075, bondColor = '#dde3ec', shell = null, center = [0, 0, 0] } = o;
   const spec = typeof kind === 'string' ? MOLECULES[kind] : kind;
@@ -397,6 +399,24 @@ export function moleculeCloud(o = {}) {
   const bondIM = bondList.length ? shade(new THREE.InstancedMesh(new THREE.CylinderGeometry(1, 1, 1, 20, 1, true), new THREE.MeshPhysicalMaterial({ color: C(bondColor), roughness: 0.22, clearcoat: 1, clearcoatRoughness: 0.08 }), count * bondList.length)) : null;
   if (bondIM) { bondIM.frustumCulled = false; g.add(bondIM); }
   const ax = new V3(), dv = new V3(), jv = new V3(), _q = new THREE.Quaternion(), _qt = new THREE.Quaternion(), _m = new THREE.Matrix4(), _p = new V3(), _s = new V3(), W = P.map(() => new V3()), _d = new V3(), _n = new V3(), Y = new V3(0, 1, 0);
+  // cloud.clearLine(from, to, radius): moves every molecule within `radius` of the segment from -> to (the camera's line
+  // of sight to the hero, or the path a camera flies) sideways to 1.15 x radius, so no crowd molecule crosses the hero
+  // or sweeps across the lens. from / to: Object3Ds (world position), Vector3s or [x, y, z]. Call it after building, once
+  // per line (a moving camera: its start and end, or a few points along its path); with drift, add the drift's reach to
+  // radius. Returns how many molecules it moved.
+  const ptOf = (x) => (x?.isObject3D ? x.getWorldPosition(new V3()) : x?.isVector3 ? x.clone() : new V3(...x));
+  g.clearLine = (from, to, radius) => {
+    const A = ptOf(from), B = ptOf(to), AB = B.clone().sub(A), L2 = Math.max(1e-12, AB.lengthSq()), side = new V3();
+    let moved = 0;
+    for (const M of mols) {
+      const u = Math.min(1, Math.max(0, M.pos.clone().sub(A).dot(AB) / L2)), Q = A.clone().addScaledVector(AB, u);
+      side.subVectors(M.pos, Q); const d = side.length();
+      if (d >= radius) continue;
+      if (d < 1e-6) { side.crossVectors(AB, new V3(0, 1, 0)); if (side.lengthSq() < 1e-12) side.crossVectors(AB, new V3(1, 0, 0)); }
+      M.pos.copy(Q).addScaledVector(side.normalize(), radius * 1.15); moved++;
+    }
+    return moved;
+  };
   g.at = (t, { twist = 0, freq = 2, axis = [0, 0, 1], jitter = 0, drift = [0, 0, 0] } = {}) => {
     ax.set(...axis).normalize(); dv.set(...drift);
     mols.forEach((M, mi) => {

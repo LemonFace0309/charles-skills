@@ -248,6 +248,7 @@ export async function globe({ radius = 1, sun = [1, 0.25, 0.6], night = 1.0, clo
   for (const [name, [lat, lon]] of Object.entries(CITIES)) g.pin(lat, lon, 0.004, name);
   g.setSun = (v) => { u.sun.value.set(...v).normalize(); };
   g.setEarthshine = (v) => { u.shineK.value = v; }; // the night side's faint fill (pure)
+  g.setLights = (v) => { u.lightsK.value = v; }; // the night side's city lights, 0 to 1 and up (pure): cities that light on a word
   // globe.lightDots(count, o): receivers, people or devices as glowing dots where the city lights are (sampled from the
   // night texture: brighter places get more, at an even density per area), just above the surface, turning with the
   // globe. dots.reveal(t, { from, t0, speed }) lights them in a wave spreading from `from` (a local point such as

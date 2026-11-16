@@ -8,7 +8,8 @@
      events    how often something new lands: an element arrives (text, a label, a number, a line drawing on, an
                object entering), a calm part of the frame starts moving, a cut or a transition. Reported per second,
                with lulls (more than 1.5 s with nothing new)
-     cuts      hard cuts (the whole picture changes in one frame), the shot list, median shot length
+     cuts      hard cuts (the whole picture changes in one frame, or in a dark or plain world its correlation with the
+               frame before drops far below its neighbours'), the shot list, median shot length
      flashes   single frames that differ from the frames on both sides (a flash, a dark frame, a stray frame)
      pops      something that appears, vanishes or jumps in one frame without easing
      hitches   a repeated frame in the middle of motion (a stutter)
@@ -20,8 +21,11 @@
                space averages 4 to 12 and is right
      black and blown-out frames
      planned   pops, jumps and flashes from 0.35 s before to 0.1 s after a word a shot timed (k.word, from
-               <video>.log.json; a line starts drawing a little before its word) or inside a planned transition:
-               listed, and left out of the counts (without a log: those on a word onset)
+               <video>.log.json; a line starts drawing a little before its word), inside a count-up (k.ui.hero logs
+               its span) or inside a planned transition: listed, and left out of the counts (without a log: those
+               on a word onset)
+     NOTE      the video is a 1-sample draft: no depth of field or motion blur, so the static, hook and dark lines
+               can change at full quality (check a --draft --samples 16 render before the final)
      captions  with a project, chunked and timed exactly as ui.js does: `flicker` (a chunk on screen under 0.7 s) and
                `dangling` (a chunk ending on a word that leans on the next, ui.js leans()); reading speed is information
    The project is found by itself when the video sits in <project>/out/ (pass --no-project to skip it); with it, cuts
@@ -121,20 +125,23 @@ export async function analyse(videoFile, o = {}) {
   // per-frame measures
   const Y = new Float32Array(N), HI = new Float32Array(N), LIT = new Float32Array(N);
   const D1 = new Float32Array(N), C1 = new Float32Array(N);           // whole frame: mean |change| vs previous frame, fraction changed > 16
+  const R1 = new Float32Array(N), SDv = new Float32Array(N);          // correlation with the previous frame (1 = same picture); grey spread
   const DM = new Float32Array(N);                                     // motion outside the caption band, vs previous frame
   const S = Math.max(2, Math.round(0.33 * fps));                     // event window, frames
   const d1b = new Float32Array(N * nb), dWb = new Float32Array(N * nb), dSb = new Float32Array(N * nb), eb = new Float32Array(N * nb);
   const acc = new Float64Array(nb), accW = new Float64Array(nb), accE = new Float64Array(nb);
   for (let i = 0; i < N; i++) {
     const f = F(i);
-    let s = 0, hi = 0, lit = 0;
-    for (let k = 0; k < P; k++) { const v = f[k]; s += v; if (v >= 250) hi++; if (v > 16) lit++; }
-    Y[i] = s / P; HI[i] = hi / P; LIT[i] = lit / P;
+    let s = 0, s2 = 0, hi = 0, lit = 0;
+    for (let k = 0; k < P; k++) { const v = f[k]; s += v; s2 += v * v; if (v >= 250) hi++; if (v > 16) lit++; }
+    Y[i] = s / P; HI[i] = hi / P; LIT[i] = lit / P; SDv[i] = Math.sqrt(Math.max(0, s2 / P - Y[i] * Y[i]));
     if (i > 0) {
       const g = F(i - 1); acc.fill(0);
-      let sd = 0, ch = 0;
-      for (let k = 0; k < P; k++) { const d = Math.abs(f[k] - g[k]); sd += d; if (d > 16) ch++; const b = bid[k]; if (b >= 0) acc[b] += d; }
+      let sd = 0, ch = 0, sfg = 0;
+      for (let k = 0; k < P; k++) { const d = Math.abs(f[k] - g[k]); sd += d; sfg += f[k] * g[k]; if (d > 16) ch++; const b = bid[k]; if (b >= 0) acc[b] += d; }
       D1[i] = sd / P; C1[i] = ch / P;
+      const cov = sfg / P - Y[i] * Y[i - 1];
+      R1[i] = SDv[i] > 0.5 && SDv[i - 1] > 0.5 ? cov / (SDv[i] * SDv[i - 1]) : 1;
       let m = 0, c = 0; for (const b of live) { d1b[i * nb + b] = acc[b] / bcnt[b]; m += acc[b]; c += bcnt[b]; } DM[i] = m / c;
     }
     const e = G(i); accE.fill(0);
@@ -180,7 +187,11 @@ export async function analyse(videoFile, o = {}) {
   for (let i = 1; i < N; i++) {
     if (flashAt.has(i)) continue;
     const local = median([...D1.slice(Math.max(1, i - 6), i), ...D1.slice(i + 1, Math.min(N, i + 7))]);
-    if (C1[i] > LIMITS.cutFrac && D1[i] > Math.max(6, 5 * local)) cuts.push({ t: r2(t(i)), frame: i, change: r2(D1[i]), frac: r2(C1[i]) });
+    // a dark world (or a centred subject on a plain ground) changes too few pixels by 16 levels at a cut: there the
+    // correlation with the previous frame drops instead, far below its neighbours' (motion keeps it high)
+    const dec = 1 - R1[i], decLocal = median([...R1.slice(Math.max(1, i - 6), i), ...R1.slice(i + 1, Math.min(N, i + 7))].map((x) => 1 - x));
+    const darkCut = SDv[i] > 3 && SDv[i - 1] > 3 && dec > Math.max(0.35, 4 * decLocal);
+    if ((C1[i] > LIMITS.cutFrac && D1[i] > Math.max(6, 5 * local)) || darkCut) cuts.push({ t: r2(t(i)), frame: i, change: r2(D1[i]), frac: r2(C1[i]), ...(darkCut ? { corr: r2(R1[i]) } : {}) });
   }
   const nearCut = (i, k = 1) => cuts.some((c) => Math.abs(c.frame - i) <= k);
 
@@ -379,14 +390,15 @@ export async function analyse(videoFile, o = {}) {
   // planned events: a pop, jump or flash from 0.35 s before to 0.1 s after a word a shot timed (render.mjs logs every
   // k.word as log.json `words`; a line that starts drawing 0.28 s before its word is that word's beat) or inside a
   // planned transition is the beat, not a glitch. Without a log: one on a word onset (0.12 s before to 0.05 s after).
-  let timed = null;
-  try { const lg = JSON.parse(fs.readFileSync(path.join(path.dirname(videoFile), path.basename(videoFile, path.extname(videoFile)) + '.log.json'), 'utf8')); if (Array.isArray(lg.words) && lg.words.length) timed = lg.words.filter((x) => Number.isFinite(x.t)); } catch {}
+  let timed = null, renderSamples = null;
+  try { const lg = JSON.parse(fs.readFileSync(path.join(path.dirname(videoFile), path.basename(videoFile, path.extname(videoFile)) + '.log.json'), 'utf8')); renderSamples = Number.isFinite(lg.samples) ? lg.samples : null; if (Array.isArray(lg.words) && lg.words.length) timed = lg.words.filter((x) => Number.isFinite(x.t)); } catch {}
   const inTransition = (tt) => shots.find((s, k) => k > 0 && s.in.dur > 0 && Math.abs(tt - s.start) <= s.in.dur / 2 + 1 / fps);
   const planOf = (tt) => {
     if (timed) {
-      const near = (x) => tt - x.t >= -LIMITS.plannedBefore && tt - x.t <= LIMITS.plannedAfter;
+      // a logged span (a count-up: its steps and landing) is planned from 0.1 s before it to plannedAfter after it ends
+      const near = (x) => (x.end != null ? tt >= x.t - 0.1 && tt <= x.end + LIMITS.plannedAfter : tt - x.t >= -LIMITS.plannedBefore && tt - x.t <= LIMITS.plannedAfter);
       const w = timed.reduce((best, x) => (near(x) && (!best || Math.abs(x.t - tt) < Math.abs(best.t - tt)) ? x : best), null);
-      if (w) return `${w.shot === 'globals' ? 'g' : 'k'}.word "${w.phrase}" at ${fmt(w.t)} s`;
+      if (w) return w.kind === 'count' ? `the count-up from ${fmt(w.t)} to ${fmt(w.end)} s` : `${w.shot === 'globals' ? 'g' : 'k'}.word "${w.phrase}" at ${fmt(w.t)} s`;
     } else if (words.some((x) => tt >= x.start - 0.12 && tt <= x.start + 0.05)) return 'on a word onset';
     const s = inTransition(tt);
     return s ? `inside the ${s.in.type} into ${s.id}` : null;
@@ -404,7 +416,7 @@ export async function analyse(videoFile, o = {}) {
       flashes: flashes.filter((f) => !f.planned).length, pops: popsM.filter((p) => p.kind !== 'jump inside motion' && !p.planned).length, jumps: popsM.filter((p) => p.kind === 'jump inside motion' && !p.planned).length, planned: [...flashes, ...popsM].filter((x) => x.planned).length, hitches: hitches.length, blackFrames: black.reduce((a, b) => a + b.frames, 0), blownFrames: blown.reduce((a, b) => a + b.frames, 0),
       hook: hook ? hook.motion : null, staticRuns: staticOut.runs.length, darkFrames: dark.frames.length, flicker: captions ? captions.flicker.length : null, dangling: captions ? captions.dangling.length : null,
     },
-    hook, static: staticOut, perSecond, dark, plannedFrom, stale, events: evT, lulls, eventsPer3s: perWindow, cuts, unplannedCuts: unplanned, shots: planned, shotLengths: lens.map(r2), flashes, pops: popsM, hitches, black, blown, captions,
+    renderSamples, hook, static: staticOut, perSecond, dark, plannedFrom, stale, events: evT, lulls, eventsPer3s: perWindow, cuts, unplannedCuts: unplanned, shots: planned, shotLengths: lens.map(r2), flashes, pops: popsM, hitches, black, blown, captions,
     series: { luma: Array.from(Y, r2), change: Array.from(D1, r2), motion: Array.from(DM, r2), moved: Array.from(moveW, r2) },
   };
 }
@@ -414,6 +426,7 @@ export function report(r) {
   const L = [], s = r.summary;
   const name = path.basename(r.video);
   L.push(`check ${name}: ${r.start ? `${fmt(r.start)}-${fmt(r.start + r.duration)} s of the project (times below are project times)` : `${fmt(r.duration)} s`}, ${r.size[0]}x${r.size[1]}, ${+r.fps.toFixed(3)} fps, ${r.frames} frames${r.project ? `, project ${path.basename(r.project)}` : ''}`);
+  if (r.renderSamples === 1) L.push('  NOTE      a 1-sample draft: no depth of field or motion blur, so the static, hook and dark lines can change at full quality; check a --draft --samples 16 render before the final');
   if (r.outdated?.length) L.push(`  WARNING   this video is older than ${r.outdated.slice(0, 3).join(', ')}${r.outdated.length > 3 ? ` and ${r.outdated.length - 3} more` : ''}: render it again before judging`);
   const target = s.eventsPerSecond >= 0.8 ? 'ok' : 'slow';
   L.push(`  pacing    ${s.eventsPerSecond.toFixed(2)} new events a second (${target}; aim for about 1)` + (r.lulls.length ? `, ${r.lulls.length} lull${r.lulls.length > 1 ? 's' : ''} over ${LIMITS.lull} s: ${r.lulls.slice().sort((a, b) => b.dur - a.dur).slice(0, 4).map((l) => `${fmt(l.start)}-${fmt(l.end)}`).join(', ')}` : ', no lulls'));

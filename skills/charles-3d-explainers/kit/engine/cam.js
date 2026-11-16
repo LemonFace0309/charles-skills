@@ -114,8 +114,8 @@ export function follow(curve, { t0 = 0, t1 = 5, from = 0, to = 1, offset = [0, 0
 
 // Rack focus: a k.lens.focus function that holds on one subject and pulls to the next at the given times, easing over
 // `dur` seconds (0.3 to 0.6 reads as a deliberate pull). keys: [[t, subject, dur?], ...] in shot-local time, each pull
-// starting at its t; a subject is an Object3D (followed as it moves), a Vector3 / [x, y, z] or a distance. Mixing
-// distances with points needs { camera: k.camera }.
+// starting at its t; a subject is an Object3D (followed as it moves), a Vector3 / [x, y, z], a distance, or a function
+// (t) => any of these (a point riding a curve). Mixing distances with points needs { camera: k.camera }.
 //   k.lens = { blur: 0.02, focus: cam.rack([[0, phone], [k.word('chip'), chip.anchor('GPU')]]) }
 export function rack(keys, { dur = 0.45, ease = 'inOutCubic', camera = null } = {}) {
   const E = easeFn(ease), ks = keys.map(([t, s, d]) => ({ t, s, d: d ?? dur })).sort((a, b) => a.t - b.t);
@@ -125,12 +125,14 @@ export function rack(keys, { dur = 0.45, ease = 'inOutCubic', camera = null } = 
   const A = new THREE.Vector3(), B = new THREE.Vector3(), F = new THREE.Vector3(), P = new THREE.Vector3();
   const pt = (s, out) => (s.isObject3D ? s.getWorldPosition(out) : s.isVector3 ? out.copy(s) : out.set(...s));
   const dist = (s) => (num(s) ? s : (camera.getWorldDirection(F), pt(s, A).sub(camera.getWorldPosition(P)).dot(F)));
+  const at = (s, t) => (typeof s === 'function' ? s(t) : s); // a subject may be (t) => any of these, like k.lens.focus
   return (t) => {
     let i = 0; while (i < ks.length - 1 && t >= ks[i + 1].t) i++;
     const cur = ks[i], prev = ks[i - 1], k = prev && cur.d > 0 ? E(clamp((t - cur.t) / cur.d)) : 1;
-    if (k >= 1 || !prev) return num(cur.s) ? cur.s : camera ? dist(cur.s) : pt(cur.s, new THREE.Vector3());
-    if (camera || num(cur.s)) return lerp(dist(prev.s), dist(cur.s), k);
-    return pt(prev.s, A).lerp(pt(cur.s, B), k).clone();
+    const cs = at(cur.s, t), ps = prev ? at(prev.s, t) : null;
+    if (k >= 1 || !prev) return num(cs) ? cs : camera ? dist(cs) : pt(cs, new THREE.Vector3());
+    if (camera || num(cs)) return lerp(dist(ps), dist(cs), k);
+    return pt(ps, A).lerp(pt(cs, B), k).clone();
   };
 }
 

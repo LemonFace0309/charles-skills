@@ -142,9 +142,11 @@ export class Engine {
     return S.lens?.autoSamples === false ? base : Math.max(base, auto);
   }
 
-  // Largest screen distance in px that the focus point, a world point on the view axis at the focus distance (the
-  // camera's own motion) or a k.motionProbes object covers while the shutter is open. The shot is evaluated at both
-  // ends of the shutter (update is pure); the scene is left at the later end. Call it with the scene at lt.
+  // Largest screen path in px that the focus point, a world point on the view axis at the focus distance (the camera's
+  // own motion) or a k.motionProbes object travels while the shutter is open. The shot is evaluated at five instants
+  // across the shutter (update is pure) and the path summed, so a fast swing that comes back inside the shutter (a
+  // molecule twisting at 60 Hz) counts its whole travel, not the near-zero gap between its ends. The scene is left at
+  // the later end. Call it with the scene at lt.
   motionPx(S, lt) {
     const half = 0.5 * (this.shutter / this.fps) * (S.motionBlur ?? 1), cam = S.camera;
     if (!(half > 0) || !cam.isPerspectiveCamera) return 0;
@@ -153,7 +155,7 @@ export class Engine {
     // and moves everything else outward (a diving hook was left at 2 samples while its frame edges moved 100+ px)
     const pz = P0.clone().project(cam).z;
     const fixed = [P0, ...[[-0.8, -0.8], [0.8, -0.8], [-0.8, 0.8], [0.8, 0.8]].map(([x, y]) => new THREE.Vector3(x, y, pz).unproject(cam))];
-    const ends = [lt - half, lt + half].map((ts) => {
+    const ends = [0, 0.25, 0.5, 0.75, 1].map((f) => lt - half + 2 * half * f).map((ts) => {
       S.update(ts, lt); cam.updateMatrixWorld(true); cam.updateProjectionMatrix();
       const focus = typeof S.lens?.focus === 'function' ? S.lens.focus(ts) : S.lens?.focus;
       return [...fixed, focus, ...(S.motionProbes || [])].map((x) => {
@@ -162,7 +164,11 @@ export class Engine {
       });
     });
     let D = 0;
-    ends[0].forEach((a, i) => { const b = ends[1][i]; if (a && b) D = Math.max(D, Math.hypot(a[0] - b[0], a[1] - b[1])); });
+    ends[0].forEach((_, i) => {
+      let L = 0;
+      for (let j = 1; j < ends.length; j++) { const a = ends[j - 1][i], b = ends[j][i]; if (!a || !b) return; L += Math.hypot(a[0] - b[0], a[1] - b[1]); }
+      D = Math.max(D, L);
+    });
     return D;
   }
 

@@ -10,7 +10,7 @@ const C = (hex) => new THREE.Color(hex);
 // haze (optional): the backdrop's soft glow behind the subject, when the secondary is too light for a big area.
 export const PALETTES = {
   'night-amber': {
-    bg: ['#0d1626', '#04060b'], fog: ['#0a1322', 0.035], accent: '#ffb43c', glow: '#5aa8ff', ink: '#16110a', text: '#ffffff',
+    bg: ['#0d1626', '#04060b'], fog: ['#0a1322', 0.035], accent: '#ffb43c', glow: '#5aa8ff', haze: '#7f8fb2', ink: '#16110a', text: '#ffffff',
     env: 'night', key: ['#ffd9a6', 2.6], rim: ['#6fa8ff', 2.2], fill: ['#1b2a44', 0.6],
     post: { exposure: 1.0, bloom: 0.07, grain: 0.035, vignette: 0.6, look: 0.35, shadowTint: [-0.01, 0.0, 0.025], highlightTint: [0.02, 0.008, -0.01] },
   },
