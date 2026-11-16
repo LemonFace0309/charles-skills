@@ -126,21 +126,32 @@
       });
     }
     const v = b.visual;
-    visual.replaceChildren();
+    // the same clip on the next line carries on (its "from" says where that line starts in it) instead of reloading
+    const same = !!(v && v.type === "video" && clip && clip.src === v.src);
+    if (!same) visual.replaceChildren();
     if (v) {
       const bx = box(v);
       Object.assign(visual.style, { left: px(bx.x), top: px(bx.y), width: px(bx.w), height: px(bx.h) });
       visual.className = `visual fit-${bx.fit === "fill" ? "contain" : bx.fit}${bx.sticker ? " sticker" : ""}${bx.panel ? " panel" : ""}`;
       if (v.type === "video") {
-        const vid = h("video", { src: v.src, muted: true, loop: true, playsinline: true, autoplay: true });
-        visual.append(vid);
-        vid.muted = true;
-        vid.play().catch(() => {});
+        // The clip runs on the reel's clock from its line's start (syncClip), so it waits for play, pauses, seeks and
+        // loops with the reel. "loop": false holds its last frame instead, for a clip timed to its line's words.
+        if (same) Object.assign(clip, { start: b.start, from: v.from || 0 });
+        else {
+          const vid = h("video", { src: v.src, muted: true, playsinline: true, preload: "auto" });
+          vid.muted = true;
+          vid.loop = v.loop !== false;
+          visual.append(vid);
+          clip = { vid, src: v.src, start: b.start, from: v.from || 0 };
+          vid.addEventListener("loadedmetadata", () => syncClip(true));
+        }
       } else {
+        clip = null;
         visual.append(h("img", { src: v.src, alt: "" }));
       }
       visual.hidden = false;
     } else {
+      clip = null;
       visual.hidden = true;
     }
     footage.classList.toggle("spotlight", !!v && v.place === "spotlight");
@@ -148,6 +159,22 @@
     const [dx, dy, s] = jump(i);
     const end = list && i === N - 1 && b.row == null && N > 1; // a list reel's sign-off punches in 6%, as list_reel.py does; nothing else zooms
     person.style.transform = end ? `translate(-30px, ${20 + faceShift(v)}px) scale(1.06)` : `translate(${dx}px, ${dy + faceShift(v)}px) scale(${s})`;
+  }
+
+  let clip = null;                     // the line's video, if it has one: { vid, src, start, from }
+  function syncClip(force = false) {
+    if (!clip) return;
+    const { vid, start, from } = clip;
+    const d = vid.duration;
+    let want = Math.max(0, t - start + from);
+    if (Number.isFinite(d) && d > 0) want = vid.loop ? want % d : Math.min(want, Math.max(0, d - 0.04));
+    const run = playing && waitingSince == null;   // still while the music is starting, as the reel is
+    const off = Math.abs(vid.currentTime - want);
+    if (force || off > (run ? 0.2 : 0.04)) {
+      try { vid.currentTime = want; } catch { /* not seekable until its metadata loads; loadedmetadata syncs again */ }
+    }
+    if (run && vid.paused) vid.play().catch(() => {});
+    if (!run && !vid.paused) vid.pause();
   }
 
   function showCaption(b) {
@@ -165,6 +192,7 @@
   function render() {
     const i = indexAt(t);
     if (i !== shown) show(i);
+    syncClip();
     showCaption(beats[i]);
     // The hook: a list reel's title stays up; a TikTok hook stays for his first sentence, on the seam if it opens on a split.
     if (HK.style !== "title" && HK.lines && HK.lines.length) {
