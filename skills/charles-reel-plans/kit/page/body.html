@@ -1,20 +1,4 @@
-<header class="top">
-  <div class="top-inner">
-    <div class="heading">
-      <h1 id="page-title"></h1>
-      <p class="lede" id="lede"></p>
-    </div>
-    <nav class="jump" aria-label="Sections">
-      <a href="#mockup">Mockup</a>
-      <a href="#script">Script</a>
-      <a href="#caption">Caption</a>
-      <a href="#assets">Assets</a>
-    </nav>
-  </div>
-</header>
-
-<main class="board">
-  <section class="stage" id="mockup" aria-label="Moving mockup of the reel">
+<main class="player" id="player">
     <div class="phone" id="phone">
       <div class="reel" id="reel">
         <div class="footage" id="footage" aria-hidden="true">
@@ -44,7 +28,7 @@
         <div class="list" id="list"></div>
         <div class="sw" id="sw" hidden aria-hidden="true"><span class="sw-off">88.88</span><span class="sw-on" id="sw-on">00.00</span></div>
         <div class="cap" id="cap" hidden></div>
-        <div class="ig" id="ig" aria-hidden="true">
+        <div class="ig" id="ig" hidden aria-hidden="true">
           <div class="ig-scrim"></div>
           <div class="ig-top"><span>Reels</span>
             <svg viewBox="0 0 24 24"><path d="M4 8.5A2.5 2.5 0 0 1 6.5 6h1.6l1.2-1.8h5.4L15.9 6h1.6A2.5 2.5 0 0 1 20 8.5v8A2.5 2.5 0 0 1 17.5 19h-11A2.5 2.5 0 0 1 4 16.5z"/><circle cx="12" cy="12.4" r="3.4"/></svg>
@@ -76,62 +60,15 @@
         <span class="big-play-label">Play with sound</span>
       </button>
     </div>
-
-    <div class="transport">
+    <div class="bar">
       <button class="play" id="play" type="button" aria-label="Play">
         <svg class="i-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5z"/></svg>
         <svg class="i-pause" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5h3.5v14H7zM13.5 5H17v14h-3.5z"/></svg>
       </button>
-      <button class="step" id="prev" type="button" aria-label="Previous line">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6 9 12l6 6"/></svg>
-      </button>
-      <button class="step" id="next" type="button" aria-label="Next line">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg>
-      </button>
-      <button class="sound" id="sound" type="button" aria-pressed="true" aria-label="Mute the music">
-        <svg class="i-on" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path class="wave" d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11"/></svg>
-        <svg class="i-off" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path class="wave" d="m15.5 9.5 5 5m0-5-5 5"/></svg>
-      </button>
+      <div class="scrub">
+        <div class="track" id="track" aria-hidden="true"></div>
+        <input type="range" id="scrub" min="0" step="0.01" value="0" aria-label="Position in the reel">
+      </div>
       <div class="clock"><span id="t-now">0.0</span><span class="clock-total" id="t-total"></span></div>
     </div>
-    <div class="scrub">
-      <div class="ticks" id="ticks" aria-hidden="true"></div>
-      <input type="range" id="scrub" min="0" step="0.01" value="0" aria-label="Position in the reel">
-    </div>
-    <div class="layers">
-      <label><input type="checkbox" id="opt-ig" checked> Instagram UI</label>
-      <label><input type="checkbox" id="opt-safe"> Safe area</label>
-      <label class="music">Music <select id="opt-music"></select></label>
-      <span class="music-note" id="music-note" hidden>This track didn't load. Try another one.</span>
-    </div>
-    <div class="now" id="now" aria-live="polite"></div>
-  </section>
-
-  <div class="sheets">
-    <section class="sheet" id="script" aria-labelledby="script-h">
-      <h2 id="script-h">Script</h2>
-      <p class="intro" id="script-intro"></p>
-      <ol class="reads" id="reads"></ol>
-      <ul class="notes" id="filming"></ul>
-      <div class="checks" id="checks"></div>
-    </section>
-
-    <section class="sheet" id="caption" aria-labelledby="caption-h">
-      <h2 id="caption-h">Caption</h2>
-      <div class="captions" id="captions"></div>
-    </section>
-
-    <section class="sheet" id="assets" aria-labelledby="assets-h">
-      <h2 id="assets-h">Assets</h2>
-      <p class="intro" id="assets-intro"></p>
-      <div class="groups" id="groups"></div>
-    </section>
-
-    <footer class="files" id="files"></footer>
-  </div>
 </main>
-
-<dialog class="viewer" id="viewer" aria-label="Image">
-  <img alt="">
-  <div class="v-text"><p class="v-what"></p><p class="v-meta"></p></div>
-</dialog>

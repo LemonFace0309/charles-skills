@@ -18,9 +18,9 @@ The one file the plan lives in. `kit/build.py` turns it into the page, and the e
 | `eye_line` | His eyes' height, which sets the "above" and "below" boxes | 860 |
 | `assets_dir` | The folder holding one folder per asset group | `assets/beats` |
 | `composites`, `composites_dir` | A list reel's collage spec and its rendered PNGs | none, `assets/collages` |
-| `reading` | One to three sentences on how to read the script, shown above it | none |
-| `filming` | Notes for filming, one sentence each | none |
-| `music` | `file`, `at` (seconds into the track), `under` (dB under his voice), `why`, `alternatives` (each with `file`, `at`, `why`) | none |
+| `reading` | One to three sentences on how to read the script, for the README | none |
+| `filming` | Notes for filming, one sentence each, for the README | none |
+| `music` | `file`, `at` (seconds into the track), `under` (dB under his voice), `why`, `alternatives` (each with `file`, `at`, `why`). The player plays `file` from `at`; the alternatives are for the edit | none |
 | `fonts` | `{family: path}` inlined into the page (the stopwatch's Digital7Mono) | none |
 | `post` | `handle`, `caption`, `caption_alt`, `comment`, `credit` | none |
 | `reference` | `structure` and `structure_title` (the reel copied), `idea`, `idea_title` and `idea_author` (what's credited) | none |
@@ -45,7 +45,7 @@ The one file the plan lives in. `kit/build.py` turns it into the page, and the e
 | `caption_y` | Moves this line's captions, when an asset sits at 1380 |
 | `pace`, `dur` | This line's pace, or a fixed length in seconds |
 | `sfx` | The sound effect on this line, for the edit ("camera shutter as the screenshot lands"). The page lists it and the checks count it |
-| `note` | One sentence for the page's "now" panel: what happens on screen, a filming note |
+| `note` | One sentence for the edit: what happens on screen, a filming note |
 
 ## Places
 
@@ -90,8 +90,7 @@ Once the editing session writes `edit/cuts.json` (`[{"s": start, "e": end}]`, on
 
 ## Checks
 
-Every build measures the plan against the rules in SKILL.md marked ✓ and prints what fails; the page lists the same under
-the script. They are: caption lines of more than 3 words or of 1 word next to others, and captions wider than the 80 px
+Every build measures the plan against the rules in SKILL.md marked ✓ and prints what fails. They are: caption lines of more than 3 words or of 1 word next to others, and captions wider than the 80 px
 margins; words TikTok blocks, on screen; one still up more than 3 s across consecutive lines without `long_ok`; more than
 4 s with nothing new (talk reels); captions sitting on an asset; "bottom" without room under the captions; an image
 stretched past its pixels (2x for `screen` kinds and `"text": true`), or drawn under 240×160 in its box; a hook of more than
@@ -104,7 +103,11 @@ only where that still reads wrong.
 
 ## What the kit writes
 
-- `build/plan.html`: the page, which opens from disk. `?solo&t=12.4` shows only the reel at 1080×1920, paused at 12.4 s, for exporting frames. `&ig=0` hides Instagram's UI, and `&safe=1` shows the safe area.
-- `build/music/<n>-<title>.mp3`: each track cut from `at` to the reel's length, faded out, and normalised to −16 LUFS so switching tracks doesn't jump.
+- `build/plan.html`: the player, which opens from disk: the reel and a play bar (tap or space plays and pauses, the arrow keys step through the lines). `?solo&t=12.4` shows only the reel at 1080×1920, paused at 12.4 s, for exporting frames. `&ig=1` draws Instagram's UI over it and `&safe=1` the safe area; the player itself shows neither. `#check` on the link adds a dot after the clock that turns orange while the music plays.
+- `build/music/1-<title>.mp3`: the track cut from `at` to the reel's length, faded out, and normalised to −16 LUFS.
 - `<assets_dir>/SOURCES.md`: every image's source and licence in one table, for the credits.
-- `build/site/`: `index.html` with its CSS, script and data inline and no head (the Artifact host adds one), plus `media/` (images as WebP at the sizes the page shows, videos as small MP4s, the music) and `files.json`, the list to publish. One publish takes up to 255 files and 64 MB. The kit warns when a site is bigger, and then the rest goes up in further publishes to the same file path.
+- `build/site/`: `index.html` with its CSS, script and data inline and no head (the Artifact host adds one), plus `media/` (the reel's images as WebP at the size the player shows, videos as small MP4s, the music) and `files.json`, the list to publish. One publish takes up to 255 files and 64 MB. The kit warns when a site is bigger, and then the rest goes up in further publishes to the same file path.
+
+## Collages
+
+`edit/collages.json`, for a list reel: `[{"group": "2013", "label": "...", "seed": 7, "images": [{"file": "assets/years/2013/1-x.png", "kind": "screen", "scale": 1.0, "top": false, "focus": [0.1, 0.1, 0.9, 0.9]}]}]`, the pick first. `kind` is screen, photo, art, logo or cutout (`references/sourcing.md`). `focus` is the part of the image, as fractions of its width and height, that nothing may lie over: the inner 80% by default, `[0.06, 0.06, 0.94, 0.94]` for the pick, and the whole card for a card of words. Overlaps are 2-7% of the smaller image, so prints only catch each other's edges.

@@ -1,8 +1,7 @@
-/* The reel plan page: a moving mockup of the reel, the script to read, the caption and every asset with its source.
-   Everything comes from window.VIDEO, which kit/build.py writes from the video's edit/plan.json. The reel is a 1080x1920
-   element laid out on the edit's grid (charles-claude-editing's numbers) and scaled to the phone, so what the mockup shows
-   is where the edit will put it. The music keeps the time while it plays. Space plays and pauses, the arrow keys step
-   through the lines. */
+/* The reel plan's player: the reel, laid out on the edit's 1080x1920 grid (charles-claude-editing's numbers) and scaled
+   to fit, playing on the plan's timeline with its music. Everything comes from window.VIDEO, which kit/build.py writes
+   from the video's edit/plan.json. The music keeps the time while it plays. Tap the reel or press space to play and
+   pause; the arrow keys step through the lines. */
 (() => {
   const V = window.VIDEO;
   const beats = V.beats;
@@ -19,7 +18,6 @@
       if (k === "class") el.className = v;
       else if (k === "text") el.textContent = v;
       else if (k === "style") Object.assign(el.style, v);
-      else if (k.startsWith("on")) el.addEventListener(k.slice(2), v);
       else el.setAttribute(k, v === true ? "" : v);
     }
     for (const kid of kids.flat()) if (kid != null && kid !== false) el.append(kid);
@@ -27,24 +25,12 @@
   }
   const secs = (s) => s.toFixed(1);
   const px = (v) => `${v}px`;
-  const mmss = (s) => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, "0")}`;
-  // A line's mark: its list number or year, "End" for a list reel's sign-off, otherwise where it starts.
-  const mark = (b) => (b.number != null ? String(b.number) : V.reel.list && b === beats[N - 1] ? "End" : mmss(b.start));
 
   for (const [family, url] of Object.entries(V.fonts || {})) {
     const face = new FontFace(family, `url(${url})`, { display: "block" });
     document.fonts.add(face);
     face.load().catch(() => {});
   }
-
-  /* ---- header ---------------------------------------------------------------------------------------------------- */
-  const REF = V.reference || {};
-  $("#page-title").textContent = V.title;
-  const lede = $("#lede");
-  lede.append(`A ${Math.round(V.total)} s ${V.format_name}: the script to read, the caption, the assets and a moving mockup with its music.`);
-  if (REF.structure) lede.append(" Structure from ", h("a", { href: REF.structure, target: "_blank", rel: "noopener", text: REF.structure_title || "the reference reel" }));
-  if (REF.idea) lede.append(REF.structure ? ", idea from " : " Idea from ", REF.idea_author ? `${REF.idea_author}'s ` : "", h("a", { href: REF.idea, target: "_blank", rel: "noopener", text: REF.idea_title || "the reference" }));
-  if (REF.structure || REF.idea) lede.append(".");
 
   /* ---- the reel: fixed layers ----------------------------------------------------------------------------------- */
   const phone = $("#phone");
@@ -127,12 +113,7 @@
     return i;
   };
   // Each line is its own take, so the picture jumps a little at every cut, as hard cuts between takes do.
-  const jump = (i) => {
-    const dx = ((i * 37) % 9 - 4) * 5;
-    const dy = ((i * 53) % 7 - 3) * 5;
-    const s = 1 + ((i * 29) % 5 - 2) * 0.01;
-    return [dx, dy, s];
-  };
+  const jump = (i) => [((i * 37) % 9 - 4) * 5, ((i * 53) % 7 - 3) * 5, 1 + ((i * 29) % 5 - 2) * 0.01];
 
   function show(i) {
     shown = i;
@@ -150,10 +131,14 @@
       const bx = box(v);
       Object.assign(visual.style, { left: px(bx.x), top: px(bx.y), width: px(bx.w), height: px(bx.h) });
       visual.className = `visual fit-${bx.fit === "fill" ? "contain" : bx.fit}${bx.sticker ? " sticker" : ""}${bx.panel ? " panel" : ""}`;
-      visual.append(v.type === "video"
-        ? h("video", { src: v.src, muted: true, loop: true, playsinline: true, autoplay: true })
-        : h("img", { src: v.src, alt: "" }));
-      if (v.type === "video") { const vid = $("video", visual); vid.muted = true; vid.play().catch(() => {}); }
+      if (v.type === "video") {
+        const vid = h("video", { src: v.src, muted: true, loop: true, playsinline: true, autoplay: true });
+        visual.append(vid);
+        vid.muted = true;
+        vid.play().catch(() => {});
+      } else {
+        visual.append(h("img", { src: v.src, alt: "" }));
+      }
       visual.hidden = false;
     } else {
       visual.hidden = true;
@@ -163,10 +148,6 @@
     const [dx, dy, s] = jump(i);
     const end = list && i === N - 1 && b.row == null && N > 1; // a list reel's sign-off punches in 6%, as list_reel.py does; nothing else zooms
     person.style.transform = end ? `translate(-30px, ${20 + faceShift(v)}px) scale(1.06)` : `translate(${dx}px, ${dy + faceShift(v)}px) scale(${s})`;
-    document.querySelectorAll(".current").forEach((el) => el.classList.remove("current"));
-    document.querySelectorAll(`[data-i="${i}"]`).forEach((el) => el.classList.add("current"));
-    if (b.group != null) document.querySelectorAll(`[data-group="${CSS.escape(String(b.group))}"]`).forEach((el) => el.classList.add("current"));
-    renderNow(i);
   }
 
   function showCaption(b) {
@@ -185,7 +166,7 @@
     const i = indexAt(t);
     if (i !== shown) show(i);
     showCaption(beats[i]);
-    // The hook: a list reel's title stays up; a TikTok hook stays for its first sentence, on the seam if it opens on a split.
+    // The hook: a list reel's title stays up; a TikTok hook stays for his first sentence, on the seam if it opens on a split.
     if (HK.style !== "title" && HK.lines && HK.lines.length) {
       const up = HK.until == null || t < HK.until;
       if (up && hook.hidden) {
@@ -207,23 +188,17 @@
 
   /* ---- music ---------------------------------------------------------------------------------------------------- */
   // A browser only starts sound from a tap or a key press, so the reel waits on its first frame until play is pressed.
-  const tracks = (V.music && V.music.tracks) || [];
-  const audio = tracks.length ? new Audio() : null;
-  let track = tracks.length ? 0 : -1;  // -1 is no music
-  let soundOn = true;
+  const track = V.music && V.music.tracks && V.music.tracks[0];
+  const audio = track ? new Audio() : null;
   let waitingSince = null;             // when play asked the music to start; the reel holds still up to 1.5 s for it
-  const soundBtn = $("#sound");
-  const musicNote = $("#music-note");
-
-  const musicOn = () => audio && track >= 0 && soundOn;
   function syncAudio(force = false) {
     if (!audio) return;
-    if (!playing || !musicOn()) {
+    if (!playing) {
       if (!audio.paused) audio.pause();
       waitingSince = null;
       return;
     }
-    const want = tracks[track].at + t;
+    const want = track.at + t;
     if (force || Math.abs(audio.currentTime - want) > 0.25) {
       try { audio.currentTime = want; } catch { /* not seekable until its metadata loads; loadedmetadata syncs again */ }
     }
@@ -236,19 +211,25 @@
     audio.preload = "auto";
     audio.hidden = true;
     document.body.append(audio);       // in the page, so its state can be read while checking it
-    audio.src = tracks[0].src;
+    audio.src = track.src;
     audio.addEventListener("loadedmetadata", () => syncAudio(true));
-    // The speaker turns orange only while music is actually coming out, and a note says so if a track can't load.
-    audio.addEventListener("playing", () => { waitingSince = null; soundBtn.classList.add("heard"); musicNote.hidden = true; });
-    ["pause", "waiting", "ended", "emptied"].forEach((ev) => audio.addEventListener(ev, () => soundBtn.classList.remove("heard")));
-    audio.addEventListener("error", () => { waitingSince = null; musicNote.hidden = false; });
+    audio.addEventListener("playing", () => { waitingSince = null; });
+    audio.addEventListener("error", () => { waitingSince = null; });
+    // #check on the link adds a dot that turns orange only while the music is actually playing: nothing outside a
+    // published page can see into its frame, so this is how a session proves the music works. Viewers never see it.
+    if (location.hash === "#check") {
+      const dot = h("span", { class: "heard-dot", title: "music" });
+      $(".bar").append(dot);
+      audio.addEventListener("playing", () => dot.classList.add("on"));
+      ["pause", "waiting", "ended", "emptied", "error"].forEach((ev) => audio.addEventListener(ev, () => dot.classList.remove("on")));
+    }
   }
 
   function tick(ts) {
     if (!playing) return;
     const dt = lastTs == null ? 0 : Math.min(0.1, (ts - lastTs) / 1000);
     lastTs = ts;
-    const heard = musicOn() && !audio.paused && audio.readyState >= 3 ? audio.currentTime - tracks[track].at : null;
+    const heard = audio && !audio.paused && audio.readyState >= 3 ? audio.currentTime - track.at : null;
     if (heard != null && heard >= -0.05 && heard <= total + HOLD + 1) {
       t = Math.max(0, heard);          // the music keeps the time while it plays, so the two can't drift apart
     } else if (!(waitingSince != null && ts - waitingSince < 1500)) {
@@ -281,194 +262,37 @@
   }
   const seekBeat = (i) => seek(beats[i].start + 0.01, { pause: true });
 
-  /* ---- transport ------------------------------------------------------------------------------------------------ */
+  /* ---- the play bar --------------------------------------------------------------------------------------------- */
   $("#t-total").textContent = `${secs(total)} s`;
   const scrub = $("#scrub");
   scrub.max = String(total);
-  const ticks = $("#ticks");
   const fill = h("span", { class: "fill" });
-  ticks.append(fill);
-  beats.slice(1).forEach((b) => ticks.append(h("span", { style: { left: `${(b.start / total) * 100}%` } })));
+  $("#track").append(fill);
   const head = h("span", { class: "head" });
   $(".scrub").append(head);
 
   $("#play").addEventListener("click", () => setPlaying(!playing));
   $("#big-play").addEventListener("click", (e) => { e.stopPropagation(); seek(0); setPlaying(true); });
   phone.addEventListener("click", () => setPlaying(!playing)); // tap the reel to pause, as on Instagram
-  // Back goes to the start of the current line, or to the one before if it's already at the start, like a player does.
   function prevBeat() {
     const i = indexAt(t);
     seekBeat(t - beats[i].start > 0.4 ? i : Math.max(0, i - 1));
   }
   const nextBeat = () => seekBeat(Math.min(N - 1, indexAt(t) + 1));
-  $("#prev").addEventListener("click", prevBeat);
-  $("#next").addEventListener("click", nextBeat);
   scrub.addEventListener("input", () => seek(Number(scrub.value)));
   document.addEventListener("keydown", (e) => {
-    if (e.target.closest("input[type=text], textarea, select") || e.metaKey || e.ctrlKey || e.altKey) return;
-    if ($("#viewer").open) return;
-    if (e.key === " " && !e.target.closest("button, a, input")) { e.preventDefault(); setPlaying(!playing); }
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    if (e.key === " " && !e.target.closest("button")) { e.preventDefault(); setPlaying(!playing); }
     if (e.key === "ArrowRight" && !e.target.closest("input")) { e.preventDefault(); nextBeat(); }
     if (e.key === "ArrowLeft" && !e.target.closest("input")) { e.preventDefault(); prevBeat(); }
   });
-  $("#opt-ig").addEventListener("change", (e) => { $("#ig").hidden = !e.target.checked; });
-  $("#opt-safe").addEventListener("change", (e) => { $("#safe").hidden = !e.target.checked; });
-
-  const musicPick = $("#opt-music");
-  if (!audio) {
-    soundBtn.hidden = true;
-    musicPick.closest("label").hidden = true;
-  } else {
-    tracks.forEach((tr, k) => musicPick.append(h("option", { value: String(k), text: `${tr.title}, from ${mmss(tr.from ?? tr.at)}` })));
-    musicPick.append(h("option", { value: "-1", text: "No music" }));
-    musicPick.addEventListener("change", () => {
-      track = Number(musicPick.value);
-      if (track >= 0) {
-        audio.src = tracks[track].src;
-        soundOn = true;
-        soundBtn.setAttribute("aria-pressed", "true");
-      }
-      syncAudio(true);
-    });
-    soundBtn.addEventListener("click", () => {
-      soundOn = !soundOn;
-      soundBtn.setAttribute("aria-pressed", String(soundOn));
-      soundBtn.setAttribute("aria-label", soundOn ? "Mute the music" : "Play the music");
-      syncAudio(true);
-    });
-  }
-
-  const short = (what) => {
-    const s = (what || "").split(/[:;(]/)[0].trim();
-    return s.length > 48 ? `${s.slice(0, 46).trimEnd()}…` : s;
-  };
-  const groupById = new Map((V.groups || []).map((g) => [String(g.id), g]));
-
-  function renderNow(i) {
-    const b = beats[i];
-    const now = $("#now");
-    now.replaceChildren(h("strong", {}, h("span", { class: "mark", text: mark(b) }), b.label || short(b.say)),
-      `Say: “${b.say}”, about ${secs(b.dur)} s.`);
-    const g = b.group != null ? groupById.get(String(b.group)) : null;
-    const used = g ? g.images.filter((im) => im.used) : [];
-    if (b.visual && b.visual.place === "under-chin") now.append(used.length ? ` Under the chin: ${used.map((im) => short(im.what)).join("; ")}.` : " Collage pending.");
-    else if (b.visual) now.append(` On screen (${b.visual.place}): ${b.visual.what || short(used[0] && used[0].what) || "the asset"}.`);
-    if (b.sfx) now.append(` Sound: ${b.sfx}.`);
-    if (b.note) now.append(` ${b.note}`);
-  }
-
-  /* ---- script --------------------------------------------------------------------------------------------------- */
-  $("#script-intro").textContent = [V.reading,
-    `Times are ${V.timed === "cut" ? "from the cut" : "estimated until there's a cut"}: the reel runs ${secs(total)} s${list ? `, and the list ends at ${secs(list.stop_at)} s` : ""}.`,
-  ].filter(Boolean).join(" ");
-  const reads = $("#reads");
-  const same = (a, b) => a.replace(/\W/g, "").toLowerCase() === b.replace(/\W/g, "").toLowerCase();
-  beats.forEach((b, i) => {
-    const shownText = b.cards.length ? b.cards.map((c) => c.lines.join(" ")).join(" / ") : null;
-    reads.append(h("li", { "data-i": i, onclick: () => seekBeat(i) },
-      h("span", { class: "y", text: mark(b) }),
-      h("span", { class: "s" }, b.say,
-        b.label && !same(b.label, b.say) && b.row != null ? h("span", { class: "label", text: `On screen: ${b.label}` }) : null,
-        shownText && b.caption_explicit ? h("span", { class: "label", text: `Caption: ${shownText}` }) : null,
-        b.visual && b.visual.place !== "under-chin" && b.visual.what ? h("span", { class: "label", text: `Shows: ${b.visual.what}` }) : null,
-        b.sfx ? h("span", { class: "label", text: `Sound: ${b.sfx}` }) : null),
-      h("span", { class: "d", text: `${secs(b.dur)} s` })));
-  });
-  (V.filming || []).forEach((line) => $("#filming").append(h("li", { text: line })));
-  // What kit/build.py found against charles-claude-editing's rules (captions, hook, timing, safe area, music, sound).
-  const checks = V.checks || [];
-  $("#checks").append(h("h3", { text: checks.length ? `${checks.length} ${checks.length === 1 ? "check fails" : "checks fail"} against the editing rules` : "Every check against the editing rules passes" }),
-    checks.length ? h("ul", {}, checks.map((c) => h("li", { text: c }))) : null);
-  if (tracks.length) {
-    $("#filming").append(h("li", { text: `Music: ${tracks.map((tr) => `${tr.title}${tr.artist ? ` (${tr.artist})` : ""} from ${mmss(tr.from ?? tr.at)}`).join(", or ")}, about ${V.music.under} dB under your voice in the edit.` }));
-  }
-
-  /* ---- caption -------------------------------------------------------------------------------------------------- */
-  const captionBox = (label, text) => {
-    const pre = h("pre", { text });
-    const btn = h("button", { class: "copy", type: "button", text: "Copy" });
-    btn.addEventListener("click", async () => {
-      try {
-        await navigator.clipboard.writeText(text);
-        btn.textContent = "Copied";
-      } catch {
-        const range = document.createRange();
-        range.selectNodeContents(pre);
-        getSelection().removeAllRanges();
-        getSelection().addRange(range);
-        btn.textContent = "Selected";
-      }
-      setTimeout(() => { btn.textContent = "Copy"; }, 1600);
-    });
-    return h("div", { class: "capbox" }, h("div", { class: "capbox-head" }, h("span", { text: label }), btn), pre);
-  };
-  const P = V.post || {};
-  if (P.caption) $("#captions").append(captionBox("Caption", P.caption));
-  if (P.caption_alt) $("#captions").append(captionBox("Shorter alternative", P.caption_alt));
-  if (P.comment) $("#captions").append(captionBox("First comment, optional", P.comment));
-  if (P.credit) $("#caption").append(h("p", { class: "credit", text: `Credit: ${P.credit}.` }));
-
-  /* ---- assets --------------------------------------------------------------------------------------------------- */
-  // Sources are web pages or paths in the repository. A published copy has no repository next to it, so there only web
-  // pages are links.
-  const hrefFor = (link) => (/^https?:/.test(link) ? link : V.site ? null : link);
-  const meta = (im) => [
-    im.used ? "" : "Spare. ",
-    im.link && hrefFor(im.link) ? h("a", { href: hrefFor(im.link), target: "_blank", rel: "noopener", text: im.source || "source" }) : (im.source || ""),
-    im.license ? `, ${im.license}` : "",
-    im.size ? `, ${im.size[0]}×${im.size[1]}` : "",
-  ];
-  const viewer = $("#viewer");
-  function openViewer(im) {
-    const img = $("img", viewer);
-    img.src = im.large || im.src;
-    img.alt = im.what || "";
-    $(".v-what", viewer).textContent = im.what || im.src.split("/").pop();
-    $(".v-meta", viewer).replaceChildren(...meta(im));
-    viewer.showModal();
-  }
-  viewer.addEventListener("click", (e) => { if (!e.target.closest("a")) viewer.close(); });
-
-  const groups = V.groups || [];
-  $("#assets-intro").textContent = groups.length
-    ? `${list ? "Each item's collage as it sits under your chin" : "Each line's asset"}, then the real images with where they came from. Click a card to see it in the mockup, or a thumbnail to see the image.`
-    : "No assets yet.";
-  groups.forEach((g) => {
-    const plateSrc = g.composite || (beats[g.beat] && beats[g.beat].visual && beats[g.beat].visual.src);
-    const isVideo = !g.composite && beats[g.beat] && beats[g.beat].visual && beats[g.beat].visual.type === "video";
-    const plate = h("div", { class: "plate" },
-      plateSrc ? (isVideo ? h("video", { src: plateSrc, muted: true, playsinline: true, preload: "metadata" }) : h("img", { src: plateSrc, alt: `${g.title}`, loading: "lazy" }))
-        : h("span", { class: "pending", text: "Pending" }));
-    const items = h("ul", { class: "srcs" }, g.images.map((im) => h("li", { class: im.used ? null : "spare" },
-      h("button", {
-        class: "thumb", type: "button", style: { backgroundImage: `url("${im.thumb || im.src}")` },
-        "aria-label": `View ${short(im.what || im.src.split("/").pop())}`,
-        onclick: (e) => { e.stopPropagation(); openViewer(im); },
-      }),
-      h("span", {},
-        h("span", { class: "what", text: im.what || im.src.split("/").pop() }),
-        h("span", { class: "meta" }, ...meta(im))))));
-    $("#groups").append(h("article", { class: "grp", "data-group": String(g.id), onclick: (e) => { if (!e.target.closest("a, button")) { seekBeat(g.beat); if (innerWidth <= 980) $("#mockup").scrollIntoView(); } } },
-      plate, h("h3", {}, g.number != null ? h("span", { class: "y", text: String(g.number) }) : null, g.title), items));
-  });
-
-  /* ---- files ---------------------------------------------------------------------------------------------------- */
-  const F = V.files || {};
-  if (F.folder) {
-    $("#files").append(
-      h("h2", { text: "Files" }),
-      h("p", {}, "Everything is in ", h("code", { text: `${F.folder}/` }), ". ",
-        ...(F.list || []).flatMap(([path, what], k) => [h("code", { text: path }), ` ${what}${k < F.list.length - 1 ? ", " : "."}`])),
-      F.rebuild ? h("p", {}, "Rebuild after changing the plan or the images: ", h("code", { text: F.rebuild }), ".") : null,
-    );
-  }
 
   /* ---- start ---------------------------------------------------------------------------------------------------- */
-  // ?solo&t=12.3 shows just the reel at 1080x1920, paused at that time, for exporting a frame (&ig=0 hides Instagram's UI,
-  // &safe=1 shows the safe area). Otherwise it waits on the first frame with a play button, since sound needs a tap.
+  // ?solo&t=12.3 shows just the reel at 1080x1920, paused at that time, for exporting a frame. For checking a plan,
+  // &ig=1 draws Instagram's UI over it and &safe=1 the safe area; the page itself shows neither.
   const params = new URLSearchParams(location.search);
-  if (params.get("ig") === "0") { $("#opt-ig").checked = false; $("#ig").hidden = true; }
-  if (params.get("safe") === "1") { $("#opt-safe").checked = true; $("#safe").hidden = false; }
+  if (params.get("ig") === "1") $("#ig").hidden = false;
+  if (params.get("safe") === "1") $("#safe").hidden = false;
   render();
   if (params.has("solo")) {
     document.body.classList.add("solo", "started");

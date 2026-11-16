@@ -1,11 +1,11 @@
 ---
 name: charles-reel-plans
-description: Plan one of Charles's reels before he films it - from a video idea and a reference (his own reel, someone else's reel, or a post to credit), tear the reference down, write the script in his voice, source the real assets with their licences, write the caption with the credit, pick the music and its start point, write the plan file the edit reads, and publish a shareable plan page (an Artifact) where the reel plays as a moving mockup with its music over a blurred stand-in for his footage. Use whenever Charles gives a video idea and a reference and wants the script, the assets, the caption, a mockup or a plan before filming ("make a video like this", "plan this reel", "script and assets for", "mock up this video", "do an evolution of ___ like this tweet"), and to update or republish a plan page.
+description: Plan one of Charles's reels before he films it - from a video idea and a reference (his own reel, someone else's reel, or a post to credit), tear the reference down, write the script in his voice, source the real assets with their licences, write the caption with the credit, pick the music and its start point, write the plan file the edit reads, and publish a shareable player (an Artifact) where the reel plays as a moving mockup with its music over a blurred stand-in for his footage. Use whenever Charles gives a video idea and a reference and wants the script, the assets, the caption, a mockup or a plan before filming ("make a video like this", "plan this reel", "script and assets for", "mock up this video", "do an evolution of ___ like this tweet"), and to update or republish a plan's player.
 ---
 
 # Goal
 
-Charles gives you an idea, and usually a reference. You give back everything up to the camera: the script he reads, the caption with its credit, the real assets with their sources, the music, `edit/plan.json` for the session that edits his footage later, and a link to a plan page where the reel plays as a moving mockup with its music. He reads the script, films and sends the footage. The one thing you may ask him for is his own angle on the topic, when charles-scripting-voice needs it (step 5).
+Charles gives you an idea, and usually a reference. You give back everything up to the camera: the script he reads, the caption with its credit, the real assets with their sources, the music, `edit/plan.json` for the session that edits his footage later, and a link to a player where the reel plays as a moving mockup with its music. He reads the script, films and sends the footage. The one thing you may ask him for is his own angle on the topic, when charles-scripting-voice needs it (step 5).
 
 Why: he judges a reel on his phone before he films it, often away from this Mac. A localhost page fails him there ("The local host is down so I can't even see the video", 16 Nov 2026), and a mockup without its music doesn't feel like the reel. The edit can only follow his taste if the plan already says, line by line, what's on screen and where.
 
@@ -17,18 +17,20 @@ In `videos/<video>/`, copied from `templates/video/`:
 
 | File | What it holds | Who reads it |
 | --- | --- | --- |
-| `SCRIPT.md` | What he says, in charles-scripting-voice's reading format, then the on-screen copy and the caption | Charles, to film |
+| `SCRIPT.md` | What he says and nothing else, in his notes' format (step 5) | Charles, to film |
 | `edit/plan.json` | Every line in order with its on-screen text, its asset and where that sits, plus the hook, the music and the caption (`references/plan.md`) | The kit, and the session that edits |
 | `assets/<dir>/<group>/` | The real images, with `sources.json` beside them | The kit, the edit and the credits |
 | `research/` | `REFERENCE.md` (the teardown), the research notes, `ASSET-BRIEF.md` | You, and the next video in the format |
-| `README.md` | The brief, the files, the published link, what's checked | Everyone |
-| The published page | The moving mockup with music, the script, the caption and every asset with its source | Charles, on his phone |
+| `README.md` | The brief, the files, the published link, the caption ready to paste, what's checked | Everyone |
+| The published player | The reel playing with its music, and a play bar. Nothing else: no script, captions, Instagram UI, safe area, music menu or labels | Charles, on his phone |
+
+Why the player is only the player: "In the chrome tab, just give me the video player ... Just the playback is enough. I don't need the extra fluff" (16 Nov 2026). The script, caption and sources live in the files and your reply.
 
 # The edit's rules every plan follows
 
 These come from charles-claude-editing, and that skill wins wherever the two disagree. A plan follows them because the
 mockup is only worth judging if it shows the reel the edit will make. `kit/build.py` measures every rule marked ✓ each time
-it builds, and the page lists what fails under the script.
+it builds and prints what fails.
 
 - **Safe area (1080×1920):** Instagram's header covers the top 250 px, the username and caption sit below y 1500, and the
   buttons run down the right side from y 840, from x 940 across. Text stays 80 px from both sides and left of x 940 below
@@ -120,6 +122,7 @@ Split a sentence into beats at its phrase breaks, so that no still stays up past
 ## 5. Write the lines and fit them
 
 - Write every spoken line with charles-scripting-voice (AGENTS.md asks for it). Its fixed format lines win. When a line needs his own angle (what he uses, built or thinks) and you don't have it, ask him in your reply and leave `<his angle>` in that line of SCRIPT.md. Never invent one.
+- SCRIPT.md is what he reads and nothing else, in the format of his "2026-11-10 SCRIPTS" Apple Note: the title in bold, `Text hook: <the hook on screen>`, then the lines he says, then the sign-off on its own line. A list reel numbers its lines (`1. Squash and stretch.`), each with a full stop, and starts the last with "And" ("And frequency of use."). A hack or explainer reel opens with its intro line, then gives each item its on-screen label in asterisks (`*Alpha borders*`) with the sentence he says under it. A roundup adds `GitHub:` and `Example:` lines under each label. No years, timings, screen notes, pronunciations or production notes: those go in `edit/plan.json` and the README, and this replaces charles-scripting-voice's screen notes in angle brackets. Why: he reads it straight off his phone while filming, and anything that isn't a line he says is in the way ("Just make it the actual verbal script ... Don't add extra jargon/text that isn't useful", 16 Nov 2026).
 - Put on-screen text that isn't his spoken words in the plan: a list label in `label`, the hook in `hook`. When a word is said differently from how it's written, `say` holds the spoken form and `label` the written one ("Glossy web two point oh buttons" and "Glossy Web 2.0 buttons").
 - A list label is at most 5 words, and the list has to fit: `kit/build.py` measures every label in Helvetica Neue Bold and stops, naming the widest, if the list runs past 68 or 1012 px. Shorten that label, or narrow `number_width` (49 px for item numbers, 77 for years) and `col_gap`.
 - Let the kit time the lines (`references/plan.md`, Timing). A subtitle like `(20 years in under {under} seconds)` fills in from where the list ends. Why: "under 30" only beats "under 35" if it's true, and a promise the reel breaks reads as clickbait.
@@ -133,12 +136,15 @@ Split a sentence into beats at its phrase breaks, so that no still stays up past
 
 ## 7. Compose and review
 
+- **Nothing covers a subject.** `kit/collages.py` lets images overlap only at their edges, and throws out any layout where something lies over another image's focus box: its inner 80% by default, nearly all of the pick. Give an image its own `"focus"` when its subject sits off-centre, and lay a page whose words run to its edge on top (`"top": true`). Why: in the first version, stickers covered Nyan Cat's face, the iOS 6 before and the Stranger Things title ("make sure the overlap ... don't cover core subjects", 16 Nov 2026).
+- **Words that matter read on a phone.** Anything meant to be read (a repo name, a tweet's key line, a headline) has letters at least 20 px tall on the 1080 grid once it's in the collage, about 7 pt on the phone. A whole screenshot shrunk under his chin never gets there. Cut a card from the real screenshot instead, with only those words, in lines of about 25 characters, on the screenshot's own background, and give it `"focus"` over all of it. Body text that's only texture (a page of a 2009 site) can stay small. Why: he couldn't read any of the GitHub capture in the first version. The repo name, its description and its stars, cut into a card, read at a glance.
 - **List reels:** order each item's images in `edit/collages.json`, the pick first. Use 3 by default, and a 4th only when it's small. Render with `kit/collages.py <video> --sheet` and judge every collage on `build/contact-sheet.jpg`. Give the image that carries the item's words `"top": true` (ChatGPT's launch title, a tweet), shrink one with `"scale"` below 1, and try other layouts with `"seed"`, side by side. A layout depends on its seed and on the side the previous item's pick sits, so after changing one, re-render the set and look at the sheet again. When you cut or reorder items, give each the `"seed"` of its old position first, so the others keep the layouts already reviewed. Logo cards stay at least 90% visible on their own.
 - **Talk reels:** crop each asset to what its line is about and keep it whole: no cut-off phone sides, no black bars. Put a transparent diagram or logo on a white card with padding, the way collages.py frames logos, so it reads over his footage. When a line explains a term, a fix or a mechanism, its visual is charles-explainers-assets' job: say so in the beat's `note`, and let a still stand in on the page.
 - **Red marks:** one box, strike or arrow per asset, and only where it makes the label readable (2009's Like row, 2015's serif logo struck through).
 
 ## 8. Write the caption and credits
 
+- Put the caption in the README's Delivery section, ready to paste, and in your reply. It never goes in SCRIPT.md.
 - His captions are short: a hook line or a question, a credit line, then 4-5 hashtags ("Let me know if you want a part 2! Shoutout @ayoships for the format"). No em dashes, and no full stop at the end of a line.
 - Credit the idea and the format by name and handle, with the platform when it isn't Instagram ("S/o Damir Sokolovsky (@heydamir on X) for the idea"). Search for an Instagram account first and tag it if there is one.
 - Ask a different question from the sign-off, so the comments get two ways in. Add a shorter alternative, and an optional first comment crediting the artists whose work is on screen.
@@ -157,16 +163,16 @@ From the video folder:
 python3 -I <skill>/kit/build.py . --site
 ```
 
-That writes `build/plan.html` (it opens from disk), `build/music/` (each track cut from its `at`), `<assets_dir>/SOURCES.md` and `build/site/`, the shareable copy. Then:
+That writes `build/plan.html` (the player, which opens from disk), `build/music/` (the track cut from its `at`), `<assets_dir>/SOURCES.md` and `build/site/`, the shareable copy. Then:
 
 1. Fix every check the build prints, or write in the README why one stays (a tweet he reads for 5 s is `long_ok`).
-2. Export full-size frames of the first line, a middle line, the busiest line and the last, plus one with `&safe=1`: `python3 -I <skill>/kit/capture.py "file://$PWD/build/plan.html?solo&t=<s>" build/frame.png --size 1080x1920 --scale 1`. Nothing that matters may sit under Instagram's header, caption or buttons. Why: the browser pane scales its screenshots down, so only full-size frames show small text.
+2. Look at every collage at full size (`assets/collages/<group>.png`, laid on a mid-grey at 1050 px wide): no subject covered, and every card's words readable. Then export full-size frames of the first line, a middle line, the busiest line and the last, plus one with `&safe=1&ig=1`: `python3 -I <skill>/kit/capture.py "file://$PWD/build/plan.html?solo&t=<s>" build/frame.png --size 1080x1920 --scale 1`. Nothing that matters may sit under Instagram's header, caption or buttons. Why: the browser pane scales its screenshots down, so only full-size frames show small text.
 3. Publish with the Artifact tool: `file_path` build/site/index.html, `root` build/site, `files` the list in build/site/files.json, and `icon` "video" on the first publish. After any change, publish the same file path again so the link stays: the page alone when only the plan changed, with files.json again when media changed, and `null` for any media path that's gone. The page is private until he shares it from its Share menu, so tell him.
-4. Open the link in his Chrome, press Play with sound, and check that the speaker icon turns orange, which means the music is playing. Then pause it. Why: nothing outside the page can see into its frame, so its own indicator is the only proof.
+4. Open the link with `#check` on the end in his Chrome, press Play with sound, and check that the dot after the clock turns orange, which means the music is playing. Then pause it, and leave the tab on the plain link. Why: nothing outside the page can see into its frame, so its own dot is the only proof, and only `#check` shows it.
 
 ## 11. Hand over
 
 - README: the brief, the files, the link, the music pick, and what's checked and what isn't. Timing is always an estimate until there's a cut.
 - Make sure the format's playbook (`formats/<format>/README.md`) lists the video as in production. Once it's posted, its row there gets the plays and what it taught (AGENTS.md).
-- In your reply, give the link first. Then say what he films (how many lines, about how long), the judgement calls he might overrule, and what isn't checked.
+- In your reply, give the link first, then the script exactly as SCRIPT.md has it, ready for his notes, and the caption. Then say what he films (how many lines, about how long), the judgement calls he might overrule, and what isn't checked.
 - After filming, the editing session writes `edit/cuts.json` and rebuilds, and the page switches to the cut's real times.

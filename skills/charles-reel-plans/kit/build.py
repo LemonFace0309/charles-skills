@@ -1,5 +1,6 @@
-"""Build a video's plan page from its edit/plan.json: a moving mockup of the reel with its music, the script to read, the
-caption and every asset with its source.
+"""Build a video's player from its edit/plan.json: a moving mockup of the reel, playing with its music. Nothing else is
+on the page (Charles, 16 Nov 2026: "just give me the video player ... I don't need the extra fluff"); the script, the
+caption and the sources live in the video's files.
 
   python3 -I <skill>/kit/build.py <video folder>           # build/plan.html, <assets_dir>/SOURCES.md, build/music/
   python3 -I <skill>/kit/build.py <video folder> --site    # also build/site/, the shareable copy, to publish as an Artifact
@@ -8,9 +9,10 @@ references/plan.md describes plan.json. Times are estimates until edit/cuts.json
 in seconds on the cut); then each line takes its length from the cut.
 
 build/plan.html opens straight from disk. build/site/index.html has no head (the Artifact host wraps the page in its own)
-and carries its CSS, script and data inline; its media sit under build/site/media/, listed in build/site/files.json. Publish
-it with the Artifact tool: file_path build/site/index.html, root build/site, files = files.json. Publishing the same file
-path again keeps the link.
+and carries its CSS, script and data inline; its media (the reel's assets and the music) sit under build/site/media/,
+listed in build/site/files.json. Publish it with the Artifact tool: file_path build/site/index.html, root build/site,
+files = files.json. Publishing the same file path again keeps the link. The build also prints the checks against
+charles-claude-editing's rules.
 """
 import base64
 import copy
@@ -373,7 +375,7 @@ def cut_music(plan, vd, length):
     the end, at one loudness so switching tracks doesn't jump. The page then plays each clip from 0 and never has to seek
     inside a long song. MP3 because every browser plays it and the Artifact host serves it."""
     m = plan.get("music") or {}
-    entries = ([m] if m.get("file") else []) + m.get("alternatives", [])
+    entries = [m] if m.get("file") else []          # the player plays the pick; alternatives stay in the plan for the edit
     folder = vd / "build/music"
     folder.mkdir(parents=True, exist_ok=True)
     tracks = []
@@ -459,8 +461,10 @@ def build(vd):
     }
     data["checks"] = checks(plan, vd, beats, hook, lst, data["music"], data["reel"]["under_chin"])
     write_sources(plan, vd, groups)
+    player = {k: data[k] for k in ("title", "total", "timed", "beats", "reel", "music", "fonts")}
+    player["post"] = {k: data["post"].get(k, "") for k in ("handle", "caption")}       # only for the ?ig=1 check
     (vd / "build").mkdir(exist_ok=True)
-    (vd / "build/plan.html").write_text(page(data, site=False))
+    (vd / "build/plan.html").write_text(page(player, site=False))
     n_vis = sum(1 for b in beats if b["visual"])
     ends = f", list ends {lst['stop_at']:.1f} s" if lst else ""
     subtitle = f", subtitle {hook['sub']}" if hook.get("sub") else ""
@@ -470,7 +474,7 @@ def build(vd):
     for c in data["checks"]:
         print(f"  - {c}")
     if "--site" in sys.argv:
-        write_site(data, vd)
+        write_site(player, vd)
 
 
 def page(data, site):
@@ -479,7 +483,7 @@ def page(data, site):
     js = (KIT / "page/page.js").read_text()
     payload = json.dumps(data, ensure_ascii=False).replace("</", "<\\/")
     title = html.escape(data["title"])
-    desc = html.escape(f"The plan for {data['title']}: a moving mockup with its music, the script, the caption and every asset.")
+    desc = html.escape(f"{data['title']}: a moving mockup of the reel, with its music.")
     scripts = f"<script>\nwindow.VIDEO = {payload};\n</script>\n<script>\n{js}</script>\n"
     if site:   # no head: the Artifact host adds its own, so the title, description and style lead the file
         return (f'<title>{title}</title>\n<meta name="description" content="{desc}">\n'
@@ -500,8 +504,8 @@ def webp(src, out, longest, quality):
 
 
 def write_site(data, vd):
-    """build/site/: index.html and media/ (images as WebP at the sizes the page shows, videos as small MP4s, the music
-    clips), with files.json listing the media for the publish."""
+    """build/site/: index.html and media/ (the reel's images as WebP at the size the player shows, videos as small MP4s,
+    the music clip), with files.json listing the media for the publish."""
     site = vd / "build/site"
     if site.exists():
         shutil.rmtree(site)
@@ -536,17 +540,6 @@ def write_site(data, vd):
     for b in d["beats"]:
         if b["visual"]:
             b["visual"]["src"] = put(b["visual"]["src"], 1600, 84, "reel")
-    for g in d["groups"]:
-        if g["plate"]:
-            g["plate"] = put(g["plate"], 1600, 84, "reel")
-        for im in g["images"]:
-            if im["video"]:
-                im["src"] = im["large"] = put(im["src"], 0, 0, "large")
-                im["thumb"] = None
-                continue
-            im["large"] = put(im["src"], 1400, 80, "large")
-            im["thumb"] = put(im["src"], 120, 78, "thumb")
-            im["src"] = im["large"]
     for tr in d["music"]["tracks"]:
         tr["src"] = put(tr["src"], 0, 0, "music")
     (site / "index.html").write_text(page(d, site=True))

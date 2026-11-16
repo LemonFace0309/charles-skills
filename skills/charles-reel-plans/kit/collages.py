@@ -23,9 +23,15 @@ Each PNG is the zone plus a 40 px margin, at 2x (2100x1160 for the default zone)
 1080x1920 grid: the same canvas and position list_reel.py composites, so the edit can lay these over the cut as they are.
 layout.json keeps every rectangle.
 
+Nothing may cover another image's subject (Charles, 16 Nov 2026: "make sure the overlap ... don't cover core subjects").
+Each image has a focus box, the part that has to stay in view, and a layout where anything lies over more than 1.5% of a
+focus box is thrown out, so images only overlap at their edges. By default the focus is the inner 80% of the image, and
+nearly all of it for the pick. Give an image its own "focus" when its subject sits off-centre (Nyan Cat's face at the
+right) or when it's a card of words that must all show.
+
 The composites file: [{"group": "2006", "label": "...", "seed": optional, "images": [{"file": "assets/years/2006/1-x.png",
-"kind": "screen", "scale": optional size factor, "top": true to lie on top like a sticker}, ...]}, ...], the pick first.
-Paths are relative to the video folder.
+"kind": "screen", "scale": optional size factor, "top": true to lie on top like a sticker, "focus": [x0, y0, x1, y1] as
+fractions of the image}, ...]}, ...], the pick first. Paths are relative to the video folder.
 """
 import json
 import math
@@ -43,6 +49,9 @@ K = 2
 ZX0, ZY0, ZX1, ZY1 = LIST.get("zone", [50, 1150, 1020, 1650])   # where any corner may go: under his chin, clear of the stopwatch
 SAFE_L, SAFE_R, SAFE_B = LIST.get("safe", [70, 950, 1500])      # what counts as seen: left of Instagram's buttons, above its caption
 MAX_UNDER = 0.3
+MAX_ON_FOCUS = 0.015                            # how much of a focus box anything may lie over
+FOCUS = {"pick": [0.06, 0.06, 0.94, 0.94], "logo": [0.05, 0.05, 0.95, 0.95], "cutout": [0.12, 0.12, 0.88, 0.88],
+         "default": [0.1, 0.1, 0.9, 0.9]}
 PAD = 40
 SC = 4                                          # the layout search rasterises at 1/4 scale
 SEED = LIST.get("seed", 7)
@@ -106,18 +115,28 @@ def size_of(rng, w0, h0, hero, shrink, kind):
     return side * math.sqrt(asp), side / math.sqrt(asp)
 
 
-def layout(n, seed, shapes, kinds, scales, prev=None, tops=None):
+def focus_poly(rect, f):
+    """The focus box (fractions of the image) as a polygon, turned with the image."""
+    cx, cy, w, h, deg = rect
+    lx, ly = ((f[0] + f[2]) / 2 - 0.5) * w, ((f[1] + f[3]) / 2 - 0.5) * h
+    a = math.radians(deg)
+    return corners(cx + lx * math.cos(a) - ly * math.sin(a), cy + lx * math.sin(a) + ly * math.cos(a),
+                   (f[2] - f[0]) * w, (f[3] - f[1]) * h, deg)
+
+
+def layout(n, seed, shapes, kinds, scales, prev=None, tops=None, focus=None):
     """shapes: [(w, h)] framed, the pick first. Returns (order, rects): rects[j] = (cx, cy, w, h, deg), order bottom first.
     The first pass is list_reel.py's search exactly. Only if nothing fits (four big images can fill the safe height on their
     own) does it try again with the whole set a little smaller each time."""
+    focus = focus or [FOCUS["pick"] if j == 0 else FOCUS.get(k, FOCUS["default"]) for j, k in enumerate(kinds)]
     for step in range(6):
-        found = search(n, seed, shapes, kinds, scales, prev, 0.92 ** step, tops or [False] * len(shapes))
+        found = search(n, seed, shapes, kinds, scales, prev, 0.92 ** step, tops or [False] * len(shapes), focus)
         if found:
             return found
     raise AssertionError(f"no layout fits item {n}, even at {0.92 ** 5:.2f}x: drop an image or give one a smaller scale")
 
 
-def search(n, seed, shapes, kinds, scales, prev, fit, tops):
+def search(n, seed, shapes, kinds, scales, prev, fit, tops, focus):
     stick = [k == "logo" or t for k, t in zip(kinds, tops)]   # logo cards and images marked "top" lie on top, like stickers
     rng = np.random.default_rng([SEED, seed if seed is not None else n])
     count = len(shapes)
@@ -129,7 +148,7 @@ def search(n, seed, shapes, kinds, scales, prev, fit, tops):
     zone_area = (ZX1 - ZX0) * (ZY1 - ZY0) / SC / SC
     best, best_score = None, 1e9
     room = 0.85 * (ZX1 - ZX0) * (SAFE_B + 60 - ZY0)
-    for _ in range(4000):
+    for _ in range(6000):
         sizes = [size_of(rng, w0, h0, j == 0, shrink * scales[j], kinds[j]) for j, (w0, h0) in enumerate(shapes)]
         k = min(1.0, math.sqrt(room / sum(w * h for w, h in sizes)))
         rects = []
@@ -142,9 +161,9 @@ def search(n, seed, shapes, kinds, scales, prev, fit, tops):
             else:
                 ax, ay, aw, ah, _ = rects[rng.integers(len(rects))]
                 ang = rng.choice([0, 30, 150, 180]) + rng.uniform(-12, 12)
-                sticker = stick[j]               # a sticker on top only catches the edge of the print under it
-                ox = rng.uniform(*((0.05, 0.18) if sticker else (0.15, 0.4))) * min(w, aw)
-                oy = rng.uniform(*((0.05, 0.2) if sticker else (0.15, 0.45))) * min(h, ah)
+                # prints only catch each other's edges, so no one's subject goes under another (the focus boxes check it)
+                ox = rng.uniform(0.02, 0.07) * min(w, aw)
+                oy = rng.uniform(0.02, 0.07) * min(h, ah)
                 cx = ax + math.cos(math.radians(ang)) * ((aw + w) / 2 - ox)
                 cy = ay + math.sin(math.radians(ang)) * ((ah + h) / 2 - oy) + rng.uniform(-0.2, 0.2) * h
             rects.append((cx, cy, w, h, deg))
@@ -160,10 +179,14 @@ def search(n, seed, shapes, kinds, scales, prev, fit, tops):
         order = [j for j in order if not stick[j]] + [j for j in order if stick[j]]
         ms = [mask(p) for p in polys]
         areas = [m.sum() for m in ms]
-        vis, above = {}, np.zeros_like(ms[0])
+        fms = [mask(focus_poly(r, f)) for r, f in zip(rects, focus)]
+        vis, on_focus, above = {}, {}, np.zeros_like(ms[0])
         for j in reversed(order):
             vis[j] = (ms[j] & ~above).sum() / areas[j]
+            on_focus[j] = (fms[j] & above).sum() / max(1, fms[j].sum())
             above |= ms[j]
+        if max(on_focus.values()) > MAX_ON_FOCUS:     # something lies over a subject
+            continue
         if vis[0] < 0.92 or min(vis.values()) < 0.6:
             continue
         if any(kinds[j] == "logo" and vis[j] < 0.9 for j in range(count)):   # half a wordmark doesn't read
@@ -187,15 +210,16 @@ def search(n, seed, shapes, kinds, scales, prev, fit, tops):
 
 
 def render(item, n, prev):
-    ims, kinds, scales, tops = [], [], [], []
-    for spec in item["images"]:
+    ims, kinds, scales, tops, focus = [], [], [], [], []
+    for j, spec in enumerate(item["images"]):
         im = Image.open(vd / spec["file"])
         im.load()
         ims.append(frame(im, spec.get("kind", "screen")))
         kinds.append(spec.get("kind", "screen"))
         scales.append(float(spec.get("scale", 1.0)))
         tops.append(bool(spec.get("top", False)))
-    order, rects = layout(n, item.get("seed"), [im.size for im in ims], kinds, scales, prev, tops)
+        focus.append(spec.get("focus") or (FOCUS["pick"] if j == 0 else FOCUS.get(kinds[-1], FOCUS["default"])))
+    order, rects = layout(n, item.get("seed"), [im.size for im in ims], kinds, scales, prev, tops, focus)
     canvas = Image.new("RGBA", ((ZX1 - ZX0 + 2 * PAD) * K, (ZY1 - ZY0 + 2 * PAD) * K), (0, 0, 0, 0))
     for j in order:
         cx, cy, w, h, deg = rects[j]
