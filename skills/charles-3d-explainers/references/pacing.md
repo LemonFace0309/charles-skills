@@ -128,36 +128,6 @@ Rules:
 - Every move eases in and out (`ease: 'inOutSine'`, `flow: true` through several keys). Only whips and zoom-throughs
   are fast in the middle on purpose.
 
-## 4b. Framing: sizes and heights
-
-Measured in November 2026 on ten 3D story reels (character stories with their own 3D characters, 27 to 86 million
-views each, 100 to 180 s long): 12 evenly spaced frames from each, 118 labelled after two transition frames were
-dropped, and a cut-and-whip count on the eight whose cuts could be read.
-
-| Size | Share | Height | Share |
-| --- | --- | --- | --- |
-| Insert or extreme close-up (a hand, an eye, a note, a phone screen) | 17% | Low, looking up | 38% |
-| Close-up | 14% | Eye level | 33% |
-| Medium close-up | 8% | High, looking down | 25% |
-| Medium | 34% | Top-down | 3% |
-| Wide | 27% | | |
-
-- 7% of frames are also rolled (dutch), in three of the ten reels, and only in danger.
-- 29% of frames look past something near the lens: a shoulder or the back of a head, bars, a bed edge, a protractor
-  on a desk. It is defocused and sits at the frame's edge.
-- Shot sizes run as a ladder: wide (the room), medium (the person), close, then an insert of the thing the line names
-  (hands tapping, the F on the forehead, the email on the laptop, the calendar on "a week"), and back out. Inserts
-  land on their word and come every two or three shots.
-- The camera sits low inside rooms, at waist height or below with a wide lens, so the ceiling and its lights are in
-  frame and near hands and props loom. The ones looking up are heroes, threats and people speaking; the ones looking
-  down are someone lying, sitting or being judged, and the layout of a room.
-- Notes, documents, screens and phones get a full-frame insert, straight down or seen from the holder's eyes, readable
-  in under a second.
-- About 6 in 10 transitions are whips of 3 to 6 frames, the rest hard cuts. Shots run 1.1 to 4.3 s (the middle half),
-  median about 2.3 s, and the camera never rests inside them.
-- What it means here: SKILL.md's Framing tree. An explainer keeps its square-on teaching frames, which the story reels
-  have no use for, and varies size and height in every setup around them.
-
 ## 5. Transitions
 
 Shares are of all detected boundaries (long explainers / fast story reels), from an automatic classification that was
