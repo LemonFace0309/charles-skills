@@ -1,6 +1,9 @@
-"""Build a video's player from its edit/plan.json: a moving mockup of the reel, playing with its music. Nothing else is
-on the page (Charles, 16 Nov 2026: "just give me the video player ... I don't need the extra fluff"); the script, the
-caption and the sources live in the video's files.
+"""Build a video's plan page from its edit/plan.json and SCRIPT.md: the player (a moving mockup of the reel playing with
+its music, a play bar and a safe-area toggle), then the script as he reads it, the caption options and every asset with
+its source. Nothing else goes around the player: no Instagram UI, music picker or now-playing line (Charles, 16 Nov
+2026: "too much fluff around the video player section"), but the sections stay ("Still include the other sections...
+like the assets and the script and the video caption options") and so does the safe-area toggle ("that was actually
+useful").
 
   python3 -I <skill>/kit/build.py <video folder>           # build/plan.html, <assets_dir>/SOURCES.md, build/music/
   python3 -I <skill>/kit/build.py <video folder> --site    # also build/site/, the shareable copy, to publish as an Artifact
@@ -370,6 +373,123 @@ def write_sources(plan, vd, groups):
     (vd / adir / "SOURCES.md").write_text("\n".join(out))
 
 
+def norm(text):
+    """A line cut down to its letters and digits, to match SCRIPT.md's lines to the plan's: no list number, case, quotes or
+    punctuation."""
+    text = re.sub(r"^\s*\d+\.\s+", "", text.lower().replace("\u2019", "'").replace("\u2018", "'"))
+    return re.sub(r"[^a-z0-9]+", "", text)
+
+
+def script_for(plan, vd, beats, hook):
+    """The script as he reads it: SCRIPT.md line for line, in his notes' format, each spoken line tied to the plan's line
+    it is, so the page can jump there and light it up while it plays. Without a SCRIPT.md, the same format from the plan."""
+    path = vd / plan.get("script", "SCRIPT.md")
+    if path.exists():
+        lines = path.read_text().strip("\n").split("\n")
+    else:
+        lines = [f"**{plan['title']}**", ""]
+        if hook.get("lines"):
+            lines += ["Text hook: " + " ".join(hook["lines"] + ([hook["sub"]] if hook.get("sub") else [])), ""]
+        lines += [f"{b['number']}. {b['say']}" if b["row"] is not None else b["say"] for b in beats]
+    says = [norm(b["say"]) for b in beats]
+    names = [{says[k], norm(b["label"] or "")} - {""} for k, b in enumerate(beats)]   # a list line can match its label
+    out, j = [], 0
+    for line in lines:
+        bare = line.replace("*", "").strip()
+        n, i = norm(bare), None
+        if n and not re.match(r"text hook\b", bare, re.I):
+            for k in range(j, len(beats)):
+                if n in names[k] or (len(says[k]) >= 8 and says[k] in n):
+                    i, j = k, k + 1
+                    while j < len(beats) and len(says[j]) >= 8 and says[j] in n:   # a sentence the plan cut into lines
+                        j += 1
+                    break
+                if len(n) >= 8 and n in says[k]:                                    # lines the plan keeps as one
+                    i, j = k, k
+                    break
+        out.append({"text": line, "i": i})
+    for a, b in zip(out, out[1:]):      # a label line (*4. Your 60 = background*) goes with the line it introduces
+        if a["i"] is None and b["i"] is not None and re.fullmatch(r"\*[^*].*\*", a["text"].strip()):
+            a["i"] = b["i"]
+    return out
+
+
+LENGTHS = {}
+
+
+def clip_length(path):
+    if path not in LENGTHS:
+        r = subprocess.run(["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", str(path)],
+                           capture_output=True, text=True)
+        try:
+            LENGTHS[path] = float(r.stdout.strip())
+        except ValueError:
+            LENGTHS[path] = 0.0
+    return LENGTHS[path]
+
+
+def poster_for(vd, src, at):
+    """A still of a clip at `at` seconds, its transparency kept, for the clip's card on the page: build/posters/."""
+    d = clip_length(src)
+    if d > 0:
+        at = min(at, max(0.0, d - 0.05))
+    name = re.sub(r"[^A-Za-z0-9]+", "-", str(src.relative_to(vd).with_suffix(""))).strip("-")
+    out = vd / "build/posters" / f"{name}-{round(at * 1000)}.webp"
+    if out.exists() and out.stat().st_mtime >= src.stat().st_mtime:
+        return out
+    out.parent.mkdir(parents=True, exist_ok=True)
+    png = out.with_suffix(".png")
+    dec = ["-c:v", "libvpx-vp9"] if src.suffix.lower() == ".webm" else []    # ffmpeg's own VP9 decoder drops the alpha
+    subprocess.run(["ffmpeg", "-v", "error", "-y", *dec, "-ss", f"{at:.3f}", "-i", str(src), "-frames:v", "1",
+                    "-vf", "format=rgba", str(png)], check=False)
+    if not png.exists():
+        return None
+    webp(png, out, 720, 80)
+    png.unlink()
+    return out
+
+
+def assets_for(plan, vd, beats, groups, under_chin):
+    """Every asset the reel shows, in order, for the page: a card per list item's group (its collage, then each image in
+    it with its source and licence; spares stay in SOURCES.md) and one per other thing a line shows, with every line it's
+    on. Lines that show the same file as the same thing (a clip that carries on, a card that comes back) share a card."""
+    by_group = {g["id"]: g for g in groups}
+    cap_y, eye, root = plan.get("caption_y", 1380), plan.get("eye_line", 860), repo_root(vd)
+    cards, index = [], {}
+    for i, b in enumerate(beats):
+        v, g = b["visual"], b["group"]
+        key = ("group", str(g)) if g is not None and str(g) in by_group else ("file", v["file"], v.get("what") or "") if v else None
+        if key is None:
+            continue
+        if key in index:
+            cards[index[key]]["beats"].append(i)
+            continue
+        index[key] = len(cards)
+        listed = b["number"] is not None and b["label"]
+        card = {"beats": [i], "number": b["number"], "start": b["start"],
+                "title": b["label"] if listed else (v or {}).get("what") or b["say"], "what": "", "meta": None,
+                "plate": None, "pieces": [im for im in by_group[key[1]]["images"] if im["used"]] if key[0] == "group" else []}
+        if v:
+            w, hh = box(v, cap_y, eye, under_chin)[2:]
+            src = vd / v["file"]
+            plate = {"src": v["src"], "type": v["type"], "alpha": bool(v.get("alpha")), "aspect": round(w / hh, 3)}
+            if v["type"] == "video" and src.exists():
+                d, at = clip_length(src), (v.get("from") or 0) + 0.7 * b["dur"]      # most of the way into its line
+                if d > 0 and at >= d:
+                    at = at % d if v.get("loop", True) is not False else d - 0.05
+                p = poster_for(vd, src, at)
+                plate["poster"] = rel_from_page(vd, p.relative_to(vd)) if p else None
+            card["plate"] = plate
+            if key[0] == "file":
+                e = sources(src.parent).get(src.name, {}) if src.parent.exists() else {}
+                if listed:
+                    card["what"] = v.get("what") or e.get("what", "")
+                card["meta"] = {"source": e.get("source", ""), "license": e.get("license", ""),
+                                "link": link_for(vd, root, e.get("file_page") or e.get("source_url") or "")}
+        cards.append(card)
+    return cards
+
+
 def cut_music(plan, vd, length):
     """build/music/<n>-<title>.mp3: each track from its start point for the reel's length and the loop's hold, faded out at
     the end, at one loudness so switching tracks doesn't jump. The page then plays each clip from 0 and never has to seek
@@ -462,14 +582,18 @@ def build(vd):
     data["checks"] = checks(plan, vd, beats, hook, lst, data["music"], data["reel"]["under_chin"])
     write_sources(plan, vd, groups)
     player = {k: data[k] for k in ("title", "total", "timed", "beats", "reel", "music", "fonts")}
-    player["post"] = {k: data["post"].get(k, "") for k in ("handle", "caption")}       # only for the ?ig=1 check
+    player["post"] = {k: data["post"][k] for k in ("handle", "caption", "caption_alt", "options", "comment") if data["post"].get(k)}
+    player["script"] = script_for(plan, vd, beats, hook)
+    player["assets"] = assets_for(plan, vd, beats, groups, data["reel"]["under_chin"])
     (vd / "build").mkdir(exist_ok=True)
     (vd / "build/plan.html").write_text(page(player, site=False))
     n_vis = sum(1 for b in beats if b["visual"])
     ends = f", list ends {lst['stop_at']:.1f} s" if lst else ""
     subtitle = f", subtitle {hook['sub']}" if hook.get("sub") else ""
-    print(f"build/plan.html: {len(beats)} lines, {n_vis} with an asset, {len(groups)} asset groups, {total:.1f} s "
-          f"({data['timed']}){ends}{subtitle}, {len(data['music']['tracks'])} music tracks")
+    tied = sum(1 for ln in player["script"] if ln["i"] is not None)
+    print(f"build/plan.html: {len(beats)} lines, {n_vis} with an asset, {len(player['assets'])} asset cards, {total:.1f} s "
+          f"({data['timed']}){ends}{subtitle}, {len(data['music']['tracks'])} music tracks; script: {tied} of "
+          f"{sum(1 for ln in player['script'] if ln['text'].strip())} lines tied to the plan's lines")
     print("Checks against charles-claude-editing's rules: " + ("all pass" if not data["checks"] else ""))
     for c in data["checks"]:
         print(f"  - {c}")
@@ -483,7 +607,7 @@ def page(data, site):
     js = (KIT / "page/page.js").read_text()
     payload = json.dumps(data, ensure_ascii=False).replace("</", "<\\/")
     title = html.escape(data["title"])
-    desc = html.escape(f"{data['title']}: a moving mockup of the reel, with its music.")
+    desc = html.escape(f"{data['title']}: the reel playing with its music, the script, the caption options and every asset.")
     scripts = f"<script>\nwindow.VIDEO = {payload};\n</script>\n<script>\n{js}</script>\n"
     if site:   # no head: the Artifact host adds its own, so the title, description and style lead the file
         return (f'<title>{title}</title>\n<meta name="description" content="{desc}">\n'
@@ -505,7 +629,8 @@ def webp(src, out, longest, quality):
 
 def write_site(data, vd):
     """build/site/: index.html and media/ (the reel's images as WebP at the size the player shows, videos as small MP4s,
-    the music clip), with files.json listing the media for the publish."""
+    the music clip, the clips' stills, and each collage image large and as a thumbnail), with files.json listing the
+    media for the publish."""
     site = vd / "build/site"
     if site.exists():
         shutil.rmtree(site)
@@ -527,7 +652,7 @@ def write_site(data, vd):
             subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", str(src), "-an", "-vf", "scale='min(720,iw)':-2",
                             "-c:v", "libx264", "-crf", "28", "-preset", "veryfast", "-pix_fmt", "yuv420p", "-movflags", "+faststart",
                             str(out)], check=True)
-        elif src.suffix.lower() == ".mp3":
+        elif src.suffix.lower() == ".mp3" or kind == "poster":
             out = media / kind / rel.name
             out.parent.mkdir(parents=True, exist_ok=True)
             shutil.copy2(src, out)
@@ -567,6 +692,23 @@ def write_site(data, vd):
             v["src"], v["alt"] = put_alpha(v["src"])
         elif v:
             v["src"] = put(v["src"], 1600, 84, "reel")
+    for a in d["assets"]:
+        p = a["plate"]
+        if p:
+            if p["type"] == "video" and p["alpha"]:
+                p["src"], p["alt"] = put_alpha(p["src"])
+            else:
+                p["src"] = put(p["src"], 1600, 84, "reel")       # the same file the reel shows, so it isn't sent twice
+            if p.get("poster"):
+                p["poster"] = put(p["poster"], 0, 0, "poster")
+        for im in a["pieces"]:
+            if im["video"]:
+                im["src"] = im["large"] = put(im["src"], 0, 0, "reel")
+                im["thumb"] = None
+                continue
+            im["large"] = put(im["src"], 1400, 80, "large")
+            im["thumb"] = put(im["src"], 120, 78, "thumb")
+            im["src"] = im["large"]
     for tr in d["music"]["tracks"]:
         tr["src"] = put(tr["src"], 0, 0, "music")
     (site / "index.html").write_text(page(d, site=True))

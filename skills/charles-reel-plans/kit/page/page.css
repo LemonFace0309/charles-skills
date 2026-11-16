@@ -1,41 +1,57 @@
-/* The reel plan's player: only the reel, playing with its music, and a play bar under it. The page is dark on purpose,
-   like a phone in a dark room, so the reel reads as it will on Instagram. The reel itself (1080x1920) is laid out on the
-   edit's grid and scaled to fit, so what plays is where the edit will put it. Fonts the reel needs come inlined in the data. */
+/* The reel plan page: the player (the reel, a play bar with full screen, the Safe area and Instagram UI toggles and the
+   music, nothing else around it), then the script, the caption options and the assets. Dark on purpose, like a phone in a dark room, so the reel reads as it will on
+   Instagram; the only accent is the list's orange. The reel itself (1080x1920) is laid out on the edit's grid and scaled
+   to the phone, so what plays is where the edit will put it. Fonts the reel needs come inlined in the data. */
 
 :root {
   color-scheme: dark;
   --bg: #0f0e0d;
-  --surface-2: #2a2826;
+  --surface: #181716;
+  --surface-2: #232120;
   --text: #efede9;
-  --text-3: #8a857f;
+  --text-2: #a9a59f;
+  --text-3: #7d7973;
   --accent: #ff963c;
+  --radius: 14px;
   --sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif;
   --reel: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  /* the player stays in view on a computer, a little short of the window's height so the bar, the toggles and the
+     music fit under it ("make the video playback itself a bit smaller"); full screen makes it as big as it goes */
+  --pw: clamp(260px, calc((100vh - 190px) * 0.5625), 400px);
+}
+@supports (height: 100dvh) {
+  :root { --pw: clamp(260px, calc((100dvh - 190px) * 0.5625), 400px); }
 }
 
 * { box-sizing: border-box; }
 [hidden] { display: none !important; }   /* as the Artifact host's reset has it, so the local page behaves the same */
-html, body { height: 100%; }
+html { scroll-behavior: smooth; scroll-padding-top: 16px; }
 body {
   margin: 0;
-  display: flex; align-items: center; justify-content: center;
-  padding-block: 16px;
   padding-left: max(16px, env(safe-area-inset-left, 0px));
   padding-right: max(16px, env(safe-area-inset-right, 0px));
   background: var(--bg);
   color: var(--text);
-  font: 14px/1.4 var(--sans);
+  font: 15px/1.55 var(--sans);
   -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
+a { color: inherit; text-decoration-color: rgba(255, 244, 232, 0.28); text-underline-offset: 3px; }
+a:hover { color: var(--accent); text-decoration-color: currentColor; }
 button { font: inherit; color: inherit; }
 :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 6px; }
+::selection { background: rgba(255, 150, 60, 0.35); }
 
-.player { display: flex; flex-direction: column; align-items: center; gap: 10px; width: min(100%, calc((100vh - 96px) * 0.5625)); }
-@supports (height: 100dvh) {
-  .player { width: min(100%, calc((100dvh - 96px) * 0.5625)); }
+/* ---- page frame: the player on the left, staying in view, and the sections beside it ------------------------------ */
+.board {
+  display: grid; grid-template-columns: var(--pw) minmax(0, 1fr); gap: 56px; align-items: start;
+  max-width: 1360px; margin: 0 auto; padding: 16px 8px 80px;
 }
+
+/* ---- the player ------------------------------------------------------------------------------------------------ */
+.stage { position: sticky; top: 16px; display: flex; flex-direction: column; gap: 10px; width: var(--pw); }
 .phone {
-  position: relative; width: 100%; max-width: 100%; aspect-ratio: 9 / 16;
+  position: relative; width: 100%; aspect-ratio: 9 / 16;
   border-radius: 22px; overflow: hidden; background: #000; cursor: pointer;
   box-shadow: 0 0 0 1px rgba(255, 244, 232, 0.1), 0 24px 70px rgba(0, 0, 0, 0.5);
   contain: layout paint;
@@ -71,11 +87,107 @@ button { font: inherit; color: inherit; }
 .track .fill { position: absolute; left: 0; top: 0; bottom: 0; background: var(--accent); }
 .scrub input { position: absolute; inset: 0; width: 100%; margin: 0; opacity: 0; cursor: pointer; }
 .scrub .head { position: absolute; top: 5px; width: 12px; height: 12px; margin-left: -6px; border-radius: 50%; background: var(--text); pointer-events: none; }
-.clock { flex: none; font-variant-numeric: tabular-nums; color: var(--text); }
-.heard-dot { flex: none; width: 10px; height: 10px; border-radius: 50%; background: var(--surface-2); }
-.heard-dot.on { background: var(--accent); }
+.clock { flex: none; font-variant-numeric: tabular-nums; color: var(--text); font-size: 14px; }
 .clock-total { color: var(--text-3); }
 .clock-total::before { content: " / "; }
+.bar .full-btn {
+  display: grid; place-items: center; flex: none;
+  width: 32px; height: 32px; margin-right: -4px; border: 0; border-radius: 8px; background: transparent; cursor: pointer;
+}
+.bar .full-btn:hover { background: var(--surface); }
+.full-btn svg { width: 20px; height: 20px; fill: none; stroke: var(--text); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.full-btn .i-exit, .full .full-btn .i-full { display: none; }
+.full .full-btn .i-exit { display: block; }
+.heard-dot { flex: none; width: 10px; height: 10px; border-radius: 50%; background: var(--surface-2); }
+.heard-dot.on { background: var(--accent); }
+
+.opts { display: flex; flex-wrap: wrap; gap: 4px 18px; padding: 0 4px; }
+.opt { display: inline-flex; align-items: center; gap: 8px; color: var(--text-2); font-size: 13px; cursor: pointer; user-select: none; }
+.opt input { margin: 0; width: 15px; height: 15px; accent-color: var(--accent); cursor: pointer; }
+.music-line { margin: 0; padding: 0 4px; color: var(--text-2); font-size: 13px; line-height: 1.45; }
+.music-line .mark { margin-right: 6px; }
+
+/* full screen: the reel as big as the screen allows, with its bar and toggles. The browser's own full screen where the
+   page may use it, otherwise the page fills its window, which is what an iPhone gets */
+.stage.full {
+  position: fixed; inset: 0; z-index: 20; width: auto; top: 0; margin: 0;
+  justify-content: center; align-items: center; gap: 10px; padding: 12px 16px; background: #000;
+}
+.stage.full .phone, .stage.full .bar, .stage.full .opts { width: min(100%, calc((100vh - 96px) * 0.5625)); }
+@supports (height: 100dvh) {
+  .stage.full .phone, .stage.full .bar, .stage.full .opts { width: min(100%, calc((100dvh - 96px) * 0.5625)); }
+}
+.stage.full .phone { box-shadow: none; }
+.stage.full .music-line { display: none; }
+body.full-open { overflow: hidden; }
+
+/* ---- the sections ---------------------------------------------------------------------------------------------- */
+.sheets { display: flex; flex-direction: column; gap: 48px; min-width: 0; padding-top: 6px; }
+.top { display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: 8px 24px; }
+h1 { margin: 0; font-size: 26px; line-height: 1.15; font-weight: 600; letter-spacing: -0.01em; text-wrap: balance; }
+.jump { display: flex; gap: 2px; margin-right: -10px; }
+.jump a { padding: 6px 10px; border-radius: 8px; color: var(--text-2); text-decoration: none; }
+.jump a:hover { color: var(--text); background: var(--surface); }
+.sheet-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 14px; }
+.sheet h2 { margin: 0; font-size: 20px; line-height: 1.2; font-weight: 600; }
+
+.copy { flex: none; border: 0; border-radius: 8px; padding: 4px 10px; background: var(--surface-2); color: var(--text); cursor: pointer; font-size: 13px; }
+.copy:hover { color: var(--accent); }
+
+/* the script, laid out the way his notes have it; a line he says jumps the reel there */
+.script { max-width: 64ch; font-size: 16px; line-height: 1.5; }
+.script p { margin: 0 -10px; padding: 2px 10px; border-radius: 8px; text-wrap: pretty; }
+.script .gap { height: 0.85em; }
+.script .s-title { font-weight: 700; }
+.script .s-label { font-style: italic; color: var(--text-2); }
+.script .seekable { cursor: pointer; }
+.script .seekable:hover { background: var(--surface); }
+.script .current, .script .current.s-label { color: var(--accent); }
+
+.captions { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr)); gap: 14px; }
+.capbox { background: var(--surface); border-radius: var(--radius); padding: 14px 18px 18px; min-width: 0; }
+.capbox-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 8px; color: var(--text-2); font-size: 13px; }
+.capbox pre { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; font: 15px/1.55 var(--sans); color: var(--text); }
+
+/* an asset: as the reel shows it (click for full size), what it is, where it came from; the card jumps the reel there */
+.cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(250px, 100%), 1fr)); gap: 14px; align-items: start; }
+.card { background: var(--surface); border-radius: var(--radius); padding: 8px 8px 12px; cursor: pointer; min-width: 0; }
+.card:hover { background: var(--surface-2); }
+.plate {
+  position: relative; display: block; width: 100%; padding: 0; border: 0; border-radius: 9px;
+  overflow: hidden; background: #3b2f28; cursor: zoom-in;
+}
+.plate::before { /* a hint of him behind it, so a cut-out or a card with a clear background reads as it will over him */
+  content: ""; position: absolute; inset: 22% 18% -40%; border-radius: 45% 45% 0 0; background: #8a7b6f; filter: blur(14px);
+}
+.plate img, .plate video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
+.plate.pending { display: grid; place-items: center; aspect-ratio: 16 / 9; color: rgba(255, 244, 232, 0.6); font-size: 13px; cursor: default; }
+.plate.pending::before { content: none; }
+.card h3 { margin: 10px 4px 0; font-size: 14.5px; font-weight: 600; line-height: 1.35; }
+.mark { color: var(--text-3); font-variant-numeric: tabular-nums; margin-right: 8px; }
+.card.current h3, .card.current .mark { color: var(--accent); }
+.card .what, .card .meta { margin: 3px 4px 0; font-size: 12.5px; line-height: 1.4; }
+.card .what { color: var(--text-2); }
+.meta { color: var(--text-3); overflow-wrap: anywhere; }
+.meta a { color: var(--text-2); }
+.pieces { list-style: none; margin: 10px 0 0; padding: 0 4px; display: flex; flex-direction: column; gap: 8px; }
+.pieces li { display: grid; grid-template-columns: 40px minmax(0, 1fr); gap: 10px; align-items: start; font-size: 12.5px; line-height: 1.4; }
+.pieces li.spare { opacity: 0.55; }
+.thumb {
+  width: 40px; height: 40px; padding: 0; border: 0; border-radius: 6px; cursor: zoom-in;
+  background: var(--surface-2) center / contain no-repeat;
+}
+.thumb:hover { box-shadow: 0 0 0 1px var(--accent); }
+.p-what { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; color: var(--text); }
+.p-meta { display: block; }
+
+/* one asset at full size */
+.viewer { width: min(100%, 1100px); max-width: calc(100% - 32px); max-height: calc(100% - 32px); padding: 0; border: 0; background: transparent; color: var(--text); cursor: zoom-out; }
+.viewer::backdrop { background: rgba(8, 7, 6, 0.88); }
+.viewer img, .viewer video { display: block; max-width: 100%; max-height: calc(100vh - 140px); margin: 0 auto; object-fit: contain; border-radius: 6px; }
+.viewer .v-text { max-width: 80ch; margin: 0 auto; padding: 12px 4px 0; font-size: 13px; }
+.viewer p { margin: 0; }
+.viewer .v-meta { margin-top: 4px; }
 
 /* ---- the reel, in 1080x1920 reel pixels ------------------------------------------------------------------------- */
 .reel {
@@ -141,7 +253,7 @@ button { font: inherit; color: inherit; }
 .cap { position: absolute; left: 80px; right: 80px; text-align: center; font-weight: 700; line-height: 1.12; }
 .cap div { color: #fff; -webkit-text-stroke: 6px #000; paint-order: stroke fill; text-shadow: 0 4px 10px rgba(0, 0, 0, 0.5); }
 
-/* Instagram's chrome, roughly where it sits on a phone, to judge the safe area */
+/* Instagram's chrome, roughly where it sits on a phone (the Instagram UI toggle, or &ig=1 for frame checks) */
 .ig { position: absolute; inset: 0; pointer-events: none; font-family: var(--sans); }
 .ig svg { width: 66px; height: 66px; fill: none; stroke: #fff; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.35)); }
 .ig .dots { fill: #fff; stroke: none; }
@@ -156,6 +268,7 @@ button { font: inherit; color: inherit; }
 .ig-caption { margin-top: 18px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
 .ig-sound { margin-top: 10px; font-size: 30px; opacity: 0.9; }
 
+/* the safe area: what Instagram covers, hatched, and the side margins */
 .safe { position: absolute; inset: 0; pointer-events: none; font-family: var(--sans); }
 .safe > div { position: absolute; background: repeating-linear-gradient(135deg, rgba(255, 60, 60, 0.26) 0 14px, rgba(255, 60, 60, 0.1) 14px 28px); }
 .safe span { position: absolute; left: 24px; top: 18px; font-size: 30px; font-weight: 600; color: #fff; text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6); }
@@ -168,11 +281,20 @@ button { font: inherit; color: inherit; }
 .safe-margin-r { left: 998px; }
 
 /* ---- ?solo: the reel alone at 1080x1920, for exporting frames ---------------------------------------------------- */
-body.solo { display: block; padding: 0; background: #000; }
-body.solo .player { width: 1080px; gap: 0; }
+body.solo { background: #000; padding: 0; }
+body.solo .sheets, body.solo .bar, body.solo .opts, body.solo .music-line, body.solo .big-play { display: none; }
+body.solo .board { display: block; max-width: none; padding: 0; }
+body.solo .stage { position: static; width: 1080px; }
 body.solo .phone { border-radius: 0; box-shadow: none; }
-body.solo .bar, body.solo .big-play { display: none; }
+
+/* ---- phones and narrow windows: the player first, then the sections under it -------------------------------------- */
+@media (max-width: 980px) {
+  .board { grid-template-columns: minmax(0, 1fr); gap: 36px; padding: 12px 0 64px; }
+  .stage { position: static; width: min(100%, 400px); margin: 0 auto; }
+  h1 { font-size: 22px; }
+}
 
 @media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
   .big-play .disc { transition: none; }
 }

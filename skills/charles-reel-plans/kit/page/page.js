@@ -1,15 +1,19 @@
-/* The reel plan's player: the reel, laid out on the edit's 1080x1920 grid (charles-claude-editing's numbers) and scaled
-   to fit, playing on the plan's timeline with its music. Everything comes from window.VIDEO, which kit/build.py writes
-   from the video's edit/plan.json. The music keeps the time while it plays. Tap the reel or press space to play and
-   pause; the arrow keys step through the lines. */
+/* The reel plan page. The player: the reel, laid out on the edit's 1080x1920 grid (charles-claude-editing's numbers) and
+   scaled to fit, playing on the plan's timeline with its music, with a play bar (full screen at its end), the Safe area
+   and Instagram UI toggles and the music under it, and nothing else around it. Beside it (under it on a phone): the script as he reads it, the caption options and every asset with its
+   source. Everything comes from window.VIDEO, which kit/build.py writes from the video's edit/plan.json and SCRIPT.md.
+   The music keeps the time while it plays. Tap the reel or press space to play and pause, the arrow keys step through
+   the lines, F goes full screen, and a script line or an asset's card jumps the reel there. */
 (() => {
   const V = window.VIDEO;
   const beats = V.beats;
   const N = beats.length;
+  const assets = V.assets || [];
   // A clip with a transparent background ships twice (kit/build.py): HEVC with alpha for Safari and every iOS browser,
   // which are all WebKit and can't show WebM's alpha, and VP9 with alpha in WebM for the rest.
   if (/AppleWebKit/.test(navigator.userAgent) && !/Chrome|Chromium|Edg|OPR|Firefox/.test(navigator.userAgent)) {
     beats.forEach((b) => { if (b.visual && b.visual.alt) b.visual.src = b.visual.alt; });
+    assets.forEach((a) => { if (a.plate && a.plate.alt) a.plate.src = a.plate.alt; });
   }
   const R = V.reel;
   const HOLD = 1.2;                     // the last frame holds this long before the loop starts again
@@ -23,6 +27,7 @@
       if (k === "class") el.className = v;
       else if (k === "text") el.textContent = v;
       else if (k === "style") Object.assign(el.style, v);
+      else if (k.startsWith("on")) el.addEventListener(k.slice(2), v);
       else el.setAttribute(k, v === true ? "" : v);
     }
     for (const kid of kids.flat()) if (kid != null && kid !== false) el.append(kid);
@@ -30,6 +35,7 @@
   }
   const secs = (s) => s.toFixed(1);
   const px = (v) => `${v}px`;
+  const mmss = (s) => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, "0")}`;
 
   for (const [family, url] of Object.entries(V.fonts || {})) {
     const face = new FontFace(family, `url(${url})`, { display: "block" });
@@ -81,7 +87,7 @@
   const person = $("#person");
   const cap = $("#cap");
   cap.style.fontSize = px(R.captions.size);
-  $("#ig-handle").textContent = (V.post && V.post.handle) || "";
+  $("#ig-handle").textContent = ((V.post && V.post.handle) || "").replace(/^@/, "");
   $("#ig-caption").textContent = V.post && V.post.caption ? `${V.post.caption.split("\n")[0]} … more` : "";
   const preload = beats.filter((b) => b.visual && b.visual.type === "image").map((b) => Object.assign(new Image(), { src: b.visual.src }));
 
@@ -167,6 +173,7 @@
     const [dx, dy, s] = jump(i);
     const end = list && i === N - 1 && b.row == null && N > 1; // a list reel's sign-off punches in 6%, as list_reel.py does; nothing else zooms
     person.style.transform = end ? `translate(-30px, ${20 + faceShift(v)}px) scale(1.06)` : `translate(${dx}px, ${dy + faceShift(v)}px) scale(${s})`;
+    light(i);
   }
 
   let clip = null;                     // the line's video, if it has one: { vid, src, start, from }
@@ -312,7 +319,7 @@
   }
   const seekBeat = (i) => seek(beats[i].start + 0.01, { pause: true });
 
-  /* ---- the play bar --------------------------------------------------------------------------------------------- */
+  /* ---- the play bar, full screen, the toggles and the music ------------------------------------------------------ */
   $("#t-total").textContent = `${secs(total)} s`;
   const scrub = $("#scrub");
   scrub.max = String(total);
@@ -330,19 +337,201 @@
   }
   const nextBeat = () => seekBeat(Math.min(N - 1, indexAt(t) + 1));
   scrub.addEventListener("input", () => seek(Number(scrub.value)));
+  // the hatched safe area (what Instagram's header, caption and buttons cover, and the side margins) and Instagram's UI
+  const optSafe = $("#opt-safe"), optIg = $("#opt-ig");
+  optSafe.addEventListener("change", () => { $("#safe").hidden = !optSafe.checked; });
+  optIg.addEventListener("change", () => { $("#ig").hidden = !optIg.checked; });
+
+  // Full screen: the browser's own where the page may use it, and otherwise the player filling the page's window, which
+  // is all an iPhone allows (it only puts a bare <video> full screen).
+  const stage = $("#player"), fullBtn = $("#full");
+  let realFull = false;
+  function setFull(on) {
+    stage.classList.toggle("full", on);
+    document.body.classList.toggle("full-open", on);
+    fullBtn.setAttribute("aria-pressed", String(on));
+    fullBtn.setAttribute("aria-label", on ? "Exit full screen" : "Full screen");
+  }
+  async function toggleFull() {
+    if (!stage.classList.contains("full")) {
+      setFull(true);
+      if (document.fullscreenEnabled && stage.requestFullscreen) {
+        try { await stage.requestFullscreen({ navigationUI: "hide" }); realFull = true; } catch { /* the frame doesn't allow it */ }
+      }
+    } else {
+      if (document.fullscreenElement) { try { await document.exitFullscreen(); } catch { /* already out */ } }
+      realFull = false;
+      setFull(false);
+    }
+  }
+  fullBtn.addEventListener("click", toggleFull);
+  document.addEventListener("fullscreenchange", () => {      // Esc out of the browser's full screen
+    if (!document.fullscreenElement && realFull) { realFull = false; setFull(false); }
+  });
+
+  if (track) {
+    const by = track.artist ? ` by ${track.artist}` : "";
+    $("#music-line").append(h("span", { class: "mark", text: "Music" }), `${track.title}${by}, from ${mmss(track.from || 0)}`);
+    $("#music-line").hidden = false;
+  }
+
+  /* ---- the sections: script, caption, assets --------------------------------------------------------------------- */
+  $("#page-title").textContent = V.title;
+  // what lights up while a line plays: its script lines and its asset's card
+  const lit = new Map();
+  const tie = (el, i) => { if (!lit.has(i)) lit.set(i, []); lit.get(i).push(el); };
+  let litNow = [];
+  function light(i) {
+    litNow.forEach((el) => el.classList.remove("current"));
+    litNow = lit.get(i) || [];
+    litNow.forEach((el) => el.classList.add("current"));
+  }
+  // A script line or a card shows its moment in the reel, playing on if it was playing. On a phone the reel is up the
+  // page, so it scrolls back to it.
+  const narrow = matchMedia("(max-width: 980px)");
+  function jumpTo(i) {
+    document.body.classList.add("started");
+    seek(beats[i].start + 0.01);
+    if (narrow.matches) $("#player").scrollIntoView({ block: "start" });
+  }
+  const hideSection = (id) => {
+    $(`#${id}`).hidden = true;
+    const a = $(`.jump a[href="#${id}"]`);
+    if (a) a.hidden = true;
+  };
+
+  // Copy puts the text on the clipboard (the script with its bold title, for his notes); where the frame blocks the
+  // clipboard, it selects the text instead.
+  async function copy(btn, target, plain, html) {
+    try {
+      if (html && window.ClipboardItem && navigator.clipboard.write) {
+        await navigator.clipboard.write([new ClipboardItem({
+          "text/plain": new Blob([plain], { type: "text/plain" }), "text/html": new Blob([html], { type: "text/html" }) })]);
+      } else {
+        await navigator.clipboard.writeText(plain);
+      }
+      btn.textContent = "Copied";
+    } catch {
+      const range = document.createRange();
+      range.selectNodeContents(target);
+      getSelection().removeAllRanges();
+      getSelection().addRange(range);
+      btn.textContent = "Selected";
+    }
+    setTimeout(() => { btn.textContent = "Copy"; }, 1600);
+  }
+
+  // The script: SCRIPT.md line for line, as his notes lay it out (a bold title, "Text hook:", the lines he says).
+  const S = V.script || [];
+  const scriptBox = $("#script-lines");
+  const esc = (s) => s.replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+  const plain = [], rich = [];
+  S.forEach((ln) => {
+    const t0 = ln.text.trim();
+    const bold = /^\*\*(.+)\*\*$/.exec(t0);
+    const ital = !bold && /^\*([^*].*)\*$/.exec(t0);
+    const text = bold ? bold[1] : ital ? ital[1] : t0.replace(/\*\*(.+?)\*\*/g, "$1");
+    plain.push(text);
+    rich.push(`<div>${!t0 ? "<br>" : bold ? `<b>${esc(text)}</b>` : ital ? `<i>${esc(text)}</i>` : esc(text)}</div>`);
+    if (!t0) { scriptBox.append(h("div", { class: "gap" })); return; }
+    const el = h("p", { class: bold ? "s-title" : ital ? "s-label" : "s-line", text });
+    if (ln.i != null) {
+      el.classList.add("seekable");
+      el.addEventListener("click", () => jumpTo(ln.i));
+      tie(el, ln.i);
+    }
+    scriptBox.append(el);
+  });
+  if (S.length) $("#copy-script").addEventListener("click", (e) => copy(e.currentTarget, scriptBox, plain.join("\n"), rich.join("")));
+  else hideSection("script");
+
+  // The caption options, each ready to paste.
+  const P = V.post || {};
+  const options = [["Caption", P.caption], ["Shorter alternative", P.caption_alt],
+    ...(P.options || []).map((o) => [o.label, o.text]), ["First comment", P.comment]].filter(([, text]) => text);
+  options.forEach(([label, text]) => {
+    const pre = h("pre", { text });
+    const btn = h("button", { class: "copy", type: "button", text: "Copy" });
+    btn.addEventListener("click", () => copy(btn, pre, text));
+    $("#captions").append(h("div", { class: "capbox" }, h("div", { class: "capbox-head" }, h("span", { text: label }), btn), pre));
+  });
+  if (!options.length) hideSection("caption");
+
+  // The assets, in the order the reel shows them. Sources are web pages or paths in the repository; a published copy
+  // has no repository next to it, so there only web pages are links.
+  const hrefFor = (link) => (/^https?:/.test(link || "") ? link : V.site ? null : link || null);
+  const metaOf = (m) => {
+    if (!m) return [];
+    const href = hrefFor(m.link);
+    const parts = [];
+    if (m.source || href) parts.push(href ? h("a", { href, target: "_blank", rel: "noopener", text: m.source || "source" }) : m.source);
+    if (m.license) parts.push(m.license);
+    return parts.flatMap((x, k) => (k ? [" · ", x] : [x]));
+  };
+  const viewer = $("#viewer");
+  function view(item) {
+    const media = $(".v-media", viewer);
+    if (item.video) {
+      const vid = h("video", { src: item.src, poster: item.poster || null, muted: true, autoplay: true, loop: true, playsinline: true });
+      vid.muted = true;
+      media.replaceChildren(vid);
+      vid.play().catch(() => {});
+    } else {
+      media.replaceChildren(h("img", { src: item.src, alt: item.what || "" }));
+    }
+    $(".v-what", viewer).textContent = item.what || "";
+    $(".v-meta", viewer).replaceChildren(...metaOf(item.meta));
+    viewer.showModal();
+  }
+  viewer.addEventListener("click", (e) => { if (!e.target.closest("a")) viewer.close(); });
+  viewer.addEventListener("close", () => { $(".v-media", viewer).replaceChildren(); });
+
+  assets.forEach((a) => {
+    const p = a.plate;
+    const plate = p
+      ? h("button", {
+        class: "plate", type: "button", "aria-label": `See ${a.title} full size`,
+        style: { aspectRatio: String(Math.min(2, Math.max(0.75, p.aspect || 1.6))) },
+        onclick: (e) => { e.stopPropagation(); view({ src: p.src, video: p.type === "video", poster: p.poster, what: a.title, meta: a.meta }); },
+      }, p.type === "video" && !p.poster
+        ? h("video", { src: p.src, muted: true, playsinline: true, preload: "metadata" })
+        : h("img", { src: p.type === "video" ? p.poster : p.src, alt: "", loading: "lazy" }))
+      : h("div", { class: "plate pending" }, h("span", { text: "Pending" }));
+    const mark = a.number != null ? (a.number < 100 ? `${a.number}.` : String(a.number)) : mmss(a.start);
+    const pieces = (a.pieces || []).map((im) => h("li", { class: im.used ? null : "spare" },
+      h("button", {
+        class: "thumb", type: "button", "aria-label": `See ${im.what || "this image"} full size`,
+        style: { backgroundImage: `url("${im.thumb || im.src}")` },
+        onclick: (e) => { e.stopPropagation(); view({ src: im.large || im.src, video: im.video, what: im.what, meta: im }); },
+      }),
+      h("span", {}, h("span", { class: "p-what", text: im.what || im.src.split("/").pop() }),
+        h("span", { class: "p-meta meta" }, im.used ? null : "Spare · ", ...metaOf(im)))));
+    const card = h("article", { class: "card", onclick: (e) => { if (!e.target.closest("a, button")) jumpTo(a.beats[0]); } },
+      plate,
+      h("h3", {}, h("span", { class: "mark", text: mark }), a.title),
+      a.what && a.what !== a.title ? h("p", { class: "what", text: a.what }) : null,
+      a.meta && (a.meta.source || a.meta.license) ? h("p", { class: "meta" }, ...metaOf(a.meta)) : null,
+      pieces.length ? h("ul", { class: "pieces" }, pieces) : null);
+    a.beats.forEach((i) => tie(card, i));
+    $("#cards").append(card);
+  });
+  if (!assets.length) hideSection("assets");
+
   document.addEventListener("keydown", (e) => {
-    if (e.metaKey || e.ctrlKey || e.altKey) return;
-    if (e.key === " " && !e.target.closest("button")) { e.preventDefault(); setPlaying(!playing); }
+    if (e.metaKey || e.ctrlKey || e.altKey || viewer.open) return;
+    if (e.key === "Escape" && stage.classList.contains("full") && !document.fullscreenElement) setFull(false);
+    if ((e.key === "f" || e.key === "F") && !e.target.closest("input")) { e.preventDefault(); toggleFull(); }
+    if (e.key === " " && !e.target.closest("button, a, input")) { e.preventDefault(); setPlaying(!playing); }
     if (e.key === "ArrowRight" && !e.target.closest("input")) { e.preventDefault(); nextBeat(); }
     if (e.key === "ArrowLeft" && !e.target.closest("input")) { e.preventDefault(); prevBeat(); }
   });
 
   /* ---- start ---------------------------------------------------------------------------------------------------- */
-  // ?solo&t=12.3 shows just the reel at 1080x1920, paused at that time, for exporting a frame. For checking a plan,
-  // &ig=1 draws Instagram's UI over it and &safe=1 the safe area; the page itself shows neither.
+  // ?solo&t=12.3 shows just the reel at 1080x1920, paused at that time, for exporting a frame. &ig=1 and &safe=1 turn
+  // the Instagram UI and the safe area on, for frame checks.
   const params = new URLSearchParams(location.search);
-  if (params.get("ig") === "1") $("#ig").hidden = false;
-  if (params.get("safe") === "1") $("#safe").hidden = false;
+  if (params.get("ig") === "1") { optIg.checked = true; $("#ig").hidden = false; }
+  if (params.get("safe") === "1") { optSafe.checked = true; $("#safe").hidden = false; }
   render();
   if (params.has("solo")) {
     document.body.classList.add("solo", "started");

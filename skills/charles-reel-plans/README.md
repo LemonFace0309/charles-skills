@@ -2,18 +2,20 @@
 
 Plans a reel before you film it. Give it a video idea and a reference (one of your reels, someone else's, or a post to
 credit). It tears the reference down, writes the script in your voice, finds the real assets with their licences, writes
-the caption with the credit, and picks the music and where it starts. Then it publishes a player you can open on your
-phone, where the reel plays as a moving mockup with its music over a blurred stand-in for your footage. The script comes
-back as only the lines you say, ready for your notes. All that's left is to read it and film, and the plan file tells the
-editing session what goes where.
+the caption with the credit, and picks the music and where it starts. Then it publishes a page you can open on your
+phone. The reel plays there as a moving mockup with its music over a blurred stand-in for your footage, with full screen
+and toggles for the safe area and Instagram's UI. Beside it are the script as you'll read it, the caption options to copy,
+and every asset with its source. All that's left is to read the script and film, and the plan file tells the editing
+session what goes where.
 
 ## Examples
 
-The player for "Evolution of Design", a 20-year list reel: the list fills in as you speak, the newest year in orange, the
-stopwatch runs, and each year's real artifacts sit under your chin, overlapping only at their edges.
+The page for "Evolution of Design", a 20-year list reel. The list fills in as you speak, with the newest year in orange,
+the stopwatch runs, and each year's real artifacts sit under your chin, overlapping only at their edges. The line playing
+lights up in the script, and a click on any line or asset jumps the reel there.
 
 <p align="center">
-<img src="examples/plan-page.jpg" width="50%" alt="The player: a phone-sized mockup of the reel at 2009, with the list, the stopwatch and Facebook's Like row under the chin">
+<img src="examples/plan-page.jpg" width="100%" alt="The plan page: the reel at 2009 with the list, the stopwatch and Facebook's Like row under the chin, and the script beside it with that line lit">
 </p>
 
 ## Needs

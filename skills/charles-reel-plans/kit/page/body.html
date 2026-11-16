@@ -1,4 +1,5 @@
-<main class="player" id="player">
+<main class="board">
+  <section class="stage" id="player" aria-label="The reel">
     <div class="phone" id="phone">
       <div class="reel" id="reel">
         <div class="footage" id="footage" aria-hidden="true">
@@ -70,5 +71,46 @@
         <input type="range" id="scrub" min="0" step="0.01" value="0" aria-label="Position in the reel">
       </div>
       <div class="clock"><span id="t-now">0.0</span><span class="clock-total" id="t-total"></span></div>
+      <button class="full-btn" id="full" type="button" aria-label="Full screen" aria-pressed="false">
+        <svg class="i-full" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>
+        <svg class="i-exit" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5"/></svg>
+      </button>
     </div>
+    <div class="opts">
+      <label class="opt"><input type="checkbox" id="opt-safe"> Safe area</label>
+      <label class="opt"><input type="checkbox" id="opt-ig"> Instagram UI</label>
+    </div>
+    <p class="music-line" id="music-line" hidden></p>
+  </section>
+
+  <div class="sheets">
+    <header class="top">
+      <h1 id="page-title"></h1>
+      <nav class="jump" aria-label="Sections">
+        <a href="#script">Script</a>
+        <a href="#caption">Caption</a>
+        <a href="#assets">Assets</a>
+      </nav>
+    </header>
+
+    <section class="sheet" id="script" aria-labelledby="script-h">
+      <div class="sheet-head"><h2 id="script-h">Script</h2><button class="copy" id="copy-script" type="button">Copy</button></div>
+      <div class="script" id="script-lines"></div>
+    </section>
+
+    <section class="sheet" id="caption" aria-labelledby="caption-h">
+      <div class="sheet-head"><h2 id="caption-h">Caption</h2></div>
+      <div class="captions" id="captions"></div>
+    </section>
+
+    <section class="sheet" id="assets" aria-labelledby="assets-h">
+      <div class="sheet-head"><h2 id="assets-h">Assets</h2></div>
+      <div class="cards" id="cards"></div>
+    </section>
+  </div>
 </main>
+
+<dialog class="viewer" id="viewer" aria-label="Asset">
+  <div class="v-media"></div>
+  <div class="v-text"><p class="v-what"></p><p class="v-meta"></p></div>
+</dialog>
