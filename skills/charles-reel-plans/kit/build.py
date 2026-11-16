@@ -397,14 +397,16 @@ def script_for(plan, vd, beats, hook):
     for line in lines:
         bare = line.replace("*", "").strip()
         n, i = norm(bare), None
-        if n and not re.match(r"text hook\b", bare, re.I):
-            for k in range(j, len(beats)):
+        # The title and the text hook are never spoken lines. Matches are looked for only a few lines ahead, so a short
+        # line can't latch onto a word further on (the title "Anti-aliasing" did, to "that's called anti-aliasing").
+        if n and not re.match(r"text hook\b", bare, re.I) and not re.fullmatch(r"\*\*.+\*\*", line.strip()):
+            for k in range(j, min(len(beats), j + 6)):
                 if n in names[k] or (len(says[k]) >= 8 and says[k] in n):
                     i, j = k, k + 1
                     while j < len(beats) and len(says[j]) >= 8 and says[j] in n:   # a sentence the plan cut into lines
                         j += 1
                     break
-                if len(n) >= 8 and n in says[k]:                                    # lines the plan keeps as one
+                if len(n) >= 20 and n in says[k]:                                   # lines the plan keeps as one
                     i, j = k, k
                     break
         out.append({"text": line, "i": i})
