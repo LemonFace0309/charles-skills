@@ -63,8 +63,8 @@ def estimate(say, pace):
     list: 0.17 s a syllable plus 0.45 s, which reproduces 22 Backgrounds (22 labels of about 4 syllables in 24.9 s).
     end:  a list reel's sign-off, a little slower and held.
     talk: 3.3 words a second, his pace in a finished cut (charles-scripting-voice), numbers counted as said aloud."""
-    if pace == "list":
-        return 0.17 * syllables(say) + 0.45
+    if pace == "list":                  # at least 0.9 s, so a one-word item's card can still be read ("Tint" got 0.62 s)
+        return max(0.9, 0.17 * syllables(say) + 0.45)
     if pace == "end":
         return 0.17 * syllables(say) + 0.9
     words = len(re.findall(r"[A-Za-z']+", say)) + sum(min(3, len(d)) for d in re.findall(r"\d+", say))
@@ -537,9 +537,36 @@ def write_site(data, vd):
         done[key] = str(out.relative_to(site))
         return done[key]
 
+    def put_alpha(page_src):
+        """A clip with a transparent background ("alpha": true, like an explainer card) goes out twice, up to 1080 px wide
+        so its UI text stays sharp: VP9 with alpha in WebM, which Chrome, Edge and Firefox show, and HEVC with alpha for
+        Safari and every iOS browser, which are all WebKit and drop WebM's alpha. page.js picks one. HEVC needs macOS."""
+        key = (page_src, "alpha")
+        if key in done:
+            return done[key]
+        src = (vd / "build" / page_src).resolve()
+        rel = Path(page_src[3:]) if page_src.startswith("../") else Path(src.name)
+        webm, hevc = (media / "reel" / rel.with_suffix(ext) for ext in (".webm", ".mp4"))   # artifacts don't serve .mov
+        webm.parent.mkdir(parents=True, exist_ok=True)
+        dec = ["-c:v", "libvpx-vp9"] if src.suffix.lower() == ".webm" else []   # ffmpeg's own VP9 decoder drops the alpha
+        # scaled premultiplied, so the clear pixels' colour can't bleed into the edges as a dark fringe
+        # (Color Design 101's 2x cards came out fringed when this scaled straight alpha)
+        vf = "format=rgba,premultiply=inplace=1,scale='min(1080,iw)':-2:flags=lanczos,unpremultiply=inplace=1"
+        subprocess.run(["ffmpeg", "-v", "error", "-y", *dec, "-i", str(src), "-an", "-vf", vf, "-c:v", "libvpx-vp9",
+                        "-pix_fmt", "yuva420p", "-b:v", "0", "-crf", "34", "-row-mt", "1", "-auto-alt-ref", "0",
+                        "-deadline", "good", "-cpu-used", "4", str(webm)], check=True)
+        subprocess.run(["ffmpeg", "-v", "error", "-y", *dec, "-i", str(src), "-an", "-vf", vf + ",format=bgra",
+                        "-c:v", "hevc_videotoolbox", "-allow_sw", "1", "-alpha_quality", "0.75", "-q:v", "55",
+                        "-tag:v", "hvc1", "-movflags", "+faststart", str(hevc)], check=True)
+        done[key] = (str(webm.relative_to(site)), str(hevc.relative_to(site)))
+        return done[key]
+
     for b in d["beats"]:
-        if b["visual"]:
-            b["visual"]["src"] = put(b["visual"]["src"], 1600, 84, "reel")
+        v = b["visual"]
+        if v and v.get("alpha") and v["type"] == "video":
+            v["src"], v["alt"] = put_alpha(v["src"])
+        elif v:
+            v["src"] = put(v["src"], 1600, 84, "reel")
     for tr in d["music"]["tracks"]:
         tr["src"] = put(tr["src"], 0, 0, "music")
     (site / "index.html").write_text(page(d, site=True))

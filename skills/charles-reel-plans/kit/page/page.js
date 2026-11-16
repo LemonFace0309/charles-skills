@@ -6,6 +6,11 @@
   const V = window.VIDEO;
   const beats = V.beats;
   const N = beats.length;
+  // A clip with a transparent background ships twice (kit/build.py): HEVC with alpha for Safari and every iOS browser,
+  // which are all WebKit and can't show WebM's alpha, and VP9 with alpha in WebM for the rest.
+  if (/AppleWebKit/.test(navigator.userAgent) && !/Chrome|Chromium|Edg|OPR|Firefox/.test(navigator.userAgent)) {
+    beats.forEach((b) => { if (b.visual && b.visual.alt) b.visual.src = b.visual.alt; });
+  }
   const R = V.reel;
   const HOLD = 1.2;                     // the last frame holds this long before the loop starts again
   const SAFE_TOP = 250, SAFE_BOTTOM = 1500;
@@ -59,7 +64,8 @@
   const rows = list ? list.rows.map((r, k) => {
     const col = Math.floor(k / list.per_col);
     const el = h("div", { class: "row", style: { left: px(list.colx[col]), top: px(list.row0 + (k % list.per_col) * list.pitch), fontSize: px(list.size) } },
-      h("span", { class: "num ov", text: String(r.number), style: { width: px(list.numw - 10) } }),
+      // item numbers take a full stop, as every list reel draws them ("1."); years don't ("2007")
+      h("span", { class: "num ov", text: r.number < 100 ? `${r.number}.` : String(r.number), style: { width: px(list.numw - 10) } }),
       h("span", { class: "lab ov", text: r.label, style: { left: px(list.numw) } }));
     $("#list").append(el);
     return el;
@@ -128,7 +134,10 @@
     const v = b.visual;
     // the same clip on the next line carries on (its "from" says where that line starts in it) instead of reloading
     const same = !!(v && v.type === "video" && clip && clip.src === v.src);
-    if (!same) visual.replaceChildren();
+    if (!same) {
+      if (clip) { clip.vid.pause(); shelf.append(clip.vid); }   // back on the shelf, loaded, in case its line comes round again
+      visual.replaceChildren();
+    }
     if (v) {
       const bx = box(v);
       Object.assign(visual.style, { left: px(bx.x), top: px(bx.y), width: px(bx.w), height: px(bx.h) });
@@ -138,12 +147,11 @@
         // loops with the reel. "loop": false holds its last frame instead, for a clip timed to its line's words.
         if (same) Object.assign(clip, { start: b.start, from: v.from || 0 });
         else {
-          const vid = h("video", { src: v.src, muted: true, playsinline: true, preload: "auto" });
-          vid.muted = true;
+          const vid = clipEls.get(v.src);
           vid.loop = v.loop !== false;
           visual.append(vid);
           clip = { vid, src: v.src, start: b.start, from: v.from || 0 };
-          vid.addEventListener("loadedmetadata", () => syncClip(true));
+          syncClip(true);
         }
       } else {
         clip = null;
@@ -162,6 +170,20 @@
   }
 
   let clip = null;                     // the line's video, if it has one: { vid, src, start, from }
+  // Every clip starts loading with the page and its element is reused, so a line's card is already there when the line
+  // starts instead of its slot sitting empty while it loads (the 20 design laws session saw that on a first play).
+  const shelf = h("div", { hidden: true });
+  document.body.append(shelf);
+  const clipEls = new Map();
+  beats.forEach((b) => {
+    const v = b.visual;
+    if (!v || v.type !== "video" || clipEls.has(v.src)) return;
+    const vid = h("video", { src: v.src, muted: true, playsinline: true, preload: "auto" });
+    vid.muted = true;
+    vid.addEventListener("loadedmetadata", () => { if (clip && clip.vid === vid) syncClip(true); });
+    shelf.append(vid);
+    clipEls.set(v.src, vid);
+  });
   function syncClip(force = false) {
     if (!clip) return;
     const { vid, start, from } = clip;

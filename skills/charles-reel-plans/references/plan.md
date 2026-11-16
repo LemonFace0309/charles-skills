@@ -82,7 +82,7 @@ For the edit, list_reel.py takes `labels` from the beats' labels in order, `titl
 
 Before there's a cut, `kit/build.py` estimates each line:
 
-- `list`: 0.17 s a syllable plus 0.45 s. That reproduces 22 Backgrounds exactly: 22 labels of about 4 syllables in 24.9 s.
+- `list`: 0.17 s a syllable plus 0.45 s, and at least 0.9 s so a one-word item's card can be read. That reproduces 22 Backgrounds exactly: 22 labels of about 4 syllables in 24.9 s.
 - `end`: 0.17 s a syllable plus 0.9 s. A list reel's sign-off, which is read slower and held.
 - `talk`: 3.3 words a second, his pace in a finished cut (charles-scripting-voice, step 5). Numbers count as said aloud.
 
@@ -106,7 +106,7 @@ only where that still reads wrong.
 - `build/plan.html`: the player, which opens from disk: the reel and a play bar (tap or space plays and pauses, the arrow keys step through the lines). `?solo&t=12.4` shows only the reel at 1080×1920, paused at 12.4 s, for exporting frames. `&ig=1` draws Instagram's UI over it and `&safe=1` the safe area; the player itself shows neither. `#check` on the link adds a dot after the clock that turns orange while the music plays.
 - `build/music/1-<title>.mp3`: the track cut from `at` to the reel's length, faded out, and normalised to −16 LUFS.
 - `<assets_dir>/SOURCES.md`: every image's source and licence in one table, for the credits.
-- `build/site/`: `index.html` with its CSS, script and data inline and no head (the Artifact host adds one), plus `media/` (the reel's images as WebP at the size the player shows, videos as small MP4s, the music) and `files.json`, the list to publish. One publish takes up to 255 files and 64 MB. The kit warns when a site is bigger, and then the rest goes up in further publishes to the same file path.
+- `build/site/`: `index.html` with its CSS, script and data inline and no head (the Artifact host adds one), plus `media/` (the reel's images as WebP at the size the player shows, videos as small MP4s, the music) and `files.json`, the list to publish. One publish takes up to 255 files and 64 MB. The kit warns when a site is bigger, and then the rest goes up in further publishes to the same file path. A video visual with `"alpha": true` (a clip with a transparent background, like an explainer card) goes out twice instead, up to 1080 px wide: VP9 with alpha in WebM for Chrome, Edge and Firefox, and HEVC with alpha (an `.mp4` made with macOS's encoder, since artifacts don't serve `.mov`) for Safari and every iOS browser, which can't show WebM's alpha. The player picks the one the browser shows. Both are scaled with premultiplied alpha, so their clear edges don't pick up a dark fringe. Give it the WebM as `src`, since ffmpeg can't read the alpha back out of HEVC.
 
 ## Collages
 
