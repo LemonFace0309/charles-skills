@@ -61,9 +61,71 @@
       sub.hidden = false;
     }
   } else if (HK.lines && HK.lines.length) {
-    // TikTok's native text: each line in its own white box, stacked edge to edge (reelkit.make_hook's sizes).
-    const lh = Math.round(HK.size * 1.3);
-    hook.replaceChildren(...HK.lines.map((l) => h("span", { text: l, style: { fontSize: px(HK.size), lineHeight: px(lh), padding: `0 ${HK.pad}px`, borderRadius: px(Math.round(lh * 0.24)) } })));
+    hook.replaceChildren(drawHook(HK));
+  }
+
+  // TikTok's native text with a background, drawn as reelkit.make_hook draws it for the edit: black Helvetica Neue Bold,
+  // each line in a white box sized to it, the boxes merged where they meet. The wider line's corner rounds out and the
+  // narrower one flows into it with an inside curve, so two lines read as one shape (separately rounded boxes left a
+  // notch at every join: "the text hook boxes aren't merging together properly", 16 Nov 2026).
+  function drawHook(K) {
+    const W = 1080, S = 2, size = K.size, pad = K.pad, lh = Math.round(size * 1.3), r = Math.round(lh * 0.24);
+    const font = `700 ${size}px "Helvetica Neue", Helvetica, Arial, sans-serif`;
+    const probe = document.createElement("canvas").getContext("2d");
+    probe.font = font;
+    let y = 0;
+    const boxes = K.lines.map((ln) => {
+      const tw = probe.measureText(ln).width;
+      const b = [Math.floor((W - tw) / 2) - pad, y, Math.floor((W + tw) / 2) + pad, y + lh];
+      y += lh;
+      return b;
+    });
+    const cv = h("canvas", { width: W * S, height: y * S, style: { width: px(W), height: px(y) } });
+    const c = cv.getContext("2d");
+    c.scale(S, S);
+    const paint = (keep, draw) => {
+      c.globalCompositeOperation = keep ? "source-over" : "destination-out";
+      c.fillStyle = "#fff";
+      c.beginPath();
+      draw();
+      c.fill();
+    };
+    const rect = (x0, y0, x1, y1) => () => c.rect(Math.min(x0, x1), Math.min(y0, y1), Math.abs(x1 - x0), Math.abs(y1 - y0));
+    const disc = (ox, oy, rc) => () => c.arc(ox, oy, rc, 0, 2 * Math.PI);
+    // the outer corner at (cx, cy) rounded; (dx, dy) points into the shape
+    const convex = (cx, cy, dx, dy, rc) => {
+      if (rc < 1) return;
+      paint(false, rect(cx, cy, cx + dx * rc, cy + dy * rc));
+      paint(true, disc(cx + dx * rc, cy + dy * rc, rc));
+    };
+    // the inside curve where a box's side (x = ex) meets the join y = jy; (dx, dy) points into the empty space
+    const concave = (ex, jy, dx, dy, rc) => {
+      if (rc < 1) return;
+      paint(true, rect(ex, jy, ex + dx * rc, jy + dy * rc));
+      paint(false, disc(ex + dx * rc, jy + dy * rc, rc));
+    };
+    boxes.forEach((b) => paint(true, rect(...b)));
+    const first = boxes[0], last = boxes[boxes.length - 1];
+    convex(first[0], first[1], 1, 1, r); convex(first[2], first[1], -1, 1, r);
+    convex(last[0], last[3], 1, -1, r); convex(last[2], last[3], -1, -1, r);
+    const joins = [];
+    for (let k = 0; k + 1 < boxes.length; k += 1) {
+      const a = boxes[k], b = boxes[k + 1];
+      const step = Math.abs(a[0] - b[0]);                 // lines are centred, so both sides step by the same amount
+      if (step < 2) continue;
+      const rj = Math.min(r, step / 2), narrowTop = a[0] > b[0];
+      const wide = narrowTop ? b : a, dy = narrowTop ? 1 : -1;
+      convex(wide[0], b[1], 1, dy, rj); convex(wide[2], b[1], -1, dy, rj);
+      joins.push([narrowTop ? a : b, b[1], rj, narrowTop ? -1 : 1]);
+    }
+    joins.forEach(([narrow, jy, rj, dy]) => { concave(narrow[0], jy, -1, dy, rj); concave(narrow[2], jy, 1, dy, rj); });
+    c.globalCompositeOperation = "source-over";
+    c.fillStyle = "#000";
+    c.font = font;
+    c.textAlign = "center";
+    c.textBaseline = "middle";
+    K.lines.forEach((ln, k) => c.fillText(ln, W / 2, (boxes[k][1] + boxes[k][3]) / 2));
+    return cv;
   }
 
   const list = R.list;
