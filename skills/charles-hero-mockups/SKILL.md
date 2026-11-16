@@ -109,4 +109,4 @@ Every render in a dark gallery, numbered per page, at `<folder>/out/board/varian
 
 ## Model
 
-GPT Image 2.6 Sunburst at quality "high" (`MODEL` in the script). It was chosen over Nano Banana 2.1 and Nano Banana Pro in a side-by-side test; "xhigh" and "max" cost 3.4 and 7.7 times as much for finer micro-texture only. Before a run, check the OpenAI models list for a newer GPT Image model and tell the user if there is one.
+GPT Image 2.6 Sunburst at quality "high" (`MODEL` in the script). It was chosen over Nano Banana 2.1 and Nano Banana Pro in a side-by-side test, and over GPT Image 2.6 Flare, its faster twin. On the same ten prompts and references, Flare was a third faster at the same price, but it dropped product details (a can's flavour art and pull tab), misspelled a wordmark and set the small type smaller. "xhigh" and "max" cost 3.4 and 7.7 times as much for finer micro-texture only. Before a run, check the OpenAI models list for a GPT Image model newer than the 2.6 pair and tell the user if there is one.
