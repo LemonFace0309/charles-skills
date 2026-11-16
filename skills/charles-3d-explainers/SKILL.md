@@ -42,8 +42,8 @@ Walk these steps in order, every time. Never render a final before step 7 passes
 2. **Words.** Read `words.json` against the script: names, numbers as digits, spellings. `captions.replace` changes
    only how a word reads on screen.
 3. **Plan** in `plan.md` (format below). Decide, for the whole video: one palette, one running example, the HUD
-   quantity if any, the chapters. Then for every beat walk the Shot, Camera and Transition trees, and count events
-   against "Pacing". If Charles is around and did not say "just do it", show him the plan before building.
+   quantity if any, the chapters. Then for every beat walk the Shot, Framing, Camera and Transition trees, and count
+   events against "Pacing". If Charles is around and did not say "just do it", show him the plan before building.
 4. **Build** one shot module per camera setup in `shots/`, registered in `project.json` with its start on a word
    onset. Start from the closest snippet in `references/kit.md` or a project in `examples/`. Read `references/look.md`
    before you light anything.
@@ -65,8 +65,8 @@ Walk these steps in order, every time. Never render a final before step 7 passes
 
 One row per beat. A beat is one clause of the voiceover, 0.8 to 3 s.
 
-| start-end | words | the visual: what literally happens, on which word | shot type | camera | overlays | link |
-|---|---|---|---|---|---|---|
+| start-end | words | the visual: what literally happens, on which word | shot type | framing | camera | overlays | link |
+|---|---|---|---|---|---|---|---|
 
 Rules:
 - **Literal first.** Every noun, number, place and app the voice names is visible within 0.2 s of its word, and every
@@ -113,7 +113,8 @@ Rules:
   does [[sand]] think?"), never a description of the video, and leaves as the dive starts (1.2 to 2.4 s). The voice
   opens on the concrete object. Why: in blind tests against premium studio reels, every hook that sat still lost;
   four of five studio reels dive between 1 and 2 s.
-- **Structure** (pacing.md section 10): cold open 5 to 15 s; the question restated over a quiet establishing shot; then
+- **Structure** (pacing.md section 10): cold open 5 to 15 s; the question restated over a WIDE establishing shot with
+  one slow move and no hero number; then
   chapters of 20 to 40 s, one world or one scale each, each opening on its biggest transition and a new hero number
   or section word; the last 5 to 10 s pull back to the big picture and end on the opening image, so the reel loops.
 
@@ -171,6 +172,84 @@ Walk the questions in order for each beat; the first yes wins.
 13. Otherwise                                          → stay on the running example and change ONE thing on the key word
 ```
 
+## Framing tree
+
+Where the camera stands, decided for every setup before its move: how big the subject is and where you see it from.
+Measured on ten 3D story reels of 27 to 86 million views each (pacing.md section 4b): 39% of their frames are close,
+17% of them inserts; 38% look up at the subject; 29% frame it past something near the lens. Why: a test reel built
+without this tree had no low angle in 37 s and sat at eye level for 15 of its first 24 seconds; it read as a diagram,
+not a film.
+
+Sizes, by the subject's share of the frame width (`cam.frame`'s `fill`): WIDE under 0.35, its place around it;
+MEDIUM 0.35 to 0.75; CLOSE over 0.75 or cropped by the frame; INSERT one detail of it (a port, a key, a line of text)
+at 0.4 to 0.9, everything else defocused. Heights, by the camera's elevation over the subject (`cam.frame`'s `el`):
+LOW -10 to -25 (looking up), EYE -10 to 10, HIGH 10 to 75, TOP-DOWN 75 to 90. Every setup's framing column in
+plan.md names both: "CLOSE LOW", "INSERT EYE".
+
+Walk it for each setup; the first yes wins.
+
+```
+The hook, through its dive?                            → the Hook rules decide
+A teaching frame (the beat carries the mechanism)?     → square-on to the change, EYE at its height, the parts at 0.5
+                                                         to 0.8 of the width; vary the setups around it, never this one
+The viewer's own action ("you open", "you tap")?       → POV, CLOSE HIGH: from the viewer's eyes behind the hand,
+                                                         looking down 30 to 45 degrees at the device, the hand under
+                                                         30% of the frame height
+Something flat must be read (a page, a screen on a desk, a flat map; a 3D chart stays HIGH)?
+                                                       → INSERT TOP-DOWN: the readable part as big as fits between
+                                                         y 240 and 1300, held 1.5 to 2 s. The pose carries `up`, the
+                                                         world direction meant as screen-up ([0, 0, -1]): with world up
+                                                         the picture spins near straight down
+The voice names a part or a detail ("the microphones", "one packet")?
+                                                       → INSERT on that part, landing on its word: fov 20 to 30,
+                                                         `blur` 0.02 to 0.03, no closer than keeps three modelled
+                                                         features (holes, ridges, letters) visible on a 16-sample
+                                                         still at phone size; a part without them stays CLOSE, lit
+                                                         and labelled, until you model them. Cut in when the next
+                                                         named part is 1.5 s or more away; nearer parts share one
+                                                         setup, with a rack and a label each
+The first setup in a new place (a cabin, a room, the inside of a machine)?
+                                                       → WIDE LOW: fov 50 to 70, the camera at 20 to 40% of the
+                                                         space's height, the far end and the ceiling in frame
+A hero's reveal (the product, a machine, a tower, a satellite), or a threat?
+                                                       → MEDIUM or CLOSE LOW, fov 35 to 50, close enough that the near
+                                                         end is 1.5 times the far end's width or more
+Many things (a field, a crowd, a board), or something small at the mercy of the system?
+                                                       → WIDE or MEDIUM HIGH; over a floor, pick the pitch and fov so
+                                                         the horizon sits at y 240 to 660 (at 1080x1920, horizon
+                                                         y = 960 x (1 - tan(pitch) / tan(fov / 2)))
+Two things acting on each other, nothing travelling between them (a key and a lock, a hand and a dial)?
+                                                       → OVER THE SHOULDER, MEDIUM EYE: from behind one, looking at
+                                                         the other past its edge (see Foreground); the answer from
+                                                         behind the other, each keeping its screen side. Something
+                                                         travelling between them is the Camera tree's follow shot
+Otherwise                                              → EYE, one size away from the setup before
+```
+
+Then check the run of setups, not each one alone. When a pick breaks a check, change its height first, then its size.
+
+- Never two setups in a row at the same size and height; on one subject a cut changes the size 1.5 times or the angle
+  35 degrees (Transition tree). At least one INSERT or CLOSE in every three setups, at most one WIDE in three (a scale
+  journey excepted), never three in a row at one height. Why: in the story reels every new setup changes size or
+  height, and that change is an event that needs no text.
+- A LOW setup at least every 20 s. Why: 38% of the reference frames look up; the test reel had none in 37 s.
+- Something fails, breaks or goes wrong: add `roll` 10 to 20 (degrees) to the pose `cam.apply` gets, or to the keys
+  of a `cam.path`, for that setup only, at most once per 20 s. Why: the story reels roll only in danger (7% of
+  frames, in three of the ten).
+- Make the angle visible. A low or high angle shows a floor, a ceiling or a near object at a slant, with its verticals
+  converging. A flat thing (a panel, a screen, a wall) within 30 degrees of square reads as a diagram from any height:
+  see it 45 to 60 degrees off square with its surroundings in frame, unless it must be read (a top-down insert, a POV
+  shot, a device screen) or is a teaching frame. Why: in the test reel a call panel 30 degrees off square read as a
+  flat icon; at about 50, with the bins and its speaker grille around it, it read as a panel in a cabin.
+- Why inserts stop at modelled detail: in the same test a 4 mm microphone port on a plain shell, framed as an insert,
+  came out as a flat field with a glowing blob, and at 11 cm still a grey slab; the close-up it replaced was clearer.
+- Foreground: one setup in three or four looks past a broad, dark near object of the same world (a seat back, the
+  other cup, a casing edge; never a cable, a fin or a rim, whose blur renders as stepped copies), defocused at a side
+  edge, filling 10 to 30% of the frame, its blur clear of the subject on a 16-sample still. Why: depth in one frame,
+  and the parallax makes any move read.
+- Lens: a branch without a fov uses 24 to 35. Cameras start at fov 35 and `cam.frame` assumes 30: pass the same `fov`
+  to `cam.frame` and to the move.
+
 ## Camera tree
 
 Numbers from pacing.md section 4. One move per setup. A reel of 60 s or less moves like the fast story reels: the
@@ -186,7 +265,8 @@ One becomes many, a part shows its whole?       → pull-back reveal, 5 to 20% a
 Something travels from a sender to a receiver?  → ONE follow shot through both places (cam.follow): it holds its
                                                   screen position while the world streams past at 300 to 600 px/s;
                                                   never cut between the sender and the receiver
-Proving a hero object is real 3D?               → quarter orbit, 60 to 90 degrees over 3 to 5 s, with a gentle push
+Proving a hero object is real 3D?               → quarter orbit, 60 to 90 degrees over 3 to 5 s, pushing 2 to 5% of
+                                                  the distance a second
 From a detail to the layout?                    → rise to top-down in 1 to 2 s
 Orders of magnitude of scale?                   → cam.logZoom over 1 to 3 s; split into two shots joined by a zoom
                                                   transition when a texture would break up close
@@ -195,9 +275,10 @@ New angle on the same subject, in a fast run?   → whip (transition tree)
 ```
 
 Always: ease in and out (except the hook's first move), `drift` 0.4 to 0.6 on every shot so no frame freezes, the
-subject's silhouette inside x 200 to 880, y 560 to 1280 and never in the caption band (y 1320 to 1500), and cut
-while the camera moves. Why: a locked-off camera reads as a slideshow, a cut from a moving camera into a moving
-camera reads as one flow, and a subject behind the caption is unreadable twice over.
+subject's silhouette (a CLOSE or INSERT: its focal detail) inside x 200 to 880, y 560 to 1280 and never in
+the caption band (y 1320 to 1500), and cut while the camera moves. Why: a locked-off camera reads as a slideshow, a
+cut from a moving camera into a moving camera reads as one flow, and a subject behind the caption is unreadable twice
+over.
 
 ## Transition tree
 
@@ -312,7 +393,8 @@ staircase). Never the same transition three times in a row unless the story repe
 - A camera setup lasts 1.5 to 4 s, unless one follow move carries the time with events inside it.
 - One change at a time: the camera, the subject and the text take turns. Little text: a caption, at most one hero or
   counter, at most two labels.
-- Many angles, one subject: within a stretch, the angles circle the same subject.
+- Many angles, one subject: within a stretch, the setups circle the same subject, each at a new size or height
+  (Framing tree).
 - When a beat needs many things (1,500 packets, 600 cables), show the many as a field and make ONE the hero: lit, in
   focus, tagged.
 
@@ -372,7 +454,8 @@ A real brand, product UI or logo?                              → the real logo
 # Review checklist (every still and every draft)
 
 1. Pause anywhere: can you say in 3 words what the frame shows, and is it what the voice says right then?
-2. Exactly one sharp, bright, purposefully moving subject, its silhouette inside x 200 to 880, y 560 to 1280;
+2. Exactly one sharp, bright, purposefully moving subject, its silhouette (a CLOSE or INSERT: its focal detail)
+   inside x 200 to 880, y 560 to 1280;
    nothing bright in the caption band while a caption is up.
 3. Every named noun and number visible within 0.2 s of its word (sheet.mjs with `--words`).
 4. check.mjs: `hook` 4 or more, no `static` run, no `dark` frame, no stale span over 0.6 s, no gap over 2.0 s between
@@ -389,13 +472,17 @@ A real brand, product UI or logo?                              → the real logo
    fails before calling it done.
 10. Every explanation beat is in the running example's world: no void shot over 4 s, no field filling the frame
     square to the camera, and the mechanism and payoff frames pass the 5-word test.
+11. Framing, from plan.md's framing column and the key-word stills: no two setups in a row at one size and height, an
+    INSERT or CLOSE in every three, no three at one height, a LOW setup at least every 20 s, every named part given its
+    insert (or its lit, labelled close-up when the detail is not modelled), and no flat panel within 30 degrees of
+    square unless it must be read or is a teaching frame.
 
 # References
 
 - `references/look.md`: measured palettes, tone ranges, type sizes and positions, light, materials, depth of field,
   what reads as cheap.
-- `references/pacing.md`: measured event cadence, shot lengths, camera moves, transitions, the running example, the
-  HUD, the hook, whole-video structure.
+- `references/pacing.md`: measured event cadence, shot lengths, camera moves, framing (sizes and heights),
+  transitions, the running example, the HUD, the hook, whole-video structure.
 - `references/kit.md`: every API, the project.json schema, CLI flags, tested snippets and gotchas.
 - `references/plates.md`: AI plates turned into 2.5D sets for real interiors and places.
 - `references/characters.md`: people doing things, in 1 to 1.5 s beats.

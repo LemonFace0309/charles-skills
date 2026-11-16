@@ -181,12 +181,13 @@ const plan = `# ${name}
 ## Beats
 
 One row per sentence, with its times in seconds. Split rows so something new lands about every second, and keep one
-focal subject per frame. **visual** is what the viewer sees, **shot** is the file in \`shots/\`, **camera** is the move,
-**overlays** are the hero number, HUD, labels and the caption highlight.
+focal subject per frame. **visual** is what the viewer sees, **shot** is the file in \`shots/\`, **framing** is the size
+and height from SKILL.md's Framing tree (CLOSE LOW, INSERT, WIDE HIGH), **camera** is the move, **overlays** are the hero
+number, HUD, labels and the caption highlight.
 
-| start | end | words | visual | shot | camera | overlays |
-|------:|----:|-------|--------|------|--------|----------|
-${sentences.map((s) => `| ${f2(s[0].start)} | ${f2(s[s.length - 1].end)} | ${cell(s.map((w) => w.text).join(' '))} | | | | |`).join('\n')}
+| start | end | words | visual | shot | framing | camera | overlays |
+|------:|----:|-------|--------|------|---------|--------|----------|
+${sentences.map((s) => `| ${f2(s[0].start)} | ${f2(s[s.length - 1].end)} | ${cell(s.map((w) => w.text).join(' '))} | | | | | |`).join('\n')}
 
 ## Numbers
 
