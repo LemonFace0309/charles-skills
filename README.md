@@ -1,6 +1,6 @@
 # Charles's skills
 
-Skills for Claude Code, Codex and other agents that read `SKILL.md`. If you came from a reel, you want `charles-unslop`, `charles-polish`, `charles-accent-heroes` or `charles-ux-animation`.
+Skills for Claude Code, Codex and other agents that read `SKILL.md`. If you came from a reel, you want `charles-unslop`, `charles-polish`, `charles-hero-mockups` (the accent colour reels; it was `charles-accent-heroes` until 16 Nov 2026) or `charles-ux-animation`.
 
 | Skill | What it does |
 | --- | --- |
@@ -8,7 +8,7 @@ Skills for Claude Code, Codex and other agents that read `SKILL.md`. If you came
 | [charles-polish](skills/charles-polish/SKILL.md) | Takes UI that works and fixes the details and motion, checked frame by frame |
 | [charles-ux-animation](skills/charles-ux-animation/SKILL.md) | Builds and reviews how an interface moves and responds, using the 20 principles of UX and animation |
 | [charles-unreasonable-craft](skills/charles-unreasonable-craft/SKILL.md) | Holds a site or app design to the bar of an Awwwards Site of the Day and an Apple Design Award |
-| [charles-accent-heroes](skills/charles-accent-heroes/SKILL.md) | Makes poster-like landing-page hero images with one bold accent colour |
+| [charles-hero-mockups](skills/charles-hero-mockups/SKILL.md) | Mocks up poster-like landing-page heroes as images, each with one bold accent colour |
 | [charles-color-analysis](skills/charles-color-analysis/SKILL.md) | Critiques the colour of a graphic, landing page, app screen or palette, with exact fixes and before/after previews |
 | [charles-store-screenshots](skills/charles-store-screenshots/SKILL.md) | Designs App Store screenshot sets and renders them at Apple's exact sizes |
 | [charles-storage-cleanup](skills/charles-storage-cleanup/SKILL.md) | Finds what's filling a Mac and removes what's safe to delete |
@@ -42,7 +42,7 @@ Start a new session, then ask for it by name:
 ```text
 /charles-unslop this login page
 /charles-polish the checkout flow, then verify the motion frame by frame
-/charles-accent-heroes four landing-page heroes for a ceramics studio, from my reference folder
+/charles-hero-mockups four landing-page heroes for a ceramics studio, from my reference folder
 /charles-color-analysis critique the colours of my landing-page hero, hero.png
 /charles-store-screenshots three App Store screenshot sets for my habit tracker, from the captures in ./shots
 /charles-ux-animation the add-to-cart flow

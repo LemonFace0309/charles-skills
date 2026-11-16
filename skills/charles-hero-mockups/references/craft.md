@@ -50,7 +50,7 @@ When edits can't get the spacing exact, set the type yourself:
 1. Remove the headline with an edit.
 2. Cut the subject out with a subject mask (macOS Vision's foreground mask works).
 3. Draw the words in a real font behind it, at a size and offset where the subject covers the chosen letter.
-4. Paste the subject back on top, and add a little grain to the type to match the photo.
+4. Paste the subject back on top, and give the type the photo's grain.
 
 ## Layouts
 
@@ -73,19 +73,23 @@ At most half a batch shares one layout, and six pages or more use at least four.
 
 **Distance.** Put the accent 120-180° around the wheel from the other two colours; 75° is the minimum. Creams, greys, blacks and whites (OKLCH chroma under 0.04) don't count. The further the accent sits from the other two, the harder the page pops. An accent in the same family as a regular colour reads as a shade, not a new colour (fuchsia after pale pink), unless it takes the tonal route. For reference, the minimum still lets a strong page through: a kintsugi bowl's gold seams sit 87° from its celadon.
 
+**Field strength.** The field covers most of the frame, so it stays quiet: at most 55% of the accent's chroma (0.11 or less under a 0.2 accent), at whatever lightness and hue the brand needs. A field nearly as vivid as the accent reads as two loud colours, like team colours, and the eye has nowhere to land: a cobalt wall behind an orange sun, violet behind lime. That was the fault on four of five heroes a colour critique fixed, and lowering the field's chroma at the same lightness fixed each one. Real materials sit there anyway: stone, sand, wood and leather stay under 0.11 in ordinary light, so a louder field also reads as screen paint.
+
 **The tonal route.** When the accent is the light itself (gold sunlight in a gold-brown room), it may share the field's colour family, because what pops is brightness, not hue. It must then read as light: at least 1.8 times the chroma of either regular colour and at least 0.3 lighter than the field, on top of the 80% vividness rule. Set `route` to `tonal` and `check` measures that instead of the distance. Use it only when one strong light fills the scene (god rays, a glow, its reflection in gold or chrome); everywhere else the far accent wins.
 
-**Hot against cold** pops hardest: orange on cobalt, gold on indigo, pink on black, lemon on sky blue.
+**The loud-field route.** A playful product may stand on its own colour at full strength: mango orange behind a mango soda, the ink of a screen-printed festival poster. That field is loud on purpose, so the accent separates by lightness as well as hue: at least 0.2 lighter or darker than the field, on top of the distance. Set `route` to `loud-field` and `check` measures that instead of the field's chroma. The accent then goes on what holds the product (the can, the label, the cup), because the product itself shares the field's colour. Use it only when the field is the product or its material; a backdrop picked to be colourful (a cobalt wall, a violet studio) takes the quiet field.
+
+**Hot against cold** pops hardest: orange on navy, gold on midnight, pink on black, lemon on slate blue.
 
 **Size and place.** The accent covers 15-30% of the frame and lives on the subject: its light, its paint, its material. From there it may spill onto the headline. A thin line of it (a laser stripe on the floor) or a small object of it (a pool in a desert) leaves the page flat.
 
 Palettes that pass the formula, as field + second colour + accent:
 
-- Lemon `#F4E04D` + Charcoal `#2A2A2E` + Electric Lavender `#9B5CFF`
 - Midnight `#0B1026` + Sky `#BCD4F2` + Acid Lime `#B8F01E`
 - Ivory `#F6F1E4` + Forest `#1F4A3A` + Vermilion `#F04A24`
 - Deep Teal `#014342` + Bone White `#FEFCF5` + Fuchsia `#F02391`
 - Plum `#3A1430` + Blush `#F3D9DE` + Jade `#00B48A`
+- Loud field, for a lemon drink: Lemon `#F4E04D` + Charcoal `#2A2A2E` + Electric Lavender `#9B5CFF`
 
 ## Light
 
@@ -93,7 +97,7 @@ Name one setup in `light`, and where it falls. Unnamed light comes out soft and 
 
 | Setup | Use it for | What it gives |
 | --- | --- | --- |
-| Two coloured gels, one from each side | faces, glossy products, technology | colour that models the shape; the stronger gel is the accent |
+| Two coloured gels, one from each side | faces, glossy products, technology | colour that models the shape; the stronger gel is the accent, and the other keeps at most 55% of its chroma so the two don't compete |
 | God rays through haze | wellness, hospitality, craft | shafts of light the subject stands in; the light carries the accent |
 | Hard on-camera flash | fashion, food and drink, anything mid-splash | frozen motion, a crisp cast shadow, real skin |
 | The product's own glow as the only light | products that light up or make sound | a dark field lit by the subject. Give the glow a shape that crosses the frame (an aurora sweeping round a watch), never a halo round a centred product |
@@ -124,6 +128,8 @@ Name a material from the brand's world in `background`. Never leave a flat digit
 
 A wordmark, three to five nav links, one button, and at most three captions. Each caption is real information: a date, a spec, a price, a place ("8 Feb to 24 Mar", "395 g", "64 pistes"). Slogans in four corners crowd the page and say nothing. Quote every word in `ui` so it is spelled right.
 
+Small type has to be read, so it reaches APCA Lc 60 against what it sits on; `check` measures the second colour on the field. White reaches 60 only on surfaces up to L 0.68 and near-black only from L 0.75, so between those no type works: move the field. A button filled with the accent follows the same rule. An accent between L 0.68 and 0.75 can't carry a label, so give that button an outline or the second colour's fill.
+
 Vary the button across a batch: a round badge, a text link with an arrow, a ticket stub, an outline pill. In a batch of six or more, give one page only a wordmark and one link instead of a full nav.
 
 ## The tells
@@ -139,6 +145,7 @@ Walk every render against this list. One hit sends it back for an edit, or for a
 - Impossible proportions or a warped object.
 - Smeared dials, screens or small text.
 - A small or pale accent, or a same-family accent that isn't clearly the brightest thing on the page.
+- A field as loud as the accent: two loud colours, and the eye has nowhere to land.
 - A letter hidden by the subject, or in front of it by accident.
 - More than three captions, or slogans as captions.
 - A clever metaphor that hides what the business sells.

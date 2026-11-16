@@ -1,4 +1,4 @@
-"""Accent heroes: landing-page hero images made with GPT Image as close variations of reference screenshots, or from a written
+"""Hero mockups: landing-page hero images made with GPT Image as close variations of reference screenshots, or from a written
 layout when a page has no reference; checked, fixed with targeted edits, and shown on a board.
 
   python3 -I heroes.py check  --project <folder> [--also <another concepts.json>]
@@ -90,6 +90,10 @@ def colours_line(c):
     if c.get("route") == "tonal":
         role = (f"{an} {ah} the one accent, in the field's own colour family but far brighter and more vivid: it is the light itself "
                 "(a glow, sun through haze, its reflection in metal), about 15 to 30% of the frame, and it may colour part of the headline.")
+    elif c.get("route") == "loud-field":
+        return (f"{fn} {fh} is the field, the product's own colour at full strength; {sn} {sh} the type and quiet surfaces; {an} {ah} "
+                "the one accent: as vivid as the field but far from it in hue and in lightness, about 15 to 30% of the frame, part of the "
+                "subject (its light, paint or material), and it may colour part of the headline.")
     else:
         role = (f"{an} {ah} the one accent: the most saturated colour, about 15 to 30% of the frame, part of the subject (its light, "
                 "paint or material), glowing or vivid against the field, and it may colour part of the headline.")
@@ -277,21 +281,44 @@ def found(target, text):
     return True if ratio >= 0.9 else near  # 0.85 let one-letter slips through (BOUTQUES for BOUTIQUES)
 
 
+def apca(text, surface):
+    """APCA 0.0.98G contrast of text on a surface, as |Lc|. It models how type actually reads, where WCAG's ratio passes
+    mid-tones that read poorly."""
+    def y(hexcode):
+        c = (np.array([int(hexcode[i:i + 2], 16) for i in (1, 3, 5)], dtype=float) / 255.0) ** 2.4
+        v = 0.2126729 * c[0] + 0.7151522 * c[1] + 0.0721750 * c[2]
+        return v + (0.022 - v) ** 1.414 if v < 0.022 else v
+    yt, ys = y(text), y(surface)
+    if abs(ys - yt) < 0.0005:
+        return 0.0
+    s = (ys ** 0.56 - yt ** 0.57) * 1.14 if ys > yt else (ys ** 0.65 - yt ** 0.62) * 1.14
+    return 0.0 if abs(s) < 0.1 else (abs(s) - 0.027) * 100
+
+
 def palette_formula(palette, route=None):
     """The palette formula, measured on 21 award-style heroes: the two regular colours one dark and one light (lightness gap
     0.4 or more); the accent the most saturated (chroma about 0.2) and far around the wheel from any regular colour that has
     real colour: 120-180° pops hardest, 75° is the minimum. Creams, greys, blacks and whites (chroma under 0.04) don't count.
-    The tonal route drops the distance: the accent shares the field's family but reads as light, because it is at least 1.8
-    times as saturated as either regular colour and 0.3 lighter than the field (gold sunlight on gold-brown measured 2.1 and 0.41)."""
+    The field stays quiet, at most 55% of the accent's chroma: a field nearly as vivid as the accent was the fault on four of
+    the five heroes a colour critique fixed (accent 0.8-1.6 times the field; the fixes took it to 2-3). Two routes change that:
+    - tonal drops the distance: the accent shares the field's family but reads as light, because it is at least 1.8 times as
+      saturated as either regular colour and 0.3 lighter than the field (gold sunlight on gold-brown measured 2.1 and 0.41);
+    - loud-field lets a field that is the product's own colour run at full strength, if the accent sits 0.2 or more from it in
+      lightness, so the two separate.
+    The second colour is the small type, so it reaches APCA Lc 60 on the field: the floor for small copy that must be read."""
     (_, bh), (_, sh), (_, ah) = palette
     B, S, A = lch(bh), lch(sh), lch(ah)
     flags = []
     if abs(B[0] - S[0]) < 0.4:
         flags.append(f"the two regular colours are only {abs(B[0] - S[0]):.2f} apart in lightness (0.4 or more: one dark, one light)")
+    lc = apca(sh, bh)
+    if lc < 60:
+        flags.append(f"small type in the second colour reads at Lc {lc:.0f} on the field, under 60: move the second colour's lightness "
+                     "(light type works on a field up to L 0.68, near-black type from 0.75; between those, move the field)")
     peak = max_chroma(A[0], A[2])
     if A[1] < 0.8 * peak:
         flags.append(f"the accent's chroma is {A[1]:.2f}, under 80% of the {peak:.2f} its hue reaches at this lightness: make it more vivid")
-    if A[1] < max(B[1], S[1]):
+    if A[1] < (S[1] if route == "loud-field" else max(B[1], S[1])):
         flags.append("the accent isn't the most saturated of the three")
     gaps = [float(hue_dist(A[2], col[2])) for col in (B, S) if col[1] >= 0.04]
     gap = round(min(gaps)) if gaps else None
@@ -300,8 +327,15 @@ def palette_formula(palette, route=None):
             flags.append(f"tonal accent's chroma is {A[1]:.2f}, under 1.8 times the regular colours' {max(B[1], S[1]):.2f}: it reads as a shade, not light")
         if A[0] < B[0] + 0.3:
             flags.append(f"tonal accent's lightness is {A[0]:.2f}, under the field's {B[0]:.2f} + 0.3: it reads as a shade, not light")
-    elif gap is not None and gap < 75:
+        return {"palette_flags": flags, "accent_gap": gap}
+    if gap is not None and gap < 75:
         flags.append(f"the accent is only {gap}° from a regular colour (at least 75; 120-180 pops hardest; or the tonal route)")
+    if route == "loud-field":
+        if abs(A[0] - B[0]) < 0.2:
+            flags.append(f"loud field: the accent is only {abs(A[0] - B[0]):.2f} from the field in lightness (0.2 or more, so the two separate)")
+    elif A[1] < 1.8 * B[1]:
+        flags.append(f"the field's chroma is {B[1]:.2f}, over 55% of the accent's {A[1]:.2f}: two loud colours, and neither leads. Lower it to "
+                     f"{A[1] / 1.8:.2f} or less, keeping its lightness and hue (or the loud-field route, when the field is the product's own colour)")
     return {"palette_flags": flags, "accent_gap": gap}
 
 
@@ -461,8 +495,8 @@ def cmd_check(project, a):
             flags.append(f"{k}: missing {', '.join(missing)}")
         if c.get("layout") and c["layout"] not in LAYOUTS:
             flags.append(f"{k}: layout {c['layout']} isn't one of {', '.join(LAYOUTS)}")
-        if c.get("route") not in (None, "tonal"):
-            flags.append(f"{k}: route {c['route']} isn't tonal (leave it out for the default)")
+        if c.get("route") not in (None, "tonal", "loud-field"):
+            flags.append(f"{k}: route {c['route']} isn't tonal or loud-field (leave it out for the default)")
         if c.get("variations") and len(c["variations"]) < VARIATIONS:
             flags.append(f"{k}: {len(c['variations'])} variations ({VARIATIONS} per page)")
     for r in new:
@@ -482,8 +516,8 @@ def cmd_check(project, a):
         flags.append(f"only {len(layouts)} layouts for {len(concepts)} pages (at least 4)")
     print("\nSET")
     for r in table:
-        gap = ("(tonal)" if r.get("route") == "tonal" else f"({r['accent_gap']}° from the others)" if r.get("accent_gap") is not None
-               else "(the others neutral)")
+        gap = ("(tonal)" if r.get("route") == "tonal" else "(the others neutral)" if r.get("accent_gap") is None
+               else f"(loud field, {r['accent_gap']}°)" if r.get("route") == "loud-field" else f"({r['accent_gap']}° from the others)")
         ref = Path(r["ref"]).name if r["ref"] != "-" else "no reference"
         tail = (f"  near {', '.join(r['near'])}" if r.get("near") else "") if r["source"] == "new" else "  (made before)"
         print(f"  {r['key']:14s} accent {r['hue']:>3d}° {gap:22s} {r['layout']:14s} {ref}{tail}")
