@@ -25,13 +25,25 @@ Did I ask you to open on a split screen?
 
 # General
 
-* Cut any dead space that exists in the video. Stumbles and false starts count as dead space
+* Cut any dead space that exists in the video. Stumbles and false starts count as dead space, and so does me finishing a line (see Cuts)
 * In the case that I filmed multiple takes of the same line, choose the best take
 * Safe area (1080x1920): the IG/TikTok header covers the top 250 px, the username and caption sit below y 1500, and the buttons run down the right side below y 840. Keep text at least 80 px from the sides, 140 px below y 840. Be aware of these areas and don't put key information in them, but don't cut off or shift videos and pictures in a weird way because of them. Footage and images can still extend into those areas
 * No gimmicks: no pop-ins, rounded corners (except for the hook title), black-background splits or emoji tiles
 * My framing is usually close, with my face filling the middle of the frame. In that case never zoom or punch in on my face. Only add slow zooms between cuts when my face is smaller than the middle third of the frame. Cover jump cuts with B-roll instead
 * Never isolate or denoise my voice. It struggles to do that well
 * If I give you a reference reel, copy its structure, pacing and B-roll, but never its caption style. Captions always follow this file
+
+
+# Cuts
+
+Every cut should look like I never stopped talking. As soon as I finish a line I relax: my hand drops, my eyes go down to the script, my arm reaches out to pause the recording. A buffer of 0.3-0.4 s after a line shows all of that, and it looks unedited. So cut on the picture as well as the sound, and never cut off a word:
+
+* End each clip at most 2 frames (0.07 s) after my voice stops. The word's last sound counts: a "t", "s" or "ch" can ring 0.05-0.1 s after the vowel, so keep all of it
+* Then check that clip's last 6 frames. If my eyes, head or hands start to move away from the line in them (a glance at the script, a hand dropping or reaching for the phone, a nod or a smile that settles), end on the last frame before the move. If the move starts before the word is over, cut the picture there and let the end of the word play over the first frames of the next clip (an L-cut, 4 frames at most). Never cut the word, and never show the move
+* Start each clip 1-2 frames before my first sound. If I'm still moving into place there (my arm coming back from pressing record, my eyes coming up from the script), use a cleaner take of that line, or cover those frames with the card or B-roll
+* Keep at most 0.1 s of silence at a join: about 0.05 s after the last word and 0.05 s before the next one. Breaths, clicks and lip smacks in the pause go
+* End the reel at most 0.15 s after my last word, never on the reach to stop the recording or the settle after I'm done. The music fades out under it
+* Before you show me anything, look at the frames on both sides of every cut and at the reel's last 10 frames (in this repository, `tools/reelkit/check_joins.py` draws them). Any movement away from the line means that cut gets redone
 
 
 # Hook Title (the text caption at the top)
@@ -50,6 +62,7 @@ Did I ask you to open on a split screen?
 * No animations/transitions
 * Go over the captions yourself to make sure the ones coming back from a transcription service are accurate to the context of what I'm saying. Sometimes transcription services suffer with names too, so fix those
 * Censor any words that tiktok may block the video for, in the captions and the hook (ex: say s*****e instead of suicide)
+* When I say a comment keyword (the word in "Comment ___ and I'll send you the skill"), caption it in caps inside quotes, in yellow with the black outline: Comment “SCREENSHOTS”. It's the one word viewers have to type, so it can't blend in with the words around it. Write it in caps and quotes anywhere else it shows on screen too, like the hook (in this repository, give reelkit the word as `keywords` and the captions do this)
 
 
 # Image/Video Overlays
