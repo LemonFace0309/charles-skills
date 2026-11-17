@@ -11,10 +11,15 @@ Before planning, read [references/craft.md](references/craft.md): the lane tree,
 
 ## The bar
 
-Every set passes all nine. Each exists because breaking it made sets look templated, generated or unreadable.
+Every set passes all ten. Each exists because breaking it made sets look templated, generated, unreadable or unconvincing.
 
 1. **Frames 1–2 are one hook.** One photo, scene, object, headline or sentence crosses the seam between them, and together they say what the app is and why it's worth it. Frame 1 alone still shows the app's name or face and its promise. Why: the opening spread is what nearly everyone sees. One image across it reads as a poster, and the half that continues pulls the swipe. Ads and some search layouts show frame 1 alone, so it can't lean on frame 2.
-2. **Every seam is crossed.** Each seam is crossed by a continuous background, or by an object, person, phone or type reaching 24 px or more into the next frame (72 px in the export). At least half the seams are crossed by a distinct shape (an object, a person, a phone, type, a drawn line or a shaft of light), not only by a flat ground. Alternating frame colours are fine when something crosses the colour change. Why: continuity makes the set one world. A row of separate cards reads as a template.
+2. **Every seam is crossed, and nothing is cut by one by accident.** Each seam is crossed by a continuous background, or by an object, person, phone or type. At least half the seams are crossed by a distinct shape (an object, a person, a phone, type, a drawn line or a shaft of light), not only by a flat ground. Alternating frame colours are fine when something crosses the colour change.
+   - A shape that crosses shows a recognisable piece on both sides: at least 60 px (180 in the export) on the smaller side.
+   - Anything that doesn't cross stays at least 12 px from the seam, and from the strip's two ends unless it bleeds off them by 60 px or more.
+   - Type crosses only between words, never through one.
+
+   Why: continuity makes the set one world, and a row of separate cards reads as a template. But the store sets every frame apart with a gap beside it, so a 20 px sliver of a shoe, a sun or a cover at a frame's edge reads as a cropping mistake, not a crossing. `render` prints a CHECK line for each sliver or near-miss.
 3. **One idea per frame after the hook, six words or fewer.** One headline of at most six words, plus an optional eyebrow of at most four. In the chaotic lane, one lead line obeys this; bubbles and stickers are texture and must read as part of the picture, never as a second headline. Why: Hick's law. A set is glanced at, not read, so every extra phrase competes with the one that sells.
 4. **Readable at search size.** Headlines are at least 40 px on the 440 px frame in a bold sans, and at least 46 px for serifs or light weights. Anything the user must read is at least 16 px. Text contrast against what's directly behind it is 4.5:1 or more. Why: in search a frame shrinks to about 115 pt wide, and below these sizes text drops under iOS's 11 pt minimum and becomes texture.
 5. **Real UI at its best moment.** Every frame after the hook, and usually frame 2, shows a real capture from the app, never redrawn UI. Crop it or size it to the moment the feature pays off (the PR, the rank, the answer). The screen is at least 300 px wide, or the crop fills at least 70% of the frame width. Why: the real screen is the proof. Mock UI reads as fake, and a whole screen shrunk into a phone can't be read.
@@ -30,6 +35,7 @@ Every set passes all nine. Each exists because breaking it made sets look templa
    Why: consistency reads as a real brand, and one changing variable keeps the swipe interesting without breaking it.
 8. **Real people, generated things.** Faces and bodies come from real photos you have the rights to (the app's coach, team or users). Generate only objects, materials, skies, worlds and lettering. Never generate a real person, and never alter a real person's body. Why: generated people carry the tells (hands, skin, eyes) that make a set read as AI, and editing someone's body is a line we don't cross.
 9. **None of the tells.** Check every frame against the list in craft.md. Why: each tell makes a set read as generated or templated, and one is enough.
+10. **Real proof where people decide.** Show the strongest proof the listing has, in this order: an Apple award (Editors' Choice, App of the Year, Apple Design Award), a rating with its volume ("4.8 ★ · 974K ratings"), a chart rank with its category, a named press quote. Put one or two of them in frames 1–2, as one line or a laurel pair at least 16 px tall, smaller than the headline and clear of it. Why: social proof and authority are the strongest trust levers a listing has, and search shows only the first three frames, so proof saved for the last frame reaches few people. A rating without its volume reads as a claim; the volume makes it a crowd.
 
 Never print a rating, user count, award or press mention that isn't real and current. When the app has none yet, the proof is the people behind it and true product facts.
 
@@ -61,7 +67,7 @@ Why: every later choice traces back to this, and assets the app already owns are
 
 ### 2. Choose the lane, the hook and the move
 
-Walk craft.md's lane tree, choose one hook technique, and name the signature move. Write all three in the comment at the top of the set's `set.html`, as in `assets/template.html`.
+Walk craft.md's lane tree, choose one hook technique, name the signature move, and pick the levers from craft.md's Psychology table. Write all four in the comment at the top of the set's `set.html` (`lane:`, `hook:`, `move:`, `levers:`), as in `assets/template.html`. Why: a lever chosen up front gets designed in; one noticed afterwards gets bolted on.
 
 ### 3. Write the frames
 
@@ -97,15 +103,15 @@ Copy `assets/base.css` and `assets/template.html` into the set's folder.
 
 Run `render`. Then look, in this order:
 
-1. **`preview.jpg`:** is it one world? Is the move in every frame? Does every seam cross?
+1. **`preview.jpg`:** is it one world? Is the move in every frame? Does every seam cross? Look up each CHECK line `render` printed in the frames themselves: its boxes include rotation and transparent padding, so some are false alarms, but every real sliver or near-miss gets fixed.
 2. **`search.png`:** can every headline be read? Does each frame keep an edge on both the white and the black rows?
 3. **Two frames at full size:** type crispness, cutout edges, UI legibility.
 
-Write `review.md` with a pass or fail for each of the nine bar items and every tell, plus the logo-swap test.
+Write `review.md` with a pass or fail for each of the ten bar items and every tell, the frame where each named lever shows, plus the logo-swap test.
 
 ### 7. Fix
 
-Fix only what failed, then re-render and re-check. You're done when all nine pass and no tell appears. A set that passes but looks like its category's average isn't done: strengthen the move or the hook and render again.
+Fix only what failed, then re-render and re-check. You're done when all ten pass and no tell appears. A set that passes but looks like its category's average isn't done: strengthen the move or the hook and render again.
 
 ### 8. Show
 

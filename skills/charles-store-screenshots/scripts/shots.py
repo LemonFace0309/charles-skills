@@ -47,6 +47,45 @@ def env_key(name):
 
 # ---------------------------------------------------------------- render
 
+# Seams: an element that crosses one shows at least SEAM_MIN px on its smaller side; one that doesn't stays
+# SEAM_CLEAR px or more away from it, and from the strip's two outer edges unless it bleeds off by SEAM_MIN or more.
+# In the store every frame sits apart, with a gap beside it, so anything less reads as a cropping mistake.
+SEAM_MIN, SEAM_CLEAR = 60, 12
+SEAM_CHECK = """([fw, MIN, CLEAR]) => {
+  const strip = document.querySelector('.strip');
+  const n = strip.querySelectorAll(':scope > .frame').length, W = fw * n, sx = strip.getBoundingClientRect().left;
+  const name = (el) => {
+    const text = (el.innerText || '').trim().replace(/\\s+/g, ' ').slice(0, 32);
+    const img = el.tagName === 'IMG' ? el : el.querySelector('img');
+    const cls = typeof el.className === 'string' ? el.className : (el.className.baseVal || '');
+    return `<${el.tagName.toLowerCase()}${cls ? ' .' + cls.trim().split(/\\s+/).join('.') : ''}>` +
+      (text ? ` "${text}"` : img ? ` ${(img.getAttribute('src') || '').split('/').pop()}` : '');
+  };
+  const out = [];
+  for (const el of strip.querySelectorAll(':scope > :not(.frame), :scope > .frame > *')) {
+    const cs = getComputedStyle(el);
+    if (cs.display === 'none' || cs.visibility === 'hidden' || +cs.opacity < 0.05) continue;
+    const r = el.getBoundingClientRect(), L = r.left - sx, R = r.right - sx;
+    if (r.width < 2 || r.height < 2 || (L <= 0.5 && R >= W - 0.5)) continue;   // nothing, or a ground under the whole strip
+    for (let k = 1; k < n; k++) {
+      const s = k * fw, seam = `seam ${k}|${k + 1}`;
+      if (L < s - 0.5 && R > s + 0.5) {
+        const small = Math.min(s - L, R - s);
+        if (small < MIN) out.push(`${name(el)} crosses ${seam} by only ${Math.round(small)} px`);
+      } else {
+        const gap = L >= s ? L - s : s - R;
+        if (gap > 0.5 && gap < CLEAR) out.push(`${name(el)} stops ${gap.toFixed(0)} px from ${seam}`);
+      }
+    }
+    for (const [off, side] of [[-L, 'left'], [R - W, 'right']]) {
+      if (off > 0.5 && off < MIN) out.push(`${name(el)} bleeds only ${Math.round(off)} px off the strip's ${side} end`);
+      else if (off < -0.5 && off > -CLEAR) out.push(`${name(el)} stops ${Math.round(-off)} px from the strip's ${side} end`);
+    }
+  }
+  return out;
+}"""
+
+
 def render(args):
     from playwright.sync_api import sync_playwright
 
@@ -81,6 +120,7 @@ def render(args):
         }""")
         page.wait_for_timeout(600)
         problems += [f"font failed: {f}" for f in state["fonts"]] + [f"image missing: {i}" for i in state["images"]]
+        seams = page.evaluate(SEAM_CHECK, [fw, SEAM_MIN, SEAM_CLEAR])
         files = []
         for f in state["frames"]:
             if abs(f["w"] - fw) > 0.5 or abs(f["h"] - fh) > 0.5:
@@ -101,6 +141,8 @@ def render(args):
     search = Image.new("RGB", (rows[0].width, rows[0].height * 2), (128, 128, 128))
     search.paste(rows[0], (0, 0)); search.paste(rows[1], (0, rows[0].height))
     search.save(out / "search.png")
+    for line in seams:      # boxes include rotation and transparent padding, so confirm each one in the frames
+        print("CHECK", line)
     print(f"{len(files)} frames -> {out / 'frames'}  (+ preview.jpg, search.png)")
     for prob in problems:
         print("PROBLEM", prob)

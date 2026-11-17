@@ -79,6 +79,28 @@ Hook patterns:
 - **Numbers** go in only when true: lengths, counts and tiers from the brief.
 - **Voice** follows the lane table. Read every headline aloud in the brand's voice; if it sounds like an ad template, rewrite it.
 
+## Psychology
+
+Pick each set's levers from this table and write them in the plan comment as `levers:`, each with the frame that pulls it. Rows marked "Always" apply to every set. Use the others only when their condition holds, because a lever pulled without its condition reads as a trick.
+
+| Lever | When | In the set | Why it works |
+| --- | --- | --- | --- |
+| Social proof | Always, if the listing has a rating, award, chart rank or press | Bar 10: one or two items in frames 1–2; a rating always with its volume | People follow what many others chose (the bandwagon effect). A crowd ("974K ratings") persuades; a bare score ("4.8 ★") reads as a claim |
+| Authority | An Apple award, Editors' Choice or a named publication | Its exact name ("Apple Watch App of the Year"), laurels allowed, never another brand's logo | Trust transfers from a judge the viewer already trusts, and one strong credential makes everything after it look better (the halo effect) |
+| Processing fluency | Always | Bar 3 and 4: six words, 40 px, 4.5:1 | Text that's easier to read is judged truer, and the app easier to use |
+| Curiosity gap | Always, frames 1–2 | Leave the hook's image or sentence unfinished at the seam | An open loop nags until it's closed (the Zeigarnik effect), so people swipe to close it |
+| Isolation effect | Always | One accent per frame, on the one word or number that matters | The one thing that differs is the thing remembered |
+| Peak-end | Always | Frame 8 holds the strongest remaining reason or the proof, never a leftover feature | People judge an experience by its peak and its end |
+| Specificity | Always | Real numbers and names over adjectives ("3–7 min", not "quick") | Specific claims read as checkable; adjectives read as marketing |
+| Familiarity | The brand owns a colour, character, sound or UI element people already know | Build the world and the move from it (Duolingo's green and word tiles) | The familiar is recognised before it's read, and what's recognised feels safe |
+| Goal-gradient | The app has progress: streaks, routes, playback, levels | A progress device that advances frame by frame | Visible progress toward a goal pulls the next step, here the next swipe |
+| Loss aversion | The app protects something the user builds (a streak, a score, savings) | At most one headline in loss framing ("Keep your streak") | A loss weighs about twice a gain; a second loss-framed line in one set reads as nagging |
+| Anchoring and free | The app has a real price, a free tier or a big true number | Print the number itself, large ("as low as $0", "100 million songs") | The first number sets the scale for judging value, and "free" outweighs any small price |
+| Gaze cueing | A real person, a mascot or anything with a face is in the frame | Their eyes or pointing hand aim at the headline or the UI | A face is the first thing the eye finds, and people look where faces look |
+| Mental simulation | The app's outcome is a place or moment people want to be in (a run, a trip, a calm night) | The world is that scene, at the hour it happens, and the UI lives inside it | People want what they can picture themselves doing |
+| Identity | The users share a saying, a ritual or a name for themselves | Their own words, in the hook ("If it's not on Strava, it didn't happen") | Speaking a group's own language makes the app feel like theirs already |
+| Aesthetic-usability | Always | One light, tinted layered shadows, nothing pasted on, none of the tells | People trust what looks carefully made to work better |
+
 ## UI
 
 - **Crop to the payoff.** Find the moment in the capture where the feature pays off, and show that part large: the target line, the rank, the answer. A whole screen is context; the crop is the proof.
@@ -119,6 +141,7 @@ Fail a frame that shows any of these:
 - every frame using the same layout with only the screenshot swapped: no change of ground, scale, crop or photo (see each lane's rhythm)
 - generated people, or a real person's body altered
 - a seam cutting through a face, a word or the UI being sold
+- a sliver at a frame's edge: something crossing a seam by less than 60 px, or stopping within 12 px of one
 - more than one emphasis per headline, or a second headline in the frame
 
 ## Review
@@ -132,3 +155,4 @@ Answer each in `review.md`:
 5. **Logo swap:** would a competitor's logo fit?
 6. **The move:** where is it in each frame?
 7. **The closest swipe reference:** where is this set better, and where is it weaker?
+8. **Levers:** where does each named lever show, and is the proof in frames 1–2?
