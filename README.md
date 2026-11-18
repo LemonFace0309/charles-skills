@@ -84,6 +84,7 @@ Start a new session, then ask for it by name:
 /charles-ux-animation the add-to-cart flow
 /charles-hero-mockups four landing-page heroes for a ceramics studio, from my reference folder
 /charles-store-screenshots three App Store screenshot sets for my habit tracker, from the captures in ./shots
+/charles-learn-anything help me understand anti-aliasing
 ```
 
 Codex uses `$charles-unslop` instead of the slash.
@@ -125,6 +126,8 @@ MOTION for it more than 4,000 times.
 
 | Skill | Use it when |
 | --- | --- |
+| [charles-eli14](skills/qol/charles-eli14/) | You want something explained clearly, the way a great teacher would explain it to a sharp 14-year-old |
+| [charles-learn-anything](skills/qol/charles-learn-anything/) | You want to properly understand a topic in a few minutes: a narrated lesson with demos and quick checks, in Chrome |
 | [charles-storage-cleanup](skills/qol/charles-storage-cleanup/) | Your Mac is out of space and you want to know what's safe to delete |
 
 ## Credits

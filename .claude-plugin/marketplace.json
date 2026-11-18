@@ -37,11 +37,13 @@
     },
     {
       "name": "qol",
-      "description": "Quality of life: small helpers for every day, like finding what's filling your Mac",
+      "description": "Quality of life: explain anything like you're 14, turn any topic into a narrated interactive lesson, and find what's filling your Mac",
       "source": "./",
       "strict": false,
       "skills": [
-        "./skills/qol/charles-storage-cleanup"
+        "./skills/qol/charles-storage-cleanup",
+        "./skills/qol/charles-eli14",
+        "./skills/qol/charles-learn-anything"
       ]
     },
     {

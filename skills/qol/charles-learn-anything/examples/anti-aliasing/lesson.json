@@ -1,0 +1,176 @@
+{
+  "title": "Anti-aliasing",
+  "subtitle": "Why slanted lines turn into staircases on a screen, and how computers smooth them out.",
+  "terms": [
+    {
+      "term": "pixel",
+      "def": "One of the tiny squares a screen is made of. Each one shows a single colour at a time."
+    },
+    {
+      "term": "sample",
+      "def": "One check of the picture at a single point, used to decide what colour a pixel gets."
+    },
+    {
+      "term": "aliasing",
+      "def": "The jagged staircase you get when a smooth edge is forced onto a grid of pixels."
+    },
+    {
+      "term": "coverage",
+      "def": "How much of a pixel's area a shape covers, from 0% to 100%."
+    }
+  ],
+  "steps": [
+    {
+      "id": "grid",
+      "title": "A screen is a grid of tiny squares",
+      "say": "Everything on a screen is drawn on a grid of **pixels**, tiny squares that can each show only one colour at a time. A 1080p screen has 1,920 columns and 1,080 rows of them, about two million in total.\n\nSmooth shapes don't fit that grid. A slanted line or the curve of a letter has to be rebuilt out of whole squares, and the edges are where it shows. Drag the slider to see the same shape with fewer or more pixels.",
+      "widget": "pixels",
+      "widgetOptions": {
+        "mode": "aliased",
+        "cols": 18,
+        "controls": [
+          "pixelate",
+          "cols"
+        ]
+      },
+      "caption": "Turn pixels off to see the real line. Fewer pixels across means bigger squares and a rougher edge."
+    },
+    {
+      "id": "staircase",
+      "title": "One check per pixel makes a staircase",
+      "predict": {
+        "q": "A slanted black edge covers 30% of a white pixel. The computer checks only the centre of that pixel. What colour can the pixel end up?",
+        "choices": [
+          "Black or white, nothing in between",
+          "A light grey, 30% of the way to black",
+          "Whatever colour its neighbours are"
+        ],
+        "answer": 0,
+        "why": "Checking one point gives a yes or no answer: the shape either covers the centre or it doesn't. So each pixel comes out all black or all white."
+      },
+      "say": "To pick a pixel's colour, the computer takes a **sample**: it checks one point, usually the centre of the pixel, and asks whether the shape covers it. [[samples]]If it does, the pixel gets the shape's colour. If it doesn't, it gets the background.\n\nAlong a slanted edge, that answer flips from no to yes in sudden jumps, one row at a time, so the edge comes out as a staircase. This is called **aliasing**. The grid is too coarse to show the real edge, so you see a pattern of steps that isn't really there.",
+      "widget": "pixels",
+      "widgetOptions": {
+        "mode": "aliased",
+        "cols": 18,
+        "showEdge": true,
+        "controls": [
+          "samples-toggle",
+          "cols"
+        ]
+      },
+      "caption": "The blue outline is the real edge. Blue dots are the points the computer checks, filled where the shape covers them."
+    },
+    {
+      "id": "coverage",
+      "title": "The fix: shade each pixel by how much is covered",
+      "say": "**Anti-aliasing** fixes this by letting edge pixels be in between. Instead of a yes or no, the computer works out the pixel's **coverage**, how much of its area the shape covers, and mixes the two colours to match. [[aa]]A pixel that's 30% covered by black on white becomes a light grey. One that's 75% covered becomes a dark grey.\n\nUp close, the edge turns into a band of greys. From a normal viewing distance your eye blends them into one smooth line. The small preview shows the same pixels near their real size.",
+      "widget": "pixels",
+      "widgetOptions": {
+        "mode": "aliased",
+        "cols": 18,
+        "preview": true,
+        "controls": [
+          "aa-toggle",
+          "cols"
+        ]
+      },
+      "check": {
+        "q": "A black shape covers 75% of a white pixel. With anti-aliasing on, what colour does the pixel get?",
+        "choices": [
+          "Pure black",
+          "A dark grey, three quarters of the way to black",
+          "A light grey, a quarter of the way to black"
+        ],
+        "answer": 1,
+        "why": "The colours are mixed in proportion to coverage, so 75% covered means 75% of the way from white to black."
+      }
+    },
+    {
+      "id": "samples",
+      "title": "More samples, smoother edges",
+      "say": "Working out exact coverage for every shape is slow, so the usual shortcut is more samples. **Supersampling** checks several points inside each pixel instead of one, then averages the answers. [[ss4]]With 4 samples, a pixel can have 0, 1, 2, 3 or all 4 of them covered, which gives five shades from white to black. [[ss16]]With 16 samples there are 17 shades, and the edge gets smoother.\n\nThe catch is the work. Four samples per pixel is roughly four times as much for the graphics chip, and sixteen is sixteen times. That's why games treat anti-aliasing as a setting you can turn down.",
+      "widget": "pixels",
+      "widgetOptions": {
+        "mode": "ss",
+        "samples": 1,
+        "showSamples": true,
+        "cols": 12,
+        "controls": [
+          "samples-seg",
+          "cols"
+        ]
+      },
+      "check": {
+        "q": "With 4 samples per pixel, how many different shades can an edge pixel get?",
+        "choices": [
+          "2",
+          "4",
+          "5"
+        ],
+        "answer": 2,
+        "why": "0, 1, 2, 3 or 4 of the samples can be covered, so there are five possible shades, from white to black."
+      }
+    },
+    {
+      "id": "motion",
+      "title": "Jagged edges crawl when things move",
+      "say": "Jagged edges look worse in motion. When a slanted edge turns or slides slowly, its steps jump from one row of pixels to the next, so the edge seems to crawl. [[move]]Watch both versions turn: the left one checks one point per pixel, the right one shades by coverage.\n\nThin details suffer most. A wire or a fence far away can be thinner than a pixel, so with one check per pixel it blinks in and out as it moves. With anti-aliasing it stays a faint, steady line.",
+      "widget": "motion",
+      "caption": "Same shapes, same pixels. Left: one check per pixel. Right: shaded by coverage."
+    },
+    {
+      "id": "shortcuts",
+      "title": "The shortcuts games actually use",
+      "say": "Few games can afford 16 samples for every pixel, so they use cheaper tricks. **MSAA**, short for multisample anti-aliasing, takes extra samples only along the edges of shapes, where they matter, and one sample everywhere else. You get clean edges for much less work.\n\nOther methods clean up the finished picture instead. **FXAA**, fast approximate anti-aliasing, finds edges in the final image and softens them. It costs almost nothing but blurs things a little. **TAA**, temporal anti-aliasing, reuses samples from the frames before, at a slightly different spot each frame, so it smooths edges and flicker, though fast motion can leave faint trails.",
+      "check": {
+        "q": "Which method softens edges in the finished image, cheaply, at the risk of a slight blur?",
+        "choices": [
+          "MSAA",
+          "FXAA",
+          "Supersampling"
+        ],
+        "answer": 1,
+        "why": "FXAA works on the final picture: it finds edges and softens them, which costs almost nothing but blurs a little."
+      }
+    }
+  ],
+  "recap": [
+    "A screen is a grid of pixels, and each pixel shows one colour at a time.",
+    "Checking one point per pixel gives yes-or-no colours, so slanted edges become staircases. That's aliasing.",
+    "Anti-aliasing shades edge pixels by how much the shape covers them, and your eye blends the greys into a smooth edge.",
+    "More samples per pixel give smoother edges but cost more work, so games use shortcuts like MSAA, FXAA and TAA."
+  ],
+  "quiz": [
+    {
+      "q": "Why does a slanted line look like a staircase without anti-aliasing?",
+      "choices": [
+        "The pixels are too dim",
+        "Each pixel is all one colour, decided by one yes-or-no check",
+        "The line is drawn with too many samples"
+      ],
+      "answer": 1,
+      "why": "One check per pixel means each pixel is fully on or fully off, and along a slant those jumps line up into steps."
+    },
+    {
+      "q": "What does anti-aliasing change about an edge pixel?",
+      "choices": [
+        "Its size",
+        "Its colour, mixed by how much of it the shape covers",
+        "Its position on the grid"
+      ],
+      "answer": 1,
+      "why": "The grid never changes. Anti-aliasing only changes the colours of edge pixels, using their coverage."
+    },
+    {
+      "q": "A game offers 2x and 8x MSAA. What does 8x get you?",
+      "choices": [
+        "Smoother edges, for more work from the graphics chip",
+        "Sharper, more jagged edges",
+        "A higher frame rate"
+      ],
+      "answer": 0,
+      "why": "8x takes more samples along edges than 2x, so edges come out smoother, and the extra samples cost performance."
+    }
+  ]
+}

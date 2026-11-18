@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{TITLE}}</title>
+<style>{{CSS}}</style>
+</head>
+<body>
+<header class="top">
+  <button class="home" id="home" type="button">{{TITLE}}</button>
+  <nav class="progress" id="progress" aria-label="Steps"></nav>
+  <span class="count" id="count" aria-live="polite"></span>
+</header>
+<main id="app"></main>
+<div class="player" id="player" role="toolbar" aria-label="Narration">
+  <button id="prev" type="button" aria-label="Previous step (Left arrow)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg></button>
+  <button id="play" type="button" class="primary" aria-label="Play narration (Space)"><svg class="i-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg><svg class="i-pause" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5h3v14H8zM13 5h3v14h-3z"/></svg></button>
+  <button id="next" type="button" aria-label="Next step (Right arrow)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>
+  <span class="sep" aria-hidden="true"></span>
+  <button id="speed" type="button" class="text-btn" aria-label="Narration speed">1×</button>
+  <button id="auto" type="button" class="text-btn" aria-pressed="true" title="Move to the next step when the narration ends">Auto</button>
+  <button id="text" type="button" class="text-btn" aria-pressed="true" title="Hide the words to just listen and watch">Text</button>
+  <span class="voice" id="voice"></span>
+</div>
+<div class="tip" id="tip" role="tooltip" hidden></div>
+<audio id="audio" preload="auto"></audio>
+<script>window.LESSON = {{LESSON}}; window.NARRATION = {{NARRATION}};</script>
+<script>{{LEARN_JS}}</script>
+<script>{{WIDGETS_JS}}</script>
+<script>{{PLAYER_JS}}</script>
+</body>
+</html>
