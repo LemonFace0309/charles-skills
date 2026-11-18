@@ -222,7 +222,12 @@ def check(lesson, widgets_js):
             for j in jots:
                 if len(str(j).split()) > 8:
                     warns.append(f"{where}: the jot \"{j}\" has {len(str(j).split())} words; keep each to 8")
-        callouts += sum(1 for raw in re.split(r"\n\s*\n", st.get("say", "").strip()) if raw.lstrip().startswith(">"))
+        for raw in re.split(r"\n\s*\n", st.get("say", "").strip()):
+            if raw.lstrip().startswith(">"):
+                callouts += 1
+                n = sum(len(p) for p in parse(raw))
+                if n > 40:
+                    warns.append(f"{where}: a callout of {n} words; keep a stand-out fact or memory aid to 40")
         for kind in ("predict", "check"):
             q = st.get(kind)
             if q and not (q.get("q") and 2 <= len(q.get("choices", [])) <= 4 and 0 <= q.get("answer", -1) < len(q["choices"]) and q.get("why")):

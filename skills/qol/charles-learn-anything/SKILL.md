@@ -71,9 +71,9 @@ Why: an idea tied to something the learner already knows has somewhere to attach
 The `say` text is both read aloud and shown with each word lit as it's spoken.
 
 - The step's point is its first sentence.
-- Bold a new term the first time (`**coverage**`) and define it in the same sentence. Never point at anything the learner hasn't seen.
+- Bold a technical word the first time it's used (`**coverage**`), at most 3 a step, and define it in the same sentence. The 2 to 4 the whole lesson depends on also go in `terms`, which shows their definitions when someone taps them. Never point at anything the learner hasn't seen. Why: bold marks what's new, and when everything is bold nothing is.
 - At most one analogy in the lesson, two only if two ideas are genuinely abstract. Map it, say where it breaks, then go back to the real thing.
-- Write for the ear: no symbols ("→", "≥", "e.g.", "vs."), no code, no parentheses doing real work, and every abbreviation spelled out the first time. Why: whatever only works on the page sounds broken when the voice reads it.
+- Write for the ear: no symbols ("→", "≥", "e.g.", "vs."), no code, no parentheses doing real work, and every abbreviation spelled out the first time, unless the full name explains nothing (for ISO, say what it does instead). Leave out names the voice will likely mispronounce. Why: whatever only works on the page sounds broken when the voice reads it.
 - "You", short sentences, no "simply", "just" or "obviously".
 
 Why: a conversational style with "you" helps people learn (personalization, d 1.00), and the voice reads exactly what's written.
@@ -82,12 +82,12 @@ Why: a conversational style with "you" helps people learn (personalization, d 1.
 
 **Stand-out facts.** Put 1 to 3 in the lesson. A stand-out fact is true, specific and non-obvious, the kind that makes someone say "wait, really?" ("CDs sample sound 44,100 times a second, just over twice the highest pitch you can hear"), and it explains or extends the step's idea. Never trivia for its own sake.
 
-- Give each one its own paragraph starting with `> `. The page shows it as a callout, and the voice reads it like any other paragraph.
-- Only facts you've checked against a source you trust: official documentation, a paper, a reputable publication. If you can't confirm one, leave it out, and never round a number to make it more striking.
+- Give each one its own paragraph starting with `> `, at most 40 words. The page shows it as a callout, and the voice reads it like any other paragraph.
+- Only facts you've checked against a source you trust: official documentation, a paper, or an established publication that says where its number came from. If you can't confirm one, leave it out; if sources disagree on a number, leave the number out; and never round a number to make it more striking. Check every other number in the narration the same way.
 
 Why: surprise and curiosity make people remember, and a line set apart from the rest is remembered better than the same line mid-paragraph. They're also the facts people repeat to friends, so a wrong one spreads.
 
-**Dot jots.** Give every step `jots`: 2 to 4 bullets of at most 8 words each, the step's points as the learner would write them in their notes. The page lists them under the narration, and the voice doesn't read them. Write them fresh; never copy a sentence from the narration.
+**Dot jots.** Give every step `jots`: 2 to 4 bullets of at most 8 words each, the step's points as the learner would write them in their notes. The page lists them under the narration and the voice doesn't read them, so numbers and symbols are fine, in the narration's names and notation. Write them fresh; never copy a sentence from the narration.
 
 Why: a short list to glance back at is how people review and find their place again, and 2 to 4 items is what working memory holds at once. Copied sentences only make them read the same thing twice.
 
@@ -101,6 +101,7 @@ Does the lesson have a fixed set of 3 or more things to remember (stages, types,
     └── No → one short phrase that links them in order ("edges, image, time" for MSAA, FXAA and TAA)
 ```
 
+- When the lesson has more than one set, pick the one they're most likely to mix up or forget the order of.
 - Say it in the narration as a `> ` callout, and put it in that step's jots.
 - At most 2 per lesson. Never an acronym that needs explaining itself, or a letter that stands for a stretched word.
 
@@ -108,10 +109,10 @@ Why: a memory aid helps people recall a set and its order, but only a fixed set,
 
 ## 8. Add questions where they do work
 
-- `predict` on 1 or 2 steps, the ones where people usually guess wrong. It's asked before the step, whose text and picture stay blurred until they answer. Why: a question asked before the answer improves memory for exactly that point (g 0.54), mostly through the surprise of being wrong, so it's wasted on easy points.
+- `predict` on 1 or 2 steps, the ones where people usually guess wrong. It's asked before the step, whose text and picture stay blurred until they answer. Make sure `terms`, the intro and the steps before it don't give the answer away. Why: a question asked before the answer improves memory for exactly that point (g 0.54), mostly through the surprise of being wrong, so it's wasted on easy points.
 - `check` on 2 to 4 steps: one question about that step, shown when the narration ends. Why: answering from memory with the explanation right after it is one of the most reliable ways to learn (g 0.50).
 - `quiz`: 3 questions across the whole lesson, and `recap`: 3 to 5 one-sentence takeaways.
-- Every question has 2 to 4 choices with one clearly right, wrong choices that are the real misconceptions, and a `why` of one or two sentences that explains the right answer.
+- Every question has 2 to 4 choices with one clearly right, wrong choices that are the real misconceptions and use only what the lesson has taught by then, and a `why` of one or two sentences that explains the right answer.
 
 ## 9. Build, open and check it
 
