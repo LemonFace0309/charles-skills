@@ -26,15 +26,30 @@ HF = "npx --yes hyperframes@0.8.217"
 SHARED = ("art", "cast", "clips", "logos")
 
 
+def cast_library():
+    """The sprite library (claude, gpt, props): $ARCADE_CAST if set, a cast/ folder inside this skill, or
+    assets/arcade-cast/ in the project you run from (where claude-editing keeps Charles's)."""
+    if os.environ.get("ARCADE_CAST"):
+        return Path(os.environ["ARCADE_CAST"]).expanduser()
+    if (SKILL / "cast").is_dir():
+        return SKILL / "cast"
+    for folder in [Path.cwd(), *Path.cwd().parents]:
+        if (folder / "assets" / "arcade-cast").is_dir():
+            return folder / "assets" / "arcade-cast"
+    return SKILL / "cast"
+
+
 def copy_cast(assets, cast):
     """The props library and the named cast members into assets/cast."""
-    if (SKILL / "cast" / "props").is_dir():
-        shutil.copytree(SKILL / "cast" / "props", assets / "cast" / "props", dirs_exist_ok=True,
+    lib = cast_library()
+    if (lib / "props").is_dir():
+        shutil.copytree(lib / "props", assets / "cast" / "props", dirs_exist_ok=True,
                         ignore=shutil.ignore_patterns("raw", "review", "*.fal.json", "costs.jsonl"))
     for name in [c.strip() for c in cast.split(",") if c.strip()]:
-        src = SKILL / "cast" / name
+        src = lib / name
         if not src.is_dir():
-            sys.exit(f"no cast member '{name}' in {SKILL / 'cast'}")
+            sys.exit(f"no cast member '{name}' in {lib}: point ARCADE_CAST at your sprite library, "
+                     f"or make the character with tools/cast.py new")
         dst = assets / "cast" / name
         shutil.copytree(src / "poses", dst / "poses", dirs_exist_ok=True)
         shutil.copy(src / "ref.png", dst / "ref.png")

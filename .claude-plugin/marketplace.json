@@ -1,0 +1,58 @@
+{
+  "name": "charles-skills",
+  "owner": {
+    "name": "Charles Liu"
+  },
+  "metadata": {
+    "description": "Charles's skills for Claude Code and Codex: design craft, his reel pipeline, everyday helpers, and the skills from his reels",
+    "version": "1.0.0"
+  },
+  "plugins": [
+    {
+      "name": "design",
+      "description": "Make UI look designed and feel finished: unslop, polish, award-level craft and App Store screenshots",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/design/charles-unslop",
+        "./skills/design/charles-polish",
+        "./skills/design/charles-unreasonable-craft",
+        "./skills/design/charles-store-screenshots"
+      ]
+    },
+    {
+      "name": "editing",
+      "description": "Charles's reel pipeline: plan, script and edit talking-head reels, with explainer, pixel-art and 3D visuals timed to the words",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/editing/charles-claude-editing",
+        "./skills/editing/charles-reel-plans",
+        "./skills/editing/charles-scripting-voice",
+        "./skills/editing/charles-explainers-assets",
+        "./skills/editing/charles-3d-explainers",
+        "./skills/editing/charles-arcade-assets"
+      ]
+    },
+    {
+      "name": "qol",
+      "description": "Quality of life: small helpers for every day, like finding what's filling your Mac",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/qol/charles-storage-cleanup"
+      ]
+    },
+    {
+      "name": "drops",
+      "description": "Skills made for a reel and given away in the DMs: UX and animation principles, hero mockups and colour critique",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/drops/charles-ux-animation",
+        "./skills/drops/charles-hero-mockups",
+        "./skills/drops/charles-color-analysis"
+      ]
+    }
+  ]
+}

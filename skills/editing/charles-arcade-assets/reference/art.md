@@ -75,7 +75,7 @@ character), in one command, about $0.45 ($0.60 when a sheet has to be redrawn):
 ```bash
 .venv/bin/python $T/tools/cast.py new videos/<video>/graphics/x/assets/cast/slop --type creature --desc "a gooey purple-grey slime blob monster with two mismatched sparkle eyes, dripping glossy violet gradient goo" --screen green
 .venv/bin/python $T/tools/cast.py new videos/<video>/graphics/x/assets/cast/charles --photo charles.jpg --desc "wearing a black t-shirt"
-.venv/bin/python $T/tools/cast.py new videos/<video>/graphics/x/assets/cast/teal --like $T/cast/gpt --desc "recoloured teal"
+.venv/bin/python $T/tools/cast.py new videos/<video>/graphics/x/assets/cast/teal --like assets/arcade-cast/gpt --desc "recoloured teal"
 ```
 
 It draws the reference, the `base` and `act` pose sheets (idle, walk_a, walk_b, jump, cheer, sad; point, think,

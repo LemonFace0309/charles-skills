@@ -50,6 +50,9 @@ phone shows; `reference/build.md` has the rule.
   `npx --yes hyperframes@0.8.217` (written `hf`).
 - The repo venv for sprite tools: `python3 -m venv .venv && .venv/bin/pip install pillow numpy`.
 - `FAL_KEY` in the repo's `.env` (`tools/fal.py` finds it).
+- The sprite library (the `claude` and `gpt` characters and `props/`) isn't part of the public skill. Charles's lives
+  in claude-editing at `assets/arcade-cast/`; `tools/new_project.py` finds it there, or wherever `ARCADE_CAST`
+  points. Below, `cast/` means that library.
 
 # Workflow
 
