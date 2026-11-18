@@ -778,10 +778,32 @@ def cut_music(plan, vd, length, voice=None):
     return {"under": m.get("under", 8.5), "tracks": tracks}
 
 
+def real_cut(vd, n_beats):
+    """The cut's own times, one {"s", "e"} per line, or None before there's a cut. edit/cuts.json is either that list or
+    reelkit's cutter spec ({"phrases": ...}, what cut_take.py reads), whose result, edit/work/cut.cuts.json, has each kept
+    line's cut_start and cut_end."""
+    p = vd / "edit/cuts.json"
+    if not p.exists():
+        return None
+    c = json.loads(p.read_text())
+    if isinstance(c, list):
+        return c
+    w = vd / "edit/work/cut.cuts.json"
+    if not w.exists():
+        print("edit/cuts.json is reelkit's cutter spec and edit/work/cut.cuts.json isn't there yet, so the times stay "
+              "before-filming ones")
+        return None
+    kept = json.loads(w.read_text()).get("kept") or []
+    if len(kept) != n_beats:
+        print(f"edit/work/cut.cuts.json keeps {len(kept)} lines and the plan has {n_beats}, so the times stay before-filming "
+              "ones: one kept line per beat")
+        return None
+    return [{"s": k["cut_start"], "e": k["cut_end"]} for k in kept]
+
+
 def build(vd):
     plan = json.loads((vd / "edit/plan.json").read_text())
-    cuts_path = vd / "edit/cuts.json"
-    cuts = json.loads(cuts_path.read_text()) if cuts_path.exists() else None
+    cuts = real_cut(vd, len(plan["beats"]))
     if cuts and len(cuts) != len(plan["beats"]):
         sys.exit(f"edit/cuts.json has {len(cuts)} lines and the plan has {len(plan['beats'])}: one cut per line.")
     is_list = bool(plan.get("list"))

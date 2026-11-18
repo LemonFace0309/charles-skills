@@ -91,7 +91,7 @@ Before there's a cut, `kit/build.py` estimates each line:
 
 With his voice (Voice, below), each line instead lasts as long as its read plus 0.08 s, the silence his cuts keep at a join, or its `dur` if that's longer. The AI read runs close to his pace: OKLCH 3D's 205 words took 57 s read, against 62 s estimated.
 
-Once the editing session writes `edit/cuts.json` (`[{"s": start, "e": end}]`, one per beat, in seconds on the cut), each line takes its real length, and the page says the times are from the cut. The voice is off then, because the cut has his real one.
+Once the editing session writes `edit/cuts.json`, each line takes its real length, and the page says the times are from the cut. That file is either `[{"s": start, "e": end}]`, one per beat in seconds on the cut, or reelkit's cutter spec (`{"phrases": ...}`, what `tools/reelkit/cut_take.py` reads), in which case the times come from its result, `edit/work/cut.cuts.json`: each kept line's `cut_start` and `cut_end`, one per beat. The voice is off then, because the cut has his real one.
 
 ## Voice
 
