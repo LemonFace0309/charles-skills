@@ -2,8 +2,8 @@
 
 ![The 20 principles as cards from my reel, most shown before and after](examples/principles.jpg)
 
-The 20 principles of UX and animation from my reel, as steps your agent follows whenever it builds or reviews an
-interaction.
+Makes your interface move and respond the way the best apps do: the 20 principles of UX and animation, as steps your
+agent follows whenever it builds or reviews an interaction.
 
 ```bash
 npx skills add LemonFace0309/charles-skills --skill charles-ux-animation

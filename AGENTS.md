@@ -9,7 +9,8 @@ Instagram DM on their phone, looking for one skill, so the READMEs come first an
   pictures and clips the README shows, and `references/`, `scripts/` or `kit/` for the rest. The folder name is the
   `name` in `SKILL.md`.
 - The shelves: `design` (UI craft he uses on his own apps), `editing` (his reel pipeline), `qol` (small everyday
-  helpers) and `drops` (skills made for a reel and given away in the DMs). Each shelf has a README listing its skills.
+  helpers) and `drops` (specialist skills that each go deep on one craft; each launched with a reel). Each shelf has a
+  README listing its skills by when to use them. Describe drops by what they do for people, never as one-offs.
 - This repo is the only copy of these skills. claude-editing links to them (`claude-editing/skills/<name>` points
   here), so an edit made from a claude-editing session lands in this repo: commit and push it from here.
 
@@ -37,5 +38,6 @@ Instagram DM on their phone, looking for one skill, so the READMEs come first an
 
 - Run `node scripts/check.mjs`. GitHub runs it on every push, and it fails on a broken link, a missing install line, a
   `SKILL.md` name that doesn't match its folder, or a skill missing from a README or the plugin list.
-- Write READMEs the way the existing ones read: first person, plain words, short sentences, real examples.
+- Write READMEs the way the existing ones read: first person, plain words, short sentences, real examples. A README
+  carrying `<!-- text-only -->` under its title is one Charles decided needs no picture; leave it that way.
 - Several sessions can share a checkout. Stage only your own paths and commit right away.

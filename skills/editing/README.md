@@ -3,14 +3,14 @@
 How I make my reels, from the plan to the export. They're written for my workflow (my folders, my music library, my
 voice), so expect to change a few paths to fit yours.
 
-| Skill | What it does |
+| Skill | Use it when |
 | --- | --- |
-| [charles-reel-plans](charles-reel-plans/) | Plans a reel before it's filmed: the script, real assets, the caption, the music and a shareable mockup page |
-| [charles-scripting-voice](charles-scripting-voice/) | Writes the words I say on camera so they sound like me talking, not like an AI script |
-| [charles-claude-editing](charles-claude-editing/) | Edits talking-head footage into Reels and TikToks |
-| [charles-explainers-assets](charles-explainers-assets/) | Makes the visual that teaches each line of a reel, timed to the words |
-| [charles-3d-explainers](charles-3d-explainers/) | Makes 3D explainer reels from a voiceover, and 3D cutaways for talking-head videos |
-| [charles-arcade-assets](charles-arcade-assets/) | Makes pixel-art motion graphics timed to a voiceover |
+| [charles-reel-plans](charles-reel-plans/) | You have a video idea and a reference, and want the script, real assets, caption and music before you film |
+| [charles-scripting-voice](charles-scripting-voice/) | A script sounds like AI and you want it to sound like you talking |
+| [charles-claude-editing](charles-claude-editing/) | You have raw talking-head footage and want a finished reel with captions, overlays and music |
+| [charles-explainers-assets](charles-explainers-assets/) | A line in your video explains something and needs a visual that teaches it, timed to your words |
+| [charles-3d-explainers](charles-3d-explainers/) | You want a cinematic 3D explainer, or 3D cutaways for a talking-head video |
+| [charles-arcade-assets](charles-arcade-assets/) | You want playful pixel-art motion graphics timed to a voiceover |
 
 Install one with `npx skills add LemonFace0309/charles-skills --skill <name>`, or the whole shelf in Claude Code:
 

@@ -1,10 +1,22 @@
+<p align="center">
+  <a href="https://www.instagram.com/charles.unemployed/">
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset=".github/assets/banner-dark.webp">
+      <source media="(prefers-color-scheme: light)" srcset=".github/assets/banner-light.webp">
+      <img alt="Charles's Skills, for Claude Code and Codex" src=".github/assets/banner-light.webp" width="680">
+    </picture>
+  </a>
+</p>
+
 # Charles's skills
 
 [![skills.sh](https://skills.sh/b/LemonFace0309/charles-skills)](https://skills.sh/LemonFace0309/charles-skills)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
+[![Instagram](https://img.shields.io/badge/instagram-%40charles.unemployed-E4405F?logo=instagram&logoColor=white)](https://www.instagram.com/charles.unemployed/)
 
-The skills I use to design apps and make my reels, for Claude Code, Codex and any agent that reads `SKILL.md`. Every
-skill I've given away in a reel lives here too.
+The skills I use to design apps and make my reels, for Claude Code, Codex and any agent that reads `SKILL.md`. I show
+them working in my reels on [Instagram](https://www.instagram.com/charles.unemployed/), and every skill I've given away
+there lives here.
 
 <p align="center">
 <a href="skills/drops/charles-ux-animation/"><img src=".github/assets/ux-animation.jpg" width="49%" alt="charles-ux-animation: the 20 principles of UX and animation, shown before and after"></a>
@@ -17,13 +29,14 @@ skill I've given away in a reel lives here too.
 
 Find the word you commented:
 
-| Comment | Skill | What it does |
+| Comment | Skill | What you get |
 | --- | --- | --- |
 | MOTION | [charles-ux-animation](skills/drops/charles-ux-animation/) | The 20 principles of UX and animation, as steps your agent follows |
 | UNSLOP | [charles-unslop](skills/design/charles-unslop/) | Turns UI that looks AI-made into a designed screen |
 | POLISH | [charles-polish](skills/design/charles-polish/) | Fixes the details and the motion, checked frame by frame |
-| ACCENT | [charles-hero-mockups](skills/drops/charles-hero-mockups/) | Mocks up poster-like landing-page heroes, each with one bold accent colour |
-| COLOR | [charles-color-analysis](skills/drops/charles-color-analysis/) | Critiques the colour of a design, with exact fixes |
+| ACCENT | [charles-hero-mockups](skills/drops/charles-hero-mockups/) | Poster-like landing-page heroes, each with one bold accent colour |
+| COLOR | [charles-color-analysis](skills/design/charles-color-analysis/) | A colour critique of your design, with exact fixes |
+| SCREENSHOTS, HEADSPACE, SPOTIFY, STRAVA | [charles-store-screenshots](skills/design/charles-store-screenshots/) | App Store screenshot sets that look like the best on the store |
 
 ## Install
 
@@ -42,8 +55,8 @@ every project.
 In Claude Code you can add a whole shelf at once:
 
 ```text
-/plugin install drops --marketplace LemonFace0309/charles-skills
 /plugin install design --marketplace LemonFace0309/charles-skills
+/plugin install drops --marketplace LemonFace0309/charles-skills
 /plugin install editing --marketplace LemonFace0309/charles-skills
 /plugin install qol --marketplace LemonFace0309/charles-skills
 ```
@@ -67,49 +80,52 @@ Start a new session, then ask for it by name:
 
 ```text
 /charles-unslop this login page
+/charles-color-analysis critique the colours of my landing-page hero, hero.png
 /charles-ux-animation the add-to-cart flow
 /charles-hero-mockups four landing-page heroes for a ceramics studio, from my reference folder
-/charles-color-analysis critique the colours of my landing-page hero, hero.png
-/charles-reel-plans an evolution of design reel, from this post, structured like my 22 Backgrounds reel
+/charles-store-screenshots three App Store screenshot sets for my habit tracker, from the captures in ./shots
 ```
 
 Codex uses `$charles-unslop` instead of the slash.
 
 ## The skills
 
-### [Drops](skills/drops/): made for a reel, given away in the DMs
+### [Design](skills/design/): for the apps I build
 
-| Skill | What it does |
+| Skill | Use it when |
 | --- | --- |
-| [charles-ux-animation](skills/drops/charles-ux-animation/) | Builds and reviews how an interface moves and responds, using the 20 principles of UX and animation |
-| [charles-hero-mockups](skills/drops/charles-hero-mockups/) | Mocks up poster-like landing-page heroes as images, each with one bold accent colour |
-| [charles-color-analysis](skills/drops/charles-color-analysis/) | Critiques the colour of a graphic, landing page, app screen or palette, with exact fixes and before/after previews |
+| [charles-unslop](skills/design/charles-unslop/) | A screen looks AI-generated and you want it to look designed |
+| [charles-polish](skills/design/charles-polish/) | The UI works but feels off, and it needs a last pass on states, spacing, contrast and motion |
+| [charles-color-analysis](skills/design/charles-color-analysis/) | Your colours clash, look muddy or just feel off, and you want exact fixes with before/after previews |
+| [charles-unreasonable-craft](skills/design/charles-unreasonable-craft/) | A site or app screen has to wow people, held to the bar of an Awwwards Site of the Day |
+| [charles-store-screenshots](skills/design/charles-store-screenshots/) | You need App Store screenshots that make people stop scrolling, rendered at Apple's exact sizes |
 
-### [Design](skills/design/): what I use on my own apps
+### [Drops](skills/drops/): specialist skills, one craft each
 
-| Skill | What it does |
+Each drop goes deep on a single craft. charles-ux-animation is the most requested skill I have: people have commented
+MOTION for it more than 4,000 times.
+
+| Skill | Use it when |
 | --- | --- |
-| [charles-unslop](skills/design/charles-unslop/) | Turns UI that looks AI-made into a designed screen with its own point of view |
-| [charles-polish](skills/design/charles-polish/) | Takes UI that works and fixes the details and motion, checked frame by frame |
-| [charles-unreasonable-craft](skills/design/charles-unreasonable-craft/) | Holds a site or app design to the bar of an Awwwards Site of the Day and an Apple Design Award |
-| [charles-store-screenshots](skills/design/charles-store-screenshots/) | Designs App Store screenshot sets and renders them at Apple's exact sizes |
+| [charles-ux-animation](skills/drops/charles-ux-animation/) | Your interface works but doesn't feel good yet: taps, menus, modals and page changes that should move with intent |
+| [charles-hero-mockups](skills/drops/charles-hero-mockups/) | You want to see a landing page's look before you build it, or pitch a client three art directions as finished images |
 
 ### [Editing](skills/editing/): how I make my reels
 
-| Skill | What it does |
+| Skill | Use it when |
 | --- | --- |
-| [charles-reel-plans](skills/editing/charles-reel-plans/) | Plans a reel before it's filmed: the script, real assets, the caption, the music and a shareable mockup page |
-| [charles-scripting-voice](skills/editing/charles-scripting-voice/) | Writes the words I say on camera so they sound like me talking, not like an AI script |
-| [charles-claude-editing](skills/editing/charles-claude-editing/) | Edits talking-head footage into Reels and TikToks |
-| [charles-explainers-assets](skills/editing/charles-explainers-assets/) | Makes the visual that teaches each line of a reel, timed to the words |
-| [charles-3d-explainers](skills/editing/charles-3d-explainers/) | Makes 3D explainer reels from a voiceover, and 3D cutaways for talking-head videos |
-| [charles-arcade-assets](skills/editing/charles-arcade-assets/) | Makes pixel-art motion graphics timed to a voiceover |
+| [charles-reel-plans](skills/editing/charles-reel-plans/) | You have a video idea and a reference, and want the script, real assets, caption and music before you film |
+| [charles-scripting-voice](skills/editing/charles-scripting-voice/) | A script sounds like AI and you want it to sound like you talking |
+| [charles-claude-editing](skills/editing/charles-claude-editing/) | You have raw talking-head footage and want a finished reel with captions, overlays and music |
+| [charles-explainers-assets](skills/editing/charles-explainers-assets/) | A line in your video explains something and needs a visual that teaches it, timed to your words |
+| [charles-3d-explainers](skills/editing/charles-3d-explainers/) | You want a cinematic 3D explainer, or 3D cutaways for a talking-head video |
+| [charles-arcade-assets](skills/editing/charles-arcade-assets/) | You want playful pixel-art motion graphics timed to a voiceover |
 
 ### [QoL](skills/qol/): small things that save time
 
-| Skill | What it does |
+| Skill | Use it when |
 | --- | --- |
-| [charles-storage-cleanup](skills/qol/charles-storage-cleanup/) | Finds what's filling a Mac and removes what's safe to delete |
+| [charles-storage-cleanup](skills/qol/charles-storage-cleanup/) | Your Mac is out of space and you want to know what's safe to delete |
 
 ## Credits
 

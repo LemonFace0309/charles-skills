@@ -50,4 +50,4 @@ Python 3 with Playwright, Pillow and requests, and Google Chrome. Generated art 
 
 ## Pairs with
 
-[charles-color-analysis](../../drops/charles-color-analysis/) to check the palette before you render.
+[charles-color-analysis](../charles-color-analysis/) to check the palette before you render.

@@ -1,13 +1,12 @@
 # Drops
 
-Skills I made for a reel and gave away in the DMs. If you commented a word on one of my reels, it's here or in the
-table at the top of the [main README](../../README.md).
+Specialist skills that each go deep on a single craft. charles-ux-animation is the most requested skill I have: people
+have commented MOTION for it more than 4,000 times.
 
-| Comment | Skill | What it does |
-| --- | --- | --- |
-| MOTION | [charles-ux-animation](charles-ux-animation/) | Builds and reviews how an interface moves and responds, using the 20 principles of UX and animation |
-| ACCENT | [charles-hero-mockups](charles-hero-mockups/) | Mocks up poster-like landing-page heroes as images, each with one bold accent colour |
-| COLOR | [charles-color-analysis](charles-color-analysis/) | Critiques the colour of a graphic, landing page, app screen or palette, with exact fixes and before/after previews |
+| Skill | Use it when |
+| --- | --- |
+| [charles-ux-animation](charles-ux-animation/) | Your interface works but doesn't feel good yet: taps, menus, modals and page changes that should move with intent |
+| [charles-hero-mockups](charles-hero-mockups/) | You want to see a landing page's look before you build it, or pitch a client three art directions as finished images |
 
 Install one with `npx skills add LemonFace0309/charles-skills --skill <name>`, or the whole shelf in Claude Code:
 

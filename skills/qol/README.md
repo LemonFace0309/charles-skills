@@ -2,9 +2,9 @@
 
 Quality of life: small skills that save time every day, on any project.
 
-| Skill | What it does |
+| Skill | Use it when |
 | --- | --- |
-| [charles-storage-cleanup](charles-storage-cleanup/) | Finds what's filling a Mac and removes what's safe to delete |
+| [charles-storage-cleanup](charles-storage-cleanup/) | Your Mac is out of space and you want to know what's safe to delete |
 
 Install one with `npx skills add LemonFace0309/charles-skills --skill <name>`, or the whole shelf in Claude Code:
 

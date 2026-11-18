@@ -1,4 +1,5 @@
 # charles-storage-cleanup
+<!-- text-only -->
 
 Finds what's filling your Mac and removes what's safe to delete, keeping your active work.
 

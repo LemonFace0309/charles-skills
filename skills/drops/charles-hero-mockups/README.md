@@ -9,7 +9,7 @@
 <img src="gallery/still-waters.jpg" width="49%" alt="Still Waters retreats: brown and pale gold, with glowing gold">
 </p>
 
-Mocks up landing-page heroes as images that read like posters, each with one bold accent colour.
+See a landing page's look before you build it: poster-like hero images, each with one bold accent colour.
 
 ```bash
 npx skills add LemonFace0309/charles-skills --skill charles-hero-mockups
@@ -42,7 +42,7 @@ check that reads every word back only runs on macOS.
 
 ## Pairs with
 
-[charles-color-analysis](../charles-color-analysis/) to check the palette, and
+[charles-color-analysis](../../design/charles-color-analysis/) to check the palette, and
 [charles-unreasonable-craft](../../design/charles-unreasonable-craft/) to build the real page.
 
 It was called `charles-accent-heroes` until 16 Nov 2026.

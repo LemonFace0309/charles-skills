@@ -1,4 +1,5 @@
 # charles-scripting-voice
+<!-- text-only -->
 
 Writes the words you say on camera so they sound like you talking, not like an AI script.
 

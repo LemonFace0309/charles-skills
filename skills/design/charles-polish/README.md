@@ -1,4 +1,5 @@
 # charles-polish
+<!-- text-only -->
 
 Takes an interface that already works and makes it feel finished, level by level.
 

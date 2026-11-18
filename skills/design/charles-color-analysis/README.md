@@ -41,4 +41,4 @@ Chromium. No API keys.
 
 ## Pairs with
 
-[charles-hero-mockups](../charles-hero-mockups/) to make heroes worth critiquing.
+[charles-hero-mockups](../../drops/charles-hero-mockups/) to make heroes worth critiquing.

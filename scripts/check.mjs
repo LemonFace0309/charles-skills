@@ -37,7 +37,8 @@ for (const s of skills) {
   const install = `npx skills add ${REPO} --skill ${s.name}`;
   if (!s.readme.includes(install)) err(`${s.rel}/README.md has no install line (${install})`);
   const top = s.readme.split('\n').slice(0, 8).join('\n');
-  if (!/!\[[^\]]*\]\(|<img\s|<video\s/.test(top)) warn(`${s.rel}/README.md: no picture or clip straight under the title`);
+  const textOnly = s.readme.includes('<!-- text-only -->');   // Charles chose no picture for this skill
+  if (!textOnly && !/!\[[^\]]*\]\(|<img\s|<video\s/.test(top)) warn(`${s.rel}/README.md: no picture or clip straight under the title`);
 }
 
 // Every relative link and picture in a README points at a file that exists; pictures stay small.

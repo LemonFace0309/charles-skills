@@ -4,20 +4,21 @@
     "name": "Charles Liu"
   },
   "metadata": {
-    "description": "Charles's skills for Claude Code and Codex: design craft, his reel pipeline, everyday helpers, and the skills from his reels",
+    "description": "Charles's skills for Claude Code and Codex: design craft, his reel pipeline, everyday helpers and specialist drops",
     "version": "1.0.0"
   },
   "plugins": [
     {
       "name": "design",
-      "description": "Make UI look designed and feel finished: unslop, polish, award-level craft and App Store screenshots",
+      "description": "Make UI look designed and feel finished: unslop, polish, award-level craft, colour critique and App Store screenshots",
       "source": "./",
       "strict": false,
       "skills": [
         "./skills/design/charles-unslop",
         "./skills/design/charles-polish",
         "./skills/design/charles-unreasonable-craft",
-        "./skills/design/charles-store-screenshots"
+        "./skills/design/charles-store-screenshots",
+        "./skills/design/charles-color-analysis"
       ]
     },
     {
@@ -45,13 +46,12 @@
     },
     {
       "name": "drops",
-      "description": "Skills made for a reel and given away in the DMs: UX and animation principles, hero mockups and colour critique",
+      "description": "Specialist skills that go deep on one craft: interface motion done right, and poster-like landing-page heroes",
       "source": "./",
       "strict": false,
       "skills": [
         "./skills/drops/charles-ux-animation",
-        "./skills/drops/charles-hero-mockups",
-        "./skills/drops/charles-color-analysis"
+        "./skills/drops/charles-hero-mockups"
       ]
     }
   ]
