@@ -15,8 +15,11 @@
     beats.forEach((b) => { if (b.visual && b.visual.alt) b.visual.src = b.visual.alt; });
     assets.forEach((a) => { if (a.plate && a.plate.alt) a.plate.src = a.plate.alt; });
   }
+  // The media loader (below) keeps the page's own copies in memory, where a seek always works; a page opened from disk
+  // has its files right there instead.
+  const useMemory = location.protocol !== "file:" && typeof fetch === "function" && !!URL.createObjectURL;
   const R = V.reel;
-  const HOLD = 1.2;                     // the last frame holds this long before the loop starts again
+  const HOLD = 1.2;                    // the last frame holds this long before the loop starts again
   const SAFE_TOP = 250, SAFE_BOTTOM = 1500;
 
   const $ = (sel, el = document) => el.querySelector(sel);
@@ -334,15 +337,25 @@
   const track = V.music && V.music.tracks && V.music.tracks[0];
   const audio = track ? new Audio() : null;
   let waitingSince = null;             // when play asked the music to start; the reel holds still up to 1.5 s for it
+  let musicCopy = null;                // the music in memory (the media loader), which can always seek
+  let musicSeekAt = 0;
+  let musicRetries = 0;
+  // A host that can't serve byte ranges makes the browser start a file over from 0 when it's asked to seek, and play
+  // after a pause always seeked the music, even to where it already was: "every time I click pause and then play
+  // again, it restarted the video from the start" (18 Nov 2026). So the music seeks only when it's somewhere else, and
+  // once its copy in memory has arrived, every seek is made on that.
   function syncAudio(force = false) {
     if (!audio) return;
     if (!playing) {
       if (!audio.paused) audio.pause();
       waitingSince = null;
+      useMusicCopy();                  // a pause is when the copy in memory can go in without a gap
       return;
     }
     const want = track.at + t;
-    if (force || Math.abs(audio.currentTime - want) > 0.25) {
+    if (Math.abs(audio.currentTime - want) > (force ? 0.08 : 0.25)) {
+      if (musicCopy && audio.src !== musicCopy) { audio.pause(); useMusicCopy(); return; }   // loadedmetadata syncs it
+      musicSeekAt = performance.now();
       try { audio.currentTime = want; } catch { /* not seekable until its metadata loads; loadedmetadata syncs again */ }
     }
     if (audio.paused) {
@@ -350,8 +363,13 @@
       audio.play().catch(() => { waitingSince = null; });
     }
   }
-  if (audio) {
+  function useMusicCopy() {
+    if (!musicCopy || audio.src === musicCopy || !audio.paused) return;
     audio.preload = "auto";
+    audio.src = musicCopy;             // its loadedmetadata puts it where the reel is
+  }
+  if (audio) {
+    audio.preload = useMemory ? "none" : "auto";   // in memory, the media loader fetches it once
     audio.hidden = true;
     document.body.append(audio);       // in the page, so its state can be read while checking it
     audio.src = track.src;
@@ -380,17 +398,29 @@
   const mem = new Map();               // a file -> its copy in memory
   const ready = new Set();             // stills decoded, ready to draw
   const waitingImgs = new Map();       // a still a line shows before its file arrived
-  const useMemory = location.protocol !== "file:" && typeof fetch === "function" && !!URL.createObjectURL;
   const want = (src) => mem.get(src) || src;
   const loadingText = $("#loading-text");
-  // #check also shows how many of the reel's files came into memory: all of them means the host let the page hold its
-  // own copies, and fewer means some play from the network (a frame that refuses blob:)
+  // #check also shows how many of the reel's files, the music included, came into memory: all of them means the host
+  // let the page hold its own copies, and fewer means some play from the network (a frame that refuses blob:)
   const memNote = location.hash === "#check" && useMemory ? h("span", { class: "mem-note", title: "files in memory" }) : null;
   if (memNote) $("#full").before(memNote);
-  const noteMem = () => { if (memNote) memNote.textContent = `${mem.size}/${kindOf.size}`; };
+  const noteMem = () => {
+    if (memNote) memNote.textContent = `${mem.size + (musicCopy ? 1 : 0)}/${kindOf.size + (audio ? 1 : 0)}`;
+  };
   let holdSince = null;
   let audioBroken = false;
-  if (audio) audio.addEventListener("error", () => { audioBroken = true; });
+  if (audio) {
+    audio.addEventListener("error", () => {
+      if (audio.src.startsWith("blob:")) {   // a frame that refuses blob: plays the network copy
+        musicCopy = null;
+        noteMem();
+        audio.preload = "auto";
+        audio.src = track.src;
+        return;
+      }
+      audioBroken = true;
+    });
+  }
   const musicReady = () => !audio || audioBroken || audio.readyState >= 3;
   function readyAt(time) {
     const v = beats[indexAt(time)].visual;
@@ -454,11 +484,14 @@
     arrived += 1;
     loadingText.textContent = arrived < kindOf.size ? `Loading ${arrived + 1} of ${kindOf.size}` : "Loading";
   }
-  const musicIn = new Promise((resolve) => {
-    if (!audio) { resolve(); return; }
-    ["canplaythrough", "error"].forEach((ev) => audio.addEventListener(ev, resolve, { once: true }));
-    setTimeout(resolve, 4000);
-  });
+  // The music comes first, into memory, and goes in as soon as the reel isn't playing. The reel's files wait for it,
+  // up to 4 s.
+  const musicFetched = !audio ? Promise.resolve()
+    : !useMemory ? new Promise((resolve) => { ["canplaythrough", "error"].forEach((ev) => audio.addEventListener(ev, resolve, { once: true })); })
+    : fetch(track.src).then((res) => { if (!res.ok) throw new Error(String(res.status)); return res.blob(); })
+      .then((blob) => { musicCopy = URL.createObjectURL(blob); noteMem(); useMusicCopy(); })
+      .catch(() => { audio.preload = "auto"; });
+  const musicIn = Promise.race([musicFetched, new Promise((resolve) => { setTimeout(resolve, 4000); })]);
   async function worker(first) {
     if (!first) await musicIn;
     for (let src = nextFile(); src; src = nextFile()) {
@@ -499,7 +532,16 @@
       // The music keeps the time while it plays, so the two can't drift apart. A restart that lands a touch early (an
       // MP3 seek isn't exact) slows the reel for a moment instead of sending it back a few frames.
       const gap = heard - t;
-      t = gap < 0 && gap > -0.4 ? t + dt * 0.5 : Math.max(0, heard);
+      if (gap < -0.4) {
+        // The music is far behind the reel: a seek it didn't take started it over. The reel keeps its place, and the
+        // music is sent back to it at most once a second, instead of the reel going back to the start with it.
+        // Twice at most: on a host that can't seek and no copy in memory, each try would start the music over again.
+        t += dt;
+        if (musicRetries < 2 && performance.now() - musicSeekAt > 1000) { musicRetries += 1; syncAudio(true); }
+      } else {
+        musicRetries = 0;
+        t = gap < 0 ? t + dt * 0.5 : heard;
+      }
     } else if (!(waitingSince != null && ts - waitingSince < 1500)) {
       t += dt;
     }
