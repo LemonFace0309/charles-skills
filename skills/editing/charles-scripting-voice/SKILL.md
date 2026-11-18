@@ -1,6 +1,6 @@
 ---
 name: charles-scripting-voice
-description: Write or rewrite the words Charles says on camera (reel scripts, hooks, item lines, explanations, calls to action) so they sound like him talking, not like an AI script. Use whenever a session drafts a script, voiceover or hook for one of his reels, adapts someone else's reel into his words, or rewrites a line "in my voice", and whenever he says a script sounds AI, robotic, stiff or "super AI like". Triggers on: script, scripting, voiceover, VO, hook, CTA, talking head, lines to read, read on camera, "in my voice", "my voice", "sounds like me", "sounds AI", "make it sound natural".
+description: "Write or rewrite the words Charles says on camera (reel scripts, hooks, item lines, explanations, calls to action) so they sound like him talking, not like an AI script. Use whenever a session drafts a script, voiceover or hook for one of his reels, adapts someone else's reel into his words, or rewrites a line \"in my voice\", and whenever he says a script sounds AI, robotic, stiff or \"super AI like\". Triggers on: script, scripting, voiceover, VO, hook, CTA, talking head, lines to read, read on camera, \"in my voice\", \"my voice\", \"sounds like me\", \"sounds AI\", \"make it sound natural\"."
 ---
 
 # Goal

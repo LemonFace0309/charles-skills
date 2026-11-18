@@ -21,6 +21,21 @@ for (const shelf of SHELVES) {
   if (!exists(`skills/${shelf}/README.md`)) err(`skills/${shelf}/README.md is missing`);
 }
 
+// The installer (npx skills) reads the frontmatter as strict YAML and skips a skill it can't parse, with only a
+// warning. Without quotes, a value can't hold ": " or " #"; inside double quotes, a quote mark is written \".
+function yamlProblem(skillMd) {
+  const block = skillMd.match(/^---\r?\n([\s\S]*?)\r?\n---/);
+  for (const line of block ? block[1].split(/\r?\n/) : []) {
+    const kv = line.match(/^([A-Za-z][\w-]*):\s*(.*)$/);
+    if (!kv) continue;
+    const v = kv[2].trim();
+    if (v.startsWith('"') ? !/^"(?:[^"\\]|\\.)*"$/.test(v)
+      : v.startsWith("'") ? !/^'(?:[^']|'')*'$/.test(v)
+      : /:(\s|$)|\s#/.test(v)) return kv[1];
+  }
+  return null;
+}
+
 // Each skill: a valid SKILL.md and a README with its install line.
 const skills = listSkills();
 const byName = new Map();
@@ -33,6 +48,8 @@ for (const s of skills) {
   if (fm.name !== s.name) err(`${s.rel}/SKILL.md: name is "${fm.name}" but the folder is "${s.name}"`);
   if (!fm.description) err(`${s.rel}/SKILL.md has no description`);
   else if (fm.description.length > 1024) err(`${s.rel}/SKILL.md: the description is ${fm.description.length} characters, over the 1,024 limit`);
+  const badKey = yamlProblem(fs.readFileSync(path.join(s.dir, 'SKILL.md'), 'utf8'));
+  if (badKey) err(`${s.rel}/SKILL.md: npx skills can't read its ${badKey} as YAML and skips the skill (put the value in double quotes, with \\" for a quote mark inside)`);
   if (!s.readme) { err(`${s.rel}/README.md is missing`); continue; }
   const install = `npx skills add ${REPO} --skill ${s.name}`;
   if (!s.readme.includes(install)) err(`${s.rel}/README.md has no install line (${install})`);
