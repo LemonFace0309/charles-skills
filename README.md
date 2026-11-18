@@ -28,11 +28,16 @@ there lives here.
 ## Install
 
 ```bash
+npx skills add LemonFace0309/charles-skills --skill '*'
+```
+
+That installs every skill. Add `-g` to install them for every project, not only this one. For one skill, name it:
+
+```bash
 npx skills add LemonFace0309/charles-skills --skill charles-unslop
 ```
 
-Swap in the skill you want. Leave off `--skill` to pick from a list grouped by shelf, and add `-g` to install it for
-every project.
+Leave off `--skill` to pick from a list grouped by shelf.
 
 <details>
 <summary>Claude Code plugins, or by hand</summary>
