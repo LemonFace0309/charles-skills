@@ -61,7 +61,13 @@ MEME_SOUNDS = ("vine boom", "dun", "bruh", "airhorn", "air horn", "emotional dam
 VOICE_REF = "assets/voice/reference.wav"
 # Words the voice says wrong as written ("OKLCH" came out "okelch"), respelled for the read only; the page shows the
 # line as written. A plan adds its own in `voice.words`, and a line can replace its whole read with `voice_say`.
-VOICE_WORDS = {"OKLCH": "O K L C H", "OKLab": "O K lab", "UI": "U I", "UX": "U X", "CSS": "C S S", "SVG": "S V G"}
+VOICE_WORDS = {"OKLCH": "O K L C H", "OKLab": "O K lab"}   # UI, UX, CSS and SVG read right as written; "C S S" came out "CS"
+# IndexTTS-2 expands "it's", "that's", "you're" and "I'm" into "it is", "that is", "you are" and "I am", which he never
+# says; written without the apostrophe they come out as the contraction. "I'll", "you'll", "don't", "can't" and "we're"
+# come through as written ("Ill" came out "It'll", and "were" would be a different word), so they keep theirs. Tested
+# 18 Nov 2026, both ways, with Whisper on each read.
+VOICE_CONTRACTIONS = [(re.compile(r"\b(\w+)['’]s\b"), r"\1s"), (re.compile(r"\b([Yy]ou)['’]re\b"), r"\1re"),
+                      (re.compile(r"\bI['’]m\b"), "Im")]
 VOICE_GAP = 0.08           # silence between lines: his cuts keep at most 0.1 s at a join (charles-claude-editing, Cuts)
 VOICE_ENGINES = {
     # name: (fal endpoint, request body, label, $ for a line from its characters and seconds of speech)
@@ -681,6 +687,8 @@ def voice_for(plan, vd, says):
     paths, todo = [], {}
     for say in says:
         text = respell.sub(lambda m: words[m.group(1)], (say or "").strip())
+        for pattern, plain in VOICE_CONTRACTIONS:
+            text = pattern.sub(plain, text)
         if not text:
             paths.append(None)
             continue
