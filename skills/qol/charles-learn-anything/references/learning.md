@@ -19,7 +19,7 @@ From [Mayer's 2023 summary](https://www.unh.edu/teaching-learning-resource-hub/s
 | Generative activity | 37/44, d 0.71 | Questions make the learner produce the answer |
 | Signaling | 26/28, d 0.70 | The outline up front, statements as titles, key terms in bold |
 | Segmenting | 7/7, d 0.67 | One idea per screen, moved through by the learner |
-| Redundancy | 8/12, d 0.10 | Weak, and it reverses when the learner sets the pace and the text is short, which is why the page shows the narrated words. The Text button hides them for anyone who'd rather just listen and watch |
+| Redundancy | 8/12, d 0.10 | Weak, and it reverses when the learner sets the pace and the text is short, which is why the page always shows the narrated words |
 | Image | 4/7, d 0.19 | No presenter photo or mascot |
 
 ## Questions

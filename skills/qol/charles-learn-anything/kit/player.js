@@ -1,5 +1,6 @@
 // The lesson player: one step per screen, predict-first questions, narration that highlights each word as it's read,
-// and speed and auto-advance controls. Lesson data comes from window.LESSON, narration timings from window.NARRATION.
+// and a speed control. Each step waits for the reader; Next moves on and keeps reading aloud if they were listening.
+// Lesson data comes from window.LESSON, narration timings from window.NARRATION.
 (() => {
   const L = window.LESSON, N = window.NARRATION || {};
   const { el } = window.learn;
@@ -11,7 +12,7 @@
     set(k, v) { try { localStorage.setItem('learn:' + k, JSON.stringify(v)); } catch (e) { /* private mode */ } },
   };
   const steps = L.steps || [];
-  const S = { i: -1, playing: false, speed: store.get('speed', 1), auto: store.get('auto', true), answers: {}, view: null, widget: null, run: 0, raf: 0, wait: 0, current: null, voice: undefined };
+  const S = { i: -1, playing: false, speed: store.get('speed', 1), listen: false, answers: {}, view: null, widget: null, run: 0, raf: 0, current: null, voice: undefined };
 
   // ---------- key terms ----------
   const defs = new Map((L.terms || []).map((t) => [t.term.toLowerCase(), t]));
@@ -171,31 +172,36 @@
     S.playing = on;
     player.classList.toggle('playing', on);
     $('#play').setAttribute('aria-label', on ? 'Pause narration (Space)' : 'Play narration (Space)');
-    if (!on) { clearTimeout(S.wait); if (S.current) { if (S.current.mode === 'audio') audio.pause(); else speechSynthesis.pause(); } }
+    if (!on) { if (S.current) { if (S.current.mode === 'audio') audio.pause(); else speechSynthesis.pause(); } }
   }
 
+  // S.listen is whether they want the steps read aloud: play turns it on, pause turns it off.
   function play() {
-    if (S.i < 0 || S.i >= steps.length) { setPlaying(true); go(0, true); return; }
-    setPlaying(true);
-    if (S.current) { if (S.current.mode === 'audio') audio.play(); else speechSynthesis.resume(); return; }
+    S.listen = true;
+    if (S.i < 0 || S.i >= steps.length) { go(0, true); return; }
+    if (S.current) { setPlaying(true); if (S.current.mode === 'audio') audio.play(); else speechSynthesis.resume(); return; }
     const st = steps[S.i];
     if (S.view?.checkShown && st.check && S.answers[st.id + '.c'] == null) return; // waiting for their answer
     if (S.view?.checkShown) { go(S.i + 1, true); return; }
+    setPlaying(true);
     narrate();
   }
+
+  function pause() { S.listen = false; setPlaying(false); }
 
   function narrate() {
     const st = steps[S.i], v = S.view;
     if (!st || !v) return;
-    if (st.predict && S.answers[st.id + '.p'] == null) { speak(st.id + '.q', v.q); return; }
+    if (st.predict && S.answers[st.id + '.p'] == null) { speak(st.id + '.q', v.q, () => setPlaying(false)); return; }
     speak(st.id + '.say', v.say, afterSay);
   }
 
+  // A step never moves on by itself: people look at the picture for different lengths of time, so the step waits
+  // until they press Next.
   function afterSay() {
     const st = steps[S.i];
-    if (st.check && S.answers[st.id + '.c'] == null) { showCheck(); return; }
-    if (S.playing && S.auto) S.wait = setTimeout(() => go(S.i + 1, true), 900);
-    else setPlaying(false);
+    if (st.check && S.answers[st.id + '.c'] == null) showCheck();
+    setPlaying(false);
   }
 
   // ---------- questions ----------
@@ -222,7 +228,7 @@
     const st = steps[S.i], v = S.view;
     if (!st?.check || v.checkShown) return false;
     v.checkShown = true;
-    questionCard(v.checkHost, st.check, 'Check yourself', st.id + '.c', () => { if (S.playing && S.auto) S.wait = setTimeout(() => go(S.i + 1, true), 2600); });
+    questionCard(v.checkHost, st.check, 'Check yourself', st.id + '.c');
     v.checkHost.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     return true;
   }
@@ -243,9 +249,9 @@
     box.appendChild(el('p', 'meta', 'What you’ll go through'));
     const ol = el('ol', 'outline'); for (const st of steps) ol.appendChild(el('li', null, st.title)); box.appendChild(ol);
     const go0 = el('button', 'go', 'Start'); go0.type = 'button';
-    go0.addEventListener('click', () => { setPlaying(true); go(0, true); });
+    go0.addEventListener('click', () => { S.listen = true; go(0, true); });
     const read = el('button', 'go ghost', 'Read without sound'); read.type = 'button';
-    read.addEventListener('click', () => { setPlaying(false); go(0, false); });
+    read.addEventListener('click', () => { S.listen = false; go(0, false); });
     const row = el('div'); row.style.cssText = 'display:flex;gap:10px;flex-wrap:wrap'; row.append(go0, read);
     box.appendChild(row);
     app.appendChild(box);
@@ -263,7 +269,7 @@
       if (gated) sec.classList.add('gated');
       const q = questionCard(text, st.predict, 'Predict first', st.id + '.p', () => {
         sec.classList.remove('gated');
-        if (S.playing) speak(st.id + '.say', v.say, afterSay);
+        if (S.listen) { setPlaying(true); speak(st.id + '.say', v.say, afterSay); }
       }, true);
       v.q = q.unit;
     }
@@ -310,7 +316,7 @@
     player.hidden = S.i < 0; // the intro's Start button is the only control it needs
     if (S.i < 0) renderIntro(); else if (S.i >= steps.length) renderEnd(); else renderStep(steps[S.i], S.i);
     const prog = $('#progress'); prog.innerHTML = '';
-    steps.forEach((st, k) => { const b = el('button'); b.type = 'button'; b.title = `${k + 1}. ${st.title}`; b.setAttribute('aria-label', `Step ${k + 1}: ${st.title}`); if (k < S.i) b.classList.add('done'); if (k === S.i) b.classList.add('cur'); b.addEventListener('click', () => go(k, S.playing)); prog.appendChild(b); });
+    steps.forEach((st, k) => { const b = el('button'); b.type = 'button'; b.title = `${k + 1}. ${st.title}`; b.setAttribute('aria-label', `Step ${k + 1}: ${st.title}`); if (k < S.i) b.classList.add('done'); if (k === S.i) b.classList.add('cur'); b.addEventListener('click', () => go(k, S.listen)); prog.appendChild(b); });
     updateCount();
   }
 
@@ -319,20 +325,20 @@
     $('#count').textContent = S.i < 0 ? `${steps.length} steps` : S.i >= steps.length ? 'Done' : `${S.i + 1} / ${steps.length} · ${Math.max(1, Math.round(left / (150 * S.speed)))} min left`;
   }
 
-  function go(i, keepPlaying) {
-    clearTimeout(S.wait); stopSpeech();
+  function go(i, readAloud) {
+    stopSpeech();
     try { S.widget?.destroy?.(); } catch (e) { /* ignore */ }
     S.widget = null;
     S.i = Math.max(-1, Math.min(steps.length, i));
     render();
     window.scrollTo(0, 0);
-    if (keepPlaying && S.playing && S.i >= 0 && S.i < steps.length) narrate();
-    else if (S.i >= steps.length || S.i < 0) setPlaying(false);
+    if (readAloud && S.i >= 0 && S.i < steps.length) { setPlaying(true); narrate(); }
+    else setPlaying(false);
   }
 
   function next() {
-    if (S.i >= 0 && S.i < steps.length && steps[S.i].check && S.answers[steps[S.i].id + '.c'] == null && !S.view.checkShown) { stopSpeech(); showCheck(); return; }
-    go(S.i + 1, S.playing);
+    if (S.i >= 0 && S.i < steps.length && steps[S.i].check && S.answers[steps[S.i].id + '.c'] == null && !S.view.checkShown) { stopSpeech(); setPlaying(false); showCheck(); return; }
+    go(S.i + 1, S.listen);
   }
 
   // ---------- controls ----------
@@ -344,19 +350,16 @@
   // Above 1.5x, comprehension drops measurably, so those speeds are labelled for review.
   const speedLabel = (s) => (s > 1.5 ? `${s}× review` : `${s}×`);
   function setSpeed(s) { S.speed = s; store.set('speed', s); audio.playbackRate = s; $('#speed').textContent = speedLabel(s); updateCount(); }
-  const setText = (on) => { S.text = on; store.set('text', on); document.body.classList.toggle('no-text', !on); $('#text').setAttribute('aria-pressed', on); };
-  $('#text').addEventListener('click', () => setText(!S.text));
-  $('#play').addEventListener('click', () => (S.playing ? setPlaying(false) : play()));
+  $('#play').addEventListener('click', () => (S.playing ? pause() : play()));
   $('#next').addEventListener('click', next);
-  $('#prev').addEventListener('click', () => go(S.i - 1, S.playing));
+  $('#prev').addEventListener('click', () => go(S.i - 1, S.listen));
   $('#home').addEventListener('click', () => go(-1, false));
   $('#speed').addEventListener('click', () => setSpeed(SPEEDS[(SPEEDS.indexOf(S.speed) + 1) % SPEEDS.length] || 1));
-  $('#auto').addEventListener('click', () => { S.auto = !S.auto; store.set('auto', S.auto); $('#auto').setAttribute('aria-pressed', S.auto); });
   document.addEventListener('keydown', (e) => {
     if (e.target.closest('input, textarea, select') || e.metaKey || e.ctrlKey || e.altKey) return;
-    if (e.key === ' ') { if (e.target.closest('button')) return; e.preventDefault(); S.playing ? setPlaying(false) : play(); }
+    if (e.key === ' ') { if (e.target.closest('button')) return; e.preventDefault(); S.playing ? pause() : play(); }
     else if (e.key === 'ArrowRight') next();
-    else if (e.key === 'ArrowLeft') go(S.i - 1, S.playing);
+    else if (e.key === 'ArrowLeft') go(S.i - 1, S.listen);
     else if (e.key === ']' || e.key === '=' || e.key === '+') setSpeed(SPEEDS[Math.min(SPEEDS.length - 1, SPEEDS.indexOf(S.speed) + 1)]);
     else if (e.key === '[' || e.key === '-') setSpeed(SPEEDS[Math.max(0, SPEEDS.indexOf(S.speed) - 1)]);
   });
@@ -373,8 +376,6 @@
   window.addEventListener('scroll', () => { tip.hidden = true; }, { passive: true });
 
   $('#speed').textContent = speedLabel(S.speed);
-  $('#auto').setAttribute('aria-pressed', S.auto);
-  setText(store.get('text', true));
   setVoiceLabel();
   render();
 })();
