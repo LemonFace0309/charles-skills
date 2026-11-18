@@ -10,18 +10,18 @@ at search-result size and seam by seam, so nothing looks cut off by accident.
 Concept sets for apps everyone knows, each built from the app's real App Store captures and its own captions. In each
 image, the top row is what AI gives you and the bottom row is the skill's set. These are concepts, not the brands' own.
 
-![Duolingo: what AI gives you, then the skill's set](https://raw.githubusercontent.com/LemonFace0309/charles-skills/main/skills/charles-store-screenshots/examples/duolingo.jpg)
+![Duolingo: what AI gives you, then the skill's set](examples/duolingo.jpg)
 Duolingo: headlines spelled in their word buttons, Duo bursting across the first gap, the real 4.7 stars from 5.6M
 ratings under the logo, and the mascots in new poses.
 
-![Strava: what AI gives you, then the skill's set](https://raw.githubusercontent.com/LemonFace0309/charles-skills/main/skills/charles-store-screenshots/examples/strava.jpg)
+![Strava: what AI gives you, then the skill's set](examples/strava.jpg)
 Strava: one dusk coastline and one orange route through every frame, their own saying split across the hook, and Apple's
 award on top.
 
-![Spotify: what AI gives you, then the skill's set](https://raw.githubusercontent.com/LemonFace0309/charles-skills/main/skills/charles-store-screenshots/examples/spotify.jpg)
+![Spotify: what AI gives you, then the skill's set](examples/spotify.jpg)
 Spotify: their lyric colours, headlines set like their lyrics screen, a record under the hook, and covers across the gaps.
 
-![Headspace: what AI gives you, then the skill's set](https://raw.githubusercontent.com/LemonFace0309/charles-skills/main/skills/charles-store-screenshots/examples/headspace.jpg)
+![Headspace: what AI gives you, then the skill's set](examples/headspace.jpg)
 Headspace: one sky from sunrise to night, a giant sun face across the hook, and each payoff lifted out of its phone.
 
 ## Needs
