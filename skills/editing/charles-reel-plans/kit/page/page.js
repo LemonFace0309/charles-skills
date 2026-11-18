@@ -1,7 +1,7 @@
 /* The reel plan page. The player: the reel, laid out on the edit's 1080x1920 grid (charles-claude-editing's numbers) and
    scaled to fit, playing on the plan's timeline with its music, with a play bar (full screen at its end), the Safe area
-   and Instagram UI toggles and the music under it, and nothing else around it. Beside it (under it on a phone): the script as he reads it, the caption options and every asset with its
-   source. Everything comes from window.VIDEO, which kit/build.py writes from the video's edit/plan.json and SCRIPT.md.
+   and Instagram UI toggles and the music under it, and nothing else around it. Beside it (under it on a phone): the script as he reads it, the caption options, every asset with its
+   source and the references the video came from. Everything comes from window.VIDEO, which kit/build.py writes from the video's edit/plan.json and SCRIPT.md.
    The music keeps the time while it plays. Tap the reel or press space to play and pause, the arrow keys step through
    the lines, F goes full screen, and a script line or an asset's card jumps the reel there. */
 (() => {
@@ -587,6 +587,27 @@
     $("#cards").append(card);
   });
   if (!assets.length) hideSection("assets");
+
+  // The references: the posts, reels and pages the video came from, each with what it gave this one. A still of one
+  // opens full size; on the local page, one of our own videos links to its folder.
+  const refs = V.references || [];
+  refs.forEach((r) => {
+    const href = hrefFor(r.url) || hrefFor(r.local);
+    const face = r.thumb || r.image
+      ? h("button", {
+        class: "ref-face ref-still", type: "button", "aria-label": `See ${r.title} full size`,
+        style: { backgroundImage: `url("${r.thumb || r.image}")` },
+        onclick: () => view({ src: r.image, what: r.title, meta: r.url ? { source: r.kind, link: r.url } : null }),
+      })
+      : h("span", { class: "ref-face", "aria-hidden": "true", text: r.badge || "" });
+    $("#ref-list").append(h("li", { class: "ref" }, face,
+      h("div", { class: "ref-text" },
+        h("p", { class: "ref-kind meta", text: [r.kind, r.by].filter(Boolean).join(" · ") }),
+        h("p", { class: "ref-title" }, href ? h("a", { href, target: "_blank", rel: "noopener", text: r.title }) : r.title),
+        r.why ? h("p", { class: "ref-why", text: r.why }) : null,
+        r.stats || r.folder ? h("p", { class: "ref-stats meta", text: [r.stats, r.folder].filter(Boolean).join(" · ") }) : null)));
+  });
+  if (!refs.length) hideSection("refs");
 
   document.addEventListener("keydown", (e) => {
     if (e.metaKey || e.ctrlKey || e.altKey || viewer.open) return;

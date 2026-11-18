@@ -28,6 +28,7 @@ import re
 import shutil
 import subprocess
 import sys
+import urllib.parse
 from pathlib import Path
 
 from PIL import Image, ImageFont
@@ -455,6 +456,60 @@ def poster_for(vd, src, at):
     return out
 
 
+# (host, path, what the page calls it, its badge) for a reference's link; anything else is named by its host
+REF_KINDS = [(r"(^|\.)(x|twitter)\.com$", r"/status/", "X post", "X"), (r"(^|\.)(x|twitter)\.com$", "", "X profile", "X"),
+             (r"(^|\.)instagram\.com$", r"^/reels?/", "Instagram reel", "IG"), (r"(^|\.)instagram\.com$", r"^/p/", "Instagram post", "IG"),
+             (r"(^|\.)instagram\.com$", "", "Instagram", "IG"), (r"(^|\.)tiktok\.com$", "", "TikTok", "TT"),
+             (r"(^|\.)(youtube\.com|youtu\.be)$", r"^/shorts/", "YouTube Short", "YT"),
+             (r"(^|\.)(youtube\.com|youtu\.be)$", "", "YouTube video", "YT"), (r"(^|\.)threads\.(net|com)$", "", "Threads post", "TH"),
+             (r"(^|\.)bsky\.app$", "", "Bluesky post", "BS"), (r"(^|\.)github\.com$", "", "GitHub", "GH"),
+             (r"(^|\.)dribbble\.com$", "", "Dribbble shot", "DR")]
+
+
+def refs_for(plan, vd):
+    """The posts, reels, videos and pages the video came from (plan.json's `references`), each with what it gave this
+    video, for the page's References section. A plan written before `references` existed has only `reference` (its idea
+    and the reel it borrows the structure from), and those two become the list."""
+    refs = plan.get("references")
+    if refs is None:
+        old = plan.get("reference") or {}
+        refs = []
+        if old.get("idea"):
+            refs.append({"url": old["idea"], "title": old.get("idea_title"), "by": old.get("idea_author"), "why": "The idea"})
+        s = old.get("structure")
+        if s and refs and refs[0]["url"] == s:
+            refs[0]["why"] = "The idea and the structure"
+        elif s:
+            web = s.startswith("http")
+            refs.append({"url": s if web else None, "local": old.get("structure_source") or (None if web else s),
+                         "title": old.get("structure_title"), "why": "The structure"})
+    root, out = repo_root(vd), []
+    for n, r in enumerate(refs, 1):
+        url, local = r.get("url"), r.get("local")
+        kind, badge = "Our video", ""
+        if url:
+            u = urllib.parse.urlparse(url)
+            host = u.netloc.lower().removeprefix("www.")
+            kind, badge = next(((k, b) for hp, pp, k, b in REF_KINDS if re.search(hp, host) and re.search(pp, u.path)),
+                               (host, "Web"))
+        item = {"url": url, "title": r.get("title") or url or local, "by": r.get("by"), "why": r.get("why"),
+                "kind": r.get("kind") or kind, "badge": badge, "stats": r.get("stats")}
+        if local:       # a folder in the repository: shown as its path, a link only on the local page
+            p = next((q for q in (vd / local, root / local) if q.exists()), None)
+            if p:
+                item["folder"] = str(p.resolve().relative_to(root))
+                item["local"] = os.path.relpath(p.resolve(), vd / "build")
+        if r.get("image"):     # a still of it (a screenshot, a contact sheet), never someone else's video
+            src = vd / r["image"]
+            if not src.exists():
+                sys.exit(f"references: reference {n}'s image {r['image']} doesn't exist")
+            if src.suffix.lower() not in IMG:
+                sys.exit(f"references: reference {n}'s image has to be a still ({', '.join(sorted(IMG))}), not {src.suffix}")
+            item["image"] = f"../{r['image']}"
+        out.append({k: v for k, v in item.items() if v})
+    return out
+
+
 def assets_for(plan, vd, beats, groups, under_chin):
     """Every asset the reel shows, in order, for the page: a card per list item's group (its collage, then each image in
     it with its source and licence; spares stay in SOURCES.md) and one per other thing a line shows, with every line it's
@@ -591,6 +646,7 @@ def build(vd):
     player["post"] = {k: data["post"][k] for k in ("handle", "caption", "caption_alt", "options", "comment") if data["post"].get(k)}
     player["script"] = script_for(plan, vd, beats, hook)
     player["assets"] = assets_for(plan, vd, beats, groups, data["reel"]["under_chin"])
+    player["references"] = refs_for(plan, vd)
     (vd / "build").mkdir(exist_ok=True)
     (vd / "build/plan.html").write_text(page(player, site=False))
     n_vis = sum(1 for b in beats if b["visual"])
@@ -599,7 +655,14 @@ def build(vd):
     tied = sum(1 for ln in player["script"] if ln["i"] is not None)
     print(f"build/plan.html: {len(beats)} lines, {n_vis} with an asset, {len(player['assets'])} asset cards, {total:.1f} s "
           f"({data['timed']}){ends}{subtitle}, {len(data['music']['tracks'])} music tracks; script: {tied} of "
-          f"{sum(1 for ln in player['script'] if ln['text'].strip())} lines tied to the plan's lines")
+          f"{sum(1 for ln in player['script'] if ln['text'].strip())} lines tied to the plan's lines; "
+          f"{len(player['references'])} references")
+    if "references" not in plan:
+        print("  references: only the idea and the structure from `reference`. List every post, reel and video that shaped "
+              "this one in plan.json's `references`, each with its `why` (references/plan.md)")
+    for n, r in enumerate(player["references"], 1):
+        if not r.get("why"):
+            print(f"  references: {n} ({r.get('title')}) has no `why`: say what it gave this video")
     print("Checks against charles-claude-editing's rules: " + ("all pass" if not data["checks"] else ""))
     for c in data["checks"]:
         print(f"  - {c}")
@@ -613,7 +676,8 @@ def page(data, site):
     js = (KIT / "page/page.js").read_text()
     payload = json.dumps(data, ensure_ascii=False).replace("</", "<\\/")
     title = html.escape(data["title"])
-    desc = html.escape(f"{data['title']}: the reel playing with its music, the script, the caption options and every asset.")
+    desc = html.escape(f"{data['title']}: the reel playing with its music, the script, the caption options, every asset "
+                       "and the references it came from.")
     scripts = f"<script>\nwindow.VIDEO = {payload};\n</script>\n<script>\n{js}</script>\n"
     if site:   # no head: the Artifact host adds its own, so the title, description and style lead the file
         return (f'<title>{title}</title>\n<meta name="description" content="{desc}">\n'
@@ -731,6 +795,12 @@ def write_site(data, vd):
             im["src"] = im["large"]
     for tr in d["music"]["tracks"]:
         tr["src"] = put(tr["src"], 0, 0, "music")
+    for r in d["references"]:
+        if r.get("image"):
+            r["large"] = put(r["image"], 1400, 80, "large")
+            r["thumb"] = put(r["image"], 240, 78, "ref")
+            r["image"] = r["large"]
+        r.pop("local", None)        # a path in the repository, which the published copy doesn't have
     (site / "index.html").write_text(page(d, site=True))
     files = sorted(str(p.relative_to(site)) for p in media.rglob("*") if p.is_file())
     (site / "files.json").write_text(json.dumps([{"path": f} for f in files], indent=0))

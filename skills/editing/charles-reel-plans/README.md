@@ -20,7 +20,7 @@ Add `-g` to install it for every project, or copy this folder into `~/.claude/sk
 - Finds the real assets with their licences, writes the caption with the credit, and picks the music and where it starts
 - Publishes a page you can open on your phone: the reel playing as a moving mockup with its music over a blurred
   stand-in for your footage, with full screen and toggles for the safe area and Instagram's UI, and beside it the
-  script, the caption options to copy and every asset with its source
+  script, the caption options to copy, every asset with its source and the posts and reels the video came from
 
 All that's left is to read the script and film, and the plan file tells the editing session what goes where.
 
