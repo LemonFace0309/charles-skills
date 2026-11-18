@@ -501,11 +501,12 @@ def refs_for(plan, vd):
                 item["local"] = os.path.relpath(p.resolve(), vd / "build")
         if r.get("image"):     # a still of it (a screenshot, a contact sheet), never someone else's video
             src = vd / r["image"]
-            if not src.exists():
-                sys.exit(f"references: reference {n}'s image {r['image']} doesn't exist")
             if src.suffix.lower() not in IMG:
                 sys.exit(f"references: reference {n}'s image has to be a still ({', '.join(sorted(IMG))}), not {src.suffix}")
-            item["image"] = f"../{r['image']}"
+            if src.exists():
+                item["image"] = f"../{r['image']}"
+            else:   # a still of someone else's post stays local (AGENTS.md), so on another computer the card goes without
+                print(f"  references: {n}'s image {r['image']} isn't on this computer, so its card shows the platform instead")
         out.append({k: v for k, v in item.items() if v})
     return out
 
