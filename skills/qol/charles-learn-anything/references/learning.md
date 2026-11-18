@@ -17,7 +17,7 @@ From [Mayer's 2023 summary](https://www.unh.edu/teaching-learning-resource-hub/s
 | Pre-training | 10/10, d 0.78 | Key terms on the intro screen, before step 1 |
 | Voice | 6/7, d 0.74 | A natural voice; modern TTS matched a recorded human on learning ([Craig and Schroeder 2018](https://doi.org/10.1177/0735633118802877)) |
 | Generative activity | 37/44, d 0.71 | Questions make the learner produce the answer |
-| Signaling | 26/28, d 0.70 | The outline up front, statements as titles, key terms in bold |
+| Signaling | 26/28, d 0.70 | The outline up front, statements as titles, key terms in bold, dot jots under each step |
 | Segmenting | 7/7, d 0.67 | One idea per screen, moved through by the learner |
 | Redundancy | 8/12, d 0.10 | Weak, and it reverses when the learner sets the pace and the text is short, which is why the page always shows the narrated words |
 | Image | 4/7, d 0.19 | No presenter photo or mascot |
@@ -26,7 +26,14 @@ From [Mayer's 2023 summary](https://www.unh.edu/teaching-learning-resource-hub/s
 
 - Quizzing with feedback: g 0.50 across 222 classroom studies ([Yang et al. 2021](https://scholars.hkbu.edu.hk/en/publications/testing-quizzing-boosts-classroom-learning-a-systematic-and-meta-/)). Hence a check on a few steps and a quiz at the end, each with its explanation right after.
 - Questions before the lesson: g 0.54 for what they ask about, little for anything else ([St. Hilaire et al. 2024](https://doi.org/10.3758/s13423-023-02353-8)). The benefit comes from the surprise of being wrong ([Brod 2021](https://doi.org/10.3758/s13423-021-01904-1)). Hence predict-first only on key points where people guess wrong.
-- Worked examples: g 0.48 in maths ([Barbieri et al. 2023](https://doi.org/10.1007/s10648-023-09745-1)). Hence one concrete example with real numbers per step.
+- Worked examples: g 0.48 in maths ([Barbieri et al. 2023](https://doi.org/10.1007/s10648-023-09745-1)). Hence real numbers in every step's example.
+
+## Examples, stand-out facts, dot jots and memory aids
+
+- Illustrative examples help people learn abstract concepts ([Rawson et al. 2015](https://doi.org/10.1007/s10648-014-9273-3)). Hence a named, real-life example in every step.
+- Curiosity improves memory for the answer, and even for unrelated things seen while curious ([Kang et al. 2009](https://doi.org/10.1111/j.1467-9280.2009.02402.x), [Gruber et al. 2014](https://doi.org/10.1016/j.neuron.2014.08.060)). An item that stands out from what's around it is remembered better, the von Restorff or isolation effect ([Hunt 1995](https://doi.org/10.3758/BF03214414)). Hence 1 to 3 stand-out facts, each set apart in a callout.
+- Working memory holds about 4 chunks at once ([Cowan 2001](https://doi.org/10.1017/S0140525X01003922)). Hence 2 to 4 dot jots per step, which also signal the step's structure at a glance.
+- First-letter acronyms helped students on the exam questions they covered ([Stalder 2005](https://doi.org/10.1207/s15328023top3204_3)), but memory aids only suit some material, which is why a review of study techniques rated the keyword mnemonic low in usefulness ([Dunlosky et al. 2013](https://doi.org/10.1177/1529100612453266)). Hence a memory aid only for a fixed set of 3 or more things, and at most 2 a lesson.
 
 ## Length and speed
 

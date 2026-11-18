@@ -1,6 +1,6 @@
 ---
 name: charles-learn-anything
-description: "Teach any topic as a short interactive lesson that opens in Chrome: one idea per screen, the key terms and an outline first, a predict-first question where people usually guess wrong, small demos to play with that change on the word the narrator says, quick checks with instant feedback, and a natural voice that reads along with each word highlighted at the speed you pick. Use when someone says teach me, help me understand, learn anything, walk me through, explain X step by step, make me a lesson on X, or I want to actually get X, and wants to understand a concept fast and properly rather than read a long answer."
+description: "Teach any topic as a short interactive lesson that opens in Chrome: one idea per screen, each hung on a real-life example, the key terms and an outline first, a predict-first question where people usually guess wrong, small demos to play with that change on the word the narrator says, stand-out facts, dot jots under every step, an acronym or phrase when there's a set to remember, quick checks with instant feedback, and a natural voice that reads along with each word highlighted at the speed you pick. Use when someone says teach me, help me understand, learn anything, walk me through, explain X step by step, make me a lesson on X, or I want to actually get X, and wants to understand a concept fast and properly rather than read a long answer."
 ---
 
 # Goal
@@ -50,27 +50,70 @@ What is this step's idea?
 
 `references/widgets.md` has the demo helpers and how to draw.
 
-## 5. Write the narration like a great teacher talking
+## 5. Hang every step on a real-life example
+
+Pick each step's example before you write its narration:
+
+```
+What will the learner recognise?
+├── Something they use or see every week (their phone, a game, an app, a TV) → use that
+├── Something well known they've seen or heard (a film, a product, a song, a landmark) → use that
+└── Nothing real shows it → a made-up case with real numbers
+```
+
+- Name it specifically ("a 1080p TV", "the wheels in old westerns"), never "a screen" or "a film", and put it right before or right after the idea it shows.
+- Real numbers wherever there are any.
+
+Why: an idea tied to something the learner already knows has somewhere to attach, and the example is what they remember first and rebuild the idea from ("the wagon wheels"). Illustrative examples help people learn abstract concepts, and an abstract statement on its own is the first thing forgotten.
+
+## 6. Write the narration like a great teacher talking
 
 The `say` text is both read aloud and shown with each word lit as it's spoken.
 
 - The step's point is its first sentence.
 - Bold a new term the first time (`**coverage**`) and define it in the same sentence. Never point at anything the learner hasn't seen.
-- One concrete example with real numbers per step.
 - At most one analogy in the lesson, two only if two ideas are genuinely abstract. Map it, say where it breaks, then go back to the real thing.
 - Write for the ear: no symbols ("→", "≥", "e.g.", "vs."), no code, no parentheses doing real work, and every abbreviation spelled out the first time. Why: whatever only works on the page sounds broken when the voice reads it.
 - "You", short sentences, no "simply", "just" or "obviously".
 
 Why: a conversational style with "you" helps people learn (personalization, d 1.00), and the voice reads exactly what's written.
 
-## 6. Add questions where they do work
+## 7. Make it stick
+
+**Stand-out facts.** Put 1 to 3 in the lesson. A stand-out fact is true, specific and non-obvious, the kind that makes someone say "wait, really?" ("CDs sample sound 44,100 times a second, just over twice the highest pitch you can hear"), and it explains or extends the step's idea. Never trivia for its own sake.
+
+- Give each one its own paragraph starting with `> `. The page shows it as a callout, and the voice reads it like any other paragraph.
+- Only facts you've checked against a source you trust: official documentation, a paper, a reputable publication. If you can't confirm one, leave it out, and never round a number to make it more striking.
+
+Why: surprise and curiosity make people remember, and a line set apart from the rest is remembered better than the same line mid-paragraph. They're also the facts people repeat to friends, so a wrong one spreads.
+
+**Dot jots.** Give every step `jots`: 2 to 4 bullets of at most 8 words each, the step's points as the learner would write them in their notes. The page lists them under the narration, and the voice doesn't read them. Write them fresh; never copy a sentence from the narration.
+
+Why: a short list to glance back at is how people review and find their place again, and 2 to 4 items is what working memory holds at once. Copied sentences only make them read the same thing twice.
+
+**Memory aids.**
+
+```
+Does the lesson have a fixed set of 3 or more things to remember (stages, types, causes, rules)?
+├── No → no memory aid
+└── Yes → Do the items' names or key words start with letters that spell a word or a pattern?
+    ├── Yes → an acronym of those letters
+    └── No → one short phrase that links them in order ("edges, image, time" for MSAA, FXAA and TAA)
+```
+
+- Say it in the narration as a `> ` callout, and put it in that step's jots.
+- At most 2 per lesson. Never an acronym that needs explaining itself, or a letter that stands for a stretched word.
+
+Why: a memory aid helps people recall a set and its order, but only a fixed set, and a forced one is one more thing to learn.
+
+## 8. Add questions where they do work
 
 - `predict` on 1 or 2 steps, the ones where people usually guess wrong. It's asked before the step, whose text and picture stay blurred until they answer. Why: a question asked before the answer improves memory for exactly that point (g 0.54), mostly through the surprise of being wrong, so it's wasted on easy points.
 - `check` on 2 to 4 steps: one question about that step, shown when the narration ends. Why: answering from memory with the explanation right after it is one of the most reliable ways to learn (g 0.50).
 - `quiz`: 3 questions across the whole lesson, and `recap`: 3 to 5 one-sentence takeaways.
 - Every question has 2 to 4 choices with one clearly right, wrong choices that are the real misconceptions, and a `why` of one or two sentences that explains the right answer.
 
-## 7. Build, open and check it
+## 9. Build, open and check it
 
 ```bash
 python3 <this skill's folder>/kit/build.py ~/Learn/<topic-slug> --open
@@ -96,7 +139,8 @@ The page open in Chrome, and in the chat: where it is (`~/Learn/<topic-slug>/bui
       "id": "staircase",
       "title": "The idea, as a statement",
       "predict": { "q": "…", "choices": ["…", "…", "…"], "answer": 0, "why": "…" },
-      "say": "Paragraphs, separated by a blank line. **Terms** in bold. [[cue]]A cue fires on the next word.",
+      "say": "Paragraphs, separated by a blank line. **Terms** in bold. [[cue]]A cue fires on the next word.\n\n> A stand-out fact or a memory aid: its own paragraph, starting with > .",
+      "jots": ["Two to four notes", "At most 8 words each"],
       "widget": "pixels",
       "widgetOptions": { "any": "settings this step's demo reads" },
       "image": "assets/diagram.png",

@@ -1,6 +1,6 @@
 # charles-learn-anything
 
-![A lesson on anti-aliasing: the narration on the left with the spoken word highlighted, and a demo of shaded edge pixels on the right](examples/anti-aliasing.jpg)
+![A lesson on anti-aliasing: the narration on the left with the spoken word highlighted inside a stand-out fact and the step's key points under it, and a demo of moving edges on the right](examples/anti-aliasing.jpg)
 
 Turns any topic into a short interactive lesson that opens in Chrome and reads itself to you, highlighting each word as it goes.
 
@@ -16,6 +16,7 @@ Add `-g` to install it for every project, or copy this folder into `~/.claude/sk
 - Breaks the topic into 4 to 7 one-idea steps, with the key terms and an outline before you start
 - Asks you to predict first where people usually guess wrong, then shows the answer, and checks you with a quick question after a few steps
 - Gives the hard ideas a small demo you can play with, which changes on the exact word the narrator says
+- Hangs every idea on a real-life example, sets the stand-out facts apart, ends each step with dot jots, and gives you an acronym or a phrase when there's a set to remember
 - Reads it all in a natural voice at 0.75x to 2x, with Space to pause and the arrow keys to move between steps
 
 Every choice comes from learning research (pre-training, segmenting, predicting before the reveal, quizzing with
@@ -24,7 +25,7 @@ feedback, changing the picture on the word). `references/learning.md` has the nu
 ## Examples
 
 The lesson in the picture is `examples/anti-aliasing`: six steps and about four minutes at 1x, with one pixel demo
-that four steps set up differently, and an animation of jagged edges crawling as they turn. Its voice cost $0.06.
+that four steps set up differently, an animation of jagged edges crawling as they turn, two stand-out facts and a memory aid for the three shortcuts games use. Its voice cost $0.07.
 
 ## Try it
 

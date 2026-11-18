@@ -27,9 +27,11 @@
   // **bold** marks a key term, [[name]] fires cue "name" on the widget when the next word is read.
   // build.py splits narration the same way, so word i on screen is word i in the timings.
   function parse(text) {
-    const words = [], paras = [];
+    const words = [], paras = [], callouts = new Set();
     for (const raw of String(text || '').trim().split(/\n\s*\n/)) {
-      const src = raw.replace(/\s+/g, ' ').trim();
+      let src = raw.replace(/\s+/g, ' ').trim();
+      // A paragraph starting with "> " is a stand-out fact or a memory aid: read like the rest, shown as a callout.
+      if (/^>\s?/.test(src)) { callouts.add(paras.length); src = src.replace(/^>\s?/, ''); }
       let p = '', boldAt = null; const bolds = [], cues = [];
       for (let j = 0; j < src.length;) {
         if (src.startsWith('**', j)) { if (boldAt == null) boldAt = p.length; else { bolds.push([boldAt, p.length]); boldAt = null; } j += 2; continue; }
@@ -48,13 +50,13 @@
       for (const [at, name] of cues) { const id = ids.find((k) => words[k].s >= at) ?? ids[ids.length - 1]; if (id != null) words[id].cues.push(name); }
       paras.push(ids);
     }
-    return { words, paras };
+    return { words, paras, callouts };
   }
 
   function renderWords(host, parsed, tag = 'p') {
     const spans = [];
-    for (const ids of parsed.paras) {
-      const p = el(tag);
+    parsed.paras.forEach((ids, pi) => {
+      const p = el(tag, parsed.callouts?.has(pi) ? 'callout' : null);
       for (let k = 0; k < ids.length;) {
         const w = parsed.words[ids[k]];
         if (w.bid) {
@@ -69,7 +71,7 @@
         } else { const s = el('span', 'w', w.t); spans[ids[k]] = s; p.append(s, ' '); k++; }
       }
       host.appendChild(p);
-    }
+    });
     return { words: parsed.words, spans, cur: -1, readTo: -1, fired: new Set() };
   }
 
@@ -275,6 +277,11 @@
     }
     const sayHost = el('div', 'say'); text.appendChild(sayHost);
     v.say = renderWords(sayHost, parse(st.say)); v.say.host = sayHost;
+    if (st.jots?.length) { // the step's dot jots: what they'd write in their notes, shown but not read aloud
+      const jots = el('div', 'jots'); jots.appendChild(el('p', 'label', 'Key points'));
+      const ul = el('ul'); for (const j of st.jots) ul.appendChild(el('li', null, j));
+      jots.appendChild(ul); text.appendChild(jots);
+    }
     v.checkHost = el('div'); text.appendChild(v.checkHost);
     if (st.check && S.answers[st.id + '.c'] != null) { v.checkShown = true; questionCard(v.checkHost, st.check, 'Check yourself', st.id + '.c'); }
     sec.appendChild(text);

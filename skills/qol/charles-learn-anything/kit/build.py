@@ -39,6 +39,7 @@ def parse(text):
     paras = []
     for raw in re.split(r"\n\s*\n", (text or "").strip()):
         src = re.sub(r"\s+", " ", raw).strip()
+        src = re.sub(r"^>\s?", "", src)                      # a callout paragraph reads like any other
         src = re.sub(r"\[\[[\w-]+\]\]\s?", "", src).replace("**", "")
         words = re.findall(r"\S+", src)
         if words:
@@ -200,7 +201,7 @@ def check(lesson, widgets_js):
         errs.append("lesson.json needs a title")
     if not 3 <= len(steps) <= 9:
         warns.append(f"{len(steps)} steps; 4 to 7 keeps a lesson under about 8 minutes")
-    seen = set()
+    seen, callouts = set(), 0
     for k, st in enumerate(steps):
         st.setdefault("id", f"s{k + 1}")
         where = f"step {k + 1} ({st['id']})"
@@ -212,6 +213,16 @@ def check(lesson, widgets_js):
         n = sum(len(p) for p in parse(st.get("say", "")))
         if n > 150:
             warns.append(f"{where}: {n} words of narration; keep a step under 150 so it stays one idea")
+        jots = st.get("jots")
+        if not jots:
+            warns.append(f"{where}: no jots; give every step 2 to 4 short notes")
+        elif not isinstance(jots, list) or not 2 <= len(jots) <= 4:
+            warns.append(f"{where}: jots should be a list of 2 to 4 notes")
+        else:
+            for j in jots:
+                if len(str(j).split()) > 8:
+                    warns.append(f"{where}: the jot \"{j}\" has {len(str(j).split())} words; keep each to 8")
+        callouts += sum(1 for raw in re.split(r"\n\s*\n", st.get("say", "").strip()) if raw.lstrip().startswith(">"))
         for kind in ("predict", "check"):
             q = st.get(kind)
             if q and not (q.get("q") and 2 <= len(q.get("choices", [])) <= 4 and 0 <= q.get("answer", -1) < len(q["choices"]) and q.get("why")):
@@ -222,6 +233,10 @@ def check(lesson, widgets_js):
     for k, q in enumerate(lesson.get("quiz") or []):
         if not (q.get("q") and 2 <= len(q.get("choices", [])) <= 4 and 0 <= q.get("answer", -1) < len(q["choices"]) and q.get("why")):
             errs.append(f"quiz {k + 1}: needs q, 2-4 choices, a valid answer index and why")
+    if callouts == 0:
+        warns.append("no callouts; most lessons have 1 to 3 stand-out facts, each a paragraph starting with > ")
+    elif callouts > 5:
+        warns.append(f"{callouts} callouts; 1 to 3 stand-out facts and at most 2 memory aids keep them standing out")
     if len(lesson.get("terms") or []) > 6:
         warns.append("more than 6 key terms up front; pick the ones the lesson can't do without")
     return errs, warns

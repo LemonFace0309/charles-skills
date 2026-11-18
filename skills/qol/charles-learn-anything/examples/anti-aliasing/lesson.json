@@ -24,6 +24,11 @@
       "id": "grid",
       "title": "A screen is a grid of tiny squares",
       "say": "Everything on a screen is drawn on a grid of **pixels**, tiny squares that can each show only one colour at a time. A 1080p screen has 1,920 columns and 1,080 rows of them, about two million in total.\n\nSmooth shapes don't fit that grid. A slanted line or the curve of a letter has to be rebuilt out of whole squares, and the edges are where it shows. Drag the slider to see the same shape with fewer or more pixels.",
+      "jots": [
+        "Screens are grids of one-colour pixels",
+        "1080p is about two million pixels",
+        "Edges are where the grid shows"
+      ],
       "widget": "pixels",
       "widgetOptions": {
         "mode": "aliased",
@@ -48,7 +53,12 @@
         "answer": 0,
         "why": "Checking one point gives a yes or no answer: the shape either covers the centre or it doesn't. So each pixel comes out all black or all white."
       },
-      "say": "To pick a pixel's colour, the computer takes a **sample**: it checks one point, usually the centre of the pixel, and asks whether the shape covers it. [[samples]]If it does, the pixel gets the shape's colour. If it doesn't, it gets the background.\n\nAlong a slanted edge, that answer flips from no to yes in sudden jumps, one row at a time, so the edge comes out as a staircase. This is called **aliasing**. The grid is too coarse to show the real edge, so you see a pattern of steps that isn't really there.",
+      "say": "To pick a pixel's colour, the computer takes a **sample**: it checks one point, usually the centre of the pixel, and asks whether the shape covers it. [[samples]]If it does, the pixel gets the shape's colour. If it doesn't, it gets the background.\n\nAlong a slanted edge, that answer flips from no to yes in sudden jumps, one row at a time, so the edge comes out as a staircase. This is called **aliasing**. The grid is too coarse to show the real edge, so you see a pattern of steps that isn't really there.\n\n> The name comes from sound. A high note sampled too slowly plays back as a lower note, an alias of the real one. That's why CDs sample sound 44,100 times a second, just over twice the highest pitch you can hear.",
+      "jots": [
+        "One sample: is the centre covered?",
+        "Yes-or-no pixels make a staircase: aliasing",
+        "Sound aliases too: CDs sample 44,100 a second"
+      ],
       "widget": "pixels",
       "widgetOptions": {
         "mode": "aliased",
@@ -64,7 +74,12 @@
     {
       "id": "coverage",
       "title": "The fix: shade each pixel by how much is covered",
-      "say": "**Anti-aliasing** fixes this by letting edge pixels be in between. Instead of a yes or no, the computer works out the pixel's **coverage**, how much of its area the shape covers, and mixes the two colours to match. [[aa]]A pixel that's 30% covered by black on white becomes a light grey. One that's 75% covered becomes a dark grey.\n\nUp close, the edge turns into a band of greys. From a normal viewing distance your eye blends them into one smooth line. The small preview shows the same pixels near their real size.",
+      "say": "**Anti-aliasing** fixes this by letting edge pixels be in between. Instead of a yes or no, the computer works out the pixel's **coverage**, how much of its area the shape covers, and mixes the two colours to match. [[aa]]A pixel that's 30% covered by black on white becomes a light grey. One that's 75% covered becomes a dark grey.\n\nUp close, the edge turns into a band of greys. From a normal viewing distance your eye blends them into one smooth line, and every letter on this page is drawn this way. The small preview shows the same pixels near their real size.",
+      "jots": [
+        "Anti-aliasing shades edge pixels by coverage",
+        "30% covered is light grey, 75% dark",
+        "Your eye blends the greys into a line"
+      ],
       "widget": "pixels",
       "widgetOptions": {
         "mode": "aliased",
@@ -90,6 +105,11 @@
       "id": "samples",
       "title": "More samples, smoother edges",
       "say": "Working out exact coverage for every shape is slow, so the usual shortcut is more samples. **Supersampling** checks several points inside each pixel instead of one, then averages the answers. [[ss4]]With 4 samples, a pixel can have 0, 1, 2, 3 or all 4 of them covered, which gives five shades from white to black. [[ss16]]With 16 samples there are 17 shades, and the edge gets smoother.\n\nThe catch is the work. Four samples per pixel is roughly four times as much for the graphics chip, and sixteen is sixteen times. That's why games treat anti-aliasing as a setting you can turn down.",
+      "jots": [
+        "Supersampling averages several samples per pixel",
+        "4 samples give 5 shades, 16 give 17",
+        "More samples, more work for the chip"
+      ],
       "widget": "pixels",
       "widgetOptions": {
         "mode": "ss",
@@ -115,14 +135,25 @@
     {
       "id": "motion",
       "title": "Jagged edges crawl when things move",
-      "say": "Jagged edges look worse in motion. When a slanted edge turns or slides slowly, its steps jump from one row of pixels to the next, so the edge seems to crawl. [[move]]Watch both versions turn: the left one checks one point per pixel, the right one shades by coverage.\n\nThin details suffer most. A wire or a fence far away can be thinner than a pixel, so with one check per pixel it blinks in and out as it moves. With anti-aliasing it stays a faint, steady line.",
+      "say": "Jagged edges look worse in motion. When a slanted edge turns or slides slowly, its steps jump from one row of pixels to the next, so the edge seems to crawl. [[move]]Watch both versions turn: the left one checks one point per pixel, the right one shades by coverage.\n\nThin details suffer most. A wire or a fence far away can be thinner than a pixel, so with one check per pixel it blinks in and out as it moves. With anti-aliasing it stays a faint, steady line.\n\n> The wheels that seem to spin backwards in old westerns are the same mistake in time. Film takes 24 pictures a second, so a wheel that turns almost one spoke between pictures looks like it's creeping backwards.",
+      "jots": [
+        "Moving edges crawl as steps jump rows",
+        "Thin wires blink in and out",
+        "Backwards wagon wheels are aliasing in time"
+      ],
       "widget": "motion",
       "caption": "Same shapes, same pixels. Left: one check per pixel. Right: shaded by coverage."
     },
     {
       "id": "shortcuts",
       "title": "The shortcuts games actually use",
-      "say": "Few games can afford 16 samples for every pixel, so they use cheaper tricks. **MSAA**, short for multisample anti-aliasing, takes extra samples only along the edges of shapes, where they matter, and one sample everywhere else. You get clean edges for much less work.\n\nOther methods clean up the finished picture instead. **FXAA**, fast approximate anti-aliasing, finds edges in the final image and softens them. It costs almost nothing but blurs things a little. **TAA**, temporal anti-aliasing, reuses samples from the frames before, at a slightly different spot each frame, so it smooths edges and flicker, though fast motion can leave faint trails.",
+      "say": "Few games can afford 16 samples for every pixel, so they use cheaper tricks. **MSAA**, short for multisample anti-aliasing, takes extra samples only along the edges of shapes, where they matter, and one sample everywhere else. You get clean edges for much less work.\n\nOther methods clean up the finished picture instead. **FXAA**, fast approximate anti-aliasing, finds edges in the final image and softens them. It costs almost nothing but blurs things a little. **TAA**, temporal anti-aliasing, reuses samples from the frames before, at a slightly different spot each frame, so it smooths edges and flicker, though fast motion can leave faint trails.\n\n> To keep them apart, remember edges, image, time: MSAA works on the edges, FXAA on the finished image, and TAA across time.",
+      "jots": [
+        "MSAA: extra samples on edges only",
+        "FXAA: softens the finished image, cheaply",
+        "TAA: borrows from earlier frames",
+        "Edges, image, time"
+      ],
       "check": {
         "q": "Which method softens edges in the finished image, cheaply, at the risk of a slight blur?",
         "choices": [
