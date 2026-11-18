@@ -5,7 +5,7 @@
 
 - A Wayback Machine URL (web.archive.org/web/<timestamp>/<url>) is captured without the Wayback toolbar: the timestamp gets
   the if_ flag, which serves the archived page with its own CSS and images but no banner.
-- --dark asks the page for its dark theme (prefers-color-scheme: dark). Charles's rule for live pages is dark mode.
+- --dark asks the page for its dark theme (prefers-color-scheme: dark). Charles' rule for live pages is dark mode.
 - --wait is how long the page gets to load and settle, in virtual milliseconds.
 - --crop is in CSS pixels on the --size viewport (x,y,w,h). The saved PNG is the crop at --scale.
 

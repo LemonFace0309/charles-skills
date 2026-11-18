@@ -4,7 +4,7 @@
     "name": "Charles Liu"
   },
   "metadata": {
-    "description": "Charles's skills for Claude Code and Codex: design craft, his reel pipeline, everyday helpers and specialist drops",
+    "description": "Charles' skills for Claude Code and Codex: design craft, his reel pipeline, everyday helpers and specialist drops",
     "version": "1.0.0"
   },
   "plugins": [
@@ -23,7 +23,7 @@
     },
     {
       "name": "editing",
-      "description": "Charles's reel pipeline: plan, script and edit talking-head reels, with explainer, pixel-art and 3D visuals timed to the words",
+      "description": "Charles' reel pipeline: plan, script and edit talking-head reels, with explainer, pixel-art and 3D visuals timed to the words",
       "source": "./",
       "strict": false,
       "skills": [

@@ -1,6 +1,6 @@
 # Swipe references
 
-Charles's picks. Take one move from a reference, never its layout wholesale, and never copy its people, logos or words. The images are other designers' work: link to them, and never commit or publish copies.
+Charles' picks. Take one move from a reference, never its layout wholesale, and never copy its people, logos or words. The images are other designers' work: link to them, and never commit or publish copies.
 
 ## Fun / gen z
 
@@ -25,7 +25,7 @@ Charles's picks. Take one move from a reference, never its layout wholesale, and
 ## Aesthetic
 
 - **[Cosmos](https://recent.design/i/2ks4rqn-cosmos)**: quiet off-white with a collage sphere, a giant cropped wordmark, one sage frame and grids running across the seams. Take one off-colour frame and grids that bleed.
-- **Cosmos, second set** (Charles's own screenshot): a grotesk with italic-serif emphasis, and a glass search bar spanning frames 1–2 over blurred photos before the set turns dark. Take a UI object crossing the hook seam.
+- **Cosmos, second set** (Charles' own screenshot): a grotesk with italic-serif emphasis, and a glass search bar spanning frames 1–2 over blurred photos before the set turns dark. Take a UI object crossing the hook seam.
 
 ## Y2K
 

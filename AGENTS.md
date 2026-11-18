@@ -1,6 +1,6 @@
 # Working in charles-skills
 
-Charles's public skills for Claude Code, Codex and any agent that reads `SKILL.md`. Most visitors arrive from an
+Charles' public skills for Claude Code, Codex and any agent that reads `SKILL.md`. Most visitors arrive from an
 Instagram DM on their phone, looking for one skill, so the READMEs come first and the links must never break.
 
 ## Where things go

@@ -28,7 +28,7 @@ labels, titles, UI text and HUD text are part of the visuals.
 
 **Sizes.** Make the asset at the size you are asked for. Where it goes on screen is charles-claude-editing's call, not yours;
 make the best asset for that frame. Common sizes:
-- a 2:1 card above Charles's face, like @opusjake's: render 1280x630 (charles-claude-editing shows it about 900x442 and adds
+- a 2:1 card above Charles' face, like @opusjake's: render 1280x630 (charles-claude-editing shows it about 900x442 and adds
   the rounded corners, the shadow and the cream band, so fill the frame edge to edge and keep key content
   40 px clear of the corners)
 - a tall card that covers his face: 1280x1550
@@ -50,7 +50,7 @@ phone shows; `reference/build.md` has the rule.
   `npx --yes hyperframes@0.8.217` (written `hf`).
 - The repo venv for sprite tools: `python3 -m venv .venv && .venv/bin/pip install pillow numpy`.
 - `FAL_KEY` in the repo's `.env` (`tools/fal.py` finds it).
-- The sprite library (the `claude` and `gpt` characters and `props/`) isn't part of the public skill. Charles's lives
+- The sprite library (the `claude` and `gpt` characters and `props/`) isn't part of the public skill. Charles' lives
   in claude-editing at `assets/arcade-cast/`; `tools/new_project.py` finds it there, or wherever `ARCADE_CAST`
   points. Below, `cast/` means that library.
 

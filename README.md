@@ -3,12 +3,12 @@
     <picture>
       <source media="(prefers-color-scheme: dark)" srcset=".github/assets/banner-dark.webp">
       <source media="(prefers-color-scheme: light)" srcset=".github/assets/banner-light.webp">
-      <img alt="Charles's Skills, for Claude Code and Codex" src=".github/assets/banner-light.webp" width="680">
+      <img alt="Charles' Skills, for Claude Code and Codex" src=".github/assets/banner-light.webp" width="680">
     </picture>
   </a>
 </p>
 
-# Charles's skills
+# Charles' skills
 
 [![skills.sh](https://skills.sh/b/LemonFace0309/charles-skills)](https://skills.sh/LemonFace0309/charles-skills)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
@@ -24,19 +24,6 @@ there lives here.
 <a href="skills/design/charles-store-screenshots/"><img src=".github/assets/store-screenshots.jpg" width="49%" alt="charles-store-screenshots: Duolingo's store screenshots as AI makes them, and as the skill makes them"></a>
 <a href="skills/editing/charles-3d-explainers/"><img src=".github/assets/3d-explainers.jpg" width="49%" alt="charles-3d-explainers: 3D cutaways from my reel on the Instagram algorithm"></a>
 </p>
-
-## Commented on a reel?
-
-Find the word you commented:
-
-| Comment | Skill | What you get |
-| --- | --- | --- |
-| MOTION | [charles-ux-animation](skills/drops/charles-ux-animation/) | The 20 principles of UX and animation, as steps your agent follows |
-| UNSLOP | [charles-unslop](skills/design/charles-unslop/) | Turns UI that looks AI-made into a designed screen |
-| POLISH | [charles-polish](skills/design/charles-polish/) | Fixes the details and the motion, checked frame by frame |
-| ACCENT | [charles-hero-mockups](skills/drops/charles-hero-mockups/) | Poster-like landing-page heroes, each with one bold accent colour |
-| COLOR | [charles-color-analysis](skills/design/charles-color-analysis/) | A colour critique of your design, with exact fixes |
-| SCREENSHOTS, HEADSPACE, SPOTIFY, STRAVA | [charles-store-screenshots](skills/design/charles-store-screenshots/) | App Store screenshot sets that look like the best on the store |
 
 ## Install
 

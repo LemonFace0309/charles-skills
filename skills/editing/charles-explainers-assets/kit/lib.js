@@ -36,7 +36,7 @@
     };
   }
 
-  /* The curves. out/inOut are Charles's defaults (charles-ux-animation: ease-out for appearing, ease-in-out for moving
+  /* The curves. out/inOut are Charles' defaults (charles-ux-animation: ease-out for appearing, ease-in-out for moving
      or resizing on screen); the css* ones are the CSS keywords; mInOut is Motion's "easeInOut". */
   const E = {
     linear: (x) => x,

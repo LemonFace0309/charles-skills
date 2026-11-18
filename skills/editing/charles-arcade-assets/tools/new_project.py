@@ -28,7 +28,7 @@ SHARED = ("art", "cast", "clips", "logos")
 
 def cast_library():
     """The sprite library (claude, gpt, props): $ARCADE_CAST if set, a cast/ folder inside this skill, or
-    assets/arcade-cast/ in the project you run from (where claude-editing keeps Charles's)."""
+    assets/arcade-cast/ in the project you run from (where claude-editing keeps Charles')."""
     if os.environ.get("ARCADE_CAST"):
         return Path(os.environ["ARCADE_CAST"]).expanduser()
     if (SKILL / "cast").is_dir():

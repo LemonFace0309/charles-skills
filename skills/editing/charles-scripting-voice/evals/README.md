@@ -10,7 +10,7 @@ Three cases with known answers: what Charles actually said. None of their lines 
 
 To test a change to the skill:
 
-1. Give one agent the skill (SKILL.md and `references/`, not this folder) and the three inputs. Give a second agent only the inputs and "write it in Charles's natural voice". Neither may open `evals/`, `videos/`, `research/charles-voice/` or `formats/`: the format playbooks quote his real lines from these reels' series, such as the GitHub libraries' "Comment repos" ask. Where they'd need a fact only Charles has, they write `[ASK: …]` instead of inventing one.
+1. Give one agent the skill (SKILL.md and `references/`, not this folder) and the three inputs. Give a second agent only the inputs and "write it in Charles' natural voice". Neither may open `evals/`, `videos/`, `research/charles-voice/` or `formats/`: the format playbooks quote his real lines from these reels' series, such as the GitHub libraries' "Comment repos" ask. Where they'd need a fact only Charles has, they write `[ASK: …]` instead of inventing one.
 2. Give a third agent the answers and the two outputs per case, labelled A and B at random, and ask which is closer to how he actually said it, with examples.
 3. Count, for each output: witty similes and jokes about the topic, sentences with no verb, "you can", "which"/"that" clauses, words per sentence, and intensifiers per 100 words. Compare with the answer.
 

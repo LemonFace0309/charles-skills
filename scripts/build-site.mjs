@@ -63,7 +63,7 @@ for (const [keyword, name] of Object.entries(links)) {
 }
 
 const repo = `https://github.com/${REPO}`;
-write('index.html', page({ title: "Charles's skills", description: 'Skills for Claude Code and Codex, from my reels.', target: repo, url: `${PAGES}/` }));
+write('index.html', page({ title: "Charles' skills", description: 'Skills for Claude Code and Codex, from my reels.', target: repo, url: `${PAGES}/` }));
 
 // Typed links arrive in any case (MOTION, Unslop): send those to the right page, everything else to the repo.
 const slugs = [...skills.map((s) => s.name), ...Object.keys(links)];
@@ -72,7 +72,7 @@ write('404.html', `<!doctype html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Charles's skills</title>
+<title>Charles' skills</title>
 <script>
 (function () {
   var slugs = ${JSON.stringify(slugs)};
