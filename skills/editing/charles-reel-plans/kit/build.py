@@ -812,9 +812,10 @@ def build(vd):
     # Before filming, his voice reads every line and each line lasts as long as its read (plus the gap his cuts keep),
     # so the cards and the list land on the words. Once edit/cuts.json exists, the cut's timings win and the voice is off.
     voiced, voice_note = (None, "off: the cut sets the timing") if cuts else voice_for(plan, vd, [b.get("voice_say", b.get("say", "")) for b in plan["beats"]])
-    beats, t, row = [], 0.0, 0
+    beats, t, row, planned = [], 0.0, 0, []
     for i, b in enumerate(plan["beats"]):
         pace = b.get("pace") or ("end" if is_list and b.get("number") is None and i == len(plan["beats"]) - 1 else default_pace)
+        planned.append(round(b.get("dur") or estimate(b["say"], pace), 2))
         if cuts:
             dur = round(cuts[i]["e"] - cuts[i]["s"], 3)
         elif voiced and voiced[i]:
@@ -842,6 +843,16 @@ def build(vd):
         if b.get("number") is not None and is_list:
             row += 1
         t += dur
+    if voiced:
+        # A clip that runs on across lines (the next line has the same src and starts where this one ends in the plan's
+        # timing) keeps running on the read's timing, so it never seeks back when a line's read is longer than planned.
+        # Events timed to a word inside a clip still need their `from` set by hand (references/plan.md, Voice).
+        for i in range(1, len(beats)):
+            a, b = beats[i - 1]["visual"], beats[i]["visual"]
+            pa, pb = plan["beats"][i - 1].get("visual") or {}, plan["beats"][i].get("visual") or {}
+            if (a and b and a.get("type") == b.get("type") == "video" and a.get("file") == b.get("file")
+                    and abs((pb.get("from") or 0) - ((pa.get("from") or 0) + planned[i - 1])) < 0.06):
+                b["from"] = round((a.get("from") or 0) + beats[i - 1]["dur"], 3)
     total = round(t, 3)
     lst = list_block(plan, beats) if is_list else None
     hook = hook_block(plan, beats, first_sentence_end(beats), lst["stop_at"] if lst else total)
