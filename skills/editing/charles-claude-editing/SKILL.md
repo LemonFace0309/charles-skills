@@ -40,7 +40,7 @@ Did I ask you to open on a split screen?
 * End each clip within 2 frames at 30 fps (0.07 s) of my voice stopping, with the whole last word kept, trailing "s" or "t" included
 * If I start to relax before then, end on the frame before it starts. If it starts before the word is over, cut the picture there and start the next clip's picture that many frames early, so the rest of the word plays over it (an L-cut, up to 4 frames). If it starts any earlier, or during my last word, use another take of the line or cover it with B-roll. Never clip a word to hide a movement
 * Start each clip 1 frame before I speak. If I'm still settling into place there, use another take of the line or cover those frames with B-roll
-* So a join keeps at most 0.1 s of silence, with no breaths, clicks or lip smacks. A beat I hold mid-line while still looking at the lens (ex: before a punchline) is delivery, not dead space, so keep it
+* So a join keeps at most 0.1 s of silence, with no breaths, clicks or lip smacks. Measure it from the sound, not from where the cut sits: a breath or a pause before my first word counts, and it shows me getting ready (this repository's tools/reelkit/check_gaps.py measures every join). A beat I hold mid-line while still looking at the lens (ex: before a punchline) is delivery, not dead space, so keep it
 * The reel's last clip can run up to 0.15 s after my last word, as long as I haven't started to relax
 * Before you show me a cut, look at the frames on both sides of every join and the reel's last frames (this repository's tools/reelkit/check_joins.py draws them). Redo any join where I visibly start to relax
 

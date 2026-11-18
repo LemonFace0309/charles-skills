@@ -33,6 +33,7 @@ from pathlib import Path
 from PIL import Image, ImageFont
 
 KIT = Path(__file__).resolve().parent
+KIT_AS_RUN = Path(os.path.abspath(__file__)).parent  # through the project's skills/ link, if it ran that way
 HN = "/System/Library/Fonts/HelveticaNeue.ttc"
 IMG = {".png", ".jpg", ".jpeg", ".webp", ".avif", ".gif"}
 VID = {".mp4", ".webm", ".mov", ".m4v"}
@@ -582,7 +583,7 @@ def build(vd):
         "files": {"folder": str(vd.relative_to(root)) if vd != root else vd.name,
                   "list": plan.get("files") or [["SCRIPT.md", "what you read"], ["edit/plan.json", "the plan the edit reads"],
                                                 [f"{plan.get('assets_dir', 'assets/beats')}/", "the images and their sources"]],
-                  "rebuild": f"python3 -I {os.path.relpath(KIT, vd) if KIT.is_relative_to(root) and root != vd else '<charles-reel-plans>/kit'}/build.py . --site"},
+                  "rebuild": f"python3 -I {os.path.relpath(KIT_AS_RUN, vd) if KIT_AS_RUN.is_relative_to(root) and root != vd else '<charles-reel-plans>/kit'}/build.py . --site"},
     }
     data["checks"] = checks(plan, vd, beats, hook, lst, data["music"], data["reel"]["under_chin"])
     write_sources(plan, vd, groups)
