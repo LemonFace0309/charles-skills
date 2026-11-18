@@ -703,6 +703,8 @@
   });
   if (S.length) $("#copy-script").addEventListener("click", (e) => copy(e.currentTarget, scriptBox, plain.join("\n"), rich.join("")));
   else hideSection("script");
+  // Before filming, an AI copy of his voice reads the lines in the player, and each line lasts as long as its read.
+  if (V.voice && S.length) scriptBox.before(h("p", { class: "voice-note", text: `The player reads it in an AI copy of your voice (${V.voice.label}), so each line runs about as long as you'll say it.` }));
 
   // The caption options, each ready to paste.
   const P = V.post || {};

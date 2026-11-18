@@ -83,6 +83,7 @@ button { font: inherit; color: inherit; }
   pointer-events: none; opacity: 0; transition: opacity 150ms ease-out;
 }
 body.buffering .loading { opacity: 1; transition-delay: 300ms; }
+.voice-note { margin: -4px 0 14px; color: var(--text-3); font-size: 12.5px; line-height: 1.45; }
 .mem-note { margin: 0 6px 0 2px; color: var(--text-3); font-size: 11px; font-variant-numeric: tabular-nums; }
 .spin {
   width: 14px; height: 14px; border-radius: 50%; border: 2px solid rgba(239, 237, 233, 0.28); border-top-color: var(--text);

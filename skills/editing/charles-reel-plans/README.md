@@ -19,8 +19,9 @@ Add `-g` to install it for every project, or copy this folder into `~/.claude/sk
   down, and writes the script in your voice
 - Finds the real assets with their licences, writes the caption with the credit, and picks the music and where it starts
 - Publishes a page you can open on your phone: the reel playing as a moving mockup with its music over a blurred
-  stand-in for your footage, with full screen and toggles for the safe area and Instagram's UI, and beside it the
-  script, the caption options to copy, every asset with its source and the posts and reels the video came from
+  stand-in for your footage, read in an AI copy of your voice so every card lands on its words, with full screen and
+  toggles for the safe area and Instagram's UI, and beside it the script, the caption options to copy, every asset
+  with its source and the posts and reels the video came from
 
 All that's left is to read the script and film, and the plan file tells the editing session what goes where.
 
@@ -41,6 +42,10 @@ The line playing lights up in the script, and a click on any line or asset jumps
 
 Python 3 with Pillow and NumPy, ffmpeg, and Google Chrome. Claude Code's Artifact tool publishes the page; without it,
 `build/plan.html` opens from disk.
+
+For the voice: a `FAL_KEY` from fal.ai and 5 to 10 seconds of you talking, saved as `assets/voice/reference.wav` in
+your project. IndexTTS-2 reads the script for about $0.10 a reel, and lines that didn't change are never paid for
+twice. Without either, the page plays the music alone.
 
 ## Pairs with
 
