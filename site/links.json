@@ -3,10 +3,12 @@
   "color": "charles-color-analysis",
   "colour": "charles-color-analysis",
   "headspace": "charles-store-screenshots",
+  "laws": "charles-design-laws",
   "motion": "charles-ux-animation",
   "polish": "charles-polish",
   "screenshots": "charles-store-screenshots",
   "spotify": "charles-store-screenshots",
   "strava": "charles-store-screenshots",
+  "tips": "charles-design-tips",
   "unslop": "charles-unslop"
 }

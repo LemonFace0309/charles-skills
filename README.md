@@ -102,6 +102,8 @@ MOTION for it more than 4,000 times.
 | --- | --- |
 | [charles-ux-animation](skills/drops/charles-ux-animation/) | Your interface works but doesn't feel good yet: taps, menus, modals and page changes that should move with intent |
 | [charles-hero-mockups](skills/drops/charles-hero-mockups/) | You want to see a landing page's look before you build it, or pitch a client three art directions as finished images |
+| [charles-design-tips](skills/drops/charles-design-tips/) | Your screen works but looks thrown together: long text centred, grey greys, one heavy shadow, buttons labelled Submit and empty states with nowhere to go |
+| [charles-design-laws](skills/drops/charles-design-laws/) | A screen or flow feels confusing or cluttered: too many choices, groups that don't read as groups, nothing that says what to do next |
 
 ### [Editing](skills/editing/): how I make my reels
 
@@ -131,6 +133,13 @@ MOTION for it more than 4,000 times.
   Illusion of Life*), Raphael Salaja's [userinterface.wiki](https://www.userinterface.wiki), Jon Yablonski's
   [Laws of UX](https://lawsofux.com), Emil Kowalski's animation skill and his rule on frequency of use, and Josh
   Puckett's Interface Craft.
+- `charles-design-tips` takes twelve of its tips from Dan Liu's threads on
+  [text layout](https://x.com/danliu/status/1576997489529344001) and
+  [choosing colors](https://x.com/danliu/status/1579536039139758080), and eight from Emil Kowalski's design rules
+  ([aiforui.dev](https://aiforui.dev)).
+- `charles-design-laws` is built on Jon Yablonski's [Laws of UX](https://lawsofux.com), Jakob Nielsen's
+  [progressive disclosure](https://www.nngroup.com/articles/progressive-disclosure/), Eric Johnson and Daniel
+  Goldstein's 2003 study of defaults, and Raphael Salaja's [userinterface.wiki](https://www.userinterface.wiki).
 
 ## License
 

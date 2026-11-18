@@ -53,7 +53,9 @@
       "strict": false,
       "skills": [
         "./skills/drops/charles-ux-animation",
-        "./skills/drops/charles-hero-mockups"
+        "./skills/drops/charles-hero-mockups",
+        "./skills/drops/charles-design-tips",
+        "./skills/drops/charles-design-laws"
       ]
     }
   ]
