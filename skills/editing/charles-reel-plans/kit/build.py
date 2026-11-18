@@ -486,7 +486,7 @@ def refs_for(plan, vd):
     root, out = repo_root(vd), []
     for n, r in enumerate(refs, 1):
         url, local = r.get("url"), r.get("local")
-        kind, badge = "Our video", ""
+        kind, badge = "Our video", "Ours"
         if url:
             u = urllib.parse.urlparse(url)
             host = u.netloc.lower().removeprefix("www.")
