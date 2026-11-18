@@ -1,8 +1,10 @@
 # charles-explainers-assets
 
 Builds the visual that teaches each line of a reel: a fix that flips from before to after on your word with its code
-under it, a principle side by side without it and with it, or a term's definition above a demo. Each clip is sized for
-its slot in your edit, timed to your words, and simple enough to read in the second or two a phone viewer gets.
+under it, a principle side by side without it and with it, or a term's definition above a demo. Every flip marks what
+changes, in red on the problem and green as it's fixed: a guide that straightens, a hatched band over a space,
+corner brackets, a before/after sweep, or the agent cursor moving the part itself. Each clip is sized for its slot in your
+edit, timed to your words, and simple enough to read in the second or two a phone viewer gets.
 
 ## Examples
 

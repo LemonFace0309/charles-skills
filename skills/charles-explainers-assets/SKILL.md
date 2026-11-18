@@ -1,6 +1,6 @@
 ---
 name: charles-explainers-assets
-description: Build the visual that teaches what I'm saying in a reel - the real thing doing what I describe, a before/after flip or a side-by-side, a definition tab above the demo, a coloured agent cursor that makes the change on my word, the CSS or another short caption under it, red marks on a real screenshot - sized for the slot charles-claude-editing gives, timed to my words, and simple enough to read in the 1-5 s a phone viewer gets. Use whenever a video explains a term, a fix, a technique, a number or a mechanism (my list reels, "10 niche ___ hacks", Day N of Removing AI Slop, reverse-engineering explainers), when charles-claude-editing asks for an explainer asset at a size, or when I say a teaching visual is too busy, too fast, too small, stale, hard to read or not engaging.
+description: Build the visual that teaches what I'm saying in a reel - the real thing doing what I describe, a before/after flip or a side-by-side, a mark that shows what changes (a guide, a hatched band, corner brackets, a before|after sweep), a definition tab above the demo, a coloured agent cursor that makes the change on my word or moves the part itself, the CSS or another short caption under it, red marks on a real screenshot - sized for the slot charles-claude-editing gives, timed to my words, and simple enough to read in the 1-5 s a phone viewer gets. Use whenever a video explains a term, a fix, a technique, a number or a mechanism (my list reels, "10 niche ___ hacks", Day N of Removing AI Slop, reverse-engineering explainers), when charles-claude-editing asks for an explainer asset at a size, or when I say a teaching visual is too busy, too fast, too small, stale, hard to read, not engaging, or that it's hard to see what changed.
 ---
 
 # Goal
@@ -30,7 +30,7 @@ Whoever draws the card owns it. In the hack-reel card, the list kit draws the ca
 # Workflow
 
 1. **Beat sheet first.** Before building anything, write into `explain.json` for every line: the takeaway in 8 words or fewer, the change word, the subject (the real thing the line is about), and the form of each asset in order. Why: the visual is decided here. A line without a written takeaway gets decoration instead of an explanation.
-2. **Pick the form** with the tree below, and give long lines their extra assets.
+2. **Pick the form** with the tree below, and give long lines their extra assets. For every flip, pick its mark too (Mark the change).
 3. **Fit the frame budget** below.
 4. **Build** with the kit (`references/kit.md`): the form from `references/forms.md`, the cursor from `references/agent-cursor.md` and every word on screen from `references/text.md`. Copy the closest gold example named there, or `kit/example/`, and change it; never start from a blank page.
 5. **Time it** to my words (Timing, below).
@@ -117,9 +117,9 @@ Hick's law: the more there is to look at, the longer it takes to find the point,
 | Pause text, for people who pause or screenshot: a code block or a property, 4 lines at most. A side by side's property under each panel is one pause text | 1 |
 | Pointer: the agent cursor with its label, a plain pointer or a fingertip. More only when my line is about more than one agent (`references/agent-cursor.md`), or in a side by side whose lesson is the pointing or the input (`references/forms.md`), which gets one per panel, moving together. A keycap that presses is a pointer | 1, or one per agent up to 4 |
 | Events at a time. On the word, the code changing and the tag flipping are one event, the fix; the component shows it after (Timing, below). A side by side's panels running the same trigger together are one event. The one exception is agents working at once when that's my line's point (`references/agent-cursor.md`) | 1 |
-| Kinds of red mark, with up to 6 marks of that kind | 1 |
+| Kinds of mark: a flip's change mark (Mark the change, below) or the red marks on a real thing, with up to 6 of that kind | 1 |
 
-Everything else is cut: badges, meters, graphs, onion skins and traces (unless they're the lesson: the key poses in pose to pose, the path in moving in arcs, the spacing in slow in and slow out, the tappable area in a hit area), lenses, speed tags, counters, verdict labels, titles, and devtools overlays such as paint flashing. Why: those were in my animation-hack clips when I said "Graphics are too busy -> make them MUCH more simple. Viewers only see the screen for a brief time so make it simple (just the before/after component + the css)".
+Everything else is cut: badges, meters, graphs, onion skins and traces (unless they're the lesson: the key poses in pose to pose, the path in moving in arcs, the spacing in slow in and slow out, the tappable area in a hit area), lenses, speed tags, counters, verdict labels, titles, and devtools overlays such as paint flashing. A flip's change mark isn't one of these: it covers only the part that changes, and only around the change. Why: those were in my animation-hack clips when I said "Graphics are too busy -> make them MUCH more simple. Viewers only see the screen for a brief time so make it simple (just the before/after component + the css)".
 
 # Timing
 
@@ -127,12 +127,75 @@ Everything else is cut: badges, meters, graphs, onion skins and traces (unless t
 - **Text enters 0.2-0.45 s before the word it explains** and stays for the line. In a list, where the term opens the line, it enters on the line's cut. Why: it needs a head start to be read while I say it.
 - **The flaw happens on screen by 0.6 s into the line,** through its natural trigger (a pointer, a finger, time) or one camera push. Never a still before. Why: my voice is naming a problem, and a still picture makes the line feel dead.
 - **The after runs at least 1.0 s at reel speed** and includes a proof beat: the same interaction again, now working. If my line leaves less, ask the editor for a hang of up to 0.5 s. Why: I allow "a little hang if waiting for an animation to finish/digest", never a clipped word.
-- **Short items** (a line under 2 s, as in a 20-item list, and every other item of a list whose lines are mostly under 2 s, so they all behave alike): the main move starts within 0.15 s of the cut and is done by 0.6 s, then the end pose holds to the next cut under the slow push-in (Never stale, below). No loop, no proof beat and no agent cursor. Why: there's no time for them, and a replay mid-item reads as a glitch.
+- **Short items** (a line under 2 s, as in a 20-item list, and every other item of a list whose lines are mostly under 2 s, so they all behave alike): the main move starts within 0.15 s of the cut and is done by 0.6 s, then the end pose holds to the next cut under the slow push-in (Never stale, below). A flip in a short item changes on its word instead and is done 0.45 s after it (a sweep 0.55 s). No loop and no proof beat. The agent cursor comes only when its action is the change itself, arriving in the before (`references/agent-cursor.md`, When it appears). Why: there's no time for a proof, and a replay mid-item reads as a glitch, but a pointer carrying the part on the word is the transition itself.
 - **A short side by side** starts both panels on the same frame; the after's move is done by 0.6 s, and the before plays its flaw at real speed, even if that runs past the cut (a 2 s spinner). Its end pose still shows the difference: the trace of what differed when that's a path or a spacing (the arc's dotted path, a tick for each frame), or the state that differs (the before's spinner still turning). When the two would end alike (squash and stretch, anticipation, secondary action) and the line runs 1.45 s or more, run the pair again on a new item (the next card, another icon), starting within 0.25 s of the first run's end and done 0.25 s before the next line. A new item is a new event, not a replay. Why: the comparison is the lesson, and two identical panels show none. In the UX-principles rebuild (13 Nov), six motion principles held identical panels for up to 1.4 s, and both fresh reads called it the weakest part.
 - **Every main move finishes 0.25 s before the next line starts.**
 - **Demos play at real speed and loop about once a second,** holding the start pose 0.25 s and the end pose 0.4 s each cycle, so a 200 ms move is seen four or five times in a line. Never slow a demo whose lesson is timing or feel. Why: slowed down, a 200 ms dropdown looks like the sluggish one it's meant to beat, and press feedback looks laggy. The one exception is a line about the shape of a path (moving in arcs, squash and stretch), which may run at 0.5× with both versions at the same speed.
 - **Never stale.** Something in the asset is always moving: the demo, the cursor, a transition or, when nothing else is, a slow push-in on the whole subject (2% a second, linear, running from the cut so it never visibly starts). Nothing sits frozen for more than 0.6 s. And no more than 1.5 s passes between one new thing ending and the next starting: the flaw, the cursor arriving or acting, the change, the proof beat, a punch-in on a detail, the next asset. A loop's repeat is motion, not something new, and so is the same action giving the same result again (a third click opening the same answer the same way). An action is new when its result differs: the first one after the fix, another item, a punch-in. Why: I don't want stale assets on screen, and a frozen picture under my voice reads as dead air.
 - **Between assets in one card,** whether they belong to two lines or to one long line, the same object at a new state morphs into it (shared parts glide and resize). A new subject fades through: the old one goes in a frame, the card reshapes, and the new one comes in from 97.5% scale. Never a cross-dissolve. Why: on the Day N reels I had the dissolves between levels replaced with transitions, and a dissolve's double exposure is unreadable at phone size.
+
+# Mark the change
+
+A flip in place shows the before and then the after in the same spot, so nothing on screen compares them. Every flip marks the part that changes: red on the flaw in the before, then moving with the fix on my word as it turns green. Why: my note of 16 Nov on the 20 practical design tips cards: "There should also be better visual indicators showing the difference between before and after if we're not doing the two column layout (especially in the transitions between the before/after to make it more clear)". Without a mark, anyone looking at the wrong part sees nothing change. The first blind read of those cards missed the gray tint, the toast padding, the text tint and the stat gap.
+
+Walk the tree from the top and take the first branch that fits.
+
+```
+What does my line say changes?
+├── How parts line up (left, right, the baseline, digits lining up)
+│   └── A GUIDE along each part's edge where it sits now, a zigzag or a step, that
+│       straightens into one line as the parts land on it
+├── How much space (padding, a gap, space above or below, line height, half the height)
+│   ├── Space inside a filled part (a button's or a toast's padding) → a DIMENSION LINE
+│   │   beside the part, outside it, shrinking or growing with the value
+│   └── Otherwise → a BAND hatched over exactly that space, growing or shrinking with it
+├── Where a part that's already there goes (away, apart, to the side, swapping places)
+│   └── THE AGENT grabs it and carries it there on the word, its selection round it. In a swap
+│       it carries one part, and the other glides into the place it left
+├── How big one part is, or its shape (go bigger, a tighter radius, a bigger hit area)
+│   └── THE AGENT selects it and drags its corner handle (or its radius handle) on the word.
+│       A part you can't see, like a hit area, shows as its selection box
+├── What a part says (a button's label, a link's words)
+│   ├── In one label (a word or a phrase) → THE AGENT selects it in its colour (a double-click
+│   │   for a word, a drag for a phrase); the new words land in the selection, which resizes
+│   │   to them and turns green
+│   └── The same fix in several labels (every Title Case label on a page) → a box on each
+│       wrong letter or word, shrinking onto its replacement
+├── A colour across the whole subject (every gray in the app, every brand colour)
+│   └── A SWEEP: build the subject twice and wipe the after across the before, left to right,
+│       behind a line with a grip (grey while it waits, green once it moves), so for half a second both sit side by side at its edge.
+│       The agent carries the grip, unless a card next to it already has the agent
+├── A colour, a fill, a stroke or a shadow on some parts (a series in a chart, the text on a
+│   banner, icon strokes)
+│   └── CORNER BRACKETS 6-8 px outside each part (round the shadow's reach, for a shadow), or
+│       a ring round something small and round. A new colour on text or a surface sweeps
+│       through it left to right; a shadow or a swatch changes in place. A stroke too thin to
+│       see changing gets magnified first (Look)
+├── Which parts stand out (everything bold, two primary buttons side by side)
+│   └── CORNER BRACKETS round the parts that lose their emphasis, turning green as they do
+└── Something new appears (an empty state's next step, a missing label)
+    └── CORNER BRACKETS round the old part, or round the empty place where the new one goes,
+        growing round the new part ahead of it
+```
+
+Why the agent moves parts itself: a part moving under a pointer shows the cause with the effect, the way a designer moves a layer in Figma, and I asked for "fake agent cursors that move components around" (16 Nov). A position, a size and a word all have something on screen to take hold of. A space, an edge or a colour doesn't, so a mark shows it instead.
+
+The timeline, with the change at T (`markLife` in the kit):
+- **It's on by T − 0.95, in red.** It draws in from T − 1.25, so a before shown for less than 0.95 s opens with it already there. An agent enters in the before on its own timeline (`references/agent-cursor.md`). Why: the editor slides the clip until its change lands on my word and can cut in anywhere in the before, and the mark can't wait for a cut it can't know.
+- **It moves on the word, never before it,** on the fix's own curve, and turns green as the fix lands, between 45% and 65% of its progress (`markTurn`): the guide straightens as the lines land, the band shrinks with the padding, the brackets grow ahead of the new part. Why: its motion is the transition the eye follows, so it has to be the fix itself. Green that arrives first marks the unfixed design as right, and a slow blend sits in the muddy grey halfway between red and green.
+- **It holds green until T + 1.0 and is gone by T + 1.25,** so the after ends clean. An agent lets go when its part lands and fades 0.2 s later.
+
+Rules for every mark:
+- **One per flip:** one kind, up to 6 of it (the frame budget). When the fix changes more than my line names (a swap moves two parts), mark what my line names and let the rest move unmarked. An agent's action is its flip's mark, so it gets no other.
+- **It never covers what it marks.** A guide runs beside the edge, a band fills only empty space, brackets sit 6-8 px clear, and nothing tints what it encloses. Why: the viewer has to see the part change, not the mark.
+- **It never looks like the UI.** Use corner brackets, not a full or dashed box, which reads as a drop zone, an empty state or a border. Never put a red ring round a field: it reads as a validation error. Never tint a part's own fill: red ends on a toast read as an error toast, and hatching on a black button reads as its colour. Why: in the 16 Nov blind read, every mark that looked like UI was read as UI.
+- **It ends on what changed,** never on what stayed the same. Why: a first build of "keep body text regular" ended with green on the title, which didn't change, and nothing on the body, which did.
+- **The change has to be visible before it's marked.** Within what's true, push the values to where the change shows at phone size: a gray tint of 3 to 7 levels a channel showed nothing even under a sweep, so use the visible end of the range. Show one subject magnified rather than two small ones. Then measure a pixel of the changing part in the before and after stills. Why: a stacking bug once left the one part that should change pixel-identical, and only a measurement caught it.
+- **Red only on the flaw, green only on the fix** (the kit's `MARK`), with lines 2.5-3 px wide in the final frame. On a dark surface use the light pair (`dark: true`), where the dark pair vanishes. A sweep waits in grey and turns green once it moves. An agent's selection keeps the agent's colour; only new words or a new value land green.
+- **It lives in the subject's box,** so it rides the zoom and the push-in. The agent and its selection live on the panel.
+- **No words, numbers or arrows on it.** The code under the subject already carries the values, and the mark's motion does the pointing.
+
+Gold: `videos/practical-design-tips/explainers/` (`scenes/tips.js`): every branch of the tree across its 20 cards.
 
 # Words on screen
 
@@ -153,14 +216,14 @@ Every word on screen adds something I don't say: what a term means, the value th
 - **Colour:** one calm neutral ground per reel (the hack reels use #e6e9ee), one accent for the UI, red only for the flaw, green only for the fix, and each agent's own colour on its cursor and on what it selects (`references/agent-cursor.md`). The kit's syntax colours inside a code block don't count. Why: colour carries meaning here, so any other accent is noise.
 - **None of my own AI tells:** no cream backgrounds, monospace eyebrows or "01/10" labels, pills, badges, gradient backgrounds, glows, emoji or section numbering. Why: I made a reel listing them, and my audience watched it.
 - **Same chrome, different subjects:** the card, tab, Before and After labels, code block and cursor look and sit the same for the whole reel. The subjects alternate (type, interface, motion; desktop, phone, close-up) so neighbours never look alike.
-- **Magnify, don't annotate:** when the difference is under 4 px in the final frame, crop tighter or zoom the whole subject. Never a lens or a callout bubble.
+- **Magnify, then mark:** when the difference is under 4 px in the final frame, crop tighter or zoom the whole subject first, then mark it (Mark the change). Never a lens or a callout bubble.
 - **Render at 2×** and scale down once. Why: the 1080-wide cards' small text looked soft in Photos.
 
 # Phone check
 
 Before handing over, for every clip:
-1. **Sheet:** frames at mid-before, 0.1 s before the change, 0.1 s after it and mid-after (for a clip with no change: its opening, the middle of its main move and its end pose), with the tab or state tag drawn on even when the list kit draws it in the reel. Shrink them to the slot's width on a phone: its width in the final frame × 0.36, about 270 pt for the hack-reel card. The flaw shows in the before frame and the fix in the after, and every word on them reads.
-2. **Muted glance:** play the line muted at reel speed once and write what changed in one sentence. An agent can't play video, so it reads the line as a grid of frames 0.06 s apart, left to right (`kit/glance.mjs`). If it doesn't match the takeaway in `explain.json`, fix the visual, not the sentence. For a fresh read, give the sheet to a subagent that hasn't seen the script and ask what changed.
+1. **Sheet:** frames at mid-before, 0.1 s before the change, 0.1 s after it and mid-after (for a clip with no change: its opening, the middle of its main move and its end pose), with the tab or state tag drawn on even when the list kit draws it in the reel. Shrink them to the slot's width on a phone: its width in the final frame × 0.36, about 270 pt for the hack-reel card. The flaw shows in the before frame and the fix in the after, and every word on them reads. In a flip, the before frame has its red mark on the part that changes, and the after has it green on the fix.
+2. **Muted glance:** play the line muted at reel speed once and write what changed in one sentence. An agent can't play video, so it reads the line as a grid of frames 0.06 s apart, left to right (`kit/glance.mjs`). If it doesn't match the takeaway in `explain.json`, fix the visual, not the sentence. In a flip, the mark moves with the change and nothing else moves with it. For a fresh read, give the sheet to a subagent that hasn't seen the script and ask what changed.
 3. **Budget and pace:** count each frame against the table, and scrub for any stretch over 0.6 s with nothing moving, or over 1.5 s between one new thing ending and the next starting.
 4. **Words:** reading time, sizes and contrast, as above, measured with `kit/words.mjs`. For everything it lists apart (copy under 26 px, dimmed text, text over the footage), say why it passes, or fix it.
 5. **Truth:** the code is complete and is what the demo does, the values are the real ones, and nothing claims what I didn't say.
@@ -181,3 +244,5 @@ Before handing over, for every clip:
 - **A spare pointer, or a pointer over the change.** One pointer per agent in my line, aimed off the text it changes.
 - **Stale** (my note on this skill): a still, or one loop, held through a long line. Cut to a new asset at least every 3 s, and keep something moving.
 - **A dissolve between levels.** Morph the shared parts.
+- **An unmarked flip** (20 practical design tips, 16 Nov): a gray tint, a toast's padding, a text tint and a stat's gap flipped in place with nothing on them, and the first blind read missed all four. Mark the change.
+- **A mark that looks like UI** (the same cards, first marked build): a red ring round a typed email read as "invalid email", hatching on a black button read as its colour, and dashed boxes read as drop zones. Use corner brackets and dimension lines, outside the part.

@@ -57,6 +57,10 @@ for (const asset of P.assets.filter((a) => a.render !== false && (!only || only.
           const b = rgba(getComputedStyle(a).backgroundColor); if (b[3] > 0.5) { bg = b; covered = self >= 0 && i < self; break; }
         }
         for (let a = e; a && !bg; a = a.parentElement) { const b = rgba(getComputedStyle(a).backgroundColor); if (b[3] > 0.5) bg = b; }
+        // Text on its own opaque fill reads against that fill, even when pointer-events: none keeps the fill out of
+        // the stack above (the agent cursor's name chip, over a white card).
+        const fill = rgba(cs.backgroundColor);
+        if (fill[3] > 0.5 && !covered) bg = fill;
         if (covered) continue;
         const fg = rgba(cs.color), mix = bg ? fg.slice(0, 3).map((v, i) => v * fg[3] + bg[i] * (1 - fg[3])) : null;
         const cr = bg ? (Math.max(lum(mix), lum(bg)) + 0.05) / (Math.min(lum(mix), lum(bg)) + 0.05) : null;

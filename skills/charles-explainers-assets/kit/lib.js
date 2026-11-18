@@ -1,6 +1,6 @@
 /* The charles-explainers-assets kit: the clock, the curves, a zoom box for drawing UI at its real CSS size, the code
    block, a finger, and the explainer layer (the coloured agent cursor, its selection box, the slow push-in and the
-   definition tab). Grown from the motion-hacks kit v3 (videos/design-hacks-motion, 2026-11-12).
+   definition tab). Grown from the motion-hacks kit v3 (videos/design-hacks/motion, 2026-11-12).
 
    Each asset is a pure function of time, so render.mjs can step it frame by frame: window.seek(t) draws the frame at
    t seconds. Never read the clock or use CSS transitions or animations inside a scene: compute the value the real
@@ -537,21 +537,24 @@
   const pressAt = (t, t0, t1) => prog(t, t0, t0 + 0.08) * (1 - prog(t, t1, t1 + 0.08));
 
   /* Where the agent is at t, for one change at T, on the timeline in references/agent-cursor.md:
-       agentAt(t, { T, from, to, action: 'click' | 'double' | 'drag', dragTo, after: 'stay' | 'fade' | 'rest', rest,
-                    lineLeft, enter })
+       agentAt(t, { T, from, to, action: 'click' | 'double' | 'drag' | 'carry', dragTo, after: 'stay' | 'fade' | 'rest',
+                    rest, lineLeft, enter, carryDur })
      It glides from `from` (450 ms under a third of the panel's width, 600 ms over) to arrive at `to` by T - 0.6
-     (T - 0.9 before a drag), fading in over 120 ms if `enter`; presses (click at T - 0.15; double-click at T - 0.3
-     and T - 0.15; a drag presses at T - 0.68 and moves to `dragTo` over T - 0.6 .. T); releases at T + 0.07; holds
-     to T + 0.5; then fades over 150 ms or glides to `rest` 40% faster. lineLeft (seconds of the line after T) under
-     1.3 fades it at T + 0.25 instead. Returns { x, y, press, o }; pass them to agent().set. */
-  function agentAt(t, { T = H$.T_FIX, from, to, action = 'click', dragTo, after = 'stay', rest, lineLeft = 9, enter = true }) {
-    const drag = action === 'drag';
-    const A = T - (drag || action === 'insert' ? 0.9 : 0.6);
+     (T - 0.9 before a drag, T - 0.5 before a carry), fading in over 120 ms if `enter`; presses (click at T - 0.15;
+     double-click at T - 0.3 and T - 0.15; a drag presses at T - 0.68 and moves to `dragTo` over T - 0.6 .. T; a carry
+     grabs at T - 0.15 and moves to `dragTo` over T .. T + carryDur, so the part moves on the word); releases at
+     T + 0.07 (a carry 0.05 s after it lands); holds to T + 0.5 (a carry 0.2 s after it lands); then fades over
+     150 ms or glides to `rest` 40% faster. lineLeft (seconds of the line after T) under 1.3 fades it at T + 0.25
+     instead, except for a carry. Returns { x, y, press, o, u }, u being how far a carry has got; pass x, y, press
+     and o to agent().set. */
+  function agentAt(t, { T = H$.T_FIX, from, to, action = 'click', dragTo, after = 'stay', rest, lineLeft = 9, enter = true, carryDur = 0.45 }) {
+    const drag = action === 'drag', carry = action === 'carry';
+    const A = T - (drag || action === 'insert' ? 0.9 : carry ? 0.5 : 0.6);
     const g = Math.hypot(to[0] - from[0], to[1] - from[1]) < W / 3 ? 0.45 : 0.6;
     const G = A - g;
     let pos = t < G ? from : t < A ? glidePt(t, from, to, G, A) : to;
     let o = enter ? prog(t, G, G + 0.12) : 1;
-    let press = 0;
+    let press = 0, u = 0;
     if (action === 'click') press = pressAt(t, T - 0.15, T + 0.07);
     if (action === 'double') press = Math.max(pressAt(t, T - 0.3, T - 0.22), pressAt(t, T - 0.15, T + 0.07));
     if (action === 'insert') press = pressAt(t, T - 0.45, T - 0.38); // code.insert's caret, then its empty line at T - 0.25
@@ -559,14 +562,23 @@
       press = pressAt(t, T - 0.68, T + 0.07);
       if (t >= T - 0.6) { const u = E.inOut(prog(t, T - 0.6, T)); pos = [lerp(to[0], dragTo[0], u), lerp(to[1], dragTo[1], u)]; }
     }
-    const at = drag ? dragTo : to;
-    if (lineLeft < 1.3) o *= 1 - prog(t, T + 0.25, T + 0.4);
-    else if (after === 'fade') o *= 1 - prog(t, T + 0.5, T + 0.65);
-    else if (after === 'rest' && rest && t > T + 0.5) {
-      const gr = 0.6 * (Math.hypot(rest[0] - at[0], rest[1] - at[1]) < W / 3 ? 0.45 : 0.6);
-      pos = glidePt(t, at, rest, T + 0.5, T + 0.5 + gr);
+    if (carry) {
+      // A part carried on the word, for a short item's move: it grabs at T - 0.15, carries the part to dragTo over
+      // T .. T + carryDur on the ease-in-out and lets go 0.05 s later. u (0..1) is how far the carry has got: move
+      // the part by it, so the part and the pointer never drift apart.
+      press = pressAt(t, T - 0.15, T + carryDur + 0.05);
+      u = E.inOut(prog(t, T, T + carryDur));
+      if (t >= T) pos = [lerp(to[0], dragTo[0], u), lerp(to[1], dragTo[1], u)];
     }
-    return { x: pos[0], y: pos[1], press, o };
+    const at = drag || carry ? dragTo : to;
+    const held = carry ? T + carryDur + 0.2 : T + 0.5;
+    if (lineLeft < 1.3 && !carry) o *= 1 - prog(t, T + 0.25, T + 0.4);
+    else if (after === 'fade') o *= 1 - prog(t, held, held + 0.15);
+    else if (after === 'rest' && rest && t > held) {
+      const gr = 0.6 * (Math.hypot(rest[0] - at[0], rest[1] - at[1]) < W / 3 ? 0.45 : 0.6);
+      pos = glidePt(t, at, rest, held, held + gr);
+    }
+    return { x: pos[0], y: pos[1], press, o, u };
   }
 
   /* A selection box with corner handles in the agent's colour, as Figma draws a collaborator's selection. It must
@@ -615,6 +627,126 @@
     return { b: wells[0], a: wells[1], wells, labels: tags, ww, wh, top };
   }
 
+  /* ---------- change markers ----------
+     A flip in place marks what changes (references/forms.md, Mark the change): red on the flaw in the before, moving
+     with the fix on the word as it turns green, holding, then fading so the after ends clean. markLife(t) is that
+     timeline and the marks below draw it. Put a mark inside the box that holds what it marks (a zoom box, the pushed
+     stage) so it rides the zoom and the push-in, and pass that box's magnification as z so its strokes keep their
+     final size. Every set() takes the life from markLife (or your own { draw, k, o }). */
+  // The light pair is for marks on a dark surface, where the dark pair vanishes (a green tint on a black button).
+  const MARK = { red: '#e5484d', green: '#2b9a66', redOnDark: '#ff6369', greenOnDark: '#3dd68c', idle: '#8b919c' };
+  const markColor = (k, a = 1, dark = false) =>
+    css(mix(hexToRgb(dark ? MARK.redOnDark : MARK.red), hexToRgb(dark ? MARK.greenOnDark : MARK.green), clamp(k)), a);
+  // Red turns green as the fix lands, between 45% and 65% of its progress, so it never goes green on the unfixed part
+  // and never sits in the muddy grey halfway between the two. Pass the fix's own progress (0..1).
+  const markTurn = (u) => E.inOut(prog(u, 0.45, 0.65));
+  // draw 0..1: how far the mark has drawn in, from T - 1.25 to T - 0.95, so a before shorter than 0.95 s opens with
+  // it already in place; k 0..1: red to green as a fix on the ease-in-out over T .. T + fix lands; o: 1 until
+  // T + 1.0, 0 by T + 1.25. A scene whose fix runs on another curve passes k: markTurn(its progress) instead.
+  function markLife(t, { T = H$.T_FIX, drawAt = T - 1.25, drawDur = 0.3, fix = 0.42, hold = 1.0, fade = 0.25 } = {}) {
+    return { draw: E.out(prog(t, drawAt, drawAt + drawDur)), k: markTurn(E.inOut(prog(t, T, T + fix))), o: 1 - prog(t, T + hold, T + hold + fade) };
+  }
+  const markSvg = (parent, zIndex) => sv('svg', { style: `position:absolute;left:0;top:0;width:1px;height:1px;overflow:visible;pointer-events:none;z-index:${zIndex}` }, parent);
+  // A guide through points [[x, y], ...]: an edge that straightens, a baseline that drops. A null in the points lifts
+  // the pen (two brackets in one mark). It draws in along its length (dashed lines fade in instead). width and dash
+  // are final px.
+  function markLine(parent, { z = 1, width = 3, dash, zIndex = 50, dark = false } = {}) {
+    const svg = markSvg(parent, zIndex);
+    const path = sv('path', { fill: 'none', 'stroke-width': fpx(width) / z, 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }, svg);
+    if (dash) path.setAttribute('stroke-dasharray', dash.map((d) => fpx(d) / z).join(' '));
+    return {
+      e: svg,
+      set(pts, { draw = 1, k = 0, o = 1 } = {}) {
+        let d = '', pen = 'M';
+        for (const p of pts) { if (!p) { pen = 'M'; continue; } d += `${pen}${p[0].toFixed(2)} ${p[1].toFixed(2)} `; pen = 'L'; }
+        path.setAttribute('d', d.trim());
+        path.setAttribute('stroke', markColor(k, 1, dark));
+        let v = o;
+        if (dash) v *= draw;
+        else { const L = path.getTotalLength(); path.setAttribute('stroke-dasharray', `${L} ${L + 1}`); path.setAttribute('stroke-dashoffset', L * (1 - draw)); if (draw <= 0) v = 0; }
+        svg.style.opacity = v; svg.style.visibility = v > 0.001 ? 'visible' : 'hidden';
+      },
+    };
+  }
+  // A hatched band over a space: padding, a gap, the room between lines. It grows in from its top (axis 'y') or its
+  // left ('x'). dark: true on a dark surface, where a light tint would vanish.
+  // hatch: false makes it a highlighter stroke behind text instead (put it under the text: zIndex 0, prepended).
+  function markBand(parent, { z = 1, dark = false, axis = 'y', zIndex = 1, hatch = true, r = 0 } = {}) {
+    const e = el('div', { class: 'abs', style: { pointerEvents: 'none', zIndex, borderRadius: px(fpx(r) / z) } }, parent);
+    const s = fpx(1) / z;
+    return {
+      e,
+      set(x, y, w, h, { draw = 1, k = 0, o = 1 } = {}) {
+        const c = (a) => markColor(k, a, dark), v = w > 0.05 && h > 0.05 && draw > 0 ? o : 0;
+        Object.assign(e.style, {
+          left: px(x), top: px(y), width: px(Math.max(0, w)), height: px(Math.max(0, h)), opacity: v, visibility: v > 0.001 ? 'visible' : 'hidden',
+          background: hatch ? `repeating-linear-gradient(135deg, ${c(dark ? 0.85 : 0.6)} 0 ${1.6 * s}px, transparent ${1.6 * s}px ${6 * s}px), ${c(dark ? 0.34 : 0.16)}` : c(dark ? 0.4 : 0.2),
+          boxShadow: hatch ? `inset 0 0 0 ${1.5 * s}px ${c(0.95)}` : 'none',
+          transform: axis === 'y' ? `scaleY(${draw})` : `scaleX(${draw})`, transformOrigin: axis === 'y' ? 'center top' : 'left center',
+        });
+      },
+    };
+  }
+  // An outline round something: by default four corner brackets, like a viewfinder's, because a full outline reads as
+  // part of the UI (a dashed box as a drop zone or an empty state, a red ring round a field as a validation error).
+  // corners: false draws the whole box, dashed (dash: null for solid); round: true a ring, for something round.
+  // It enters from 96%. fill tints what it encloses; leave it 0 round anything whose colour is the lesson.
+  function markBox(parent, { z = 1, width = 2.5, dash = [7, 5], round = false, corners = !round, arm = 16, fill = 0, zIndex = 50, dark = false } = {}) {
+    const svg = markSvg(parent, zIndex);
+    const shape = sv(corners ? 'path' : round ? 'ellipse' : 'rect', { 'stroke-width': fpx(width) / z, 'stroke-linecap': 'round', 'stroke-linejoin': 'round', fill: 'none' }, svg);
+    if (dash && !corners) shape.setAttribute('stroke-dasharray', dash.map((d) => fpx(d) / z).join(' '));
+    return {
+      e: svg,
+      set(x, y, w, h, { draw = 1, k = 0, o = 1, r = 8 } = {}) {
+        const s = 0.96 + 0.04 * draw, cx = x + w / 2, cy = y + h / 2, hw = (w * s) / 2, hh = (h * s) / 2;
+        if (corners) {
+          const a = Math.min(fpx(arm) / z, hw, hh), L = cx - hw, R = cx + hw, Tp = cy - hh, B = cy + hh;
+          shape.setAttribute('d', [[L, Tp + a, L, Tp, L + a, Tp], [R - a, Tp, R, Tp, R, Tp + a], [R, B - a, R, B, R - a, B], [L + a, B, L, B, L, B - a]]
+            .map(([x1, y1, x2, y2, x3, y3]) => `M${x1} ${y1} L${x2} ${y2} L${x3} ${y3}`).join(' '));
+        } else if (round) for (const [a, v] of [['cx', cx], ['cy', cy], ['rx', hw], ['ry', hh]]) shape.setAttribute(a, v);
+        else for (const [a, v] of [['x', cx - hw], ['y', cy - hh], ['width', 2 * hw], ['height', 2 * hh], ['rx', r]]) shape.setAttribute(a, v);
+        shape.setAttribute('stroke', markColor(k, 1, dark)); if (!corners) shape.setAttribute('fill', markColor(k, fill, dark));
+        const v = o * draw;
+        svg.style.opacity = v; svg.style.visibility = v > 0.001 ? 'visible' : 'hidden';
+      },
+    };
+  }
+  // A dimension line between two points, with a tick across each end: padding inside a filled part (a button, a
+  // toast), measured from outside it, since a tint over a part's own fill reads as the part's colour.
+  function markMeasure(parent, { z = 1, width = 2.5, tick = 7, zIndex = 50, dark = false } = {}) {
+    const line = markLine(parent, { z, width, zIndex, dark });
+    return {
+      e: line.e,
+      set(x1, y1, x2, y2, life = {}) {
+        const dx = x2 - x1, dy = y2 - y1, d = Math.hypot(dx, dy) || 1, tx = (-dy / d) * (fpx(tick) / z), ty = (dx / d) * (fpx(tick) / z);
+        line.set([[x1 - tx, y1 - ty], [x1 + tx, y1 + ty], null, [x1, y1], [x2, y2], null, [x2 - tx, y2 - ty], [x2 + tx, y2 + ty]], { ...life, draw: d > 0.5 ? life.draw ?? 1 : 0 });
+      },
+    };
+  }
+  // A before|after sweep for a change of colour across a whole subject: a green line with a round grip, the edge of
+  // the fix as it crosses. Build the subject twice, before and after, and clip the after copy to the left of the line
+  // (clip-path: inset(0 <width - x>px 0 0)). An agent can carry the grip (agentAt action 'carry'); grip: false leaves
+  // a bare line, for a sweep across one small part.
+  function sweep(parent, { z = 1, zIndex = 52, grip: withGrip = true } = {}) {
+    const s = fpx(1) / z;
+    const e = el('div', { class: 'abs', style: { pointerEvents: 'none', zIndex, width: px(3 * s), marginLeft: px(-1.5 * s), background: MARK.green,
+      boxShadow: `0 0 0 ${s}px rgb(255 255 255 / 0.85)` } }, parent);
+    const grip = el('div', { class: 'abs', style: { display: withGrip ? 'flex' : 'none', left: px(1.5 * s - 17 * s), width: px(34 * s), height: px(34 * s), borderRadius: '50%', background: '#fff',
+      boxShadow: `inset 0 0 0 ${2.5 * s}px ${MARK.green}, 0 ${2 * s}px ${6 * s}px rgb(0 0 0 / 0.25)`, alignItems: 'center', justifyContent: 'center', color: MARK.green },
+      html: `<svg viewBox="0 0 24 24" width="${20 * s}" height="${20 * s}" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" style="display:block"><path d="m9 6-6 6 6 6"/><path d="m15 6 6 6-6 6"/></svg>` }, e);
+    return {
+      e, grip,
+      // k 0 parks it in a neutral grey, 1 is the fix's green: it's green only once it moves, since green means the fix.
+      set(x, top, bottom, { o = 1, gripY, k = 1 } = {}) {
+        const c = css(mix(hexToRgb(MARK.idle), hexToRgb(MARK.green), clamp(k)));
+        Object.assign(e.style, { left: px(x), top: px(top), height: px(bottom - top), opacity: o, visibility: o > 0.001 ? 'visible' : 'hidden', background: c });
+        grip.style.top = px((gripY ?? (top + bottom) / 2) - top - 17 * s);
+        grip.style.boxShadow = `inset 0 0 0 ${2.5 * s}px ${c}, 0 ${2 * s}px ${6 * s}px rgb(0 0 0 / 0.25)`;
+        grip.style.color = c;
+      },
+    };
+  }
+
   // The slow push-in that keeps a still alive (SKILL.md, Never stale): 2% a second from the asset's start, linear.
   const push = (t, rate = 0.02) => 1 + rate * Math.max(0, t);
 
@@ -628,6 +760,7 @@
     clamp, lerp, prog, mix, bezier, E, springTo, motionSpring, transition, keyframes, keys, lastBefore, bump,
     hexToRgb, css, el, sv, px, div, zoom, icon, cursor, finger, codeBlock, PAD,
     setSlot, setAgents, fpx, AGENT_COLORS, agent, agentAt, glidePt, pressAt, selection, tab, pair, push, scene,
+    MARK, markColor, markTurn, markLife, markLine, markBand, markBox, markMeasure, sweep,
   };
   window.HACKS = {};
 })();

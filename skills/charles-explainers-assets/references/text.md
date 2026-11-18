@@ -19,12 +19,12 @@ Every kind of text a clip can carry. Sizes are in the final 1080×1920 frame, af
 ## State tag
 
 - "Before" or "After", in the same black tab, flipping on the change.
-- In the hack-reel and term cards, the list kit draws the tab on the card's frame (`tagOnFrame` in `videos/design-hacks-list/edit.mjs`) and flips it at the change time in `explain.json`, so leave it out of the clip. In any other slot, draw it in the clip.
+- In the hack-reel and term cards, the list kit draws the tab on the card's frame (`tagOnFrame` in `videos/design-hacks/kit/edit.mjs`) and flips it at the change time in `explain.json`, so leave it out of the clip. In any other slot, draw it in the clip.
 - A side by side has no state tag: a label sits over each panel instead (`forms.md`, Side by side).
 
 ## Principle tag (the Day N inspector)
 
-My rules for the inspector layer (2026-11-07), from `videos/eradicating-ai-slop/tools/reel/tags.js`:
+My rules for the inspector layer (2026-11-07), from `tools/reelkit/tags.js`:
 - It names a design principle in 4 words or fewer. No sentences, no code, no cards.
 - It never repeats what I'm saying at that moment.
 - Nothing goes on the AI's screen. It's the bad example, so it stays bare.
@@ -39,7 +39,7 @@ For a line that teaches a property or a value someone could copy. Principles nev
 
 - **The full working recipe:** every declaration the fix needs, at most 4 lines. Line-clamp, for example, needs `display: -webkit-box`, `-webkit-box-orient: vertical` and `overflow: hidden` as well as `line-clamp`. Why: my script doesn't say the CSS, so the screen carries it for the people who pause or screenshot.
 - **Where:** under the subject, inside the band, ending at least 12 px above the band's bottom.
-- **Look:** the kit's dark block, JetBrains Mono, with the kit's colours for CSS, JS and JSX (`codeBlock()` in `videos/design-hacks-type/scenes/lib.js`). 24 px or more in the final frame: the kit sets the size from the slot's scale, 34 px in the panel at the hack card's 0.72 and 36 px at its smallest, 0.68. About 44 characters fit on a line at 36 px; rewrap or shorten anything longer.
+- **Look:** the kit's dark block, JetBrains Mono, with the kit's colours for CSS, JS and JSX (`codeBlock()` in `videos/design-hacks/type/scenes/lib.js`). 24 px or more in the final frame: the kit sets the size from the slot's scale, 34 px in the panel at the hack card's 0.72 and 36 px at its smallest, 0.68. About 44 characters fit on a line at 36 px; rewrap or shorten anything longer.
 - **The change:** only the changing token animates. It morphs to the new value on the change word under a soft green highlight. If a property and its value both change, the whole declaration is the token. Lines the fix adds open where they sit under a green tint, and the block grows downward to fit them. Nothing else in the block moves. Why: the one moving token is the only part a viewer can read at speed.
 - **A range in my line** ("between 150 and 250 milliseconds") shows the value I say on the change word.
 - **One declaration:** a fix that is a single value can be a one-line chip in the same style (`input { font-size: 16px }`).

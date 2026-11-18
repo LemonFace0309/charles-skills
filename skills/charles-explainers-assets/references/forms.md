@@ -13,11 +13,11 @@ Gold: `videos/eradicating-ai-slop/design-terms/` (`terms/index.html`, `tools/ree
 
 ## Flip in place
 
-Gold: `videos/eradicating-ai-slop/unslop-designs/` for stills, `videos/design-hacks-motion/` (kit v3, `scenes/`) for motion. `kit/example/` is a motion flip with the agent cursor making the change.
+Gold: `videos/eradicating-ai-slop/unslop-designs/` for stills, `videos/design-hacks/motion/` (kit v3, `scenes/`) for motion. `kit/example/` is a motion flip with the agent cursor making the change. `videos/practical-design-tips/explainers/` marks every change (SKILL.md, Mark the change), with every kind of mark across its 20 cards.
 
 - **One crop and one scale for both states.** A slow push-in, if the flip has one, runs straight through the change and never restarts on it. The state tag sits on the card's corner and flips on the change. Why: anything that moves besides the fix reads as part of the fix.
-- **The before shows the flaw happening:** the pointer triggers it, time does, or the camera pushes in on it once. A demo built for the line is cropped so the flaw is the subject, and gets no mark. A still flaw on a real page (a crop of a site, where it's one detail among many) gets its red mark 0.2 s after the cut, as in the real-thing form below.
-- **The change** lands on the change word. The agent cursor makes it whenever the fix lives somewhere on screen (`agent-cursor.md`).
+- **The before shows the flaw happening:** the pointer triggers it, time does, or the camera pushes in on it once. A demo built for the line is cropped so the flaw is the subject, and its change mark sits on the part that will change (SKILL.md, Mark the change). A still flaw on a real page (a crop of a site, where it's one detail among many) gets its red mark 0.2 s after the cut, as in the real-thing form below.
+- **The change** lands on the change word, and the mark moves with it, turning green. The agent cursor makes it whenever the fix lives somewhere on screen (`agent-cursor.md`).
 - **The after** includes the proof beat: the same interaction again, now right. On desktop UI the agent cursor runs it; on a phone, the fingertip.
 - **The clip:** 9.0 s, the change at exactly 4.50 s, both halves looping (SKILL.md, The contract).
 
@@ -47,7 +47,7 @@ A fix that differs in feel:
 
 ## After only
 
-Gold: `videos/design-hacks-motion/assets/02-press-feedback.mp4`.
+Gold: `videos/design-hacks/motion/assets/02-press-feedback.mp4`.
 
 - The fix in action for the whole line, looping, tagged After. Nothing stands in for a missing before.
 
@@ -65,7 +65,7 @@ Gold: `videos/eradicating-ai-slop/slop-tells/` (`tools/make_examples.py`, `picks
 
 ## Measure
 
-Gold: `videos/eradicating-ai-slop/tools/reel/tags.js` (its `measure`, `arc` and `bars` kinds).
+Gold: `tools/reelkit/tags.js` (its `measure`, `arc` and `bars` kinds).
 
 - A redline between the same edge of two elements with the number at its middle, a corner's radius traced as it draws in, or a wordless timeline bar for durations.
 - It draws in over 250 ms on the number's word. Numbers are 40 px or more, and the equation shows only if the line says it ("24 = 32 − 8").
@@ -77,7 +77,7 @@ Gold: `videos/eradicating-ai-slop/tools/reel/tags.js` (its `measure`, `arc` and 
 
 ## Levels (Day N)
 
-Gold: `videos/eradicating-ai-slop/day-09-password/`, with `tools/reel/tags.js` for the inspector layer.
+Gold: `videos/eradicating-ai-slop/day-09-password/`, with `tools/reelkit/tags.js` for the inspector layer.
 
 - One card is the live demo. Each level morphs from the last on my word (View Transitions, stepped on the render's clock).
 - The AI's version stays bare. No tags on the bad example.
@@ -85,7 +85,7 @@ Gold: `videos/eradicating-ai-slop/day-09-password/`, with `tools/reel/tags.js` f
 
 ## Showcase
 
-Gold: `videos/unslop-repos/part-1/`, recorded with `unslop repos reel/source/rec.mjs`.
+Gold: `videos/unslop-repos/part-1/`, recorded with `videos/unslop-repos/kit/source/rec.mjs`.
 
 - Survey every example the project ships before picking. Use the strongest 3-8 per item at 0.5-1.5 s each, with a cut on most caption lines.
 - Prefer recognisable subjects (iconic cards, real places) over test props, and show exactly the effect I name.

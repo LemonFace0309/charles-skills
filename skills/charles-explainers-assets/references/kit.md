@@ -1,6 +1,6 @@
 # The kit
 
-`kit/` draws and renders the assets. It's the motion-hacks kit v3 (`videos/design-hacks-motion/scenes/`, the clips I approved on 12 Nov), made general and given the explainer layer: the agent cursor, its selection box, the slow push-in and the definition tab. It needs Bun, Google Chrome in `/Applications` and ffmpeg. Run `bun install` in `kit/` once (in this repo you can link `kit/node_modules` to `.claude/skills/landing-craft/tools/node_modules` instead).
+`kit/` draws and renders the assets. It's the motion-hacks kit v3 (`videos/design-hacks/motion/scenes/`, the clips I approved on 12 Nov), made general and given the explainer layer: the agent cursor, its selection box, the slow push-in and the definition tab. It needs Bun, Google Chrome in `/Applications` and ffmpeg. Run `bun install` in `kit/` once.
 
 ## A project
 
@@ -85,7 +85,7 @@ Every scene is a pure function of time: `seek(t)` draws the frame at t, so the r
 | `transition(t, events, { dur, ease, init })`, `keyframes`, `keys`, `springTo`, `motionSpring` | What a CSS transition, a keyframes array or a spring would be at t |
 | `codeBlock` | Built by the page from `scene.code`, under the band, at 24 px or more in the final frame (34 px in the panel, more on a slot scaled under 0.71). `ctx.block.slotBox(k)` is where token k sits, and `ctx.block.insertPoint()` where the agent clicks to add the `+` lines (`code.insert: true`), for aiming it |
 | `agent(ctx.panel, { label, color })` | The agent cursor; `.set(x, y, { press, o })` puts its tip at (x, y). Put it on `ctx.panel`, never in the pushed stage |
-| `agentAt(t, { T, from, to, action, dragTo, after, rest, lineLeft })` | The agent's position, press and opacity at t on the timeline in `agent-cursor.md`; `action` is `click`, `double`, `drag` or `insert` (with `code.insert`) |
+| `agentAt(t, { T, from, to, action, dragTo, after, rest, lineLeft, carryDur })` | The agent's position, press and opacity at t on the timeline in `agent-cursor.md`; `action` is `click`, `double`, `drag`, `insert` (with `code.insert`) or `carry` (a part, handle or grip carried to `dragTo` over T to T + `carryDur`). A carry also returns `u`, how far it has got: move the part by `u` so the two never drift apart |
 | `glidePt`, `pressAt` | A single glide or press, for a proof beat the agent runs itself |
 | `selection(ctx.panel, { color })` | The selection box with corner handles; `.set(x, y, w, h, o)` |
 | `tab(ctx.panel, { x, y, text })` | The definition tab, for a slot whose clip draws its own |
@@ -93,6 +93,14 @@ Every scene is a pure function of time: `seek(t)` draws the frame at t, so the r
 | `cursor`, `finger` | A plain pointer and the fingertip disc, for interactions that aren't the agent's |
 | `fpx(n)` | n px in the final frame, in panel px: text is `fpx(26)` or more, an outline `fpx(2)` |
 | `AGENT_COLORS` | Blue, violet, magenta, teal, in the order they're assigned |
+| `markLife(t, { T, fix })` | A change mark's timeline (SKILL.md, Mark the change) as `{ draw, k, o }`: drawn in over T − 1.25 to T − 0.95, green as a `fix`-second ease-in-out fix lands, gone by T + 1.25. Pass it to a mark's `set` |
+| `markTurn(u)` | Red to green between 45% and 65% of a fix's progress `u`: pass `k: markTurn(u)` when your fix runs on another curve |
+| `markLine(box, { z, width, dash })` | A guide through points: `.set([[x, y], ...], life)`, with a `null` in the points to lift the pen |
+| `markBand(box, { z, dark, axis, hatch })` | A hatched band over an empty space: `.set(x, y, w, h, life)`. Never over a part's own fill |
+| `markMeasure(box, { z, dark })` | A dimension line with a tick at each end, for space inside a filled part, drawn outside it: `.set(x1, y1, x2, y2, life)` |
+| `markBox(box, { z, corners, round, dash, fill, dark })` | Corner brackets 6-8 px clear of a part (the default), a ring (`round: true`), or with `corners: false` a full box (`dash: null` for solid, as for a box on a letter): `.set(x, y, w, h, { ...life, r })` |
+| `sweep(box, { z, grip })` | A before\|after sweep's line and grip: `.set(x, top, bottom, { o, gripY, k })`, grey at `k` 0 while it waits, green at 1 once it moves. Build the subject twice, isolate each copy (`isolation: isolate`, or a part's own z-index escapes and stays on top), and clip the after copy to the left of x |
+| `MARK` | The marks' red (the flaw) and green (the fix), and their light pair for dark surfaces (`dark: true` on any mark). Put every mark inside the box that holds what it marks and pass that box's zoom as `z`, so it rides the zoom and the push-in at its final width |
 
 ## Commands
 
