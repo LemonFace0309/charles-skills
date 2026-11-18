@@ -2,7 +2,11 @@
   "accent": "charles-hero-mockups",
   "color": "charles-color-analysis",
   "colour": "charles-color-analysis",
+  "headspace": "charles-store-screenshots",
   "motion": "charles-ux-animation",
   "polish": "charles-polish",
+  "screenshots": "charles-store-screenshots",
+  "spotify": "charles-store-screenshots",
+  "strava": "charles-store-screenshots",
   "unslop": "charles-unslop"
 }
