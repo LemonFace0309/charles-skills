@@ -151,7 +151,6 @@
   cap.style.fontSize = px(R.captions.size);
   $("#ig-handle").textContent = ((V.post && V.post.handle) || "").replace(/^@/, "");
   $("#ig-caption").textContent = V.post && V.post.caption ? `${V.post.caption.split("\n")[0]} … more` : "";
-  const preload = beats.filter((b) => b.visual && b.visual.type === "image").map((b) => Object.assign(new Image(), { src: b.visual.src }));
 
   /* ---- layouts: the five ways charles-claude-editing puts an asset on screen, plus the list reel's collage ---------- */
   function box(v) {
@@ -223,7 +222,12 @@
         }
       } else {
         clip = null;
-        visual.append(h("img", { src: v.src, alt: "" }));
+        // a still goes in once its file has arrived (the reel holds until then), so it never draws half-loaded
+        const im = h("img", { alt: "" });
+        if (ready.has(v.src) || !useMemory) im.src = want(v.src);
+        else waitingImgs.set(v.src, im);
+        if (!useMemory && !ready.has(v.src)) im.decode().then(() => ready.add(v.src), () => ready.add(v.src));
+        visual.append(im);
       }
       visual.hidden = false;
     } else {
@@ -239,15 +243,16 @@
   }
 
   let clip = null;                     // the line's video, if it has one: { vid, src, start, from }
-  // Every clip starts loading with the page and its element is reused, so a line's card is already there when the line
-  // starts instead of its slot sitting empty while it loads (the 20 design laws session saw that on a first play).
+  let buffering = false;               // the reel holding still for a file it shows (the media loader, below)
+  // One element per clip, reused, so a line's clip is there when the line starts instead of its slot sitting empty
+  // (the 20 design laws session saw that on a first play). The media loader gives each its file, in the reel's order.
   const shelf = h("div", { hidden: true });
   document.body.append(shelf);
   const clipEls = new Map();
   beats.forEach((b) => {
     const v = b.visual;
     if (!v || v.type !== "video" || clipEls.has(v.src)) return;
-    const vid = h("video", { src: v.src, muted: true, playsinline: true, preload: "auto" });
+    const vid = h("video", { muted: true, playsinline: true, preload: "none" });
     vid.muted = true;
     vid.addEventListener("loadedmetadata", () => { if (clip && clip.vid === vid) syncClip(true); });
     shelf.append(vid);
@@ -259,13 +264,31 @@
     const d = vid.duration;
     let want = Math.max(0, t - start + from);
     if (Number.isFinite(d) && d > 0) want = vid.loop ? want % d : Math.min(want, Math.max(0, d - 0.04));
-    const run = playing && waitingSince == null;   // still while the music is starting, as the reel is
+    const run = playing && !buffering && waitingSince == null;   // still while the music starts or a file loads
     const off = Math.abs(vid.currentTime - want);
-    if (force || off > (run ? 0.2 : 0.04)) {
+    // Seek only when the frame is clearly off, never on top of a seek still under way, and while it plays at most once
+    // a second. Seeking a clip on every frame while it was still arriving restarted its download each time, so on a
+    // computer without the files it never caught up (913 seeks in 22 s and frames 6 s off, 18 Nov 2026).
+    const now = performance.now();
+    if (vid.readyState >= 1 && !vid.seeking && off > (run && !force ? 0.25 : 0.05)
+        && (!run || force || now - (vid.seekAt || 0) > 1000)) {
+      vid.seekAt = now;
       try { vid.currentTime = want; } catch { /* not seekable until its metadata loads; loadedmetadata syncs again */ }
     }
-    if (run && vid.paused) vid.play().catch(() => {});
+    if (run && vid.paused && vid.readyState >= 3) vid.play().catch(() => {});
     if (!run && !vid.paused) vid.pause();
+  }
+  // The next line's clip waits on its first frame a second before its cut, so the cut lands on a frame that's already
+  // decoded instead of a black one while it seeks.
+  function prime(i) {
+    const nx = beats[i + 1];
+    const v = nx && nx.visual;
+    if (!v || v.type !== "video" || nx.start - t > 1.2 || (clip && clip.src === v.src)) return;
+    const vid = clipEls.get(v.src);
+    if (!vid || vid.readyState < 1 || vid.seeking || vid.primed === i + 1) return;
+    vid.primed = i + 1;
+    if (!vid.paused) vid.pause();
+    try { vid.currentTime = v.from || 0; } catch { /* its metadata isn't in yet */ }
   }
 
   function showCaption(b) {
@@ -284,6 +307,7 @@
     const i = indexAt(t);
     if (i !== shown) show(i);
     syncClip();
+    if (playing) prime(i);
     showCaption(beats[i]);
     // The hook: a list reel's title stays up; a TikTok hook stays for his first sentence, on the seam if it opens on a split.
     if (HK.style !== "title" && HK.lines && HK.lines.length) {
@@ -344,13 +368,138 @@
     }
   }
 
+  /* ---- media: the files the reel shows, in its order, into memory ------------------------------------------------ */
+  // On a computer that had never opened the page nothing was cached, and the reel's clock (the music's) didn't wait:
+  // every clip and still started downloading at once, a clip that wasn't in yet at its line showed a stale or black
+  // frame, and the music came in seconds late ("transitions don't work properly or the a-roll/b-roll doesn't load
+  // properly", 18 Nov 2026). Now the music loads first, then each line's clip or still in the order the reel shows them,
+  // two at a time and into memory (a blob: URL, where a seek is instant), with the line the reel is on always next. The
+  // reel holds still, with a spinner, while what it shows hasn't arrived. Opened from disk, the files go straight in.
+  const kindOf = new Map();            // each file the reel shows -> "image" or "video", in the order it shows them
+  beats.forEach((b) => { const v = b.visual; if (v && v.src && !kindOf.has(v.src)) kindOf.set(v.src, v.type); });
+  const mem = new Map();               // a file -> its copy in memory
+  const ready = new Set();             // stills decoded, ready to draw
+  const waitingImgs = new Map();       // a still a line shows before its file arrived
+  const useMemory = location.protocol !== "file:" && typeof fetch === "function" && !!URL.createObjectURL;
+  const want = (src) => mem.get(src) || src;
+  const loadingText = $("#loading-text");
+  // #check also shows how many of the reel's files came into memory: all of them means the host let the page hold its
+  // own copies, and fewer means some play from the network (a frame that refuses blob:)
+  const memNote = location.hash === "#check" && useMemory ? h("span", { class: "mem-note", title: "files in memory" }) : null;
+  if (memNote) $("#full").before(memNote);
+  const noteMem = () => { if (memNote) memNote.textContent = `${mem.size}/${kindOf.size}`; };
+  let holdSince = null;
+  let audioBroken = false;
+  if (audio) audio.addEventListener("error", () => { audioBroken = true; });
+  const musicReady = () => !audio || audioBroken || audio.readyState >= 3;
+  function readyAt(time) {
+    const v = beats[indexAt(time)].visual;
+    if (!v || !v.src) return true;
+    if (v.type !== "video") return ready.has(v.src);
+    const vid = clipEls.get(v.src);
+    return !vid || vid.failed === true || (vid.readyState >= 3 && !vid.seeking);
+  }
+  function setBuffering(on) {
+    if (on === buffering) return;
+    buffering = on;
+    document.body.classList.toggle("buffering", on);
+    if (on) {
+      if (audio && !audio.paused) audio.pause();
+      if (clip && !clip.vid.paused) clip.vid.pause();
+    } else {
+      lastTs = null;
+      syncAudio(true);
+      syncClip(true);
+    }
+  }
+  function giveClip(src, url) {
+    const vid = clipEls.get(src);
+    vid.addEventListener("error", () => {
+      if (vid.src.startsWith("blob:")) { mem.delete(src); noteMem(); vid.src = src; vid.load(); }   // a frame that refuses blob:
+      else vid.failed = true;                                                                      // broken: never hold the reel for it
+    });
+    vid.preload = "auto";
+    vid.src = url;
+    vid.load();
+  }
+  async function stillIn(src, url) {
+    const im = new Image();
+    im.src = url;
+    try { await im.decode(); } catch {
+      if (url !== src) { mem.delete(src); noteMem(); const im2 = new Image(); im2.src = src; await im2.decode().catch(() => {}); }
+    }
+    ready.add(src);
+    const el = waitingImgs.get(src);
+    if (el) { el.src = want(src); waitingImgs.delete(src); }
+  }
+  const queue = [...kindOf.keys()];
+  let arrived = 0;
+  function nextFile() {
+    if (!queue.length) return null;
+    const from = Math.max(0, shown);
+    const k = queue.findIndex((src) => beats.slice(from).some((b) => b.visual && b.visual.src === src));
+    return queue.splice(k < 0 ? 0 : k, 1)[0];
+  }
+  async function fetchIn(src) {
+    let url = src;
+    try {
+      const res = await fetch(src);
+      if (!res.ok) throw new Error(String(res.status));
+      url = URL.createObjectURL(await res.blob());
+      mem.set(src, url);
+    } catch { /* the network copy instead */ }
+    noteMem();
+    if (kindOf.get(src) === "video") giveClip(src, url);
+    else await stillIn(src, url);
+    arrived += 1;
+    loadingText.textContent = arrived < kindOf.size ? `Loading ${arrived + 1} of ${kindOf.size}` : "Loading";
+  }
+  const musicIn = new Promise((resolve) => {
+    if (!audio) { resolve(); return; }
+    ["canplaythrough", "error"].forEach((ev) => audio.addEventListener(ev, resolve, { once: true }));
+    setTimeout(resolve, 4000);
+  });
+  async function worker(first) {
+    if (!first) await musicIn;
+    for (let src = nextFile(); src; src = nextFile()) {
+      await fetchIn(src);
+      await musicIn;                   // past the first file, the music goes before the rest
+    }
+  }
+  // The sections' thumbnails wait for the reel's own files, so they don't take the connection the music needs
+  let reelIn;
+  const allIn = new Promise((resolve) => { reelIn = resolve; });
+  const afterReel = (fn) => { allIn.then(fn); };
+  if (useMemory) {
+    loadingText.textContent = `Loading 1 of ${kindOf.size}`;
+    Promise.all([worker(true), worker(false)]).then(reelIn, reelIn);
+    setTimeout(reelIn, 15000);
+  } else {
+    kindOf.forEach((kind, src) => (kind === "video" ? giveClip(src, src) : stillIn(src, src)));
+    reelIn();
+  }
+
   function tick(ts) {
     if (!playing) return;
     const dt = lastTs == null ? 0 : Math.min(0.1, (ts - lastTs) / 1000);
     lastTs = ts;
+    // Hold the reel, music and all, while what it shows now hasn't arrived. A gap under 150 ms (a clip settling after
+    // its cut) doesn't stop the music; anything longer pauses both, and the spinner shows after 300 ms more.
+    const need = !readyAt(t) || !musicReady();
+    holdSince = need ? holdSince ?? ts : null;
+    if (need && ts - holdSince > 150) setBuffering(true);
+    else if (!need && buffering) setBuffering(false);
+    if (buffering) {
+      render();
+      requestAnimationFrame(tick);
+      return;
+    }
     const heard = audio && !audio.paused && audio.readyState >= 3 ? audio.currentTime - track.at : null;
     if (heard != null && heard >= -0.05 && heard <= total + HOLD + 1) {
-      t = Math.max(0, heard);          // the music keeps the time while it plays, so the two can't drift apart
+      // The music keeps the time while it plays, so the two can't drift apart. A restart that lands a touch early (an
+      // MP3 seek isn't exact) slows the reel for a moment instead of sending it back a few frames.
+      const gap = heard - t;
+      t = gap < 0 && gap > -0.4 ? t + dt * 0.5 : Math.max(0, heard);
     } else if (!(waitingSince != null && ts - waitingSince < 1500)) {
       t += dt;
     }
@@ -364,6 +513,8 @@
 
   function setPlaying(on) {
     playing = on;
+    if (!on && buffering) { buffering = false; document.body.classList.remove("buffering"); }
+    holdSince = null;
     document.body.classList.toggle("playing", on);
     if (on) document.body.classList.add("started");
     $("#play").setAttribute("aria-label", on ? "Pause" : "Play");
@@ -565,18 +716,20 @@
         style: { aspectRatio: String(Math.min(2, Math.max(0.75, p.aspect || 1.6))) },
         onclick: (e) => { e.stopPropagation(); view({ src: p.src, video: p.type === "video", poster: p.poster, what: a.title, meta: a.meta }); },
       }, p.type === "video" && !p.poster
-        ? h("video", { src: p.src, muted: true, playsinline: true, preload: "metadata" })
+        ? (() => { const pv = h("video", { muted: true, playsinline: true, preload: "metadata" }); afterReel(() => { pv.src = p.src; }); return pv; })()
         : h("img", { src: p.type === "video" ? p.poster : p.src, alt: "", loading: "lazy" }))
       : h("div", { class: "plate pending" }, h("span", { text: "Pending" }));
     const mark = a.number != null ? (a.number < 100 ? `${a.number}.` : String(a.number)) : mmss(a.start);
-    const pieces = (a.pieces || []).map((im) => h("li", { class: im.used ? null : "spare" },
-      h("button", {
+    const pieces = (a.pieces || []).map((im) => {
+      const thumb = h("button", {
         class: "thumb", type: "button", "aria-label": `See ${im.what || "this image"} full size`,
-        style: { backgroundImage: `url("${im.thumb || im.src}")` },
         onclick: (e) => { e.stopPropagation(); view({ src: im.large || im.src, video: im.video, what: im.what, meta: im }); },
-      }),
-      h("span", {}, h("span", { class: "p-what", text: im.what || im.src.split("/").pop() }),
-        h("span", { class: "p-meta meta" }, im.used ? null : "Spare · ", ...metaOf(im)))));
+      });
+      afterReel(() => { thumb.style.backgroundImage = `url("${im.thumb || im.src}")`; });
+      return h("li", { class: im.used ? null : "spare" }, thumb,
+        h("span", {}, h("span", { class: "p-what", text: im.what || im.src.split("/").pop() }),
+          h("span", { class: "p-meta meta" }, im.used ? null : "Spare · ", ...metaOf(im))));
+    });
     const card = h("article", { class: "card", onclick: (e) => { if (!e.target.closest("a, button")) jumpTo(a.beats[0]); } },
       plate,
       h("h3", {}, h("span", { class: "mark", text: mark }), a.title),
@@ -596,10 +749,10 @@
     const face = r.thumb || r.image
       ? h("button", {
         class: "ref-face ref-still", type: "button", "aria-label": `See ${r.title} full size`,
-        style: { backgroundImage: `url("${r.thumb || r.image}")` },
         onclick: () => view({ src: r.image, what: r.title, meta: r.url ? { source: r.kind, link: r.url } : null }),
       })
       : h("span", { class: "ref-face", "aria-hidden": "true", text: r.badge || "" });
+    if (r.thumb || r.image) afterReel(() => { face.style.backgroundImage = `url("${r.thumb || r.image}")`; });
     $("#ref-list").append(h("li", { class: "ref" }, face,
       h("div", { class: "ref-text" },
         h("p", { class: "ref-kind meta", text: [r.kind, r.by].filter(Boolean).join(" · ") }),
@@ -632,5 +785,4 @@
     seek(Number(params.get("t")), { pause: true });
   }
   document.addEventListener("visibilitychange", () => { if (document.hidden && playing) setPlaying(false); });
-  void preload;
 })();
