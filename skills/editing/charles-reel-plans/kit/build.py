@@ -17,9 +17,7 @@ listed in build/site/files.json. Publish it with the Artifact tool: file_path bu
 files = files.json. Publishing the same file path again keeps the link. The build also prints the checks against
 charles-claude-editing's rules.
 """
-import array
 import base64
-import concurrent.futures as cf
 import copy
 import hashlib
 import html
@@ -30,11 +28,9 @@ import re
 import shutil
 import subprocess
 import sys
-import time
 import urllib.error
 import urllib.parse
 import urllib.request
-import wave
 from pathlib import Path
 
 from PIL import Image, ImageFont
@@ -52,34 +48,7 @@ MOODS = {"chill", "emotional storytelling", "funny", "motivational", "suspensefu
 # Words TikTok holds a video back for; write them like s*****e in captions and the hook (charles-claude-editing, Captions).
 BLOCKED = ("suicide", "self-harm", "self harm", "kill yourself", "porn", "nude", "rape", "cocaine", "heroin", "nazi", "terrorist")
 MEME_SOUNDS = ("vine boom", "dun", "bruh", "airhorn", "air horn", "emotional damage", "oh no", "sad violin")
-# His voice reads the script on the page: each line is cloned from a clean 5-10 s clip of him talking, kept in the
-# project (never in this skill, which is public). In an 18 Nov 2026 bake-off on four lines cloned from one 8 s clip,
-# IndexTTS-2 scored closest to his real voice (WeSpeaker cosine 0.72-0.76 on sentences; two real clips of him score
-# 0.83-0.88) with the fewest misread words and almost no silence around each line; Chatterbox was as close on average
-# for a sixth of the price but misread "vibe coding"; F5-TTS dropped a line's first word and clipped; Chatterbox
-# Turbo was furthest from him.
-VOICE_REF = "assets/voice/reference.wav"
-# His ElevenLabs voice (a clone trained on his own reel audio), named in the project, never in this skill: when the
-# project has this file, the page reads the script with it. It replaced IndexTTS-2 as the default on 19 Nov 2026
-# ("It sounds hella weird rn"), since a voice trained on hours of him beats one cloned from an 8 s clip.
-ELEVEN_VOICE = "assets/voice/elevenlabs.json"
-# Words the voice says wrong as written ("OKLCH" came out "okelch"), respelled for the read only; the page shows the
-# line as written. A plan adds its own in `voice.words`, and a line can replace its whole read with `voice_say`.
-VOICE_WORDS = {"OKLCH": "O K L C H", "OKLab": "O K lab"}   # UI, UX, CSS and SVG read right as written; "C S S" came out "CS"
-# IndexTTS-2 expands "it's", "that's", "you're" and "I'm" into "it is", "that is", "you are" and "I am", which he never
-# says; written without the apostrophe they come out as the contraction. "I'll", "you'll", "don't", "can't" and "we're"
-# come through as written ("Ill" came out "It'll", and "were" would be a different word), so they keep theirs. Tested
-# 18 Nov 2026, both ways, with Whisper on each read.
-VOICE_CONTRACTIONS = [(re.compile(r"\b(\w+)['’]s\b"), r"\1s"), (re.compile(r"\b([Yy]ou)['’]re\b"), r"\1re"),
-                      (re.compile(r"\bI['’]m\b"), "Im")]
-VOICE_GAP = 0.08           # silence between lines: his cuts keep at most 0.1 s at a join (charles-claude-editing, Cuts)
-VOICE_ENGINES = {
-    # name: (fal endpoint, request body, label, $ for a line from its characters and seconds of speech)
-    "index-tts-2": ("fal-ai/index-tts-2/text-to-speech", lambda text, ref: {"prompt": text, "audio_url": ref},
-                    "IndexTTS-2", lambda chars, secs: 0.002 * secs),
-    "chatterbox": ("fal-ai/chatterbox/text-to-speech", lambda text, ref: {"text": text, "audio_url": ref, "seed": 7},
-                   "Chatterbox", lambda chars, secs: 0.025 * chars / 1000),
-}
+
 
 
 def syllables(text):
@@ -594,245 +563,32 @@ def assets_for(plan, vd, beats, groups, under_chin):
     return cards
 
 
-def env_key(vd, name):
-    """A key from the environment, or the first .env or .env.local in the video folder, a folder above it, or home."""
-    if os.environ.get(name):
-        return os.environ[name]
-    for d in [vd, *vd.parents, Path.home()]:
-        for fn in (".env", ".env.local"):
-            env = d / fn
-            if env.is_file():
-                m = re.search(rf"^{name}=(.+)$", env.read_text(), re.M)
-                if m:
-                    return m.group(1).strip().strip('"').strip("'")
-    return None
 
 
-def fal_key(vd):
-    return env_key(vd, "FAL_KEY")
 
 
-def eleven_audio(key, voice_id, model, settings, text, prev, nxt):
-    """One line read by ElevenLabs as MP3. previous_text and next_text carry the intonation across lines, so a list
-    reads as one take instead of ten separate announcements. Retries when the plan's concurrency limit answers 429."""
-    body = {"text": text, "model_id": model, "voice_settings": settings}
-    if prev:
-        body["previous_text"] = prev
-    if nxt:
-        body["next_text"] = nxt
-    url = f"https://api.elevenlabs.io/v1/text-to-speech/{voice_id}?output_format=mp3_44100_128"
-    for attempt in range(6):
-        req = urllib.request.Request(url, data=json.dumps(body).encode(), method="POST",
-                                     headers={"xi-api-key": key, "Content-Type": "application/json", "Accept": "audio/mpeg"})
-        try:
-            with urllib.request.urlopen(req, timeout=180) as r:
-                return r.read()
-        except urllib.error.HTTPError as e:
-            if e.code in (429, 503) and attempt < 5:
-                time.sleep(2 + 3 * attempt)
-                continue
-            raise RuntimeError(f"HTTP {e.code} from ElevenLabs: {e.read().decode()[:300]}") from None
 
 
-def fal_http(key, url, body=None, timeout=120):
-    data = json.dumps(body).encode() if body is not None else None
-    headers = {"Authorization": f"Key {key}"}
-    if data:
-        headers["Content-Type"] = "application/json"
-    req = urllib.request.Request(url, data=data, headers=headers, method="POST" if data else "GET")
-    try:
-        with urllib.request.urlopen(req, timeout=timeout) as r:
-            return json.load(r)
-    except urllib.error.HTTPError as e:
-        raise RuntimeError(f"HTTP {e.code} from {url.split('?')[0]}: {e.read().decode()[:300]}") from None
 
 
-def fal_upload(key, path, cache):
-    """The reference clip on fal's storage, uploaded once per clip (its URL is cached in build/voice/)."""
-    digest = hashlib.sha1(path.read_bytes()).hexdigest()[:16]
-    known = json.loads(cache.read_text()) if cache.exists() else {}
-    if digest not in known:
-        ctype = {".wav": "audio/wav", ".mp3": "audio/mpeg", ".m4a": "audio/mp4"}.get(path.suffix.lower(), "audio/wav")
-        init = fal_http(key, "https://rest.alpha.fal.ai/storage/upload/initiate?storage_type=fal-cdn-v3",
-                        {"content_type": ctype, "file_name": "voice-reference" + path.suffix.lower()})
-        put = urllib.request.Request(init["upload_url"], data=path.read_bytes(), headers={"Content-Type": ctype}, method="PUT")
-        urllib.request.urlopen(put, timeout=300).read()
-        known[digest] = init["file_url"]
-        cache.write_text(json.dumps(known))
-    return known[digest]
 
 
-def fal_audio(key, endpoint, body):
-    job = fal_http(key, f"https://queue.fal.run/{endpoint}", body)
-    t0 = time.time()
-    while fal_http(key, job["status_url"]).get("status") != "COMPLETED":
-        if time.time() - t0 > 300:
-            raise RuntimeError(f"{endpoint} took over 5 minutes")
-        time.sleep(1.5)
-    res = fal_http(key, job["response_url"])
-    urls = re.findall(r'"url":\s*"(https://[^"]+)"', json.dumps(res))
-    if not urls:
-        raise RuntimeError(f"no audio in {json.dumps(res)[:300]}")
-    with urllib.request.urlopen(urls[0], timeout=120) as r:
-        return r.read()
 
 
-def speech_clip(raw, out, rate=44100):
-    """The read trimmed to its speech, 30 ms before the first sound and 60 ms after the last, as 44.1 kHz mono WAV."""
-    pcm = subprocess.run(["ffmpeg", "-v", "error", "-i", "pipe:0", "-ac", "1", "-ar", str(rate), "-f", "s16le", "-"],
-                         input=raw, capture_output=True, check=True).stdout
-    a = array.array("h")
-    a.frombytes(pcm)
-    hop = rate // 100
-    level = [math.sqrt(sum(x * x for x in a[i:i + hop]) / hop) + 1e-9 for i in range(0, len(a) - hop, hop)]
-    loud = [i for i, v in enumerate(level) if v > max(level) * 10 ** (-35 / 20)]
-    if not loud:
-        raise RuntimeError("the read came back silent")
-    lo, hi = max(0, loud[0] * hop - int(0.03 * rate)), min(len(a), (loud[-1] + 1) * hop + int(0.06 * rate))
-    with wave.open(str(out), "wb") as w:
-        w.setnchannels(1)
-        w.setsampwidth(2)
-        w.setframerate(rate)
-        w.writeframes(a[lo:hi].tobytes())
 
 
-def wav_seconds(path):
-    with wave.open(str(path)) as w:
-        return w.getnframes() / w.getframerate()
 
 
-def voice_for(plan, vd, says):
-    """Each line read in his voice: [(build/voice/<hash>.wav, seconds) or None per line] and the engine's label, or
-    (None, why not). Reads are cached by engine, reference clip and text, so a rebuild only pays for lines that changed.
-    plan.json's `voice` picks the engine and the clip ({"engine": "index-tts-2" | "chatterbox" | "none", "ref": path});
-    --no-voice skips it."""
-    cfg = plan.get("voice") or {}
-    eleven = repo_root(vd) / ELEVEN_VOICE
-    engine = cfg.get("engine", "elevenlabs" if (cfg.get("voice_id") or eleven.exists()) else "index-tts-2")
-    if engine == "none" or "--no-voice" in sys.argv:
-        return None, "off"
-    if engine == "elevenlabs":
-        return voice_eleven(cfg, vd, says, eleven)
-    if engine not in VOICE_ENGINES:
-        sys.exit(f"voice.engine must be one of {', '.join(VOICE_ENGINES)} or none, not {engine}")
-    endpoint, body, label, cost = VOICE_ENGINES[engine]
-    ref = (vd / cfg["ref"]).resolve() if cfg.get("ref") else repo_root(vd) / VOICE_REF
-    if not ref.exists():
-        return None, f"no clip of his voice at {ref}, so the page plays the music alone"
-    key = fal_key(vd)
-    if not key:
-        return None, "no FAL_KEY in the environment or a .env, so the page plays the music alone"
-    folder = vd / "build/voice"
-    folder.mkdir(parents=True, exist_ok=True)
-    ref_id = hashlib.sha1(ref.read_bytes()).hexdigest()[:12]
-    words = {**VOICE_WORDS, **(cfg.get("words") or {})}
-    respell = re.compile(r"\b(" + "|".join(map(re.escape, sorted(words, key=len, reverse=True))) + r")\b")
-    paths, todo = [], {}
-    for say in says:
-        text = respell.sub(lambda m: words[m.group(1)], (say or "").strip())
-        for pattern, plain in VOICE_CONTRACTIONS:
-            text = pattern.sub(plain, text)
-        if not text:
-            paths.append(None)
-            continue
-        p = folder / f"{hashlib.sha1(f'{engine}|{ref_id}|{text}'.encode()).hexdigest()[:16]}.wav"
-        paths.append(p)
-        if not p.exists():
-            todo[p] = text
-    if todo:
-        chars = sum(len(t) for t in todo.values())
-        print(f"voice: reading {len(todo)} of {sum(1 for p in paths if p)} lines with {label}, about "
-              f"${cost(chars, chars / 15):.2f} (the rest are cached)")
-        ref_url = fal_upload(key, ref, folder / "reference-url.json")
-
-        def read(item):
-            p, text = item
-            speech_clip(fal_audio(key, endpoint, body(text, ref_url)), p)
-            return p
-
-        with cf.ThreadPoolExecutor(6) as ex:
-            futures = {ex.submit(read, it): it for it in todo.items()}
-            for f in cf.as_completed(futures):
-                if f.exception():
-                    print(f"  voice: couldn't read \"{futures[f][1][:40]}\": {f.exception()}; that line stays silent")
-    return [(p, wav_seconds(p)) if p and p.exists() else None for p in paths], label
 
 
-def voice_eleven(cfg, vd, says, eleven):
-    """voice_for() with his ElevenLabs voice: the project's assets/voice/elevenlabs.json names it ({"voice_id", "model",
-    "settings"}), and plan.json's voice can override any of those. The key is ELEVENLABS_API_KEY. Each line is read
-    knowing the lines either side of it, and reads are cached by voice, model, settings, text and those neighbours."""
-    ev = json.loads(eleven.read_text()) if eleven.exists() else {}
-    voice_id = cfg.get("voice_id") or ev.get("voice_id")
-    model = cfg.get("model") or ev.get("model") or "eleven_multilingual_v2"
-    settings = {"stability": 0.5, "similarity_boost": 0.9, "style": 0.0, "use_speaker_boost": True,
-                **(ev.get("settings") or {}), **(cfg.get("settings") or {})}
-    if not voice_id:
-        return None, f"no ElevenLabs voice in plan.json or {eleven}, so the page plays the music alone"
-    key = env_key(vd, "ELEVENLABS_API_KEY")
-    if not key:
-        return None, "no ELEVENLABS_API_KEY in the environment or a .env, so the page plays the music alone"
-    folder = vd / "build/voice"
-    folder.mkdir(parents=True, exist_ok=True)
-    words = {**VOICE_WORDS, **(cfg.get("words") or {})}
-    respell = re.compile(r"\b(" + "|".join(map(re.escape, sorted(words, key=len, reverse=True))) + r")\b")
-    texts = [respell.sub(lambda m: words[m.group(1)], (say or "").strip()) for say in says]
-    spoken = [i for i, t in enumerate(texts) if t]
-    sig = json.dumps(settings, sort_keys=True)
-    paths, todo = [None] * len(texts), {}
-    for k, i in enumerate(spoken):
-        prev = texts[spoken[k - 1]] if k > 0 else ""
-        nxt = texts[spoken[k + 1]] if k + 1 < len(spoken) else ""
-        p = folder / f"{hashlib.sha1(f'elevenlabs|{voice_id}|{model}|{sig}|{prev}|{texts[i]}|{nxt}'.encode()).hexdigest()[:16]}.wav"
-        paths[i] = p
-        if not p.exists():
-            todo[p] = (texts[i], prev, nxt)
-    label = f"ElevenLabs ({ev.get('name') or voice_id}, {model})"
-    if todo:
-        chars = sum(len(t[0]) for t in todo.values())
-        print(f"voice: reading {len(todo)} of {len(spoken)} lines with {label}, {chars} characters of ElevenLabs credit "
-              f"(the rest are cached)")
-
-        def read(item):
-            p, (text, prev, nxt) = item
-            speech_clip(eleven_audio(key, voice_id, model, settings, text, prev, nxt), p)
-            return p
-
-        with cf.ThreadPoolExecutor(3) as ex:
-            futures = {ex.submit(read, it): it for it in todo.items()}
-            for f in cf.as_completed(futures):
-                if f.exception():
-                    print(f"  voice: couldn't read \"{futures[f][1][0][:40]}\": {f.exception()}; that line stays silent")
-    return [(p, wav_seconds(p)) if p and p.exists() else None for p in paths], label
 
 
-def voice_track(vd, beats, voiced, length, rate=44100):
-    """build/voice/voice.wav: every line's read placed at its line's start, on the reel's clock."""
-    track = array.array("h", bytes(2 * int(length * rate)))
-    for b, v in zip(beats, voiced):
-        if not v:
-            continue
-        with wave.open(str(v[0])) as w:
-            a = array.array("h")
-            a.frombytes(w.readframes(w.getnframes()))
-        s = int(round(b["start"] * rate))
-        n = max(0, min(len(a), len(track) - s))
-        track[s:s + n] = a[:n]
-    out = vd / "build/voice/voice.wav"
-    with wave.open(str(out), "wb") as w:
-        w.setnchannels(1)
-        w.setsampwidth(2)
-        w.setframerate(rate)
-        w.writeframes(track.tobytes())
-    return out
 
 
-def cut_music(plan, vd, length, voice=None):
+def cut_music(plan, vd, length):
     """build/music/<n>-<title>.mp3: each track from its start point for the reel's length and the loop's hold, faded out at
     the end, at one loudness so switching tracks doesn't jump. The page then plays each clip from 0 and never has to seek
-    inside a long song. MP3 because every browser plays it and the Artifact host serves it. With his voice
-    (build/voice/voice.wav), the clip is the mix: his voice at -16 LUFS and the music `under` dB below it, as in the
-    edit, so the page still plays one file on one clock."""
+    inside a long song. MP3 because every browser plays it and the Artifact host serves it."""
     m = plan.get("music") or {}
     entries = [m] if m.get("file") else []          # the player plays the pick; alternatives stay in the plan for the edit
     folder = vd / "build/music"
@@ -847,33 +603,16 @@ def cut_music(plan, vd, length, voice=None):
         title, artist = (re.split(r" [-—] ", stem, maxsplit=1) + [""])[:2] if re.search(r" [-—] ", stem) else (stem, "")
         out = folder / f"{k + 1}-{re.sub(r'[^a-z0-9]+', '-', title.lower()).strip('-')}.mp3"
         at = float(e.get("at") or 0)
-        under = float(m.get("under", 8.5))
-        if voice:
-            out = out.with_name(out.stem + "-voiced.mp3")
-        stamp = {"file": str(path), "at": at, "length": round(length, 2),
-                 "voice": hashlib.sha1(voice.read_bytes()).hexdigest()[:16] if voice else None, "under": under}
+        stamp = {"file": str(path), "at": at, "length": round(length, 2)}
         side = out.with_suffix(".json")
         if not (out.exists() and side.exists() and json.loads(side.read_text()) == stamp):
             fade = f"afade=t=in:d=0.03,afade=t=out:st={length - 1.8:.2f}:d=1.8"
-            if voice:
-                graph = (f"[0:a]{fade},loudnorm=I={-16 - under:.1f}:TP=-2:LRA=11,aresample=44100,aformat=channel_layouts=stereo[m];"
-                         "[1:a]loudnorm=I=-16:TP=-1.5:LRA=11,aresample=44100,aformat=channel_layouts=stereo[v];"
-                         "[m][v]amix=inputs=2:normalize=0:duration=first,alimiter=limit=0.95[out]")
-                subprocess.run(["ffmpeg", "-v", "error", "-y", "-ss", str(at), "-t", f"{length:.2f}", "-i", str(path),
-                                "-i", str(voice), "-filter_complex", graph, "-map", "[out]",
-                                "-ar", "44100", "-ac", "2", "-c:a", "libmp3lame", "-b:a", "160k", str(out)], check=True)
-            else:
-                subprocess.run(["ffmpeg", "-v", "error", "-y", "-ss", str(at), "-t", f"{length:.2f}", "-i", str(path),
-                                "-af", f"{fade},loudnorm=I=-16:TP=-1.5:LRA=11",
-                                "-ar", "44100", "-ac", "2", "-c:a", "libmp3lame", "-b:a", "160k", str(out)], check=True)
+            subprocess.run(["ffmpeg", "-v", "error", "-y", "-ss", str(at), "-t", f"{length:.2f}", "-i", str(path),
+                            "-af", f"{fade},loudnorm=I=-16:TP=-1.5:LRA=11",
+                            "-ar", "44100", "-ac", "2", "-c:a", "libmp3lame", "-b:a", "160k", str(out)], check=True)
             side.write_text(json.dumps(stamp))
         tracks.append({"title": title.strip(), "artist": artist.strip(), "at": 0.0, "from": at,
                        "src": rel_from_page(vd, out.relative_to(vd)), "why": e.get("why", "")})
-    if voice and not tracks:                        # no song picked yet: the page plays his voice alone
-        out = folder / "voice.mp3"
-        subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", str(voice), "-af", "loudnorm=I=-16:TP=-1.5:LRA=11",
-                        "-ar", "44100", "-ac", "2", "-c:a", "libmp3lame", "-b:a", "160k", str(out)], check=True)
-        tracks.append({"title": "Voice", "artist": "", "at": 0.0, "from": 0.0, "src": rel_from_page(vd, out.relative_to(vd)), "why": ""})
     return {"under": m.get("under", 8.5), "tracks": tracks}
 
 
@@ -908,17 +647,14 @@ def build(vd):
     is_list = bool(plan.get("list"))
     default_pace = plan.get("pace", "list" if is_list else "talk")
     default_caps = plan.get("captions", not is_list)            # a list reel's list is its captions
-    # Before filming, his voice reads every line and each line lasts as long as its read (plus the gap his cuts keep),
-    # so the cards and the list land on the words. Once edit/cuts.json exists, the cut's timings win and the voice is off.
-    voiced, voice_note = (None, "off: the cut sets the timing") if cuts else voice_for(plan, vd, [b.get("voice_say", b.get("say", "")) for b in plan["beats"]])
+    # Before filming each line is an estimate (Timing in references/plan.md, or its `dur`); once edit/cuts.json exists,
+    # the cut's timings win. Nothing reads the script aloud: the AI copies of his voice "sounded like shit" (19 Nov 2026).
     beats, t, row, planned = [], 0.0, 0, []
     for i, b in enumerate(plan["beats"]):
         pace = b.get("pace") or ("end" if is_list and b.get("number") is None and i == len(plan["beats"]) - 1 else default_pace)
         planned.append(round(b.get("dur") or estimate(b["say"], pace), 2))
         if cuts:
             dur = round(cuts[i]["e"] - cuts[i]["s"], 3)
-        elif voiced and voiced[i]:
-            dur = round(max(voiced[i][1] + VOICE_GAP, b.get("dur") or 0), 3)
         else:
             dur = round(b.get("dur") or estimate(b["say"], pace), 2)
         cards, explicit = cards_for(b, default_caps, t, dur)
@@ -942,21 +678,11 @@ def build(vd):
         if b.get("number") is not None and is_list:
             row += 1
         t += dur
-    if voiced:
-        # A clip that runs on across lines (the next line has the same src and starts where this one ends in the plan's
-        # timing) keeps running on the read's timing, so it never seeks back when a line's read is longer than planned.
-        # Events timed to a word inside a clip still need their `from` set by hand (references/plan.md, Voice).
-        for i in range(1, len(beats)):
-            a, b = beats[i - 1]["visual"], beats[i]["visual"]
-            pa, pb = plan["beats"][i - 1].get("visual") or {}, plan["beats"][i].get("visual") or {}
-            if (a and b and a.get("type") == b.get("type") == "video" and a.get("file") == b.get("file")
-                    and abs((pb.get("from") or 0) - ((pa.get("from") or 0) + planned[i - 1])) < 0.06):
-                b["from"] = round((a.get("from") or 0) + beats[i - 1]["dur"], 3)
     total = round(t, 3)
-    # Every line's start and length on the reel's clock (the voice's, or the cut's), for anything timed to his words: a
+    # Every line's start and length on the reel's clock (the estimate's, or the cut's), for anything timed to his words: a
     # clip that runs across lines, an explainer card that changes on a word (charles-explainers-assets).
     (vd / "build").mkdir(exist_ok=True)
-    (vd / "build/times.json").write_text(json.dumps({"source": "cut" if cuts else ("voice" if voiced else "estimate"), "total": total,
+    (vd / "build/times.json").write_text(json.dumps({"source": "cut" if cuts else "estimate", "total": total,
         "beats": [{"i": i, "start": b["start"], "dur": b["dur"], "say": b["say"]} for i, b in enumerate(beats)]}, indent=1))
     lst = list_block(plan, beats) if is_list else None
     hook = hook_block(plan, beats, first_sentence_end(beats), lst["stop_at"] if lst else total)
@@ -966,13 +692,13 @@ def build(vd):
     root = repo_root(vd)
     data = {
         "title": plan["title"], "format_name": plan.get("format_name", f"{plan.get('format', 'talking-head')} reel"),
-        "total": total, "timed": "cut" if cuts else "voice" if voiced else "estimate", "beats": beats, "groups": groups,
+        "total": total, "timed": "cut" if cuts else "estimate", "beats": beats, "groups": groups,
         "reel": {"hook": hook, "list": lst, "captions": {"y": plan.get("caption_y", 1380), "size": plan.get("caption_size", 66)},
                  "eye_line": plan.get("eye_line", 860),
                  # a collage PNG is the zone plus a 40 px margin, placed 40 px up and left of the zone (collages.py)
                  "under_chin": (lambda z: [z[0] - 40, z[1] - 40, z[2] - z[0] + 80, z[3] - z[1] + 80])(
                      (plan.get("list") or {}).get("zone", [50, 1150, 1020, 1650]))},
-        "music": cut_music(plan, vd, total + HOLD + 0.4, voice_track(vd, beats, voiced, total + HOLD + 0.4) if voiced else None),
+        "music": cut_music(plan, vd, total + HOLD + 0.4),
         "fonts": {fam: "data:font/ttf;base64," + base64.b64encode((vd / path).read_bytes()).decode()
                   for fam, path in (plan.get("fonts") or {}).items() if (vd / path).exists()},
         "post": plan.get("post", {}), "reference": plan.get("reference", {}), "reading": plan.get("reading", ""),
@@ -985,8 +711,6 @@ def build(vd):
     data["checks"] = checks(plan, vd, beats, hook, lst, data["music"], data["reel"]["under_chin"])
     write_sources(plan, vd, groups)
     player = {k: data[k] for k in ("title", "total", "timed", "beats", "reel", "music", "fonts")}
-    if voiced:
-        player["voice"] = {"label": voice_note, "lines": sum(1 for v in voiced if v)}
     player["post"] = {k: data["post"][k] for k in ("handle", "caption", "caption_alt", "options", "comment") if data["post"].get(k)}
     player["script"] = script_for(plan, vd, beats, hook)
     player["assets"] = assets_for(plan, vd, beats, groups, data["reel"]["under_chin"])
@@ -994,14 +718,13 @@ def build(vd):
     (vd / "build").mkdir(exist_ok=True)
     (vd / "build/plan.html").write_text(page(player, site=False))
     n_vis = sum(1 for b in beats if b["visual"])
-    voice_line = f"{player['voice']['lines']} lines read by {voice_note}" if voiced else voice_note
     ends = f", list ends {lst['stop_at']:.1f} s" if lst else ""
     subtitle = f", subtitle {hook['sub']}" if hook.get("sub") else ""
     tied = sum(1 for ln in player["script"] if ln["i"] is not None)
     print(f"build/plan.html: {len(beats)} lines, {n_vis} with an asset, {len(player['assets'])} asset cards, {total:.1f} s "
           f"({data['timed']}){ends}{subtitle}, {len(data['music']['tracks'])} music tracks; script: {tied} of "
           f"{sum(1 for ln in player['script'] if ln['text'].strip())} lines tied to the plan's lines; "
-          f"{len(player['references'])} references; voice: {voice_line}")
+          f"{len(player['references'])} references")
     if "references" not in plan:
         print("  references: only the idea and the structure from `reference`. List every post, reel and video that shaped "
               "this one in plan.json's `references`, each with its `why` (references/plan.md)")
@@ -1021,8 +744,7 @@ def page(data, site):
     js = (KIT / "page/page.js").read_text()
     payload = json.dumps(data, ensure_ascii=False).replace("</", "<\\/")
     title = html.escape(data["title"])
-    heard = "read in an AI copy of his voice over its music" if data.get("voice") else "playing with its music"
-    desc = html.escape(f"{data['title']}: the reel {heard}, the script, the caption options, every asset "
+    desc = html.escape(f"{data['title']}: the reel playing with its music, the script, the caption options, every asset "
                        "and the references it came from.")
     scripts = f"<script>\nwindow.VIDEO = {payload};\n</script>\n<script>\n{js}</script>\n"
     if site:   # no head: the Artifact host adds its own, so the title, description and style lead the file
