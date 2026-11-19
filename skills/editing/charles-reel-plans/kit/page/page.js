@@ -146,6 +146,13 @@
     Object.assign(sw.style, { left: px(list.stopwatch[0]), top: px(list.stopwatch[1]) });
     sw.hidden = false;
   }
+  // A countdown to a later line (list.countdown), labelled over the plate ("Video tutorial in").
+  const swLabel = $("#sw-label");
+  if (list && list.stopwatch && list.countdown && list.countdown.label) {
+    swLabel.textContent = list.countdown.label;
+    Object.assign(swLabel.style, { left: px(list.stopwatch[0]), top: px(list.stopwatch[1] - Math.round(list.countdown.label_size * 1.35)), fontSize: px(list.countdown.label_size) });
+    swLabel.hidden = false;
+  }
 
   const visual = $("#visual");
   const footage = $("#footage");
@@ -321,7 +328,15 @@
       }
       hook.hidden = !up;
     }
-    if (list && list.stopwatch) {
+    if (list && list.hide_from != null) {
+      const gone = t >= list.hide_from;
+      $("#list").hidden = gone; title.hidden = gone || HK.style !== "title"; sub.hidden = gone || !HK.sub; sw.hidden = gone;
+      swLabel.hidden = gone || !(list.countdown && list.countdown.label);
+    }
+    if (list && list.stopwatch && list.countdown) {
+      const cs = Math.ceil(Math.max(0, list.countdown.to - t) * 100 - 1e-6);
+      swOn.textContent = `${String(Math.floor(cs / 100)).padStart(2, "0")}.${String(cs % 100).padStart(2, "0")}`;
+    } else if (list && list.stopwatch) {
       const cs = Math.floor(Math.min(t, list.stop_at) * 100 + 1e-6);
       swOn.textContent = `${String(Math.floor(cs / 100)).padStart(2, "0")}.${String(cs % 100).padStart(2, "0")}`;
     }
