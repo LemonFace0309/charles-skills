@@ -1,0 +1,114 @@
+/* The poster system, measured from Quartr's 2026 earnings posters (2520 x 3360 px, 3:4).
+   The page is 1260 x 1680 CSS px and renders at 2x, so every number below is half the poster's pixels.
+
+   Copy: Inter Display (Inter at optical size 32), one size for everything, 24px (48 px on the poster = 1.9% of the
+   width), weight 580, line height 30px, tracking -0.018em: this matches the NVIDIA poster's line widths within 1% and
+   its stroke weight within 2%. Margins 70px (5.56%). Copy columns start at 666px (52.9%) and 943px (74.8%).
+   The time sits in tabular figures with a slashed zero: 05:00 PM ET. */
+
+@font-face { font-family: 'Inter'; font-style: normal; font-weight: 100 900; font-display: block;
+  src: url('/kit/fonts/InterVariable.woff2') format('woff2-variations'); }
+@font-face { font-family: 'Inter'; font-style: italic; font-weight: 100 900; font-display: block;
+  src: url('/kit/fonts/InterVariable-Italic.woff2') format('woff2-variations'); }
+@font-face { font-family: 'Plex Mono'; font-weight: 400; font-display: block; src: url('/kit/fonts/ibm-plex-mono-latin-400-normal.woff2') format('woff2'); }
+@font-face { font-family: 'Plex Mono'; font-weight: 500; font-display: block; src: url('/kit/fonts/ibm-plex-mono-latin-500-normal.woff2') format('woff2'); }
+
+:root {
+  --W: 1260px;
+  --H: 1680px;
+  --m: 70px;            /* outer margin */
+  --size: 24px;         /* the one copy size */
+  --lead: 30px;
+  --track: -0.018em;
+  --weight: 580;
+  --colA: 666px;        /* copy column A, from the poster's left edge */
+  --colB: 943px;        /* copy column B */
+  --colW: 250px;        /* copy wraps inside this; break lines by sense with <br> */
+  --logo-h: 31px;       /* company logo height: 31px for a mark beside a word (NVIDIA's eye), 21-24px for a plain wordmark */
+  --mark-h: 21px;       /* publisher wordmark (SVG) height: its cap height should be 21px */
+  --title: 44px;        /* the optional title (Meta Q2 2026, Caterpillar) */
+  --field: #111111;     /* the ground */
+  --ink: #6b6b6b;       /* copy, rules and logos */
+  --paper: #f3f1ec;     /* band and frame layouts */
+}
+
+html, body { margin: 0; padding: 0; background: #000; }
+* { box-sizing: border-box; }
+
+.poster {
+  position: relative; width: var(--W); height: var(--H); overflow: hidden;
+  background: var(--field); color: var(--ink);
+  font-family: 'Inter', system-ui, sans-serif; font-size: var(--size); line-height: var(--lead);
+  font-weight: var(--weight); letter-spacing: var(--track); font-variation-settings: 'opsz' 32;
+  -webkit-font-smoothing: antialiased; text-rendering: geometricPrecision;
+  font-feature-settings: 'kern' 1, 'calt' 1;
+}
+
+/* The picture: stack images, canvases and SVG in here. .fill covers the poster. */
+.picture { position: absolute; inset: 0; }
+.picture > .fill { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+
+/* The info: a lockup and two short sentences. Nothing else unless the words are the art. */
+.info { position: absolute; inset: 0; pointer-events: none; z-index: 5; }
+.lockup { display: flex; align-items: center; gap: 21px; white-space: nowrap; }
+.lockup .rule { width: 2.5px; height: 32px; background: currentColor; flex: none; }
+.mark { display: block; flex: none; height: var(--logo-h); background: currentColor;
+  -webkit-mask: var(--src) center / contain no-repeat; mask: var(--src) center / contain no-repeat; }
+.mark.publisher { height: var(--mark-h); }
+.wordmark { font-weight: 640; letter-spacing: 0.06em; font-size: 29px; line-height: 1; text-transform: uppercase; }   /* cap height 21px, as QUARTR's on the NVIDIA poster */
+.copy { margin: 0; max-width: var(--colW); }
+.row > .copy.a { grid-column: 2; max-width: calc(var(--colB) - var(--colA) - 18px); }   /* column A may run to 18px short of column B */
+.row > .copy.b { grid-column: 3; max-width: calc(var(--W) - var(--m) - var(--colB) + 4px); }   /* column B to the right margin */
+.copy + .copy { margin-top: 0; }
+.time { font-feature-settings: 'tnum' 1, 'zero' 1; }
+.title { font-size: var(--title); line-height: 1.04; letter-spacing: -0.028em; font-weight: 560; margin: 0; }
+
+/* The row: lockup in the first column, copy A and copy B after it, first lines aligned. */
+.row { position: absolute; left: var(--m); right: var(--m); display: grid; align-items: start;
+  grid-template-columns: calc(var(--colA) - var(--m)) calc(var(--colB) - var(--colA)) 1fr; }
+.row > .lockup { margin-top: -1px; }
+
+/* top: NVIDIA, Rollins. The first line's cap top lands on the margin. */
+.poster[data-layout='top'] .row { top: calc(var(--m) - 6px); }
+/* bottom: Tesla, Verisign. The last line's baseline sits on the margin. */
+.poster[data-layout='bottom'] .row { bottom: calc(var(--m) - 7px); }
+/* split: publisher top left, company top right, copy (and an optional title) along the bottom. Dollar Tree, Meta Q2. */
+.poster[data-layout='split'] .top { position: absolute; top: var(--m); left: var(--m); right: var(--m);
+  display: flex; justify-content: space-between; align-items: center; }
+.poster[data-layout='split'] .row { bottom: calc(var(--m) - 7px); }
+/* centre: Nu. Everything stacked in the quiet middle band. */
+.poster[data-layout='centre'] .stack { position: absolute; left: 0; right: 0; top: 50%; transform: translateY(-50%);
+  display: flex; flex-direction: column; align-items: center; text-align: center; gap: 0; }
+.poster[data-layout='centre'] .stack .copy { max-width: 270px; }
+.poster[data-layout='centre'] .stack .copy + .copy { margin-top: 12px; }
+.poster[data-layout='centre'] .stack .mark:first-child { margin-bottom: 28px; }
+.poster[data-layout='centre'] .stack > :last-child { margin-top: 26px; }
+/* edge: BlackRock, Palantir Q2. Copy and lockup read upwards along the left margin. */
+.poster[data-layout='edge'] .edge { position: absolute; left: var(--m); bottom: var(--m); width: calc(var(--H) - 2 * var(--m));
+  transform-origin: 0 100%; transform: translateY(0) rotate(-90deg) translateY(100%);
+  display: flex; justify-content: space-between; align-items: flex-start; gap: 40px; }
+.poster[data-layout='edge'] .edge .copies { display: flex; gap: 28px; }
+/* band: Hermès. The picture stops above an unpainted paper band that holds the info. */
+.poster[data-layout='band'] { --band: 214px; }
+.poster[data-layout='band'] .picture { bottom: var(--band); }
+.poster[data-layout='band'] .band { position: absolute; left: 0; right: 0; bottom: 0; height: var(--band); background: var(--paper); }
+.poster[data-layout='band'] .row { bottom: calc(var(--m) - 7px); }
+/* frame: Verisign. The picture sits inside a border of the brand colour; the info sits in the bottom border. */
+.poster[data-layout='frame'] { --frame: 44px; --frame-b: 178px; }
+.poster[data-layout='frame'] .picture { top: var(--frame); left: var(--frame); right: var(--frame); bottom: var(--frame-b); }
+.poster[data-layout='frame'] .row { bottom: calc(var(--m) - 7px); }
+
+/* Picture helpers.
+   .place: a picture set into the field instead of full bleed. <img class="place" style="--x:180px; --y:900px; --w:900px">
+   .burn: a darkroom burn, darkening towards the edges around a point. <div class="burn" style="--bx:50%; --by:62%"></div>
+   .lift on .picture: nothing goes darker than --black, the way a print never reaches pure #000. */
+.picture > .place { position: absolute; left: var(--x, 0); top: var(--y, 0); width: var(--w, 100%); height: auto; display: block; }
+.picture > .burn { position: absolute; inset: 0; pointer-events: none;
+  background: radial-gradient(ellipse 72% 58% at var(--bx, 50%) var(--by, 62%), transparent 38%, rgba(0, 0, 0, var(--burn, 0.55)) 100%); }
+.picture.lift::after { content: ''; position: absolute; inset: 0; background: var(--black, #111111); mix-blend-mode: lighten; pointer-events: none; }
+
+/* The finish sits above everything, type included, as it does on a scanned print. */
+/* No z-index on .finish itself: a stacking context there would isolate its layers, and their multiply and other
+   blend modes would composite as plain grey over the poster. Each layer carries the z-index instead. */
+.finish { position: absolute; inset: 0; pointer-events: none; }
+.finish canvas, .finish svg { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 50; }

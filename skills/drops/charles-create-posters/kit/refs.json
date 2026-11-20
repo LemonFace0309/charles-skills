@@ -1,0 +1,331 @@
+{
+ "about": "The reference posters: Quartr's earnings-call posters on X (designers Oliver Hamrin, Haris Cehic, Jacob Titus). The kit downloads them for study from X's public image CDN, or cuts them from Oliver Hamrin's public portfolio videos; they are never stored in this skill. Notes on each are in references/swipe.md.",
+ "videos": {
+  "oliver-site": {
+   "post": "https://x.com/oliverhamrin/status/2120489144849739847",
+   "url": "https://video.twimg.com/tweet_video/HW175DEWUAAe1C0.mp4",
+   "fps": 6.25,
+   "crop": [
+    230,
+    94,
+    1050,
+    1186
+   ]
+  },
+  "oliver-recent": {
+   "post": "https://x.com/oliverhamrin/status/2115464287338561646",
+   "url": "https://video.twimg.com/tweet_video/HVuje0tWsAAWzDc.mp4",
+   "fps": 4,
+   "crop": [
+    244,
+    112,
+    1036,
+    1168
+   ]
+  }
+ },
+ "posters": [
+  {
+   "id": "01-nvidia-q3-fy2027",
+   "company": "NVIDIA",
+   "event": "Q3 FY2027 earnings call",
+   "date": "2026-11-17",
+   "era": "2026",
+   "idea": "Jensen Huang's leather jacket hangs alone on a coat rack in a dark room: is he leaving or coming back?",
+   "move": "the founder's signature object, standing in for the founder, at a moment of succession talk",
+   "medium": "low-key monochrome photograph, film grain and dust",
+   "image": "https://pbs.twimg.com/media/HXWOg_0W8AAV6uu.jpg",
+   "post": "https://x.com/Quartr_App/status/2122759531356930150"
+  },
+  {
+   "id": "02-nu-q3-2026",
+   "company": "Nu Holdings",
+   "event": "Q3 2026 earnings call",
+   "date": "2026-11-12",
+   "era": "2026",
+   "idea": "Nu's purple broken into pixels that drip down from the top and rise up from the bottom like a mirrored signal.",
+   "move": "the brand colour as the whole picture, digital bank as digital pixels",
+   "medium": "flat pixel mosaic in four tints of Nu purple (#820AD1) plus near-black, on paper",
+   "image": "https://pbs.twimg.com/media/HW7539kW8AAmdkx.jpg",
+   "post": "https://x.com/Quartr_App/status/2120909111764086905"
+  },
+  {
+   "id": "03-rollins-q3-2026",
+   "company": "Rollins (Orkin)",
+   "event": "Q3 2026 earnings call",
+   "date": "2026-10-22",
+   "era": "2026",
+   "idea": "Cockroaches scattered across a red poster, one crawling over the copy.",
+   "move": "the unglamorous thing the business exists to fight, shot like fashion",
+   "medium": "photographic cut-outs on a flat signal-red field",
+   "video": "oliver-site",
+   "frame": 41,
+   "post": "https://x.com/oliverhamrin/status/2120489144849739847"
+  },
+  {
+   "id": "04-verisign-q3-2026",
+   "company": "Verisign",
+   "event": "Q3 2026 earnings call",
+   "date": "2026-10-22",
+   "era": "2026",
+   "idea": "A wall of '.com' set in twenty different typefaces.",
+   "move": "the one thing the company owns (the .com registry), repeated until it's a texture",
+   "medium": "typography as image, yellow on black inside a yellow frame",
+   "video": "oliver-recent",
+   "frame": 19,
+   "post": "https://x.com/oliverhamrin/status/2115464287338561646"
+  },
+  {
+   "id": "05-hermes-q3-2026",
+   "company": "Hermès",
+   "event": "Q3 2026 trading update",
+   "date": "2026-10-22",
+   "era": "2026",
+   "idea": "A tiny horse-drawn carriage on a field of loose red watercolour checks, from the house's equestrian roots.",
+   "move": "the company's heritage (it began as a harness maker), in a medium that fits the brand",
+   "medium": "watercolour and gouache; one of twelve variants the team posted",
+   "image": "https://pbs.twimg.com/media/HVLa-z9WEAAaKTQ.jpg",
+   "post": "https://x.com/Quartr_App/status/2112991989650055515"
+  },
+  {
+   "id": "06-tesla-q3-2026",
+   "company": "Tesla",
+   "event": "Q3 2026 earnings call",
+   "date": "2026-10-21",
+   "era": "2026",
+   "idea": "A silver Tesla flips through the dark trailing rocket smoke, the quarter staged like a launch.",
+   "move": "the product doing the founder's other business (SpaceX), a promise made literal",
+   "medium": "CGI/AI photograph on pure black, smoke lit cold white",
+   "image": "https://pbs.twimg.com/media/HVLEV50XQAApjXt.jpg",
+   "post": "https://x.com/Quartr_App/status/2112967086284939549"
+  },
+  {
+   "id": "07-blackrock-q3-2026",
+   "company": "BlackRock",
+   "event": "Q3 2026 earnings call",
+   "date": "2026-10-14",
+   "era": "2026",
+   "idea": "A pixel-art mountain: a black rock under a red sky.",
+   "move": "the name made literal, in a childlike medium for a $15T asset manager",
+   "medium": "flat 8-bit pixel landscape, six colours, inside a white page",
+   "video": "oliver-site",
+   "frame": 25,
+   "post": "https://x.com/oliverhamrin/status/2120489144849739847"
+  },
+  {
+   "id": "08-porsche-cmd-2026",
+   "company": "Porsche",
+   "event": "Capital Markets Day 2026",
+   "date": "2026-10-07",
+   "era": "2026",
+   "idea": "A line of identical blue 911s curving across a white page like a road or a chart line.",
+   "move": "the product repeated into a shape that means something (growth curve, racing line)",
+   "medium": "repeated product photograph on white",
+   "video": "oliver-recent",
+   "frame": 43,
+   "post": "https://x.com/oliverhamrin/status/2115464287338561646"
+  },
+  {
+   "id": "09-dollar-tree-q2-2026",
+   "company": "Dollar Tree",
+   "event": "Q2 FY2026 earnings call",
+   "date": "2026-08-27",
+   "era": "2026",
+   "idea": "A tree whose leaves are green price tags ($1.25, $1.50, $3.00) and whose trunk is brown ones.",
+   "move": "the name made literal, out of the company's real material (its price tags)",
+   "medium": "photo collage of real price stickers on dark green",
+   "video": "oliver-site",
+   "frame": 13,
+   "post": "https://x.com/oliverhamrin/status/2120489144849739847"
+  },
+  {
+   "id": "10-palantir-q2-2026",
+   "company": "Palantir",
+   "event": "Q2 2026 earnings call",
+   "date": "2026-08-03",
+   "era": "2026",
+   "idea": "'SOFTWARE THAT DOMINATES' typed over and over in monospace, with Palantir's ring logo ghosted out of the text.",
+   "move": "the company's own boast, turned into the texture that draws its logo",
+   "medium": "monospace typography as image, grey on white",
+   "video": "oliver-site",
+   "frame": 39,
+   "post": "https://x.com/oliverhamrin/status/2120489144849739847"
+  },
+  {
+   "id": "11-meta-q2-2026",
+   "company": "Meta",
+   "event": "Q2 2026 earnings call",
+   "date": "2026-07-29",
+   "era": "2026",
+   "idea": "'Move fast and break things' bursts out from the centre like shattered glass over a pixel map.",
+   "move": "the founder's old motto, made to do what it says",
+   "medium": "radial typography over flat pixel shapes in Meta blue with one magenta accent",
+   "video": "oliver-site",
+   "frame": 32,
+   "post": "https://x.com/oliverhamrin/status/2120489144849739847"
+  },
+  {
+   "id": "12-alphabet-q4-2025",
+   "company": "Alphabet",
+   "event": "Q4 2025 earnings call",
+   "date": "2026-02-04",
+   "era": "2026",
+   "idea": "Sundar Pichai in halftone black and white, wearing a crown of Gemini sparkles.",
+   "move": "the CEO crowned by the product of the moment",
+   "medium": "halftone portrait plus a flat colour graphic element",
+   "video": "oliver-site",
+   "frame": 34,
+   "post": "https://x.com/oliverhamrin/status/2120489144849739847"
+  },
+  {
+   "id": "13-meta-q4-2025",
+   "company": "Meta",
+   "event": "Q4 2025 earnings call",
+   "date": "2026-01-28",
+   "era": "2026",
+   "idea": "A classical marble bust wearing Meta's infinity logo as a pair of VR goggles; the copy runs along the logo's loop.",
+   "move": "the logo turned into the product (glasses/headset), on the oldest kind of face",
+   "medium": "engraving-style bust on paper with one hand-drawn blue stroke",
+   "video": "oliver-site",
+   "frame": 30,
+   "post": "https://x.com/oliverhamrin/status/2120489144849739847"
+  },
+  {
+   "id": "14-caterpillar-q4-2025",
+   "company": "Caterpillar",
+   "event": "Q4 2025 earnings call",
+   "date": "2026-01-29",
+   "era": "2026",
+   "idea": "A torn-paper collage of excavators, bulldozers and quarries in Cat yellow, brown and black.",
+   "move": "the machines themselves, as a vintage industrial collage",
+   "medium": "collage of archival photos with yellow duotone patches",
+   "video": "oliver-site",
+   "frame": 14,
+   "post": "https://x.com/oliverhamrin/status/2120489144849739847"
+  },
+  {
+   "id": "15-robinhood-q3-2025",
+   "company": "Robinhood",
+   "event": "Q3 2025 earnings call",
+   "date": "2025-11-05",
+   "era": "2025",
+   "idea": "A fox Robin Hood drawing his bow, engraved in an oval frame on green bookcloth.",
+   "move": "the name made literal through a cultural reference (the fox Robin Hood)",
+   "medium": "antique engraving printed tone-on-tone on linen",
+   "image": "https://pbs.twimg.com/media/G5AJ0jdWwAAY493.jpg",
+   "post": "https://x.com/Quartr_App/status/1986098612745732328"
+  },
+  {
+   "id": "16-dole-q3-2025",
+   "company": "Dole",
+   "event": "Q3 2025 earnings call",
+   "date": "2025-11-10",
+   "era": "2025",
+   "idea": "A banana plant at night, one yellow bunch glowing among dark leaves.",
+   "move": "the product where it grows, shot like nature photography",
+   "medium": "flash-lit night photograph",
+   "image": "https://pbs.twimg.com/media/G5PGqVPXgAAzozI.jpg",
+   "post": "https://x.com/oliverhamrin/status/1987150638187417671"
+  },
+  {
+   "id": "17-figma-q3-2025",
+   "company": "Figma",
+   "event": "Q3 2025 earnings call",
+   "date": "2025-11-05",
+   "era": "2025",
+   "idea": "A Figma canvas holding Quartr's own posters, with multiplayer cursors saying 'plz fix', 'crisp' and 'thanks bruv'.",
+   "move": "the product used as the medium (meta)",
+   "medium": "UI screenshot staged as a poster",
+   "image": "https://pbs.twimg.com/media/G4_l7fuXgAAIuIn.jpg",
+   "post": "https://x.com/Quartr_App/status/1986059450025910677"
+  },
+  {
+   "id": "18-palantir-q3-2025",
+   "company": "Palantir",
+   "event": "Q3 2025 earnings call",
+   "date": "2025-11-03",
+   "era": "2025",
+   "idea": "Alex Karp's wild hair, his face lost in a white blur crossed by a band of half-legible text.",
+   "move": "the CEO's signature look, with the mystery Palantir sells",
+   "medium": "black-and-white portrait with a blur and a type band",
+   "image": "https://pbs.twimg.com/media/G41MJ_nWkAA0djH.jpg",
+   "post": "https://x.com/Quartr_App/status/1985326906028269621"
+  },
+  {
+   "id": "19-mcdonalds-q3-2025",
+   "company": "McDonald's",
+   "event": "Q3 2025 earnings call",
+   "date": "2025-11-05",
+   "era": "2025",
+   "idea": "Three burgers tumbling through the dark in slow motion, with one hard shadow on the floor.",
+   "move": "the cheapest product in the world, shot like a luxury campaign",
+   "medium": "food photograph on a dark brown gradient",
+   "image": "https://pbs.twimg.com/media/G5KqRt2bIAA_upN.jpg",
+   "post": "https://x.com/joshpuckett/status/1986838139638587749"
+  },
+  {
+   "id": "20-ferrari-q3-2025",
+   "company": "Ferrari",
+   "event": "Q3 2025 earnings call",
+   "date": "2025-11-04",
+   "era": "2025",
+   "idea": "The prancing horse as a real black horse, rearing in deep red shadow.",
+   "move": "the logo made literal",
+   "medium": "photograph in monochrome red light",
+   "image": "https://pbs.twimg.com/media/G5KqNhja4AAKjnA.jpg",
+   "post": "https://x.com/joshpuckett/status/1986838139638587749"
+  },
+  {
+   "id": "21-apple-q4-2025",
+   "company": "Apple",
+   "event": "Q4 2025 earnings call",
+   "date": "2025-10-30",
+   "era": "2025",
+   "idea": "A red apple whose inside is packed with circuit boards.",
+   "move": "the logo made literal, with the product inside",
+   "medium": "surreal still-life composite on pale grey",
+   "image": "https://pbs.twimg.com/media/G5qCb_zWAAAOoul.jpg",
+   "post": "https://x.com/NateMatherson/status/1989045611266507129"
+  },
+  {
+   "id": "22-uber-q3-2025",
+   "company": "Uber",
+   "event": "Q3 2025 earnings call",
+   "date": "2025-11-04",
+   "era": "2025",
+   "idea": "'So like how long you been doing Uber?' over a motion-blurred back-seat view of city lights.",
+   "move": "the line every rider has said, as the headline",
+   "medium": "motion-blurred night photograph with a centred quote",
+   "image": "https://pbs.twimg.com/media/G5KqPDvbIAIvMbN.jpg",
+   "post": "https://x.com/joshpuckett/status/1986838139638587749"
+  }
+ ],
+ "making_of": [
+  {
+   "what": "Haris Cehic's 'How we made the NVIDIA poster': ~25 iterations with the team's verdicts written on them",
+   "image": "https://pbs.twimg.com/media/HXW-kcmXkAArORH.jpg",
+   "post": "https://x.com/haris_chc/status/2122813105424211981"
+  },
+  {
+   "what": "Oliver Hamrin's '15 NVIDIA throwaways'",
+   "post": "https://x.com/oliverhamrin/status/2123037799339495657",
+   "images": [
+    "https://pbs.twimg.com/media/HXaJctSWcAA78y6.jpg",
+    "https://pbs.twimg.com/media/HXaJdcNWAAAeGMg.jpg",
+    "https://pbs.twimg.com/media/HXaJeKgXUAALxJ4.jpg",
+    "https://pbs.twimg.com/media/HXaJezyWgAA3UvB.jpg",
+    "https://pbs.twimg.com/media/HXaJfhKWQAA51Ia.jpg",
+    "https://pbs.twimg.com/media/HXaJgUGWoAAMYsG.jpg",
+    "https://pbs.twimg.com/media/HXaJg_-XYAAxjom.jpg",
+    "https://pbs.twimg.com/media/HXaJhxSXQAA8__k.jpg",
+    "https://pbs.twimg.com/media/HXaJiiQXAAAjkq_.jpg",
+    "https://pbs.twimg.com/media/HXaJjU9WAAAHwIk.jpg",
+    "https://pbs.twimg.com/media/HXaJkOsWAAAoYnA.jpg",
+    "https://pbs.twimg.com/media/HXaJk4GXoAAFFk6.jpg",
+    "https://pbs.twimg.com/media/HXaJlnoWgAARBjr.jpg",
+    "https://pbs.twimg.com/media/HXaJmXwW0AAPDvn.jpg",
+    "https://pbs.twimg.com/media/HXaJnIdWQAAuZ4G.jpg"
+   ]
+  }
+ ]
+}

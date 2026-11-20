@@ -1,0 +1,10 @@
+{
+  "name": "charles-create-posters-kit",
+  "private": true,
+  "type": "module",
+  "description": "Poster kit for charles-create-posters: renders HTML posters to 2520x3360 in Google Chrome, and calls fal.ai for pictures, edits, upscales and cutouts. Runs on Bun or Node 18+.",
+  "dependencies": {
+    "@fontsource/ibm-plex-mono": "5.2.7",
+    "playwright-core": "1.63.0"
+  }
+}

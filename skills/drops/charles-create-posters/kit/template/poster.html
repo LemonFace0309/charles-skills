@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>poster</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="/kit/system.css">
+<style>
+  /* Set the ground and the ink for this poster. Dark grounds: ink is a mid grey (#6b6b6b on #111, as NVIDIA).
+     Light grounds: ink is the brand's near-black (#261d2b on paper, as Nu). Colour grounds: white or the ground's
+     darkest tone. */
+  :root { --field: #111111; --ink: #6b6b6b; }
+</style>
+</head>
+<body>
+<!-- data-layout: top | bottom | split | centre | edge | band | frame   (see references/system.md)
+     data-grain: film | paper | none     data-grain-amount: 1     data-dust: 0..1 (scanned-film looks only)     data-seed -->
+<main class="poster" data-layout="top" data-grain="film">
+
+  <div class="picture">
+    <img class="fill" src="pic/final.png" alt="">
+  </div>
+
+  <div class="info">
+    <div class="row">
+      <div class="lockup">
+        <span class="mark" data-logo="logo/brand.svg"></span>
+      </div>
+      <!-- Only the subject's logo. Words go here only when the user gave them, exactly as given:
+           <p class="copy a">Their line,<br>broken by sense</p>   (references/system.md, "Words the user gave")
+           An event poster starts from `new <folder> --event` instead. -->
+    </div>
+  </div>
+
+</main>
+<script src="/kit/art.js"></script>
+<script>
+  // Code-drawn pictures go here: posterSteps.push(async () => { ... })   (see art.js)
+</script>
+<script src="/kit/finish.js"></script>
+</body>
+</html>

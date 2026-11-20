@@ -48,14 +48,15 @@
     },
     {
       "name": "drops",
-      "description": "Specialist skills that go deep on one craft: interface motion done right, and poster-like landing-page heroes",
+      "description": "Specialist skills that go deep on one craft: interface motion done right, poster-like landing-page heroes, and posters for company moments in the Quartr style",
       "source": "./",
       "strict": false,
       "skills": [
         "./skills/drops/charles-ux-animation",
         "./skills/drops/charles-hero-mockups",
         "./skills/drops/charles-design-tips",
-        "./skills/drops/charles-design-laws"
+        "./skills/drops/charles-design-laws",
+        "./skills/drops/charles-create-posters"
       ]
     }
   ]

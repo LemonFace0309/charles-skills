@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>poster</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="/kit/system.css">
+<style>
+  /* Set the ground and the ink for this poster. Dark grounds: ink is a mid grey (#6b6b6b on #111, as NVIDIA).
+     Light grounds: ink is the brand's near-black (#261d2b on paper, as Nu). Colour grounds: white or the ground's
+     darkest tone. */
+  :root { --field: #111111; --ink: #6b6b6b; }
+</style>
+</head>
+<body>
+<!-- An event poster: only when the user asked for one (an earnings call, an investor day, a listing, a dated launch).
+     Every fact checked against the source; sentence two in the publisher's own words (references/system.md).
+     data-layout: top | bottom | split | centre | edge | band | frame   (see references/system.md)
+     data-grain: film | paper | none     data-grain-amount: 1     data-dust: 0..1 (scanned-film looks only)     data-seed -->
+<main class="poster" data-layout="top" data-grain="film">
+
+  <div class="picture">
+    <img class="fill" src="pic/final.png" alt="">
+  </div>
+
+  <div class="info">
+    <div class="row">
+      <div class="lockup">
+        <!-- The publisher (whoever is posting, never Quartr), then the subject. Use an SVG wordmark if there is one:
+             <span class="mark publisher" data-logo="logo/publisher.svg"></span>
+             With no publisher: the subject's logo alone, and sentence two is "Live at 05:00 PM ET." -->
+        <span class="wordmark">Publisher</span>
+        <i class="rule"></i>
+        <span class="mark" data-logo="logo/company.svg"></span>
+      </div>
+      <p class="copy a">On Tuesday, Nov 17,<br>Company will host its<br>Q3 2026 earnings call.</p>
+      <p class="copy b">Listen live and read<br>along on Publisher<br>at <span class="time">05:00 PM ET</span>.</p>
+    </div>
+  </div>
+
+</main>
+<script src="/kit/art.js"></script>
+<script>
+  // Code-drawn pictures go here: posterSteps.push(async () => { ... })   (see art.js)
+</script>
+<script src="/kit/finish.js"></script>
+</body>
+</html>
