@@ -3,19 +3,14 @@
 #
 #   scripts/link-skills.sh                   the design and qol shelves into ~/.claude/skills and ~/.agents/skills
 #   scripts/link-skills.sh design drops      the shelves you name
-#   scripts/link-skills.sh all               every shelf
-#   scripts/link-skills.sh --project <dir>   every skill into <dir>/skills/<name>, with <dir>/.claude/skills/<name> and
-#                                            <dir>/.agents/skills/<name> pointing at those (how claude-editing uses them)
+#   scripts/link-skills.sh all               every shelf (what Charles' computers use)
 #
-# Links are relative in --project mode, so they work on any computer that clones both repos side by side.
 # A link that points at a skill this repo no longer has is removed. A real folder with a skill's name is left
 # alone and reported: it's probably a copy from `npx skills add`, so delete it yourself if you want the link.
 set -euo pipefail
 
 repo="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 shelves=(design editing qol drops)
-
-relpath() { python3 -c 'import os, sys; print(os.path.relpath(sys.argv[1], sys.argv[2]))' "$1" "$2"; }
 
 # skill folders on the chosen shelves, as "shelf/name"
 skills_on() {
@@ -54,27 +49,6 @@ prune() {
     if [ ! -e "$at" ]; then rm "$at"; echo "removed  $at (its skill moved or was deleted)"; fi
   done
 }
-
-if [ "${1:-}" = "--project" ]; then
-  project="$(cd "${2:?usage: scripts/link-skills.sh --project <dir>}" && pwd)"
-  mkdir -p "$project/skills" "$project/.claude/skills" "$project/.agents/skills"
-  prune "$project/skills"
-  while read -r item; do
-    name="${item#*/}"
-    link "$project/skills/$name" "$(relpath "$repo/skills/$item" "$project/skills")"
-    link "$project/.claude/skills/$name" "../../skills/$name"
-    link "$project/.agents/skills/$name" "../../skills/$name"
-  done < <(skills_on "${shelves[@]}")
-  for folder in "$project/.claude/skills" "$project/.agents/skills"; do
-    for at in "$folder"/*; do
-      [ -L "$at" ] && [ ! -e "$at" ] || continue
-      case "$(readlink "$at")" in ../../skills/*) ;; *) continue ;; esac
-      rm "$at"
-      echo "removed  $at (its skill moved or was deleted)"
-    done
-  done
-  exit 0
-fi
 
 chosen=("$@")
 [ ${#chosen[@]} -eq 0 ] && chosen=(design qol)

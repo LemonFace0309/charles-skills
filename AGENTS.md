@@ -11,8 +11,10 @@ Instagram DM on their phone, looking for one skill, so the READMEs come first an
 - The shelves: `design` (UI craft he uses on his own apps), `editing` (his reel pipeline), `qol` (small everyday
   helpers) and `drops` (specialist skills that each go deep on one craft; each launched with a reel). Each shelf has a
   README listing its skills by when to use them. Describe drops by what they do for people, never as one-offs.
-- This repo is the only copy of these skills. claude-editing links to them (`claude-editing/skills/<name>` points
-  here), so an edit made from a claude-editing session lands in this repo: commit and push it from here.
+- This repo is the only copy of these skills. Charles' computers link every shelf into `~/.claude/skills` and
+  `~/.agents/skills` (`scripts/link-skills.sh all`), and claude-editing keeps no copies or links of them (Charles,
+  20 Nov 2026), so an edit made from any session lands in this repo: commit and push it from here. claude-editing's
+  tools run some kits straight from this clone, at `../charles-skills/skills/<shelf>/<name>/`.
 
 ## Adding, moving or renaming a skill
 
@@ -20,11 +22,10 @@ Instagram DM on their phone, looking for one skill, so the READMEs come first an
   (they carry it so installers don't mistake the template for a skill). Write the README in the template's order (real
   output under the title, one sentence, the install line, then the rest), and add the skill to its shelf README, the
   root README and
-  `.claude-plugin/marketplace.json`. Then run `scripts/link-skills.sh --project ../claude-editing` and commit the new
-  links in claude-editing.
+  `.claude-plugin/marketplace.json`. Then run `scripts/link-skills.sh all` so this computer's agents load it.
 - Moving a skill to another shelf: `git mv` it, update the two shelf READMEs, the root README and `marketplace.json`,
-  and rerun both `scripts/link-skills.sh --project ../claude-editing` and `scripts/link-skills.sh`. Installs and short
-  links find skills by name, so nothing else changes.
+  and rerun `scripts/link-skills.sh all`. Installs and short links find skills by name, but claude-editing's tools
+  reach some kits by shelf: update its paths in the same change (`git grep skills/<old-shelf>/<name>` there).
 - Renaming a skill breaks every install and every link that uses the old name. Only do it when Charles asks, and then
   add the old name to `site/links.json` so the short link keeps working.
 
