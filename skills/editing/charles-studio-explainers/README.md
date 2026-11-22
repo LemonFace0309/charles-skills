@@ -1,6 +1,6 @@
 # charles-studio-explainers
 
-![Four cards from my 20 psychology principles reel: a candle burned low lighting a giant 46-day streak that ends tonight, YOU with a crystal ball as its O, a running shoe standing on the word runner, and an iron anchor tagged $119.88 beside $59.99 a year on cream](examples/cards.jpg)
+![Four cards from my 20 psychology principles reel: a candle burned low lighting a giant 46-day streak that ends tonight, YOU with a crystal ball as its O, a running shoe standing on the word runner, and two kraft price tags where a decoy duck greys out the 6-month plan so yearly is only $5 more](examples/cards.jpg)
 
 Turns a reel's explainer cards from plain UI mock-ups into cards that look like a design studio made them.
 

@@ -109,15 +109,16 @@
       const m = `radial-gradient(64% 105% at ${htAt || f.at}, transparent 30%, #000 92%)`;
       div(card, { x: 0, y: 0, w: W, h: H, style: { backgroundImage: `radial-gradient(circle, ${halftone} 0 1.9px, transparent 2.4px)`, backgroundSize: '8px 8px', maskImage: m, webkitMaskImage: m } });
     }
-    const tile = f.cream ? '#ddd2bf' : `color-mix(in oklch, ${f.deep} 62%, rgb(52 54 60))`;
-    const b = L.B(card, 18, 18, beforeW, H - 36, { r: 24, bg: tile, style: { overflow: 'hidden', boxShadow: `inset 0 1px 0 rgb(255 255 255 / ${f.cream ? 0.5 : 0.1})` } });
-    const bk = f.cream ? '#29231c' : '#fff';
+    // dark on every card, cream included: viewers learn "dark box = Before" (round 5's critic)
+    const tile = f.cream ? '#3b342c' : `color-mix(in oklch, ${f.deep} 62%, rgb(52 54 60))`;
+    const b = L.B(card, 18, 18, beforeW, H - 36, { r: 24, bg: tile, style: { overflow: 'hidden', boxShadow: 'inset 0 1px 0 rgb(255 255 255 / 0.1)' } });
+    const bk = '#fff';
     const lab = (p, x, y, text, c) => L.T(p, x, y, text, { size: 24, weight: 650, color: c, style: c === '#fff' ? { textShadow: '0 1px 8px rgb(0 0 0 / 0.25)' } : {} });
     lab(b, 22, 18, 'Before', bk);
     // a soft shade behind the After label keeps white type readable however bright the world is; dark ink needs none
     if (!f.ink) div(card, { x: beforeW - 8, y: -10, w: 220, h: 110, style: { background: 'radial-gradient(closest-side, rgb(0 0 0 / 0.16), transparent)' } });
     lab(card, beforeW + 48, 36, 'After', f.ink || '#fff');
-    const shade = L.B(b, 0, 0, beforeW, H - 36, { bg: f.cream ? 'rgb(70 50 30 / 0.1)' : 'rgb(0 0 0 / 0.22)', r: 24, style: { opacity: 0, zIndex: 3 } });
+    const shade = L.B(b, 0, 0, beforeW, H - 36, { bg: 'rgb(0 0 0 / 0.22)', r: 24, style: { opacity: 0, zIndex: 3 } });
     L.grain(card, W, H, f.cream ? 0.26 : 0.34, 'overlay').style.zIndex = 30;
     return { b, bk, tick: (t) => { shade.style.opacity = L.P(t, 0.12, 0.34).toFixed(3); } };
   };

@@ -19,15 +19,19 @@ The studio look, rule by rule, with the numbers that worked on the 20 Psychology
   | Endowed progress | A printed practice card of ten stamps | The first two are already inked |
   | Barnum effect | A crystal ball | It stands in for the O in a giant YOU |
   | Identity-based habits | A running shoe | It lands on the word "runner", set huge as the ground |
-  | Social currency | An instant photo | It ejects and develops "Top 2%" in its window |
+  | Social currency | An enamel TOP 2% pin | It drops in, clicks down and a glint runs across it: "You'd post this" |
+  | Reciprocity | A kraft gift | Its lid pops off and the score rises out of the box |
+  | Labor illusion | A thermal receipt | It prints up out of the card's edge, a line of work at a time, ending on "Your plan" |
+  | Curiosity gap | A card in an envelope | It slides halfway out: one name shows, the next is cut off by the envelope |
+  | Social comparison | Meeples on numbered steps | You hop up to the step just below the person above you |
 
-- **The test:** someone could describe the card to a friend in one sentence. If the sentence is "a nicer screen", there's no idea yet.
-- **Where no object fits** (a percentage, a leaderboard), make the UI itself a material instead: glass tubes that fill with liquid, glass rows over a photographed medal.
+- **The test:** someone could describe the card to a friend in one sentence. If the sentence is "a nicer screen", there's no idea yet. And the After must change the thing the principle changes: round 5's alarm clock answered "Daily reminder" with a louder reminder, when the principle (implementation intentions) is about adding a time and a place.
+- **Never a UI widget in the After.** A checklist, a leaderboard, price rows, a score card, a share pill or a frosted panel is what Claude builds by default, so on the studio side it reads as the default (round 4's critic). Turn it into the object it stands for: the checklist into a receipt that prints, the leaderboard into game pieces on steps, plan rows into price tags, a share button into a pin you'd wear.
 
 ## The stage
 
 - **The card:** 870x350, radius 30, with the scene as its own background (no white frame). The black tab sits on its top-left edge, inset 22 px, in Helvetica Neue Bold 30. On a long line the tab covers the whole top edge, so objects at rest bleed off the bottom or the right edge, never the top: round 3's anchor ring, cut flat at the top, read as the tab slicing it. Bring moving things in from the right or the bottom too (the running shoe comes in toe first from the right); only a fast drop comes through the top.
-- **Before:** a flat tile at x 18, y 18, 270 wide, in the card's own colour: `color-mix(in oklch, <deep> 62%, rgb(52 54 60))`, or warm grey `#ddd2bf` on cream, with a hairline highlight. It holds one element, what Claude builds by default, in plain Inter at 26 px or more: a bare number, one button, a short list. As the After plays, it dims to about 78%. A graphite block on every colour read as a dead black third (round 2), and three toasts or a stats list was more than a 1.4 s read allows (round 3).
+- **Before:** a flat tile at x 18, y 18, 270 wide, in the card's own colour: `color-mix(in oklch, <deep> 62%, rgb(52 54 60))`, or warm dark brown `#3b342c` on cream, with a hairline highlight. It's dark on every card: viewers learn "dark box = Before", and a light tan tile on the cream cards reversed it (round 5's critic). It holds one element, what Claude builds by default, in plain Inter at 26 px or more: a bare number, one button, a short list. As the After plays, it dims to about 78%. A graphite block on every colour read as a dead black third (round 2), and three toasts or a stats list was more than a 1.4 s read allows (round 3).
 - **The labels:** "Before" and "After" in Inter 650 at 24 px, on one line at y 36: chrome the viewer learns by position. At 32 px they were as loud as the tab (round 3).
 - **After:** the rest of the card, from x about 318. Nothing may cross the "After" label, so start the After's content at y 76 or below near x 316-420. Keep every word 40 px inside the card's edges, and keep the payoff (the prize, the seal) whole.
 - **Words:** the After says its point in three words or fewer ("Built by you", "Fresh start", "See who else"), and some of its words are on screen by 0.3 s. Round 3 had 20-30 words a card, and five cards showed an object and no words at 0.3 s.
@@ -46,7 +50,7 @@ The studio look, rule by rule, with the numbers that worked on the 20 Psychology
   - Put the light on the object (the After's centre-left, `at` about '46% 58%') and let the deep colour fall in behind the type on the right (`deepAt` '100% 92%').
   - Mix the base toward its deep colour (`color-mix(in oklch, mid 64%, deep)`).
   - On a naturally bright family (mustard, chartreuse), use dark ink for the After's words and label instead (`{ deepAt: null, ink }`).
-  - Then run the explainer kit's `words.mjs --only <ids> --times 0.6,1.2`. Every must-read word passes 4.5:1, or it isn't done. The first round-3 pass, lit from the upper right behind the type, put most white headlines at 2-4:1.
+  - Then run the explainer kit's `words.mjs --only <ids> --times 0.6,1.2`. Every must-read word passes 4.5:1, or it isn't done. It can't measure two effects, so measure those from the pixels instead: a gradient clipped to the glyphs (it reads 1:1), and dot-matrix type (it averages the dots with the gaps, reading 4.37:1 for dots that sit at 9.5:1). The first round-3 pass, lit from the upper right behind the type, put most white headlines at 2-4:1.
 - **Light every object (`L.obj`).** A photo cut out and set on a gradient reads as a stock PNG: round 3's critic called "nothing sits in light" the most wrong note. So each object gets:
   - the world's light colour on its lit side and the world's deep colour on its far side, both masked to its own shape (soft-light and multiply);
   - a cast shadow on the backdrop, down and to the left, since every prompt puts the key light upper right;
@@ -65,6 +69,7 @@ The studio look, rule by rule, with the numbers that worked on the 20 Psychology
 
 - **The principle's words are the biggest type on the card:** Inter Tight 800 at 40-104 px, tracked -0.045em ("46-day streak", "$0.16 a day", "You're a runner now").
 - **Before copy is plain Inter:** 300 for big numbers, 600-650 for headings. It should look like the default it is.
+- **Give numbers a second voice:** thin numerals (Inter 250) for prices and gaps, dot-matrix (Doto) for scores and counters, and mono (JetBrains Mono) for small print on receipts, tickets and tags. Keep the Befores in plain regular weight (400-500), so the refined type belongs to the After. Round 4's critic found one bold sans everywhere and the thin numerals all on the plain side. Skip the serif with an italic accent word: it's one of Tobi's four default looks.
 - **Use dot-matrix type (Doto) only at 48 px or more.** At 24 px it reads as noise.
 - **Measure every line against its box before you trust it.** The first passes clipped "/mo", "a day" and a countdown at the card's edge.
 

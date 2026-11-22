@@ -35,6 +35,8 @@ Load it first. Its contract wins on everything it covers, and this skill only ad
    - an instant photo developing for social currency.
 
    Say the card in one sentence before building it. If you can't, there's no idea yet.
+
+   Never put a UI widget on the studio side (a checklist, a leaderboard, price rows, a score card, a share pill). Turn it into the object it stands for: a receipt that prints, game pieces on numbered steps, kraft price tags, an enamel pin you'd wear. Why: round 4's critic read those widgets as the default Claude builds.
 2. **Photographed materials, never game icons.** Generate each object as a studio product photograph, with real wear, on a transparent background (`references/objects.md`). Why: the first critic's single most wrong note was glossy, toy-like 3D icons. They "read as a mobile-game ad", and the reference's objects (a marble orb, a crystal prism, a card over a tile grid) look photographed.
 3. **Lit, not pasted.** Each object gets:
    - its world's light on its lit side and its deep colour on the far side;
@@ -52,6 +54,12 @@ Load it first. Its contract wins on everything it covers, and this skill only ad
    - Before is a flat tile in the card's own colour, with one element Claude builds by default in plain type at 26 px or more. Never a black block, which reads as a dead third of the card.
    - After is the object on its world. It says its point in three words or fewer, as the biggest type on the card, and some of its words are up by 0.3 s.
    - The labels are 24 px chrome. Why: round 3 put 20-30 words on a card that a phone viewer sees for 1.4 s.
+   - Numbers get a second voice:
+     - thin numerals for prices and gaps;
+     - dot-matrix for scores and counters;
+     - mono for small print on receipts, tickets and tags.
+
+     The Before stays in plain regular weight. Why: one bold sans everywhere was round 4's second biggest note.
    - Words keep 40 px inside the card's edges. The payoff (the seal, the prize) is always whole, and props drawn in code look as real as the photos: paper gets warm stock, grain and a curl shade.
 7. **Four layouts across the set:**
    - the object beside its words;

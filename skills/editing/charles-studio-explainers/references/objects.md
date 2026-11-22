@@ -34,6 +34,7 @@ When the card needs an object in two states (a happy plush and a sad one, a cand
 
 - **Resize each to 512 px** (`<name>-512.png`). That's plenty for a card drawn at 2x.
 - **Measure each object's visible bounds** with `kit/bbox.py` (fractions of the image). Stacking (an arch on two cubes), dropping into a cup or resting on a floor shadow all need the real edges, not the image's.
+- **Measure what you place things on or in:** an envelope's opening (the card slides out above it and hides below it), a step's top (where a meeple's feet go), a pin's enamel (where a glint runs). The 20 Psychology Principles cards measured each from the photo's pixels before placing anything.
 - **When code fills part of an object** (a Polaroid's window, a calendar's page, a screen), ask for the object straight on and square to the frame, then measure that part's bounds (its dark or white pixels) and fit the content to them exactly. A tilted print put the stat off-register, with the window showing on both sides (round 3).
 - **Look at every object on a mid-colour background before you use it.** Reject:
   - garbled text or fake logos;

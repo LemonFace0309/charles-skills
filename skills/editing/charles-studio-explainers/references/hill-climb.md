@@ -19,8 +19,9 @@ How to get from "much more interesting" to the reference: directions first, then
   - Round 2: d4 3, d5 4, d6 5.
   - Round 3 (d6 with its critic's fixes, on all 20): 4.5.
   - Round 4 (lit objects, four layouts, cream grounds, three-word Afters): 4. Its sub-scores rose (instant read 5 → 6, principle clarity 6 → 6.5, system 6 → 7), while craft held at 4 and the moves fell from 5 to 4.
+  - Round 5 (objects instead of UI widgets, thin, dot-matrix and mono type for numbers, plain Befores): 4. Craft rose from 4 to 5 and the instant read from 6 to 7, while closeness held.
 
-  Every round, the critic's single most wrong note was a system-wide choice: game icons, then the moving light, then nothing sitting in light, then a default UI loader. Fix those before touching any one card.
+  Every round, the critic's single most wrong note was a system-wide choice: game icons, then the moving light, then nothing sitting in light, then a default UI loader, then a card whose After was only a louder version of its Before. Fix those before touching any one card.
 - **What stopped it:** by round 4 every ask was about the system, not a card. The critic wanted a one-off composition per card, the reference's type range (thin, dot-matrix and serif type) and bespoke material UI instead of components. A shared Before | After frame across 20 cards has a ceiling against a library of one-off pieces. Decide early whether the job is a consistent card system or 20 one-offs, and say which to the critics.
 - **Fresh critics re-anchor.** Each round's closeness score comes from a new judge, so track the sub-scores too: they show what a round actually changed.
 
