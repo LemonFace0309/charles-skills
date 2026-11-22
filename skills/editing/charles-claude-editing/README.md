@@ -13,7 +13,7 @@ Add `-g` to install it for every project, or copy this folder into `~/.claude/sk
 
 ## What it does
 
-- Cuts dead space and stumbles, and picks the best take
+- Cuts dead space and stumbles, and keeps the last clean take of each line
 - Adds 2-3 word captions, overlays, split screens, sound effects and music
 - Writes a hook title when you ask for one
 

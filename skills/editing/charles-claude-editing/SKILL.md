@@ -1,6 +1,6 @@
 ---
 name: charles-claude-editing
-description: Edit raw talking-head videos into engaging, organic-looking Instagram Reels / TikToks - cut dead space and stumbles, pick the best take, 2-3 word captions, retention-maxing image/video overlays (pop-culture stickers, cutouts, split screens, tweet screenshots), sound effects, a background track from the music folder, and a TikTok-title-style hook when asked. Covers news and education/entertainment videos. Use this whenever Charles shares a talking-head .MOV/.mp4 and asks to edit, cut, caption, add a hook, add overlays/b-roll/images/a split screen, add music or sound effects, "make it a reel", "minoify" it, or fix any of those in a video already edited this way - even if only one of those steps is asked for.
+description: Edit raw talking-head videos into engaging, organic-looking Instagram Reels / TikToks - cut dead space and stumbles, keep the last clean take, 2-3 word captions, retention-maxing image/video overlays (pop-culture stickers, cutouts, split screens, tweet screenshots), sound effects, a background track from the music folder, and a TikTok-title-style hook when asked. Covers news and education/entertainment videos. Use this whenever Charles shares a talking-head .MOV/.mp4 and asks to edit, cut, caption, add a hook, add overlays/b-roll/images/a split screen, add music or sound effects, "make it a reel", "minoify" it, or fix any of those in a video already edited this way - even if only one of those steps is asked for.
 ---
 
 # Goal
@@ -26,7 +26,7 @@ Did I ask you to open on a split screen?
 # General
 
 * Cut any dead space that exists in the video. Stumbles, false starts and the moments after I finish a line all count (see Cuts)
-* In the case that I filmed multiple takes of the same line, choose the best take
+* When I say a line more than once, keep the last take I get through without a stumble or a mixed-up word, and cut the takes before it. I redo a line when I mess it up, so the last clean take is the one I meant. Transcribe each stretch of speech on its own (this repository's tools/reelkit/voice_map.py does): a transcript of the whole file merges repeated takes into one or drops them
 * Safe area (1080x1920): the IG/TikTok header covers the top 250 px, the username and caption sit below y 1500, and the buttons run down the right side below y 840. Keep text at least 80 px from the sides, 140 px below y 840. Be aware of these areas and don't put key information in them, but don't cut off or shift videos and pictures in a weird way because of them. Footage and images can still extend into those areas
 * No gimmicks: no pop-ins, rounded corners (except for the hook title), black-background splits or emoji tiles
 * My framing is usually close, with my face filling the middle of the frame. In that case never zoom or punch in on my face. Only add slow zooms between cuts when my face is smaller than the middle third of the frame. Cover jump cuts with B-roll instead
@@ -38,10 +38,11 @@ Did I ask you to open on a split screen?
 
 * Cut on the picture as well as the sound. The moment I finish a line I start to relax (ex: looking down at my script, dropping a hand, reaching to stop the recording), and even 0.3 s of that makes a cut look sloppy
 * End each clip within 2 frames at 30 fps (0.07 s) of my voice stopping, with the whole last word kept, trailing "s" or "t" included
-* If I start to relax before then, end on the frame before it starts. If it starts before the word is over, cut the picture there and start the next clip's picture that many frames early, so the rest of the word plays over it (an L-cut, up to 4 frames). If it starts any earlier, or during my last word, use another take of the line or cover it with B-roll. Never clip a word to hide a movement
-* Start each clip 1 frame before I speak. If I'm still settling into place there, use another take of the line or cover those frames with B-roll
+* If I start to relax before then, end on the frame before it starts. If it starts before the word is over, cut the picture there and start the next clip's picture that many frames early, so the rest of the word plays over it (an L-cut, up to 4 frames). If it starts any earlier, or during my last word, use an earlier clean take of the line or cover it with B-roll. Never clip a word to hide a movement
+* Start each clip 1 frame before I speak. If I'm still settling into place there, use an earlier clean take of the line or cover those frames with B-roll
 * So a join keeps at most 0.1 s of silence, with no breaths, clicks or lip smacks. Measure it from the sound, not from where the cut sits: a breath or a pause before my first word counts, and it shows me getting ready (this repository's tools/reelkit/check_gaps.py measures every join). A beat I hold mid-line while still looking at the lens (ex: before a punchline) is delivery, not dead space, so keep it
 * The reel's last clip can run up to 0.15 s after my last word, as long as I haven't started to relax
+* These limits are tight enough to clip a word, so cut the sound only in the silence between words, never inside one (this repository's tools/reelkit/check_cuts.py fails any join that splits a word)
 * Before you show me a cut, look at the frames on both sides of every join and the reel's last frames (this repository's tools/reelkit/check_joins.py draws them). Redo any join where I visibly start to relax
 
 
