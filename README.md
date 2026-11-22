@@ -114,6 +114,7 @@ MOTION for it more than 4,000 times.
 | [charles-scripting-voice](skills/editing/charles-scripting-voice/) | A script sounds like AI and you want it to sound like you talking |
 | [charles-claude-editing](skills/editing/charles-claude-editing/) | You have raw talking-head footage and want a finished reel with captions, overlays and music |
 | [charles-explainers-assets](skills/editing/charles-explainers-assets/) | A line in your video explains something and needs a visual that teaches it, timed to your words |
+| [charles-studio-explainers](skills/editing/charles-studio-explainers/) | Your explainer cards look plain and you want each one to look like a design studio made it |
 | [charles-3d-explainers](skills/editing/charles-3d-explainers/) | You want a cinematic 3D explainer, or 3D cutaways for a talking-head video |
 | [charles-arcade-assets](skills/editing/charles-arcade-assets/) | You want playful pixel-art motion graphics timed to a voiceover |
 
