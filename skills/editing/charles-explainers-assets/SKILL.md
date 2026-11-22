@@ -121,6 +121,24 @@ Hick's law: the more there is to look at, the longer it takes to find the point,
 
 Everything else is cut: badges, meters, graphs, onion skins and traces (unless they're the lesson: the key poses in pose to pose, the path in moving in arcs, the spacing in slow in and slow out, the tappable area in a hit area), lenses, speed tags, counters, verdict labels, titles, and devtools overlays such as paint flashing. A flip's change mark isn't one of these: it covers only the part that changes, and only around the change. Why: those were in my animation-hack clips when I said "Graphics are too busy -> make them MUCH more simple. Viewers only see the screen for a brief time so make it simple (just the before/after component + the css)".
 
+# Make it worth watching
+
+Simple within a frame doesn't mean plain. Every card has a real subject in colour, a camera that moves, and an agent that uses the product.
+
+Why: my note on the first cards for design hacks part 2 (22 Nov 2026): "The explainer assets are way too boring. Look at how the original video did it and make it much more engaging like that ... Include zoom ins/colours/agent cursors". Those cards were a small grey component in the middle of a big grey card, with a still camera and a fix that happened by itself. Part 1's cards (`videos/design-hacks/design/`, 705K plays by 19 Nov, against 137K and 87K for the follow-ups) did the opposite on every count.
+
+- **Real colour.** The subject is a product with its own colour in it: album art, product photos, a brand panel, a hero image, a dark browser with colourful tabs. The UI keeps its one accent and the content brings the rest. A white or grey component on the grey ground is a wireframe, not a card.
+- **Fill the band.** The subject spans the band's width (the frame budget's 10% rule), drawn at the size where its copy reads at 20 px or more.
+- **Move the camera.** Every flip has at least one camera move with a reason, and usually two, unless the flaw already moves the whole subject (a page that jumps as it loads, a page that cuts to the next), where a camera move would compete with it:
+  - in the before, a punch-in on the flaw (1.1-1.5×, the find-the-flaw beat), a pan from one instance of the flaw to the next, or a dive of 5-10× into a few pixels when that's where the flaw is;
+  - after the fix, a pull-back or a push-in on the proof.
+
+  A move takes 0.5-0.7 s on the ease-in-out and never runs on the change word, so the fix is the only thing moving then. The kit's `camera()` keeps the agent, a finger and the marks on target while it moves. Never crop what the line is about, its mark or the agent's name chip: check frames at the widest and the tightest moments.
+- **The agent uses the product.** On desktop UI it's the user in the before as well: it clicks Share, deletes a photo, scrolls the page or opens a product, and the flaw follows from that. Then it fixes the code on my word, and does the same thing again for the proof. On touch UI a fingertip does the using and the agent only makes the change (`references/agent-cursor.md`). The kit's `route()` takes its stops.
+- **Show the cost.** When the flaw costs the user something, make it happen on screen: the click that lands on a photo because the page jumped, a popup on every delete, an error a colour-blind user can't see. A cost is what makes a viewer care about the fix.
+
+Gold: part 1's contact sheet (`videos/design-hacks/design/assets/contact-sheet.jpg`) for colour and fill, and `videos/design-hacks/design-part-2/explainers/` for the camera, the agent using the product and the cost, card by card.
+
 # Timing
 
 - **The fix starts on the change word.** The code (or the control) changes within one frame of the word's first sound. The component shows it at once if it's a state, or on its next run, within 1.0 s, if it's a motion. When the agent has to move to run that proof (a hover, a second click), it leaves when its hold ends at T + 0.5 s, and the proof starts as it arrives. Why: my voice tells the viewer when to look. Early reads as a glitch and late as lag, and the cause comes before the effect.
@@ -213,7 +231,7 @@ Every word on screen adds something I don't say: what a term means, the value th
 - **The real thing:** a real-looking component from a real kind of product (a checkout, a settings page, a chat), with real copy, drawn at its real CSS size and magnified as a whole. Never grey bars or a wireframe. If a real screenshot exists (a page an AI built, the app's own UI), use it. Why: real reads faster than abstract, and "use the real thing over a recreation" is my editing rule.
 - **The demo runs on the values it teaches:** the real 150 ms ease-out, the real 0.97, exactly the CSS in its code block. Why: my audience copies them, and some check.
 - **Performance flaws are reproduced on the render's clock.** Hold frames at the rate the flaw really causes, as the kit's `left` toast does (a new frame every 33-83 ms, about 17 fps). Why: a frame-stepped render never drops a frame, so a captured "before" of jank comes out smooth.
-- **Colour:** one calm neutral ground per reel (the hack reels use #e6e9ee), one accent for the UI, red only for the flaw, green only for the fix, and each agent's own colour on its cursor and on what it selects (`references/agent-cursor.md`). The kit's syntax colours inside a code block don't count. Why: colour carries meaning here, so any other accent is noise.
+- **Colour:** one calm neutral ground per reel (the hack reels use #e6e9ee), one accent for the UI, red only for the flaw, green only for the fix, and each agent's own colour on its cursor and on what it selects (`references/agent-cursor.md`). The kit's syntax colours inside a code block don't count, and neither does the content's own colour (album art, photos, a brand panel), which every card needs (Make it worth watching). Why: colour carries meaning on the controls and the marks, so any other accent there is noise; the accent rule was never a reason to keep a card grey.
 - **None of my own AI tells:** no cream backgrounds, monospace eyebrows or "01/10" labels, pills, badges, gradient backgrounds, glows, emoji or section numbering. Why: I made a reel listing them, and my audience watched it.
 - **Same chrome, different subjects:** the card, tab, Before and After labels, code block and cursor look and sit the same for the whole reel. The subjects alternate (type, interface, motion; desktop, phone, close-up) so neighbours never look alike.
 - **Magnify, then mark:** when the difference is under 4 px in the final frame, crop tighter or zoom the whole subject first, then mark it (Mark the change). Never a lens or a callout bubble.
@@ -233,6 +251,7 @@ Before handing over, for every clip:
 # Faults that come back
 
 - **Too busy** (the animation hacks, first version): graphs, lenses, onion skins, speed badges. Cut to the component and its code.
+- **Too boring** (design hacks part 2, first build, 22 Nov): a small grey component floating in a big grey card, a still camera, and a fix that happened by itself. "Way too boring." Give it a real subject in colour that fills the band, move the camera, let the agent use the product, and show what the flaw costs (Make it worth watching).
 - **A still before** (the first design-hacks reel): the voice names the problem while the picture waits. Make the flaw happen.
 - **A principle on its own** (the UX-principles mock, 13 Nov): every card a single demo, so a wind-up read as a card moving. Put it next to the same component without it.
 - **Twin end poses** (the UX-principles rebuild): a side by side of a motion principle whose panels end alike and hold for a second. Keep the trace of the difference, or run the pair again on a new item.

@@ -750,6 +750,39 @@
   // The slow push-in that keeps a still alive (SKILL.md, Never stale): 2% a second from the asset's start, linear.
   const push = (t, rate = 0.02) => 1 + rate * Math.max(0, t);
 
+  /* The camera (SKILL.md, Make it worth watching): a full-panel div the subject lives in, scaled about a focus point.
+     camera(stage, { cx, cy, track, push }) where track(t) returns [s, fx, fy]: the scale, and the point in the camera's
+     own px that sits at the panel point (cx, cy). Keyframe it with keys(), [[t, [s, fx, fy]], [t, [s, fx, fy], E.inOut]],
+     for a punch-in on the flaw, a pan to the next one or a dive into a few pixels. A slow push of `push` a second
+     (1.2% by default) runs under it, so a held shot is never still. Call apply(t) first in the frame; toPanel(t, x, y)
+     maps a camera point to the panel at t, to aim the agent, a finger or a mark that lives on the panel. A zoom box built
+     inside cam maps its own points with zb.toPanel(x, y), then camera.toPanel. */
+  function camera(stage, { cx = W / 2, cy = (BAND.top + BAND.bottom) / 2, track = () => [1, cx, cy], push: rate = 0.012 } = {}) {
+    const cam = div(stage, { x: 0, y: 0, w: W, h: H, style: { transformOrigin: '0 0' } });
+    const at = (t) => { const [s, fx, fy] = track(t); return [s * (1 + rate * Math.max(0, t)), fx, fy]; };
+    return {
+      cam,
+      apply(t) { const [s, fx, fy] = at(t); cam.style.transform = `translate(${cx - s * fx}px, ${cy - s * fy}px) scale(${s})`; },
+      toPanel(t, x, y) { const [s, fx, fy] = at(t); return [cx + s * (x - fx), cy + s * (y - fy)]; },
+      scale: (t) => at(t)[0],
+    };
+  }
+
+  /* A pointer's route through several stops, for an agent that uses the product before and after the fix:
+     route(t, [[t, point], ...]) holds between two stops at the same point and glides between different ones (glidePt's
+     ease-in-out and slight bow). A point can be a function of t, for a target the camera is moving. pressOf(t, [[down,
+     up], ...]) is how far down the pointer is for a list of presses. */
+  function route(t, stops) {
+    const at = (p) => (typeof p === 'function' ? p(t) : p);
+    if (t <= stops[0][0]) return at(stops[0][1]);
+    for (let i = 1; i < stops.length; i++) {
+      const [t1, p1] = stops[i], [t0, p0] = stops[i - 1];
+      if (t <= t1) return p0 === p1 ? at(p0) : glidePt(t, at(p0), at(p1), t0, t1);
+    }
+    return at(stops[stops.length - 1][1]);
+  }
+  const pressOf = (t, presses) => presses.reduce((m, [a, b]) => Math.max(m, pressAt(t, a, b)), 0);
+
   // A scene file registers itself with H$.scene({ code, build(stage, area, ctx), check, stills }).
   const scene = (def) => { window.SCENE = def; };
 
@@ -759,7 +792,7 @@
     W, H, BAND, SLOT_SCALE, T_FIX: 4.5, DUR: 9.0, CB,
     clamp, lerp, prog, mix, bezier, E, springTo, motionSpring, transition, keyframes, keys, lastBefore, bump,
     hexToRgb, css, el, sv, px, div, zoom, icon, cursor, finger, codeBlock, PAD,
-    setSlot, setAgents, fpx, AGENT_COLORS, agent, agentAt, glidePt, pressAt, selection, tab, pair, push, scene,
+    setSlot, setAgents, fpx, AGENT_COLORS, agent, agentAt, glidePt, pressAt, selection, tab, pair, push, scene, camera, route, pressOf,
     MARK, markColor, markTurn, markLife, markLine, markBand, markBox, markMeasure, sweep,
   };
   window.HACKS = {};

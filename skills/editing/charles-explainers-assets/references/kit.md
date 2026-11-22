@@ -14,7 +14,7 @@ One folder per video, usually `videos/<video>/explainers/`:
 | `check/phone.png` | The phone sheet, one strip per asset |
 | `build/` | Frames while rendering; git ignores it |
 
-Start by copying `kit/example/`: one flip ("Scale from 0.97") where the agent double-clicks the old value in the code block and the new one lands on the word.
+Start by copying `kit/example/`: one flip ("Scale from 0.97") where the agent double-clicks the old value in the code block and the new one lands on the word. For a card that's worth watching (a camera on the flaw, the agent using the product, the cost of the flaw), copy from `videos/design-hacks/design-part-2/explainers/` (`scenes/hacks.js`, one file for ten cards, picked by asset id).
 
 ## explain.json
 
@@ -80,6 +80,8 @@ Every scene is a pure function of time: `seek(t)` draws the frame at t, so the r
 | Helper | What it does |
 |---|---|
 | `zoom(stage, { w, h, z, cy })` | A box for UI at its real CSS size, magnified `z` times (about 2 in the hack card), so 10px in the code moves 10 px in the demo |
+| `camera(stage, { cy, track, push })` | The camera the subject lives in (SKILL.md, Make it worth watching): `track(t)` returns `[s, fx, fy]`, the scale and the camera point that sits at the panel point (`cx`, `cy`), usually keyframed with `keys()` for a punch-in, a pan or a dive. A slow push of 1.2% a second runs under it. Build the zoom box inside `.cam`, call `.apply(t)` first in each frame, and aim anything on the panel (the agent, a finger, a keycap, a mark that mustn't thicken with a deep dive) through `.toPanel(t, x, y)` after `zb.toPanel(x, y)` |
+| `route(t, [[t, point], ...])`, `pressOf(t, [[down, up], ...])` | A pointer that uses the product before and after the fix: it holds between two stops at the same point and glides between different ones; a point can be a function of t, for a target the camera is moving. `pressOf` is how far down it is for a list of presses. Use `agentAt` when the agent only makes the change |
 | `div`, `el`, `sv`, `icon(name)` | DOM, SVG and Lucide-style icons |
 | `E.out`, `E.inOut`, `E.cssEase`, `E.cssOut`, `E.mInOut`, `E.move` | The curves: my ease-out `cubic-bezier(0.32, 0.72, 0, 1)`, my ease-in-out `(0.77, 0, 0.175, 1)`, the CSS keywords and Motion's easeInOut |
 | `transition(t, events, { dur, ease, init })`, `keyframes`, `keys`, `springTo`, `motionSpring` | What a CSS transition, a keyframes array or a spring would be at t |
