@@ -46,7 +46,11 @@
     cssOut: bezier(0, 0, 0.58, 1),
     cssInOut: bezier(0.42, 0, 0.58, 1),
     mInOut: bezier(0.42, 0, 0.58, 1),
-    move: bezier(0.65, 0, 0.35, 1), // pointer moves and code-block changes (not the demos)
+    move: bezier(0.65, 0, 0.35, 1), // code-block changes (not the demos)
+    // A pointer, or a part it carries, crossing the card: the minimum-jerk curve, which is how a hand moves. It covers
+    // 36% of its distance in the middle fifth of its time. inOut covers 63%, which over that distance reads as a snap
+    // (the frame-by-frame critique of design hacks part 2, 22 Nov 2026).
+    travel: (x) => { x = Math.min(1, Math.max(0, x)); return x * x * x * (x * (6 * x - 15) + 10); },
     quadIn: (x) => x * x,
   };
 
@@ -201,6 +205,21 @@
         arrow.style.transform = `scale(${scale * (1 - 0.12 * clamp(press))})`;
       },
     };
+  }
+
+  /* A click or a tap you can see: a ring that opens from the point and fades. ring(parent, {color, z}) returns
+     { set(cx, cy, k, r0, r1) }, k being 0..1 from the click, and { clicks(t, [[time, [x, y]], ...], {r0, r1, dur}) },
+     which draws the last click that has started. White with a dark hairline each side, so it shows on a white sheet
+     and on a black button alike. Why: a blind read of design hacks part 2 called its pointer's clicks "near
+     invisible", so a double click and a click that missed looked like nothing happening. */
+  function ring(parent, { color = '#fff', z = 28 } = {}) {
+    const e = el('div', { style: { position: 'absolute', left: 0, top: 0, width: 0, height: 0, boxSizing: 'border-box', border: `4px solid ${color}`, borderRadius: '50%',
+      boxShadow: '0 0 0 1.5px rgb(22 23 26 / 0.5), inset 0 0 0 1.5px rgb(22 23 26 / 0.5)', pointerEvents: 'none', zIndex: z, visibility: 'hidden' } }, parent);
+    const set = (cx, cy, k, r0 = 12, r1 = 46) => {
+      const r = lerp(r0, r1, E.out(clamp(k))), o = k <= 0 || k >= 1 ? 0 : 1 - k;
+      Object.assign(e.style, { left: px(cx - r), top: px(cy - r), width: px(2 * r), height: px(2 * r), opacity: o.toFixed(3), visibility: o > 0.001 ? 'visible' : 'hidden' });
+    };
+    return { e, set, clicks(t, list, { r0 = 12, r1 = 46, dur = 0.42 } = {}) { let c = null; for (const q of list) if (t >= q[0]) c = q; if (c) set(c[1][0], c[1][1], prog(t, c[0], c[0] + dur), r0, r1); else set(0, 0, 0); } };
   }
 
   /* A touch: a soft disc where a fingertip is on the glass. set(x, y, {press, o}): o shows it (0 when the finger is
@@ -531,9 +550,9 @@
     };
   }
 
-  // A glide from a to b over [t0, t1] on the ease-in-out, bowing to one side by `bow` of the distance (at most 0.08).
+  // A glide from a to b over [t0, t1] on E.travel, bowing to one side by `bow` of the distance (at most 0.08).
   function glidePt(t, a, b, t0, t1, bow = 0.05) {
-    const u = E.inOut(prog(t, t0, t1));
+    const u = E.travel(prog(t, t0, t1));
     const dx = b[0] - a[0], dy = b[1] - a[1], d = Math.hypot(dx, dy) || 1, k = Math.sin(Math.PI * u) * Math.min(bow, 0.08) * d;
     return [a[0] + dx * u + (dy / d) * k, a[1] + dy * u - (dx / d) * k];
   }
@@ -564,14 +583,14 @@
     if (action === 'insert') press = pressAt(t, T - 0.45, T - 0.38); // code.insert's caret, then its empty line at T - 0.25
     if (drag) {
       press = pressAt(t, T - 0.68, T + 0.07);
-      if (t >= T - 0.6) { const u = E.inOut(prog(t, T - 0.6, T)); pos = [lerp(to[0], dragTo[0], u), lerp(to[1], dragTo[1], u)]; }
+      if (t >= T - 0.6) { const u = E.travel(prog(t, T - 0.6, T)); pos = [lerp(to[0], dragTo[0], u), lerp(to[1], dragTo[1], u)]; }
     }
     if (carry) {
       // A part carried on the word, for a short item's move: it grabs at T - 0.15, carries the part to dragTo over
-      // T .. T + carryDur on the ease-in-out and lets go 0.05 s later. u (0..1) is how far the carry has got: move
+      // T .. T + carryDur on E.travel and lets go 0.05 s later. u (0..1) is how far the carry has got: move
       // the part by it, so the part and the pointer never drift apart.
       press = pressAt(t, T - 0.15, T + carryDur + 0.05);
-      u = E.inOut(prog(t, T, T + carryDur));
+      u = E.travel(prog(t, T, T + carryDur));
       if (t >= T) pos = [lerp(to[0], dragTo[0], u), lerp(to[1], dragTo[1], u)];
     }
     const at = drag || carry ? dragTo : to;
@@ -758,10 +777,10 @@
      camera(stage, { cx, cy, track, push }) where track(t) returns [s, fx, fy]: the scale, and the point in the camera's
      own px that sits at the panel point (cx, cy). Keyframe it with keys(), [[t, [s, fx, fy]], [t, [s, fx, fy], E.inOut]],
      for a punch-in on the flaw, a pan to the next one or a dive into a few pixels. A slow push of `push` a second
-     (1.2% by default) runs under it, so a held shot is never still. Call apply(t) first in the frame; toPanel(t, x, y)
+     (0.6% by default) runs under it, so a held shot is never still. Call apply(t) first in the frame; toPanel(t, x, y)
      maps a camera point to the panel at t, to aim the agent, a finger or a mark that lives on the panel. A zoom box built
      inside cam maps its own points with zb.toPanel(x, y), then camera.toPanel. */
-  function camera(stage, { cx = W / 2, cy = (BAND.top + BAND.bottom) / 2, track = () => [1, cx, cy], push: rate = 0.012 } = {}) {
+  function camera(stage, { cx = W / 2, cy = (BAND.top + BAND.bottom) / 2, track = () => [1, cx, cy], push: rate = 0.006 } = {}) {
     const cam = div(stage, { x: 0, y: 0, w: W, h: H, style: { transformOrigin: '0 0' } });
     const at = (t) => { const [s, fx, fy] = track(t); return [s * (1 + rate * Math.max(0, t)), fx, fy]; };
     return {
@@ -795,7 +814,7 @@
   window.H$ = {
     W, H, BAND, SLOT_SCALE, T_FIX: 4.5, DUR: 9.0, CB,
     clamp, lerp, prog, mix, bezier, E, springTo, motionSpring, transition, keyframes, keys, lastBefore, bump,
-    hexToRgb, css, el, sv, px, div, zoom, icon, cursor, finger, codeBlock, PAD,
+    hexToRgb, css, el, sv, px, div, zoom, icon, cursor, finger, ring, codeBlock, PAD,
     setSlot, setAgents, fpx, AGENT_COLORS, agent, agentAt, glidePt, pressAt, selection, tab, pair, push, scene, camera, route, pressOf,
     MARK, markColor, markTurn, markLife, markLine, markBand, markBox, markMeasure, sweep,
   };

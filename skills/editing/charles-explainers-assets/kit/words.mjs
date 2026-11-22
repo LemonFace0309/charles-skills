@@ -1,5 +1,5 @@
 #!/usr/bin/env bun
-/* The words check (SKILL.md, Words on screen; Phone check, step 4), measured in the page instead of eyeballed.
+/* The words check (SKILL.md, Words on screen; Phone check, step 5), measured in the page instead of eyeballed.
    - At each phone-check moment, every visible text in the band: its size in the final frame (font size x the scale
      it's drawn at x the slot's scale) against 26 px, 24 px for code and 30 px for a tab, and its contrast against
      the nearest opaque background behind it, against 4.5:1. Copy from 20 to 26 px is listed apart: it passes only

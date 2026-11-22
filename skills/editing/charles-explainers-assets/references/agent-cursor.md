@@ -17,12 +17,15 @@ Is there a fix or a change of state on screen?
     │   the word and leaves, and never runs a proof beat. Otherwise the flip's mark shows the change
     └── 2 s or longer → the agent cursor makes the change
         Does the demo also need a pointer to show the interaction?
-        ├── Desktop UI → the agent cursor does that too, before and after the change:
-        │   one pointer for the whole clip
-        ├── Touch UI → a fingertip taps inside the phone and the agent cursor only makes the change;
-        │   the finger lifts away before the cursor enters and comes back for the proof beat after it leaves
+        ├── Yes → one pointer at a time, each with one job. A plain arrow (desktop UI) or a
+        │   fingertip (touch UI) uses the product, before and after the change. Then either the
+        │   code changes by itself on the word, or that pointer lifts away before the agent
+        │   enters, the agent makes the change, and the pointer comes back for the proof beat
+        │   after it leaves. Never one agent doing both
         └── No → the agent cursor enters for the change and leaves after it
 ```
+
+**The code can change by itself.** In a reel whose cards mostly have a pointer or a finger using the product, the code changes on the word with no agent, on every card, and the agent comes only for a change it makes to the design itself (it drags a hit area out, carries a part). Decide it once per reel, so every card behaves one way. Why: on the second build of design hacks part 2 (22 Nov 2026) the agent used the product and then edited the code on every card. That took it on up to five trips in 3.5 s, it sat on the code as it changed, and it pulled the eye to the pause text when the lesson was in the product: "It feels tacky at times".
 
 Why a short item gets the agent at all: a part moving under a pointer is the clearest way to show a change of place or size, and I asked for "fake agent cursors that move components around" (16 Nov). What a short item has no time for is the proof beat, not the change.
 
@@ -70,7 +73,7 @@ Only when my line is about more than one: agents working in parallel, a handoff,
 
 ## The timeline, with the change at T
 
-**Moving in.** It arrives by T − 0.6 s (T − 0.9 s before a drag, T − 0.5 s before a carry), so it starts that much earlier than its glide: from where it is, or from the slot's edge nearest the target, fading in over 120 ms if it's entering. The glide is 450 ms across less than a third of the slot and 600 ms across more, on the ease-in-out `cubic-bezier(0.77, 0, 0.175, 1)`, along a slight arc that bows no more than 8% of the distance. Once it arrives, the target shows its own hover state, if it has one.
+**Moving in.** It arrives by T − 0.6 s (T − 0.9 s before a drag, T − 0.5 s before a carry), so it starts that much earlier than its glide: from where it is, or from the slot's edge nearest the target, fading in over 120 ms if it's entering. The glide is 450 ms across less than a third of the slot and 600 ms across more, on `E.travel` (the minimum-jerk curve, which is how a hand moves; the ease-in-out snapped over that distance), along a slight arc that bows no more than 8% of the distance. Once it arrives, the target shows its own hover state, if it has one.
 
 **The action:**
 
@@ -80,7 +83,7 @@ Only when my line is about more than one: agents working in parallel, a handoff,
 | Double-click a code token | Presses at T − 0.3 s and T − 0.15 s, and the token shows as selected after the second; the new value morphs in at T; releases at T + 0.07 s |
 | Drag a slider or a handle | Presses at T − 0.68 s and drags for 600 ms (a slider's full travel), so the value arrives at T; releases at T + 0.07 s. In a short item it carries the handle instead (the carry row, below) |
 | Add lines of code | Arrives by T − 0.9 s and clicks at T − 0.45 s, so its caret shows; the empty line opens over T − 0.25 to T − 0.1 s, and the new lines land at T |
-| Carry a part, a corner handle or a sweep's grip (a short item's change) | Arrives by T − 0.5 s; grabs at T − 0.15 s, and a part's selection snaps round it; carries it over T to T + 0.45 s (a sweep's grip, T + 0.55 s) on the ease-in-out, the part moving with it, never ahead of it; lets go 0.05 s after it lands. A corner handle needs its part selected first: a click at T − 0.42 s, the selection showing from T − 0.36 s |
+| Carry a part, a corner handle or a sweep's grip (a short item's change) | Arrives by T − 0.5 s; grabs at T − 0.15 s, and a part's selection snaps round it; carries it over T to T + 0.45 s (a sweep's grip, T + 0.55 s) on `E.travel`, the part moving with it, never ahead of it; lets go 0.05 s after it lands. A corner handle needs its part selected first: a click at T − 0.42 s, the selection showing from T − 0.36 s |
 
 Why a carry moves on the word, when a drag ends on it: a drag sets a value the code then shows, so the value lands on the word. A carried part is the change itself, and the change starts on the word (SKILL.md, Timing).
 
@@ -93,6 +96,9 @@ Why: the eye needs about half a second to find a pointer and follow it, the pres
 ## Never
 
 - **Covering what it changes.** Aim inside the target but off its text: a code token's lower-left corner, a button's empty side. When it carries a part, hold it where the name chip, hanging below-right of the tip, falls into empty space: a button by its right end, a slider's grip low on the subject. Why: on the first build of the dark-mode card the chip sat on a row whose colour was the change. Why lower left: a value grows rightward when it changes (0 → 0.97), so a tip on the right ends up on the new value. The label hangs below-right of the tip, over the line under the token, so never put a token that changes at the same moment right below it; reorder the declarations if you must.
-- **Moving without a reason.** Every move goes to the next action or clears the way. It never circles, wanders or rests on the subject.
+- **Moving without a reason.** Every move goes to the next action or clears the way. It never circles, wanders or rests on the subject, and it does each action once.
+- **Travelling on the word.** From 0.3 s before the change to 0.5 s after it, the only pointer that moves is one carrying the change. Why: a pointer crossing the card then pulls the eye off the fix.
+- **Entering or leaving clipped.** It starts and ends outside the card or fully faded, never as a sliver cut by the card's edge or with its chip half off it.
+- **A chip over the change.** When the part is small or the agent carries it, fade the chip (`agent().chip`) once it has arrived, 0.3 to 0.12 s before the change, and let the bare arrow do it.
 - **Sharing the screen with a pointer that isn't another agent in my line.** A fingertip and the agent cursor take turns (When it appears).
 - **Faking a state.** The cursor's path drives the demo's own states: the kit's `agentAt()` gives its position and press at every frame for the scene to react to, as `pointerAt()` does in `tools/reelkit/tags.js`, so hover and press are the component's own. Why: states drawn on top drift off the cursor and look fake.
