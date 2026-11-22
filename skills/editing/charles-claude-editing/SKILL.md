@@ -91,17 +91,44 @@ Did I ask you to open on a split screen?
 * When you show a list or sequence as a row of pictures, don't use icons. Use organic-looking images you find online, cropped into squares/rectangles
 * Graphs and charts are okay. Screenshots of real ones from other sources are great. If you make one yourself, it has to look professional and clean, and be accurate and detailed, w/ well timed animations. A sloppy one comes across as AI slop
 * If I read out a list, put it up as an overlay with blur, each item revealed as I say it (plain caption-style text, not a screenshot). If I read it slowly (more than ~4 s between items), take the overlay down between items and bring it back for the next one, so it stays engaging
-* Timing:
-   * Don't go more than ~4 s without something new on screen (a new asset, a cut, a highlight moving to the next line)
-   * No asset stays up longer than 3 s, except videos, tweets or code I'm reading, complex assets, or something I keep referencing. Those stay up as long as I'm talking about them
-   * Anything back to back (images, tweets, clips) is a hard cut with no gap in between. Even a brief stutter isn't back to back
+
+
+# Pacing
+
+* The reel should feel brisk. While I'm talking, something on screen changes or moves every 2-3 s (a new asset, a cut, a move inside an asset, a highlight moving to the next line), and it never goes more than ~4 s without something new. Captions changing don't count
+* Brisk isn't frantic. One new thing at a time, landing on the word it belongs to, with at least ~0.5 s between changes, except a run of quick cuts (below). A viewer who can't tell what they're looking at swipes away as fast as a bored one
+* Anything back to back (images, tweets, clips) is a hard cut with no gap in between. Even a brief stutter isn't back to back
+* How long an asset stays up depends on what the viewer gets from it:
+
+```
+What does the viewer get from this asset?
+├── Words I'm reading out (a tweet, a quote, code) → as long as I'm reading them, with a highlight moving on the words
+├── The payoff they're watching for (a demo, a before/after, the result) → as long as I'm talking about it
+├── Proof that something exists or is big (a long list, a page of docs, a pile of examples) → 1-2 s, with a fast scroll or pan
+│   across it so it reads as "there's a lot here". The reel never waits for anyone to read or screenshot it: whoever wants
+│   it pauses. Put the full thing in the caption or the comment ask
+├── Many things of one kind, where how many is the point (ten sites, twenty logos) → a run of quick cuts, 0.3-0.5 s each,
+│   in time with my words or the beat
+└── Anything else → 1.5-3 s, then a hard cut to the next thing
+```
+
+* My face is what keeps people watching, so a layout that takes it away (an overlay with blur, a new screen) has to earn the time:
+   * Cut back to me within ~2 s, unless it's words I'm reading out or the payoff itself
+   * Never hold text over my face that isn't interesting to read. A long list gets 1-2 s with a scroll, or goes in a regular overlay that leaves my face on screen, zoomed in to the 3-6 lines that matter
+   * A regular overlay that leaves my face on screen follows the tree above
+* Keep most stills moving. A still that sits dead for 2-3 s is where people swipe, and a move gives the eye somewhere to go:
+   * A slow push-in, 5-10% over the asset's time, toward what the line is about
+   * A pan across anything wider or taller than its slot (a canvas, a grid, a long page), ending on the part I'm naming
+   * From the whole thing to the detail I name (the whole window, then the images pasted into it)
+   * A busy asset cut into 2-4 crops instead of one long hold: four pages as four 0.6 s cuts, not a 2x2 grid for 2.4 s
+* Leave these still: words I'm reading out, since moving text is harder to read, and anything up for under ~1 s. Each asset gets one move with one destination, eased in and out. A push-in stays under ~15%, or it turns into a gimmick; a move from the whole to a detail can go further, because it lands on something
 
 
 # Choosing the Layout
 
 * Every asset goes on screen one of five ways. Pick by what the asset is and what the moment is going for:
    * Regular overlay, no blur: images I just want on screen, which is most of them. Sticker-sized, above or below my face (see Image/Video Overlays)
-   * Overlay with blur: an image that takes up a lot of space and has to be seen whole, or a list I'm reading out (each item revealed as I say it). Blur me behind it and centre it
+   * Overlay with blur: an image that takes up a lot of space and has to be seen whole, or a list I'm reading out (each item revealed as I say it). Blur me behind it and centre it. It takes my face off screen, so it follows the limits in Pacing
    * Split screen 50/50: another video that's taller (ex: footage from somewhere else, a phone screen recording). It gets half the frame (1080x960) and my face gets the other half, at the top or bottom
    * Split screen 40/60: another video that's landscape (ex: a desktop screen recording, a 16:9 clip). It gets the top 40% at full width (1080x768) and my face gets the bottom 60%, like @opusjake's splits
    * A new screen: B-roll or a new vertical video we generate that should be completely immersive. It takes the whole frame (1080x1920) and cuts away from me

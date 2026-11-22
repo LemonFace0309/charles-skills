@@ -52,9 +52,12 @@ it builds and prints what fails.
   except tweets, recordings and code, which have to be big enough to read. Never over his eyes or the captions, always
   whole, sharp at the size it's drawn ✓, with no black bars, rounded corners, pop-ins or emoji tiles. Web pages in dark
   mode, starting at the visual part. Anchor on pop culture the viewer knows.
-- **Timing:** never more than 4 s without something new on screen ✓, and no still asset up longer than 3 s ✓, counted across
-  every line it stays up for, unless it's a video, a tweet or code he's reading, a complex asset, or one he keeps referring
-  to (`long_ok`). Back-to-back assets are hard cuts.
+- **Timing:** charles-claude-editing's Pacing. Never more than 4 s without something new on screen ✓, and no still asset up
+  longer than 3 s ✓, counted across every line it stays up for, unless it's a tweet or code he's reading or the payoff he's
+  talking about (`long_ok`). A layout that covers his face (`spotlight`, `screen`, a box over it) comes off within ~2 s
+  unless he's reading it out, and a long list is proof, not reading: 1-2 s with a fast scroll. Most stills move, so give
+  the line a short clip with its push-in, pan or cuts made in, since the page draws a still as it is. Back-to-back assets
+  are hard cuts.
 - **Music:** a track from `assets/music/<mood>/` ✓: chill, emotional storytelling, funny, motivational, suspenseful, upbeat
   or wholesome. Exposés and serious news always get suspenseful. Skip quiet intros, and keep it 8-9 dB under his voice ✓.
 - **Sound effects:** a camera shutter when a screenshot appears, a click on a highlight, a soft whoosh on a big transition,
