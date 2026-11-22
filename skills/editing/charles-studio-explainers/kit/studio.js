@@ -158,4 +158,42 @@
       <circle cx="32" cy="32" r="26"/><circle cx="32" cy="32" r="20.5" stroke-width="1.6"/><path d="M21 33.5l7.5 7.5L44 25"/></g></svg>`;
     return e;
   };
+
+  /* ---------- app moments (round 6) ---------- */
+  // System type for recreated app screens, by name: in headless Chrome on macOS, -apple-system and ui-rounded fall back
+  // to a serif.
+  L.SFR = "'SF Pro Rounded', 'Arial Rounded MT Bold', sans-serif";
+  L.SFT = "'SF Pro Text', 'Helvetica Neue', sans-serif";
+  L.SFD = "'SF Pro Display', 'Helvetica Neue', sans-serif";
+  // A value that changes in place: only the characters that change roll, the old one up and out, the new one up and
+  // in. states have equal lengths; times[i] is when states[i + 1] arrives. Call box.draw(t) each frame.
+  L.roller = (p, x, y, states, times, o = {}) => {
+    const { size = 64, weight = 700, family = L.SFR, color = '#fff', dur = 0.2, ls = '0', style = {} } = o;
+    const LH = Math.round(size * 1.18);
+    const box = div(p, { x, y, w: o.w || 600, h: LH, style: { display: 'flex', whiteSpace: 'pre', font: `${weight} ${size}px/${LH}px ${family}`, color, letterSpacing: ls, fontFeatureSettings: '"tnum" 1', ...style } });
+    const cells = Array.from({ length: states[0].length }, () => {
+      const c = el('span', { style: { position: 'relative', display: 'inline-block', overflow: 'hidden', height: LH + 'px' } }, box);
+      return { a: el('span', { style: { display: 'block' } }, c), b: el('span', { style: { position: 'absolute', left: '0', top: '0', display: 'block' } }, c) };
+    });
+    box.draw = (t) => {
+      let k = 0; while (k < times.length && t >= times[k]) k++;
+      const cur = states[k], prev = k ? states[k - 1] : cur, u = k ? L.P(t, times[k - 1], times[k - 1] + dur, E.out) : 1;
+      cells.forEach(({ a, b }, i) => {
+        a.textContent = cur[i];
+        if (prev[i] !== cur[i] && u < 1) {
+          b.textContent = prev[i];
+          a.style.transform = `translateY(${(LH * 0.7 * (1 - u)).toFixed(2)}px)`; a.style.opacity = u.toFixed(3);
+          b.style.transform = `translateY(${(-LH * 0.7 * u).toFixed(2)}px)`; b.style.opacity = (1 - u).toFixed(3);
+        } else { b.textContent = ''; a.style.transform = 'none'; a.style.opacity = '1'; }
+      });
+    };
+    return box;
+  };
+  // A casual game's button: a bright face over a darker lip, and white text with a dark outline so it reads.
+  L.gameButton = (p, x, y, w, h, face, lip, text, o = {}) => {
+    const b = L.B(p, x, y, w, h, { bg: face, r: o.r ?? 18, style: { boxShadow: `inset 0 -6px 0 ${lip}, 0 8px 16px -8px rgb(0 0 0 / 0.35)`, transformOrigin: '50% 50%' } });
+    const ink = o.ink || lip;
+    L.T(b, 0, (h - 6 - (o.size ?? 30) * 1.15) / 2, text, { size: o.size ?? 30, weight: 800, family: L.SFR, color: '#fff', w, align: 'center', style: { textShadow: `0 2px 0 ${ink}`, webkitTextStroke: `2px ${ink}`, paintOrder: 'stroke fill' } });
+    return b;
+  };
 })();

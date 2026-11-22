@@ -1,6 +1,6 @@
 # charles-studio-explainers
 
-![Four cards from my 20 psychology principles reel: a candle burned low lighting a giant 46-day streak that ends tonight, YOU with a crystal ball as its O, a running shoe standing on the word runner, and two kraft price tags where a decoy duck greys out the 6-month plan so yearly is only $5 more](examples/cards.jpg)
+![Four cards from my 20 psychology principles reel: a 46-day streak whose flame gutters as it resets at midnight, a candy game's out-of-moves screen with one jelly left and +5 moves, a dating app's blurred likes grid with 24 likes, and a daily prize wheel landing on +500 coins](examples/cards.jpg)
 
 Turns a reel's explainer cards from plain UI mock-ups into cards that look like a design studio made them.
 
@@ -13,7 +13,7 @@ Add `-g` to install it for every project, or copy this folder into `~/.claude/sk
 
 ## What it does
 
-- Finds an object for every line that's a pun on it: an anchor for price anchoring, a decoy duck for the decoy effect, a coin scratching a scratch card for surprise rewards
+- Shows the moment each line fires in an app or game people already use, recreated big: a Duolingo-style streak about to reset, a candy game's out-of-moves screen, a board game's free dice, a dating app's blurred likes. Where there's no real moment, it finds an object that's a pun on the line
 - Generates each object as a photographed studio product shot and sits it in real light (its world's colour on its edges, a contact shadow, grain over everything), in one colour family or on cream, with one move that sells the idea
 - Rotates four layouts across a set, including type locked with the object, and keeps each card to a few words a phone viewer reads in a second
 - Works on cards that flip in place too (a flaw, then the fix on my word): the object becomes what causes the flaw, like a rubber stamp that marks a field INVALID at the first letter

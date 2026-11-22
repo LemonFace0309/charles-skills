@@ -28,6 +28,40 @@ The studio look, rule by rule, with the numbers that worked on the 20 Psychology
 - **The test:** someone could describe the card to a friend in one sentence. If the sentence is "a nicer screen", there's no idea yet. And the After must change the thing the principle changes: round 5's alarm clock answered "Daily reminder" with a louder reminder, when the principle (implementation intentions) is about adding a time and a place.
 - **Never a UI widget in the After.** A checklist, a leaderboard, price rows, a score card, a share pill or a frosted panel is what Claude builds by default, so on the studio side it reads as the default (round 4's critic). Turn it into the object it stands for: the checklist into a receipt that prints, the leaderboard into game pieces on steps, plan rows into price tags, a share button into a pin you'd wear.
 
+## Real app moments (round 6)
+
+When the line is about apps, show the moment it fires in one people already use. The 20 Psychology Principles set, after Charles' 23 Nov notes:
+
+| Principle | The moment | Its move |
+| --- | --- | --- |
+| Variable rewards | A daily prize wheel | It winds back, spins, the flapper ticks over each peg as it slows, and lands on +500 coins |
+| Loss aversion | A Duolingo-style 46-day streak | The flame gutters while "Resets in 2:59:58" ticks |
+| Price anchoring | A paywall | $119.99 first, struck, then $59.99 a year and Save 50% |
+| Reciprocity | A board game's free gift | The box shakes, the lid pops, dice tumble out: +50 rolls, Collect |
+| FOMO | A limited-time chest offer | The countdown ticks through its last minute |
+| IKEA effect | An avatar builder | Hair, glasses and a hoodie fly from their chips onto the face, then Saved |
+| Decoy effect | A three-plan picker | 6 months at $59.99 makes 12 at $69.99 a steal; the selection moves there |
+| Commitment | Hold to commit | The ring fills, closes into a disc, and the disc draws a check |
+| Sunk cost fallacy | A candy game's out-of-moves screen | 1 jelly left, +5 moves for 9 gold bars |
+| Endowed progress | A coffee app's rewards stars | 2 of 10 stars, a welcome gift |
+| Curiosity gap | A dating app's likes grid | Eight blurred photos, 24 likes, See who likes you |
+| Framing effect | A paywall's per-year / per-day toggle | $39.99 a year becomes $0.11 a day, billed once a year |
+| Loading the next trigger | A reminder time picker | The wheels spin to 8:00 PM, then the 8 PM notification arrives |
+| Fresh start effect | The iOS calendar icon | Thursday the 20th flips to Monday the 24th: New week |
+| Tamagotchi effect | An egg-shaped virtual pet | Its hearts drain and the pixel face turns sad: Hungry |
+| Scarcity | A board game's dice | The last roll goes, the dice grey out, free rolls in 59:59 |
+| Status | A league badge | Gold becomes Diamond as it jumps |
+| Social proof | The App Store's ratings card | 4.8, the bars fill, 2.1M ratings |
+| Social currency | A Wrapped-style card | Top 2% of listeners, Share to story |
+| Identity-based habits | A running shoe | It lands on the word "runner" |
+
+- **Recreate the look, not the brand:** the app's colours, type and button style, but no logos, mascots or real event names. Glossy game icons are right inside a game's own screen.
+- **The app's own type:** 'SF Pro Text', 'SF Pro Display' and 'SF Pro Rounded' by name (the Duolingo-like rounded heavy), with 'Arial Rounded MT Bold' behind it. In headless Chrome on macOS, `-apple-system` and `ui-rounded` fall back to a serif, quoted or not.
+- **Write the app's copy, never a caption to the viewer:** "Resets in 2:59:58", "Billed $39.99 once a year", "Time for Spanish". Never generic names like Maya.
+- **Contrast:** keep each brand's hue and take its deeper shade for words (Duolingo orange #b85c00, Tinder-like gold #9a6b00, iOS red #d70015, iOS blue #0062cc). Game buttons keep white text with a 2 px dark outline (`-webkit-text-stroke` with `paint-order: stroke fill`), which `words.mjs` can't measure, so check it by eye.
+- **Numbers roll only the digit that changes** (`roller` in the 20 Psychology Principles cards): the old digit up and out, the new one up and in, over 0.2 s. A countdown ticks at real seconds.
+- **Show the outcome after the cause:** the price lands after the strike, the notification after the reminder is set, the dice after the lid.
+
 ## The stage
 
 - **The card:** 870x350, radius 30, with the scene as its own background (no white frame). The black tab sits on its top-left edge, inset 22 px, in Helvetica Neue Bold 30. On a long line the tab covers the whole top edge, so objects at rest bleed off the bottom or the right edge, never the top: round 3's anchor ring, cut flat at the top, read as the tab slicing it. Bring moving things in from the right or the bottom too (the running shoe comes in toe first from the right); only a fast drop comes through the top.
