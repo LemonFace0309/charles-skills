@@ -73,6 +73,8 @@ window.ready = (async () => {
   const faces = ['400 20px Inter', '500 20px Inter', '600 20px Inter', '700 20px Inter', '400 20px JBM', '700 20px JBM'];
   await Promise.all(faces.map((f) => document.fonts.load(f)));
   await document.fonts.ready;
+  // A scene with pictures (sprites, photos) renders only once every <img> in it has decoded, so no frame misses one.
+  await Promise.all([...document.images].map((im) => im.decode().catch(() => null)));
   if (block) block.measure();
   if (sc.measure) sc.measure(ctx);
   window.seek(0);
