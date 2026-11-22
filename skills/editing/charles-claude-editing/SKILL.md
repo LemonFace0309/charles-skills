@@ -58,6 +58,7 @@ Did I ask you to open on a split screen?
 
 * Helvetica Neue Bold, ~66 px, white with a thin black outline and a soft shadow. Sentence case, apart from the comment keyword (below)
 * Around y 1380, inside the safe area. If an asset sits there, move the captions above or below it, never over it. While a split screen is up, they go on the seam
+* Never over my face unless everything behind them is blurred. When an asset pushes them up, right under my mouth is as high as they go
 * 2-3 words each line
 * No animations/transitions
 * Go over the captions yourself to make sure the ones coming back from a transcription service are accurate to the context of what I'm saying. Sometimes transcription services suffer with names too, so fix those

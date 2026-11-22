@@ -42,8 +42,10 @@ it builds and prints what fails.
   text hook should probably be a little bigger", 16 Nov 2026). The list reel's stopwatch (digital-7 mono) is the one
   exception. Why: native-looking type reads as made on his phone, and that organic look is half of what the edit is for.
 - **Captions:** 2-3 words a line ✓, no animation. On a split they sit on the seam. When an asset sits at y 1380 they move
-  above or below it, never over it ✓. Censor words TikTok blocks, like s*****e, in captions and the hook ✓. A list reel's list
-  is its captions, so only its sign-off gets word captions.
+  above or below it, never over it ✓. They stay off his face whenever it's on screen and sharp ✓: an asset at 1380 can push
+  them up to right under his mouth, never onto it, and a line with nothing there keeps them at 1380 ("make sure the
+  captions don't block my face when the full blur isn't on", 23 Nov 2026). Censor words TikTok blocks, like s*****e, in
+  captions and the hook ✓. A list reel's list is its captions, so only its sign-off gets word captions.
 - **Hook title:** only when he asks for one. Two lines at most ✓ (three only when a CAPS word gets its own), up for his
   first sentence, 3-5 s ✓. When the reel opens on a split, it sits on the seam. It raises the stakes and opens a question the
   reel answers. A label for the topic doesn't do that ("Both of these are 50% lightness" was "boring"). When nothing does,

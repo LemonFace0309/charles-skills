@@ -51,7 +51,24 @@ BACKDROP_BY_PLACE = {"spotlight": "blur"}
 
 
 def backdrop_of(v):
-    return v.get("backdrop") or BACKDROP_BY_PLACE.get(v["place"], "none")
+    return "none" if not v else (v.get("backdrop") or BACKDROP_BY_PLACE.get(v["place"], "none"))
+
+
+# His face on the 1080x1920 grid, from his eye line (`eye_line`): brows about 70 px above it, chin about 300 under it
+# and about 400 px wide around `face_x` (the medians of the face boxes on 34 of his cuts, videos/*/edit/work/face.json).
+# His lower lip sits about 0.74 of the way from eyes to chin (face.swift on four of his takes), 190-220 px at his usual
+# sizes; LIP takes the low end, so captions placed right under his mouth on a smaller face aren't flagged (23 Nov 2026).
+BROW, LIP, CHIN, FACE_W = 70, 190, 300, 400
+CAPTION_HOME = 1380        # charles-claude-editing: captions sit around y 1380 unless an asset sits there
+
+
+def clear_of_face(eye, half):
+    """Where a caption card `half` px tall each side of its y clears his face: 1380 when that's under his chin, else just
+    under his chin, else above his brows."""
+    for y in (CAPTION_HOME, round(eye + CHIN + half + 10)):
+        if y - half >= eye + CHIN and y + half <= SAFE_BOTTOM:
+            return y
+    return round(eye - BROW - half - 10)
 
 
 MOODS ={"chill", "emotional storytelling", "funny", "motivational", "suspenseful", "upbeat", "wholesome"}
@@ -237,20 +254,36 @@ def checks(plan, vd, beats, hook, lst, music, under_chin):
             if re.search(rf"\b{re.escape(word)}\b", said):
                 out.append(f"Line {n}: censor \"{word}\" on screen (TikTok holds videos back for it), as {word[0]}{'*' * (len(word) - 2)}{word[-1]}.")
         v = b["visual"]
+        cy = b.get("caption_y") or cap_y
+        fl = 540 + plan.get("face_x", 0) - FACE_W / 2          # his face's left edge; eye_line is his eyes' height
+        # Captions stay off his face while it's on screen and sharp ("make sure the captions don't block my face when
+        # the full blur isn't on", 23 Nov 2026). An asset at y 1380 can push them up to right under his mouth ("keep
+        # captions underneath my mouth and above the demo", 12 Nov), never onto it.
+        if lines and backdrop_of(v) == "none" and not (v and v["place"] in ("split", "screen")):
+            half = max(len(c["lines"]) for c in b["cards"]) * cap_size * 1.12 / 2   # page.js centres a card on its y
+            if abs(plan.get("face_x", 0)) < (max(cap_w(line) for line in lines) + FACE_W) / 2:
+                pushed = False
+                if v:
+                    _, by, _, bh = box(v, cy, eye, under_chin)
+                    pushed = by < CAPTION_HOME + 45 and by + bh > CAPTION_HOME - 45
+                if cy - half < eye + LIP and cy + half > eye - BROW:
+                    to = f"just under his mouth, {round(eye + LIP + half + 5)}" if pushed else clear_of_face(eye, half)
+                    out.append(f"Line {n}: the captions sit on his eyes or mouth; move this line's caption_y to {to}.")
+                elif cy - half < eye + CHIN and cy + half > eye - BROW and not pushed:
+                    out.append(f"Line {n}: the captions sit on his chin with nothing blurred behind them and no asset at "
+                               f"y {CAPTION_HOME} pushing them up; put this line's caption_y at {clear_of_face(eye, half)}.")
         if not v:
             continue
-        x, y, w, h = box(v, b.get("caption_y") or cap_y, eye, under_chin)
+        x, y, w, h = box(v, cy, eye, under_chin)
         if v["place"] == "bottom" and SAFE_BOTTOM - (cap_y + 45) < 160:
             out.append(f"Line {n}: \"bottom\" needs room under the captions; set caption_y to 1295 or less for this line.")
         if b["cards"] and v["place"] not in ("split", "screen") and y < (b.get("caption_y") or cap_y) + 45 and y + h > (b.get("caption_y") or cap_y) - 45:
             out.append(f"Line {n}: the captions sit on the asset; move this line's caption_y above or below it.")
-        # His face, eyes to mouth, where he sits (face_x, face_y). An asset over it with nothing blurred behind leaves
-        # the title and the list crisp over a face that's gone, which reads as a mistake rather than a layout.
-        fx, fy = plan.get("face_x", 0), plan.get("face_y", 0)
-        fl, ft, fw, fh = 540 + fx - 170, eye + fy - 70, 340, 230
-        ow = max(0, min(x + w, fl + fw) - max(x, fl))
-        oh = max(0, min(y + h, ft + fh) - max(y, ft))
-        if v["place"] not in ("split", "screen") and backdrop_of(v) == "none" and ow * oh > 0.2 * fw * fh:
+        # An asset over his face (brows to mouth) with nothing blurred behind leaves the title and the list crisp over a
+        # face that's gone, which reads as a mistake rather than a layout. (face_y only moves the page's stand-in.)
+        ow = max(0, min(x + w, fl + FACE_W) - max(x, fl))
+        oh = max(0, min(y + h, eye + LIP) - max(y, eye - BROW))
+        if v["place"] not in ("split", "screen") and backdrop_of(v) == "none" and ow * oh > 0.2 * FACE_W * (BROW + LIP):
             out.append(f"Line {n}: the asset covers his face with nothing blurred behind it. Give it \"backdrop\": \"blur\" "
                        "(an overlay with blur, which blurs his footage and the title and list behind it), or move it off his face.")
         src = vd / v["file"]

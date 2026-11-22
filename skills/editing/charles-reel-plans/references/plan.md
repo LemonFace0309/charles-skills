@@ -102,10 +102,16 @@ Once the editing session writes `edit/cuts.json`, each line takes its real lengt
 
 Every build measures the plan against the rules in SKILL.md marked ✓ and prints what fails. They are: caption lines of more than 3 words or of 1 word next to others, and captions wider than the 80 px
 margins; words TikTok blocks, on screen; one still up more than 3 s across consecutive lines without `long_ok`; more than
-4 s with nothing new (talk reels); captions sitting on an asset; "bottom" without room under the captions; an image
+4 s with nothing new (talk reels); captions sitting on an asset; an asset over his face (brows to mouth) with nothing
+blurred behind it; captions on his face with nothing blurred behind them, where an asset at y 1380 may push them up to
+right under his mouth but never onto it; "bottom" without room under the captions; an image
 stretched past its pixels (2x for `screen` kinds and `"text": true`), or drawn under 240×160 in its box; a hook of more than
 2 lines, wider than the margins, or up less than 2.5 s or more than 5.5 s; no music, a track outside a mood folder, or music
 outside 8-9 dB under the voice; more than 6 sound effects a minute, or more than one meme sound.
+
+His face, for those checks, is measured from `eye_line`, his eyes' height: brows 70 px above it, lower lip 205 under it,
+chin 300 under it, 400 px wide around `face_x` (the medians of the face boxes on 34 of his cuts). `face_y` only moves the
+page's stand-in, so when he sits higher or lower, set `eye_line` too.
 
 Captions written by the kit break at the sentence's own commas and full stops first, never end a line on a small word like
 "the" or "on" when the next line can take it, and drop commas and full stops at the end of a line. Write `caption` by hand
