@@ -13,6 +13,8 @@ Pick it fresh each time, because lineups change every few weeks:
 
 The key is `FAL_KEY` in the repository's `.env`. The script reads it without printing it.
 
+If fal answers 403 "Exhausted balance", tell me so I can top it up, and carry on with `kit/openai_gen.py`: the same prompts file sent to OpenAI's Images API with the repository's `OPENAI_API_KEY`, which had the same model (`gpt-image-2.6-flare`) on 22 Nov 2026. It has no edit endpoint wired in, so a second state of an object waits for fal.
+
 ## The prompt
 
 A studio product photograph, never an icon:

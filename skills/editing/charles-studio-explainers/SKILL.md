@@ -13,7 +13,7 @@ Why: my first cards for 20 Psychology Principles were clean white UI side by sid
 
 Load it first. Its contract wins on everything it covers, and this skill only adds the look:
 
-- **The slot, the clip length and the frame:** for a list reel's term card, a transparent 1080x480 clip at reel y 1080 with the card at x 80-950, y 1150-1500, inside the safe area.
+- **The slot, the clip length and the frame:** for a list reel's term card, a transparent 1080x480 clip at reel y 1080 with the card at x 80-950, y 1150-1500, inside the safe area. On a card that flips in place (the hack-reel card), there's no Before tile and the look goes on the one stage: `references/flip-cards.md`.
 - **Timing:**
   - The After's move starts by 0.15 s and is done by 0.6 s.
   - Nothing sits frozen. Hold the end pose under a slow push-in, with a living loop such as a bob, a flicker or a spin.
