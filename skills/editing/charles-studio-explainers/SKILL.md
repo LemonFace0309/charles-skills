@@ -54,11 +54,13 @@ Load it first. Its contract wins on everything it covers, and this skill only ad
    - grain over the whole card, type and photos included (`L.obj`, `L.stage`).
 
    Flames light their card and even the type beside them. Why: round 3's critic, of photos set on a gradient without these: "nothing sits in light", a template with stock PNGs.
-4. **One colour family per card,** lit on its object, with the deep colour behind the type. Two or three cards in 20 stand on cream instead, with dark ink and one loud colour, and never black. Neighbours never share a hue, and every word you must read passes 4.5:1. Why:
+4. **One colour family per card,** lit on its object, with the deep colour behind the type. Two or three cards in 20 stand on cream instead, with dark ink and one loud colour, and never black. Every word you must read passes 4.5:1. Why:
    - The critic flagged the stock violet, magenta and orange gradient as the AI tell.
    - The reference puts one loud hero on cream, and round 3 had no neutral ground at all.
    - A near-black world turns the card into a hole on my black T-shirt.
    - A light behind the type put most white headlines at 2-4:1.
+
+   **No two cards in a row share a colour.** Two light cards count as the same colour, whether white, grey, cream or a pale tint. Recreated app screens are often white, so when a white screen's neighbour is light too, put its panel on a coloured stage: a paywall on a savings green, the Calendar icon on its red. Run `kit/neighbours.py` on the clips in list order. Why: each card replaces the last in the same slot, so a repeat reads as one card that changed its words. Charles, 23 Nov 2026: "don't have back to back same colours". Round 6 had put a lime Wrapped card before the lime runner, and four pairs of white or pale cards in a row.
 
    Brand colours: keep the hue, and use its deeper shade for words. Duolingo's orange on white is 2.2:1, and #b85c00 is 4.5:1. White text on a bright game button gets a dark outline, the way games draw it.
 5. **A light you can name, standing still.** Light each world softly from its object's side, and give every glow a source. Why: in round 2 a pool of light that slid onto the After bleached the very numbers it pointed at. The critic called it "the single most wrong note", AI glow rather than studio light. The Before only dims to about 78% as the After plays.
@@ -80,6 +82,13 @@ Load it first. Its contract wins on everything it covers, and this skill only ad
    - the object carrying the words (a ticket, a stamp card, a calendar).
 
    Why: one composition 20 times reads as a template, and the reference's signature move is type and subject locked together (SPOTTED set behind a head).
+
+   **Space a type lockup by eye, from the letters.**
+   - The small line sits one cap height above the big word. Measure from the word's x-height when it's lowercase, because a lowercase word has no ascenders.
+   - No two letters touch.
+   - The object rests wholly on the letters.
+
+   Why: Charles called round 6's "You're a runner" weird spacing. "You're a" floated 88 px above the word, -0.045em left its letters all but touching, and half the shoe hung past the last r.
 8. **One signature move, built from Disney's principles:**
    - a wind-up before the pop;
    - a squash on landing;
@@ -104,7 +113,7 @@ Load it first. Its contract wins on everything it covers, and this skill only ad
    - Stop at the bar I named, or when three rounds in a row don't raise the score.
    - Fix by eye too. Collisions, clipped text and blow-outs show up on the sheets before any critic sees them.
 7. **Run charles-unslop, emil-animations and charles-polish over every card,** and fix what they find: generic names and copy, entrances from scale 0, springs past bounce 0.3, numbers that roll more digits than changed, dead frames mid-move, collisions. I asked for this pass on 23 Nov 2026.
-8. **Run charles-explainers-assets' phone and words checks,** then deliver.
+8. **Run charles-explainers-assets' phone and words checks, and `kit/neighbours.py`** over the clips in list order, then deliver.
 
 # Deliver
 
