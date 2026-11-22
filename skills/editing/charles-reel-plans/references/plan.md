@@ -64,6 +64,12 @@ The boxes `page.js` draws, from charles-claude-editing's layouts and reelkit's n
 | `under-chin` | the list zone plus 40 px on each side, (10, 1110, 1050, 580) by default | a list reel's collage, rendered by `kit/collages.py` |
 | `rect` | `rect` as given | anything else, with `fit` "contain" or "cover" |
 
+### Backdrops
+
+What a layout does to everything behind its asset. An asset that covers his face (eyes to mouth) takes the whole reel behind it out of focus: `"backdrop": "blur"` on the visual is charles-claude-editing's overlay with blur, and it blurs his footage and the reel's own layers, the title, list, stopwatch and hook, so only the asset and the captions stay sharp. `spotlight` has it by default; a big `rect` over his face needs it set. An asset that doesn't take the whole screen's attention stays off his face instead. `kit/build.py` fails any visual over his face with no backdrop. Why: with the title and list still crisp over a face that's gone, "it's not obvious that we're trying to do a full blur background" (23 Nov 2026), and the edit has to blur the same layers the plan blurs.
+
+The page draws a backdrop as one pane over everything below the asset, from the same table `kit/build.py` checks against (`BACKDROP_BY_PLACE` in both, one `.backdrop[data-kind]` rule per kind in `page.css`). When the editing skill's layouts change, change the table and its rule, never a single beat.
+
 ## A hook
 
 - A list reel: `{"style": "title", "lines": ["Evolution of Design"], "sub": "(20 years in under {under} seconds)"}`. Helvetica Neue Medium 56 at y 256, the subtitle Regular 40 two px under it, up the whole reel (`size`, `sub_size`, `sub_gap`; the edit's `title_size`, `sub_size` and `sub_gap`). `{under}` becomes the next multiple of 5 s at or above where the list ends.

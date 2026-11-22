@@ -128,7 +128,7 @@ What does the viewer get from this asset?
 
 * Every asset goes on screen one of five ways. Pick by what the asset is and what the moment is going for:
    * Regular overlay, no blur: images I just want on screen, which is most of them. Sticker-sized, above or below my face (see Image/Video Overlays)
-   * Overlay with blur: an image that takes up a lot of space and has to be seen whole, or a list I'm reading out (each item revealed as I say it). Blur me behind it and centre it. It takes my face off screen, so it follows the limits in Pacing
+   * Overlay with blur: an image that takes up a lot of space and has to be seen whole, or a list I'm reading out (each item revealed as I say it). Blur everything behind it, me and any title, list or hook on screen, so only it and the captions stay sharp, and centre it. It takes my face off screen, so it follows the limits in Pacing. An overlay without the blur stays off my face
    * Split screen 50/50: another video that's taller (ex: footage from somewhere else, a phone screen recording). It gets half the frame (1080x960) and my face gets the other half, at the top or bottom
    * Split screen 40/60: another video that's landscape (ex: a desktop screen recording, a 16:9 clip). It gets the top 40% at full width (1080x768) and my face gets the bottom 60%, like @opusjake's splits
    * A new screen: B-roll or a new vertical video we generate that should be completely immersive. It takes the whole frame (1080x1920) and cuts away from me

@@ -162,6 +162,22 @@
   $("#ig-handle").textContent = ((V.post && V.post.handle) || "").replace(/^@/, "");
   $("#ig-caption").textContent = V.post && V.post.caption ? `${V.post.caption.split("\n")[0]} … more` : "";
 
+  /* ---- backdrops: what a line's layout does to everything behind its asset ----------------------------------------- */
+  // charles-claude-editing's overlay with blur blurs everything behind the asset: his footage and the reel's own title,
+  // list, stopwatch and hook. The page draws a backdrop as one pane (#backdrop) above all of those and under the asset
+  // and the captions, so the mockup never shows a blurred face with crisp text still sitting on it. A layout takes its
+  // backdrop from this table, or a visual sets its own ("backdrop": "blur"). When the editing skill's layouts change,
+  // change this table, build.py's BACKDROP_BY_PLACE and, for a new kind, one rule in page.css: never a single beat.
+  const BACKDROP_BY_PLACE = { spotlight: "blur" };
+  const backdropOf = (v) => (v ? v.backdrop || BACKDROP_BY_PLACE[v.place] || "none" : "none");
+  const backdrop = $("#backdrop");
+  function setBackdrop(v) {
+    const kind = backdropOf(v);
+    backdrop.dataset.kind = kind;
+    backdrop.hidden = kind === "none";
+    visual.classList.toggle("over", kind !== "none");
+  }
+
   /* ---- layouts: the five ways charles-claude-editing puts an asset on screen, plus the list reel's collage ---------- */
   function box(v) {
     const capY = R.captions.y, eye = R.eye_line;
@@ -244,7 +260,7 @@
       clip = null;
       visual.hidden = true;
     }
-    footage.classList.toggle("spotlight", !!v && v.place === "spotlight");
+    setBackdrop(v);
     footage.hidden = !!v && v.place === "screen";
     const [dx, dy, s] = jump(i);
     const end = list && i === N - 1 && b.row == null && N > 1; // a list reel's sign-off punches in 6%, as list_reel.py does; nothing else zooms

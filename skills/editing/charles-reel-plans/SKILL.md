@@ -52,6 +52,12 @@ it builds and prints what fails.
   except tweets, recordings and code, which have to be big enough to read. Never over his eyes or the captions, always
   whole, sharp at the size it's drawn ✓, with no black bars, rounded corners, pop-ins or emoji tiles. Web pages in dark
   mode, starting at the visual part. Anchor on pop culture the viewer knows.
+- **Behind an asset:** an asset over his face takes everything behind it out of focus, his footage and the reel's own
+  title, list, stopwatch and hook, so only the asset and the captions stay sharp: `"backdrop": "blur"` on the visual,
+  the editing skill's overlay with blur (`spotlight` has it by default). An asset without one stays off his face ✓. Why:
+  with the list still crisp over a face that's gone, "it's not obvious that we're trying to do a full blur background"
+  (23 Nov 2026). The page draws each backdrop from one table that mirrors the editing skill's layouts
+  (references/plan.md, Backdrops), so when those layouts change, change the table, not a beat.
 - **Timing:** charles-claude-editing's Pacing. Never more than 4 s without something new on screen ✓, and no still asset up
   longer than 3 s ✓, counted across every line it stays up for, unless it's a tweet or code he's reading or the payoff he's
   talking about (`long_ok`). A layout that covers his face (`spotlight`, `screen`, a box over it) comes off within ~2 s

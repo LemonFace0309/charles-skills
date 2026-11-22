@@ -44,7 +44,17 @@ ACRONYMS = {"ios": 3, "ai": 2, "nft": 3, "nfts": 4, "ui": 2, "ux": 2, "css": 3, 
 HOLD = 1.2                 # page.js holds the last frame this long before it loops
 LIMITS = (255, 60e6)       # what one Artifact publish takes: files, bytes
 SAFE_TOP, SAFE_BOTTOM, RAIL_X, RAIL_Y, SIDE = 250, 1500, 940, 840, 80   # charles-claude-editing's safe area
-MOODS = {"chill", "emotional storytelling", "funny", "motivational", "suspenseful", "upbeat", "wholesome"}
+# What each layout does to everything behind its asset (his footage and the reel's own title, list, stopwatch and hook):
+# "blur" is charles-claude-editing's overlay with blur. A visual can set its own "backdrop". page.js keeps the same
+# table and draws each kind; when the editing skill's layouts change, change both tables, never a single beat.
+BACKDROP_BY_PLACE = {"spotlight": "blur"}
+
+
+def backdrop_of(v):
+    return v.get("backdrop") or BACKDROP_BY_PLACE.get(v["place"], "none")
+
+
+MOODS ={"chill", "emotional storytelling", "funny", "motivational", "suspenseful", "upbeat", "wholesome"}
 # Words TikTok holds a video back for; write them like s*****e in captions and the hook (charles-claude-editing, Captions).
 BLOCKED = ("suicide", "self-harm", "self harm", "kill yourself", "porn", "nude", "rape", "cocaine", "heroin", "nazi", "terrorist")
 MEME_SOUNDS = ("vine boom", "dun", "bruh", "airhorn", "air horn", "emotional damage", "oh no", "sad violin")
@@ -234,6 +244,15 @@ def checks(plan, vd, beats, hook, lst, music, under_chin):
             out.append(f"Line {n}: \"bottom\" needs room under the captions; set caption_y to 1295 or less for this line.")
         if b["cards"] and v["place"] not in ("split", "screen") and y < (b.get("caption_y") or cap_y) + 45 and y + h > (b.get("caption_y") or cap_y) - 45:
             out.append(f"Line {n}: the captions sit on the asset; move this line's caption_y above or below it.")
+        # His face, eyes to mouth, where he sits (face_x, face_y). An asset over it with nothing blurred behind leaves
+        # the title and the list crisp over a face that's gone, which reads as a mistake rather than a layout.
+        fx, fy = plan.get("face_x", 0), plan.get("face_y", 0)
+        fl, ft, fw, fh = 540 + fx - 170, eye + fy - 70, 340, 230
+        ow = max(0, min(x + w, fl + fw) - max(x, fl))
+        oh = max(0, min(y + h, ft + fh) - max(y, ft))
+        if v["place"] not in ("split", "screen") and backdrop_of(v) == "none" and ow * oh > 0.2 * fw * fh:
+            out.append(f"Line {n}: the asset covers his face with nothing blurred behind it. Give it \"backdrop\": \"blur\" "
+                       "(an overlay with blur, which blurs his footage and the title and list behind it), or move it off his face.")
         src = vd / v["file"]
         if v["type"] == "image" and v["place"] != "under-chin" and src.exists():
             with Image.open(src) as im:
