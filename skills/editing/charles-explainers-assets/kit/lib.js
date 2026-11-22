@@ -516,6 +516,9 @@
     const chip = el('div', { class: 'agent-chip', text: label, style: { left: px(h * 0.55), top: px(h * 0.86), background: color,
       font: `600 ${fpx(26)}px/${fpx(26)}px Inter, sans-serif`, padding: `${fpx(7)}px ${fpx(11)}px`, borderRadius: px(fpx(9)),
       boxShadow: `0 ${fpx(2)}px ${fpx(6)}px rgb(0 0 0 / 0.25)` } }, e);
+    // The chip hangs below-right of the tip, or above-right when that would put it past the band's bottom edge (a
+    // token on the code block's last line), so the card never cuts it off.
+    const chipH = fpx(26) + 2 * fpx(7);
     return {
       e, chip, color, height: h,
       set(x, y, { press = 0, o = 1 } = {}) {
@@ -523,6 +526,7 @@
         e.style.opacity = o;
         e.style.visibility = o > 0.001 ? 'visible' : 'hidden';
         arrow.style.transform = `scale(${1 - 0.1 * clamp(press)})`;
+        chip.style.top = px(y + h * 0.86 + chipH > BAND.bottom - fpx(4) ? -(chipH + fpx(6)) : h * 0.86);
       },
     };
   }
