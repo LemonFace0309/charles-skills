@@ -1,15 +1,17 @@
 ---
 name: charles-studio-explainers
-description: "Make the explainer cards in my reels look hand-made by a design studio instead of plain UI mock-ups: each line gets an idea (the moment it fires in an app or game people know, recreated, or a real object that puns on it), one signature move, one colour family lit from a side, and big confident type, on charles-explainers-assets' timing, slots and readability rules, then hill-climbed with fresh critics against a reference. Use when explainer graphics are called boring, plain, flat, generic or not engaging, when I want cards that look like a studio made them, look premium, pop, or match a reference (Tobi Donadon's Construct Design, an Awwwards or Apple Design Award look), when I say hill climb the visuals, or when a list, hack or principle reel needs a card per item people would screenshot. Triggers on: more interesting, MUCH more interesting, boring cards, studio look, visually engaging, make it pop, like this reference, hill climb, explainer graphics, before/after cards."
+description: "Make the explainer cards in my reels look hand-made by a design studio instead of plain UI mock-ups: each line gets an idea (a real instance cropped from a page that really did it when the line is about what AI or a product makes, the moment it fires in an app or game people know, recreated, or a real object that puns on it), one signature move, one colour family lit from a side and big confident type, on charles-explainers-assets' timing and readability rules, then hill-climbed with fresh critics against a reference. Use when explainer graphics are called boring, plain, flat, generic or not engaging, when I want cards that look like a studio made them or match a reference (Tobi Donadon's Construct Design), when I say hill climb the visuals, when a list, hack or principle reel needs a card per item, or when I want real instances of AI tells. Triggers on: boring cards, studio look, make it pop, like this reference, hill climb, explainer graphics, before/after cards, real instances."
 ---
 
 # Goal
 
-Every card still teaches its line in the second a phone viewer gets, and now it also looks like a studio made it: an idea you could say in one sentence, a real-looking object acting it out, one colour family lit from a side, and one move a person would describe to a friend ("the anchor drops on the price", "a coin scratches off +40 XP").
+Every card still teaches its line in the second a phone viewer gets, and now it also looks like a studio made it: an idea you could say in one sentence, the real thing or a real-looking object acting it out, one colour family lit from a side, and one move a person would describe to a friend ("the anchor drops on the price", "a coin scratches off +40 XP").
 
 Why: my first cards for 20 Psychology Principles were clean white UI side by sides, and I said: "Make the explainer graphics MUCH more interesting. Reference this reel and hill climb until we can make it like this" (22 Nov 2026, pointing at Tobi Donadon's article "How to Make Claude Design Like a Real Studio" and his Construct Design library). Clean and correct isn't enough to hold a scroll. A clear idea, a rich material and a move that lands are.
 
 Then, after five rounds of object metaphors: "try to use practical examples from mobile apps. Not ones that are too abstract. Think of what the best apps and games use like Monopoly Go, Duolingo, Candy Crush, etc. U can even recreate UI from iconic/well known apps to create a familiarity effect" (23 Nov 2026). A moment people have felt in an app they use reads faster than a clever metaphor.
+
+And when the line is about what AI makes, a recreation isn't enough either: "as much as possible show real instances of the tells (like in our first video for ai tells)" (23 Nov 2026). Viewers judge a recreated AI page against the real ones they've seen.
 
 # Keep from charles-explainers-assets
 
@@ -32,7 +34,18 @@ Load it first. Its contract wins on everything it covers, and this skill only ad
 
 `references/craft.md` has each rule with its numbers and the reason for it. In short:
 
-1. **The real moment first.** If people have felt the principle in an app or game, recreate that moment, big:
+1. **The real thing first.** Walk this for every line:
+
+   ```
+   What is the line about?
+   ├── What AI or a real product makes (a tell, a habit, a default)
+   │   └── THE REAL INSTANCE: a crop of a page that really did it, rendered from its own code, the tell put back
+   │       with one move, then marked in red (references/real-instances.md). Never recreate it
+   ├── A principle people have felt in an app or game → recreate that moment, big (below)
+   └── Neither → the real-world object that is a pun on it (below)
+   ```
+
+   **The real moment.** If people have felt the principle in an app or game, recreate that moment, big:
    - Duolingo's streak about to reset, a daily prize wheel, Candy Crush's out-of-moves screen;
    - Monopoly Go's free dice gift, a dating app's blurred likes, Spotify Wrapped, the App Store's ratings card;
    - an iOS reminder and its notification.
@@ -51,7 +64,7 @@ Load it first. Its contract wins on everything it covers, and this skill only ad
 3. **Lit, not pasted.** Each object gets:
    - its world's light on its lit side and its deep colour on the far side;
    - a cast shadow on the backdrop, and a contact shadow where it stands;
-   - grain over the whole card, type and photos included (`L.obj`, `L.stage`).
+   - grain over the whole card, type and photos included (`L.obj`, `L.stage`). A real instance's page is the one exception: it stays as rendered, with grain on its mat only.
 
    Flames light their card and even the type beside them. Why: round 3's critic, of photos set on a gradient without these: "nothing sits in light", a template with stock PNGs.
 4. **One colour family per card,** lit on its object, with the deep colour behind the type. Two or three cards in 20 stand on cream instead, with dark ink and one loud colour, and never black. Every word you must read passes 4.5:1. Why:
@@ -96,7 +109,7 @@ Load it first. Its contract wins on everything it covers, and this skill only ad
 
    Rigid things (iron, brass, a coin, wood) never squash: they fall, stop and rock. The move lands by 0.6 s and then holds still, except where real life flickers (a flame).
 9. **The tells to refuse:**
-   - Tobi's four default looks: the paper edition, the black launch page with a purple glow, the KPI dashboard and the dark dev tool;
+   - Tobi's four default looks: the paper edition, the black launch page with a purple glow, the KPI dashboard and the dark dev tool, except as the real instance a card is showing;
    - game icons and stock gradients;
    - glows with no source, and objects with no shadow;
    - giant faint words that repeat the label;
@@ -107,7 +120,7 @@ Load it first. Its contract wins on everything it covers, and this skill only ad
 1. **Read the reference,** if I gave one. Write down what it does in plain terms: the ideas, the materials, the light, the colour, the type and the moves. Save its images in the video's `research/reference/`, which stays local.
 2. **Write the beat sheet,** as charles-explainers-assets does, and add to each line its idea: the object, the move and the colour family.
 3. **Explore three directions,** rendered side by side on two or three lines, before building all of them (`references/hill-climb.md`). One of them can be your own synthesis.
-4. **Generate the objects** with `kit/fal_gen.py` and look at each one on a mid colour. Make every changed state of an object (a happy plush and a sad one, a candle and the candle in ice) with the edit endpoint from the first image, so the two match. Measure each object's visible bounds with `kit/bbox.py` before you place it.
+4. **Render the real instances** for the lines that have them (`references/real-instances.md`), then **generate the objects** for the rest with `kit/fal_gen.py` and look at each one on a mid colour. Make every changed state of an object (a happy plush and a sad one, a candle and the candle in ice) with the edit endpoint from the first image, so the two match. Measure each object's visible bounds with `kit/bbox.py` before you place it.
 5. **Build** with `kit/studio.js` on charles-explainers-assets' renderer, one file of builders per few cards, joined by `kit/bundle.sh`.
 6. **Hill-climb.** Render stills at 0.3 s and at the end pose, sheet them over my footage (`kit/sheet.sh`), and have a fresh critic score them against the reference. Fix the biggest problem first, re-render, look again, and log every round in the video's `DESIGN-LOG.md`.
    - Stop at the bar I named, or when three rounds in a row don't raise the score.

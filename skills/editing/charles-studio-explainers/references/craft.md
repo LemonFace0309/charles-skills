@@ -91,7 +91,8 @@ When the line is about apps, show the moment it fires in one people already use.
   - the world's light colour on its lit side and the world's deep colour on its far side, both masked to its own shape (soft-light and multiply);
   - a cast shadow on the backdrop, down and to the left, since every prompt puts the key light upper right;
   - a contact shadow where it stands on something, which fades and shrinks as it leaves the floor.
-- **Grain over everything,** photos and type included, at 0.34 overlay (0.26 on cream), so the photos, the paper and the colour read as one print. At 0.2 soft-light under the content, nobody could see it.
+- **Grain over everything,** photos and type included, so the photos, the paper and the colour read as one print: `L.grain` at 0.3 overlay on a colour, and on cream or white its light tile multiplied at 0.55 (`L.stage` does both). At 0.2 soft-light under the content, nobody could see it.
+- **Measure the grain, don't trust it.** Take a flat patch of a still and read its standard deviation: real grain is 3-8 levels (`L.stage` gives 3-8 on a colour and 3 on cream). The kit's old SVG turbulence tile measured under one level on colour and 0.0 on white (23 Nov 2026), so for three rounds the cards had no grain at all. Overlay can't darken white, which is why light worlds multiply. A real instance's page gets none (`real-instances.md`).
 - **Light sources light things.** A flame lights its card with a flickering warm pool (`L.flameLight`), and it can light type too: a radial gradient centred on the flame, clipped to the glyphs, dims as the flame gutters.
 - **The light stands still.** The world is lit from the object's side, and each glow has a source (a candle, a crystal ball).
   - Never slide a glowing pool across the card. In round 2 it bleached the numbers it pointed at, and the critic called it the single most wrong note.
@@ -110,6 +111,9 @@ When the line is about apps, show the moment it fires in one people already use.
 - **Give numbers a second voice:** thin numerals (Inter 250) for prices and gaps, dot-matrix (Doto) for scores and counters, and mono (JetBrains Mono) for small print on receipts, tickets and tags. Keep the Befores in plain regular weight (400-500), so the refined type belongs to the After. Round 4's critic found one bold sans everywhere and the thin numerals all on the plain side. Skip the serif with an italic accent word: it's one of Tobi's four default looks.
 - **Use dot-matrix type (Doto) only at 48 px or more.** At 24 px it reads as noise.
 - **Measure every line against its box before you trust it.** The first passes clipped "/mo", "a day" and a countdown at the card's edge.
+- **Tabular figures only on a number that changes** (`L.T(..., { tnum: true })`). In running text Inter's tnum sets hyphens and punctuation on the figures' width: "Control - plane".
+- **Draw every arrow and symbol as an icon** (`L.icon`), never type it. A glyph the bundled fonts lack falls back to a thin system face: the kit's fonts have → but no ↗, and a tab of "Claude →, GPT ↗" mixed the two weights.
+- **Place anything that sits in a line of text from its baseline.** An empty inline-block's bottom edge sits on the baseline, and an interpunct centres 0.29 em above it. Placed from the line box's top, dots between words floated at the x-height.
 
 ## Motion
 

@@ -38,12 +38,14 @@
   L.fadeUp = (e, k, dy = 8) => { e.style.opacity = Number(k).toFixed(3); e.style.transform = `translateY(${(dy * (1 - k)).toFixed(2)}px)`; };
 
   /* ---------- drawing ---------- */
-  // text: T(parent, x, y, 'copy', { size, weight, color, family, w, align, lh, ls, style })
+  // text: T(parent, x, y, 'copy', { size, weight, color, family, w, align, lh, ls, tnum, style })
+  // Tabular figures only with tnum: true, for a number that changes on screen. In running text Inter's tnum sets hyphens
+  // and punctuation on the figures' width too ("Control - plane", 23 Nov 2026).
   L.T = (p, x, y, text, o = {}) => {
-    const { size = 20, weight = 500, color = '#fff', family = 'InterV', w, align, lh, ls, style = {} } = o;
+    const { size = 20, weight = 500, color = '#fff', family = 'InterV', w, align, lh, ls, tnum = false, style = {} } = o;
     return div(p, { x, y, w, text, style: { font: `${weight} ${size}px/${lh || Math.round(size * 1.15)}px ${family}, Inter, sans-serif`, color,
       whiteSpace: 'nowrap', letterSpacing: ls ?? (size >= 60 ? '-0.045em' : size >= 28 ? '-0.025em' : '-0.01em'), textAlign: align || 'left',
-      fontFeatureSettings: '"tnum" 1', ...style } });
+      fontFeatureSettings: tnum ? '"tnum" 1' : 'normal', ...style } });
   };
   // the principle's words: Inter Tight 800, tracked tight, with the word spaces kept open (at -0.045em and no word
   // spacing, round 3's critic read "Ipromise", "Bestvalue", "Pipmisses")
@@ -62,11 +64,28 @@
     el('img', { src, style: { width: '100%', height: '100%', display: 'block', objectFit: 'contain' } }, box);
     return box;
   };
-  const GRAIN = `url("data:image/svg+xml;utf8,${encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>`)}")`;
-  L.grain = (p, w, h, o = 0.22, blend = 'overlay') => div(p, { x: 0, y: 0, w, h, style: { backgroundImage: GRAIN, backgroundSize: '220px 220px', opacity: o, mixBlendMode: blend, pointerEvents: 'none' } });
+  // Grain: a 256 px tile of real gaussian noise, the same every render. The SVG turbulence tile this replaced measured
+  // under one level on colour and 0.0 on white (23 Nov 2026): it was never on screen. Overlay can't darken white, so a
+  // near-white or cream world takes the light tile (mean 244) multiplied instead: L.grain(p, w, h, 0.55, 'multiply', true).
+  const noise = (mean, sd, seed) => {
+    const c = el('canvas', { width: 256, height: 256 }), x = c.getContext('2d'), d = x.createImageData(256, 256);
+    let s = seed >>> 0;
+    const r = () => { s = (Math.imul(s, 1664525) + 1013904223) >>> 0; return (s + 0.5) / 4294967296; };
+    for (let i = 0; i < d.data.length; i += 4) {
+      const g = Math.sqrt(-2 * Math.log(r())) * Math.cos(2 * Math.PI * r());
+      d.data[i] = d.data[i + 1] = d.data[i + 2] = Math.max(0, Math.min(255, Math.round(mean + sd * g))); d.data[i + 3] = 255;
+    }
+    x.putImageData(d, 0, 0);
+    return `url(${c.toDataURL('image/png')})`;
+  };
+  const GRAIN = noise(128, 52, 7), GRAIN_LIGHT = noise(244, 11, 11);
+  L.grain = (p, w, h, o = 0.3, blend = 'overlay', light = false) => div(p, { x: 0, y: 0, w, h, style: { backgroundImage: light ? GRAIN_LIGHT : GRAIN, backgroundSize: '256px 256px', opacity: o, mixBlendMode: blend, pointerEvents: 'none' } });
   L.glass = (p, x, y, w, h, o = {}) => L.B(p, x, y, w, h, { r: o.r ?? 18, bg: o.bg || 'rgb(255 255 255 / 0.16)',
     style: { backdropFilter: 'blur(14px) saturate(1.4)', boxShadow: 'inset 0 1px 0 rgb(255 255 255 / 0.35), inset 0 0 0 1px rgb(255 255 255 / 0.14), 0 16px 34px -18px rgb(0 0 0 / 0.5)', ...(o.style || {}) } });
   const ICONS = {
+    // arrows are drawn, never typed: the kit's fonts have → but no ↗, which falls back to a thin system glyph
+    arrowRight: '<path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>',
+    arrowUpRight: '<path d="M7 7h10v10"/><path d="M7 17 17 7"/>',
     bell: '<path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>',
     lock: '<rect width="16" height="11" x="4" y="11" rx="2.5"/><path d="M8 11V7.5a4 4 0 0 1 8 0V11"/>',
     check: '<path d="M20 6 9 17l-5-5"/>',
@@ -119,7 +138,7 @@
     if (!f.ink) div(card, { x: beforeW - 8, y: -10, w: 220, h: 110, style: { background: 'radial-gradient(closest-side, rgb(0 0 0 / 0.16), transparent)' } });
     lab(card, beforeW + 48, 36, 'After', f.ink || '#fff');
     const shade = L.B(b, 0, 0, beforeW, H - 36, { bg: 'rgb(0 0 0 / 0.22)', r: 24, style: { opacity: 0, zIndex: 3 } });
-    L.grain(card, W, H, f.cream ? 0.26 : 0.34, 'overlay').style.zIndex = 30;
+    (f.cream ? L.grain(card, W, H, 0.55, 'multiply', true) : L.grain(card, W, H, 0.3, 'overlay')).style.zIndex = 30;
     return { b, bk, tick: (t) => { shade.style.opacity = L.P(t, 0.12, 0.34).toFixed(3); } };
   };
   // A lit object: the photo, the world's light spilling onto its lit side (upper right, where every prompt puts the key

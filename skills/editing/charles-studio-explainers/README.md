@@ -13,7 +13,8 @@ Add `-g` to install it for every project, or copy this folder into `~/.claude/sk
 
 ## What it does
 
-- Shows the moment each line fires in an app or game people already use, recreated big: a Duolingo-style streak about to reset, a candy game's out-of-moves screen, a board game's free dice, a dating app's blurred likes. Where there's no real moment, it finds an object that's a pun on the line
+- When a line is about what AI or a product makes, shows a real instance: a crop of a page that really did it, rendered from its own code, with the tell popping back onto it and marked in red, never a recreation
+- Otherwise shows the moment each line fires in an app or game people already use, recreated big: a Duolingo-style streak about to reset, a candy game's out-of-moves screen, a board game's free dice, a dating app's blurred likes. Where there's no real moment, it finds an object that's a pun on the line
 - Generates each object as a photographed studio product shot and sits it in real light (its world's colour on its edges, a contact shadow, grain over everything), in one colour family or on cream, with one move that sells the idea
 - Rotates four layouts across a set, including type locked with the object, and keeps each card to a few words a phone viewer reads in a second
 - Checks the set in list order so no two cards in a row share a colour (`kit/neighbours.py`)
