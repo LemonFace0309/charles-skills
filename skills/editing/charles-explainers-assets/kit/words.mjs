@@ -1,7 +1,8 @@
 #!/usr/bin/env bun
 /* The words check (SKILL.md, Words on screen; Phone check, step 5), measured in the page instead of eyeballed.
    - At each phone-check moment, every visible text in the band: its size in the final frame (font size x the scale
-     it's drawn at x the slot's scale) against 26 px, 24 px for code and 30 px for a tab, and its contrast against
+     it's drawn at x the slot's scale) against 26 px, 24 px for code and for a Before/After label (class "label"),
+     and 30 px for a tab and for a feel side by side's two values (class "value"), and its contrast against
      the nearest opaque background behind it, against 4.5:1. Copy from 20 to 26 px is listed apart: it passes only
      as part of the picture, where the lesson isn't (SKILL.md, Sizes). So is text under 0.6 opacity: it passes only
      if it's dimmed on purpose as the lesson. Text with nothing opaque behind it in an alpha clip sits on the
@@ -64,13 +65,13 @@ for (const asset of P.assets.filter((a) => a.render !== false && (!only || only.
         if (covered) continue;
         const fg = rgba(cs.color), mix = bg ? fg.slice(0, 3).map((v, i) => v * fg[3] + bg[i] * (1 - fg[3])) : null;
         const cr = bg ? (Math.max(lum(mix), lum(bg)) + 0.05) / (Math.min(lum(mix), lum(bg)) + 0.05) : null;
-        const kind = e.closest('.tab') ? 'tab' : /JBM|mono/i.test(cs.fontFamily) ? 'code' : 'text';
+        const kind = e.closest('.tab') ? 'tab' : e.closest('.value') ? 'value' : e.closest('.label') ? 'label' : /JBM|mono/i.test(cs.fontFamily) ? 'code' : 'text';
         res.push({ text: own.slice(0, 32), size: +size.toFixed(1), kind, cr: cr && +cr.toFixed(2), op: +op.toFixed(2) });
       }
       return res;
     }, [t, band, P.slot.scale]);
     for (const f of found) {
-      const min = { tab: 30, code: 24, text: 26 }[f.kind], small = f.size < min - 0.3, low = f.cr != null && f.cr < 4.5;
+      const min = { tab: 30, value: 30, label: 24, code: 24, text: 26 }[f.kind], small = f.size < min - 0.3, low = f.cr != null && f.cr < 4.5;
       const what = `"${f.text}" (${f.kind}): ${f.size} px${small ? ` UNDER ${min}` : ''}${f.cr != null ? `, ${f.cr}:1${low ? ' UNDER 4.5' : ''}` : ''}`;
       if (f.op < 0.6) { if (small || low) dimmed.set(f.text, `${what}, opacity ${f.op}, at ${t} s`); continue; }
       if (f.cr == null) footage.set(f.text, `${what}, over the footage, at ${t} s`);

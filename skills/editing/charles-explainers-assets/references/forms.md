@@ -1,6 +1,6 @@
 # Forms
 
-How each form from the tree in SKILL.md is built, and the gold to copy. Paths are on main. Copy the gold's structure (crop, sizes, timing) and change its content; a copy that only changes the words isn't done.
+How each form from the tree in SKILL.md is built, and the gold to copy. Gold paths are in the claude-editing repository: use them when it's present, and the sheets in `examples/` otherwise. Copy the gold's structure (crop, sizes, timing) and change its content; a copy that only changes the words isn't done.
 
 ## Demo + definition tab
 
@@ -13,11 +13,11 @@ Gold: `videos/eradicating-ai-slop/design-terms/` (`terms/index.html`, `tools/ree
 
 ## Flip in place
 
-Gold: `videos/eradicating-ai-slop/unslop-designs/` for stills, `videos/design-hacks/motion/` (kit v3, `scenes/`) for motion. `kit/example/` is a motion flip with the agent cursor making the change. `videos/practical-design-tips/explainers/` marks every change (SKILL.md, Mark the change), with every kind of mark across its 20 cards.
+Gold: `videos/eradicating-ai-slop/unslop-designs/` for stills, `videos/design-hacks/motion/` (kit v3, `scenes/`) for motion. `kit/example/` is a motion flip with the agent cursor making the change. `videos/practical-design-tips/explainers/` marks every change (`marks.md`), with every kind of mark across its 20 cards (`examples/gold-marks.jpg`).
 
 - **One crop and one scale for both states.** A slow push-in, if the flip has one, runs straight through the change and never restarts on it. The state tag sits on the card's corner and flips on the change. Why: anything that moves besides the fix reads as part of the fix.
-- **The camera holds.** One framing for the whole flip, under the slow push. A zoom is for a lesson too small to see (under 4 px in the final frame): one move, settled 0.3 s before the change and never reversed (SKILL.md, Make it worth watching). Why: a punch-in and a pull-back on every card of design hacks part 2 read as tacky. Gold: `videos/design-hacks/design-part-2/explainers/`.
-- **The before shows the flaw happening:** a pointer or a fingertip triggers it, or time does. A demo built for the line is cropped so the flaw is the subject, and its change mark sits on the part that will change (SKILL.md, Mark the change). A still flaw on a real page (a crop of a site, where it's one detail among many) gets its red mark 0.2 s after the cut, as in the real-thing form below.
+- **The camera holds.** One framing for the whole flip, under the slow push. A zoom is for a lesson too small to see (under 4 px in the final frame): one move, settled 0.3 s before the change and never reversed (SKILL.md, Make it worth watching). Why: a punch-in and a pull-back on every card read as tacky. Gold: `videos/design-hacks/design-part-2/explainers/` (`examples/gold-cards.jpg`).
+- **The before shows the flaw happening:** a pointer or a fingertip triggers it, or time does. A demo built for the line is cropped so the flaw is the subject, and its change mark sits on the part that will change (`marks.md`). A still flaw on a real page (a crop of a site, where it's one detail among many) gets its red mark 0.2 s after the cut, as in the real-thing form below.
 - **The change** lands on the change word, and the mark moves with it, turning green. Nothing else moves from 0.3 s before the word to 0.5 s after it. The agent cursor makes the change when the fix has something on screen to take hold of; when a plain pointer is already using the product, the code can change by itself (`agent-cursor.md`).
 - **The after** includes the proof beat: the same interaction again, now right, run by the pointer that caused the flaw (the arrow on desktop UI, the fingertip on a phone).
 - **The clip:** 9.0 s, the change at exactly 4.50 s, both halves looping (SKILL.md, The contract).
@@ -26,25 +26,26 @@ Gold: `videos/eradicating-ai-slop/unslop-designs/` for stills, `videos/design-ha
 
 Two kinds, from the two branches of the tree: a principle (the same component without it and with it) and a fix whose versions differ only in feel.
 
-Gold for the layout: the posted cards of `videos/ux-principles/` (`kit/cards-sheet.png`, `source/cards.html`). The card is white, 960×400, with the tab on its top-left edge, two equal wells 24 px apart and a label over each. Keep that layout and drop what they got wrong: grey 21 px sublabels describing each demo, and a sentence in the tab. `pair()` in the kit draws the wells and labels (`kit.md`). `videos/eradicating-ai-slop/unslop-animations/` (148K plays) is the same idea for fixes, but its panels are too grey and its labels too small to copy.
+Gold for the layout: the posted cards of `videos/ux-principles/` (`videos/ux-principles/kit/cards-sheet.png`, `videos/ux-principles/source/cards.html`). The card is white, 960×400, with the tab on its top-left edge, two equal wells 24 px apart and a label over each. Keep that layout and drop what they got wrong: grey 21 px sublabels describing each demo, and a sentence in the tab. `pair()` in the kit draws the wells and labels (`kit.md`). `videos/eradicating-ai-slop/unslop-animations/` (148K plays) is the same idea for fixes, but its panels are too grey and its labels too small to copy.
 
 Both kinds:
 - **One component, twice.** Use the same component, crop, size and copy in both panels, so the only difference is what the principle or fix changes. Build it once as a function of the side (`build(well, side)`) so the two can't drift apart. Why: the difference is the lesson, so anything else that differs is a false lead.
 - **A real component in colour, as big as its panel allows.** Its moving part stays 40 px or bigger in the final frame: a toast, a dock, a checkout button, never a grey stand-in. If it can't fit at that size in half the card, it's the wrong component for a side by side; pick a smaller real one.
-- **Both start on the same frame** from the same pose, at real speed. In a list's short items, the after's move is done by 0.6 s and the end pose still shows the difference (SKILL.md, Timing, A short side by side). In a longer line the pair loops together about once a second, a cycle starts on the change word, and each cycle changes something (another item, a harder flick) so it counts as new (SKILL.md, Never stale).
+- **Both start on the same frame** from the same pose, at real speed. In a longer line the pair loops together about once a second, a cycle starts on the change word, and each cycle changes something (another item, a harder flick) so it counts as new (SKILL.md, Timing, Never stale).
+- **A short side by side** (a list's short items): the after's move is done by 0.6 s, and the before plays its flaw at real speed, even past the cut (a 2 s spinner). The end pose still shows the difference: the trace of what differed when that's a path or a spacing (the arc's dotted path, a tick for each frame), or the state that differs (the before's spinner still turning). When the two would end alike (squash and stretch, anticipation, secondary action) and the line runs 1.45 s or more, run the pair again on a new item (the next card, another icon), starting within 0.25 s of the first run's end and done 0.25 s before the next line. A new item is a new event, not a replay. Why: the comparison is the lesson, and two identical panels held for a second show none.
 - **Left is always before, right after.**
 - **No agent cursor:** nothing is being fixed on screen, so a press shows as the element's own pressed state. When pointing is the lesson (Fitts's law, a hit area, where people look for the cart), or a gesture's speed is (a flick), each panel gets a plain cursor or one fingertip. So does a change whose cause would otherwise be invisible: the pointer hovering over the choices in Hick's law, or a keycap that presses as the selection moves (frequency of use). Both pointers start from the same spot on the same frame. Why: two pointers are two more things to watch unless they're the subject, but a tap with nothing tapping has no visible cause.
 - **Show the difference, don't describe it.** No sublabels that say what the demo shows ("Rigid", "No wind-up", "Everything at once"). Why: the panels already show it, and in about a second there's no time for a third read.
 
 A principle:
-- **Labels:** "Before" and "After" in Inter semibold, 30 px in the final frame, in the ink colour. Each sits over its well's top-left corner, in the same place on every card. They're chrome, not a read (SKILL.md, The frame budget).
+- **Labels:** "Before" and "After" in Inter semibold, 24 px in the final frame, in the ink colour (`pair()`'s default). Each sits over its well's top-left corner, in the same place on every card. Why: they're chrome, read once and then known by position, so they stay quieter than the tab (SKILL.md, Words on screen).
 - **The tab** says what the principle means (`text.md`). A number the principle is about goes in the tab ("Keep UI under 300ms"), not under the panels.
 - **A property in each well** only when one CSS property makes the whole difference, inside the well along its bottom edge so the card's chrome stays the same on every item, in the code style: `perspective: none` under the before and `perspective: 700px` under the after. The two are the clip's pause text.
 
 A fix that differs in feel:
 - **Only when the versions differ in feel** (the same duration on another curve, a spring against a tween, durations under 2× apart), on a simple element: a toggle's knob, a progress bar, one card.
 - **Never in a slot whose editor tags every clip Before/After** (the hack-reel card): there, flip in place. Why: a Before tag over two versions at once tells the viewer something false.
-- **Labels:** each version's value only ("ease-in", "ease-out"), 30 px or more, over its well: the before's value in red, the after's in green. There's no tab and no "Before"/"After": the pair of values is the clip's one glance text.
+- **Labels:** each version's value only ("ease-in", "ease-out"), 30 px or more, over its well: the before's value in red, the after's in green (`pair()` with `colors`). There's no tab and no "Before"/"After": the pair of values is the clip's one glance text, so it keeps the glance size, not the 24 px of chrome.
 
 ## After only
 

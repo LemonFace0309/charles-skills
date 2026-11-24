@@ -1,5 +1,7 @@
 # The agent cursor
 
+Contents: When it appears · What it acts on · More than one agent · The look · The timeline, with the change at T · Never
+
 A labelled, coloured pointer, like a collaborator's cursor in Figma, that makes the change on my word, so the viewer's eye is already where the change happens and sees what caused it.
 
 Why: in 1-5 s, with my face, the list and the captions competing, the eye has to be at the change before it happens. A moving pointer is the strongest cue on screen, and press-then-change shows cause and effect: this value did that. It also says what my reels are about: telling your agent what to change ("Give this to your AI agent:").
@@ -13,7 +15,7 @@ Is there a fix or a change of state on screen?
 └── Yes
     ├── The line is under 2 s (a short item) → the agent comes only when its action is the
     │   change itself: it carries a part, drags a corner handle, retypes a word or carries a
-    │   sweep's grip (SKILL.md, Mark the change). It arrives in the before, makes the change on
+    │   sweep's grip (`marks.md`). It arrives in the before, makes the change on
     │   the word and leaves, and never runs a proof beat. Otherwise the flip's mark shows the change
     └── 2 s or longer → the agent cursor makes the change
         Does the demo also need a pointer to show the interaction?
@@ -25,9 +27,9 @@ Is there a fix or a change of state on screen?
         └── No → the agent cursor enters for the change and leaves after it
 ```
 
-**The code can change by itself.** In a reel whose cards mostly have a pointer or a finger using the product, the code changes on the word with no agent, on every card, and the agent comes only for a change it makes to the design itself (it drags a hit area out, carries a part). Decide it once per reel, so every card behaves one way. Why: on the second build of design hacks part 2 (22 Nov 2026) the agent used the product and then edited the code on every card. That took it on up to five trips in 3.5 s, it sat on the code as it changed, and it pulled the eye to the pause text when the lesson was in the product: "It feels tacky at times".
+**The code can change by itself.** In a reel whose cards mostly have a pointer or a finger using the product, the code changes on the word with no agent, on every card, and the agent comes only for a change it makes to the design itself (it drags a hit area out, carries a part). Decide it once per reel, so every card behaves one way. Why: an agent that used the product and then edited the code on every card made up to five trips in 3.5 s, sat on the code as it changed, and pulled the eye to the pause text when the lesson was in the product. It read as tacky.
 
-Why a short item gets the agent at all: a part moving under a pointer is the clearest way to show a change of place or size, and I asked for "fake agent cursors that move components around" (16 Nov). What a short item has no time for is the proof beat, not the change.
+Why a short item gets the agent at all: a part moving under a pointer is the clearest way to show a change of place or size. What a short item has no time for is the proof beat, not the change.
 
 ## What it acts on
 
@@ -50,7 +52,7 @@ Where does the fix live?
 ├── In a word of the component's copy (a button's label) → it double-clicks the word, which
 │   selects in its colour; on the word the new words land in the selection, which turns green
 ├── In a colour across the whole subject → it carries a before|after sweep's grip across it
-│   (SKILL.md, Mark the change)
+│   (`marks.md`)
 └── Nowhere on screen (a principle with no single control) → no agent cursor; the flip happens
     on the word by itself
 ```
@@ -63,12 +65,12 @@ Only when my line is about more than one: agents working in parallel, a handoff,
 
 ## The look
 
-- **A coloured arrow, like a collaborator's cursor in Figma:** filled with the agent's colour, with a 2 px white outline and a soft shadow (0 2px 6px at 25% black). Why: I asked for coloured cursors like Figma's. The colour sets the cursor apart from the UI it acts on, and the outline keeps it visible on the dark code block.
+- **A coloured arrow, like a collaborator's cursor in Figma:** filled with the agent's colour, with a 2 px white outline and a soft shadow (0 2px 6px at 25% black). Why: the colour sets the cursor apart from the UI it acts on, and the outline keeps it visible on the dark code block.
 - **Its size** is what a real pointer would be at the demo's zoom (the kit's `cursor()` at scale 1.3, next to UI magnified about 2×), and never under 36 px tall in the final frame.
-- **The label:** "Agent", in a chip of the same colour attached below-right of the arrow's tip, the way Figma shows a collaborator's name. With more than one on screen, "Agent 1", "Agent 2" and so on. White 26 px semibold text, corner radius 9 px like the principle tag. Always Agent, never a product name. When below-right would put the chip past the band's bottom edge (a token on the code block's last line), the kit hangs it above-right instead, because a chip cut off by the card's edge looks broken: on design hacks part 2 the chip under a one-line code block fell outside the card on half the clicks.
+- **The label:** "Agent", in a chip of the same colour attached below-right of the arrow's tip, the way Figma shows a collaborator's name. With more than one on screen, "Agent 1", "Agent 2" and so on. White 26 px semibold text, corner radius 9 px like the principle tag. Always Agent, never a product name. When below-right would put the chip past the band's bottom edge (a token on the code block's last line), the kit hangs it above-right instead, because a chip cut off by the card's edge looks broken.
 - **The colours,** in this order: blue #0079CD, violet #9747FF, magenta #DE04A3, teal #058193. Assign them once per reel, skipping any colour the reel's demos use as an accent, so a cursor never blends into what it clicks: a lone agent is blue, or violet when the demos' buttons are blue. List them in `explain.json` "agents", and the kit draws every cursor and selection in them. Never red or green, which mean the flaw and the fix. Each agent keeps its colour for the whole reel. Why: these are Figma-style hues, each darkened only as far as its white label needs for 4.5:1 (Figma's own blue, #0D99FF, gives 3.0:1). Each is also at least 3.7:1 against the hack reels' #e6e9ee ground, so the arrow shows even where its white outline doesn't.
 - **What it selects takes its colour,** as a collaborator's selection does in Figma: the token it double-clicks, and the selection box and handles it drags. The new value still lands under green, because green is the fix.
-- **The fingertip** is the kit's soft dark disc (`finger()` in `videos/design-hacks/motion/scenes/lib.js`). Never an emoji hand or a photo of a finger.
+- **The fingertip** is the kit's soft dark disc (`finger()`). Never an emoji hand or a photo of a finger.
 - **No trails, glows, sparkles or simulated hand shake.** Why: they're noise, and they're AI tells.
 
 ## The timeline, with the change at T
@@ -95,10 +97,10 @@ Why: the eye needs about half a second to find a pointer and follow it, the pres
 
 ## Never
 
-- **Covering what it changes.** Aim inside the target but off its text: a code token's lower-left corner, a button's empty side. When it carries a part, hold it where the name chip, hanging below-right of the tip, falls into empty space: a button by its right end, a slider's grip low on the subject. Why: on the first build of the dark-mode card the chip sat on a row whose colour was the change. Why lower left: a value grows rightward when it changes (0 → 0.97), so a tip on the right ends up on the new value. The label hangs below-right of the tip, over the line under the token, so never put a token that changes at the same moment right below it; reorder the declarations if you must.
+- **Covering what it changes.** Aim inside the target but off its text: a code token's lower-left corner, a button's empty side. When it carries a part, hold it where the name chip, hanging below-right of the tip, falls into empty space: a button by its right end, a slider's grip low on the subject. Why: a chip over a row whose colour is the change hides the change. Why lower left: a value grows rightward when it changes (0 → 0.97), so a tip on the right ends up on the new value. The label hangs below-right of the tip, over the line under the token, so never put a token that changes at the same moment right below it; reorder the declarations if you must.
 - **Moving without a reason.** Every move goes to the next action or clears the way. It never circles, wanders or rests on the subject, and it does each action once.
 - **Travelling on the word.** From 0.3 s before the change to 0.5 s after it, the only pointer that moves is one carrying the change. Why: a pointer crossing the card then pulls the eye off the fix.
 - **Entering or leaving clipped.** It starts and ends outside the card or fully faded, never as a sliver cut by the card's edge or with its chip half off it.
 - **A chip over the change.** When the part is small or the agent carries it, fade the chip (`agent().chip`) once it has arrived, 0.3 to 0.12 s before the change, and let the bare arrow do it.
 - **Sharing the screen with a pointer that isn't another agent in my line.** A fingertip and the agent cursor take turns (When it appears).
-- **Faking a state.** The cursor's path drives the demo's own states: the kit's `agentAt()` gives its position and press at every frame for the scene to react to, as `pointerAt()` does in `tools/reelkit/tags.js`, so hover and press are the component's own. Why: states drawn on top drift off the cursor and look fake.
+- **Faking a state.** The cursor's path drives the demo's own states: the kit's `agentAt()` gives its position and press at every frame for the scene to react to (as `pointerAt()` does in reelkit's `tags.js`, in the claude-editing repository), so hover and press are the component's own. Why: states drawn on top drift off the cursor and look fake.

@@ -1,10 +1,12 @@
 # The kit
 
-`kit/` draws and renders the assets. It's the motion-hacks kit v3 (`videos/design-hacks/motion/scenes/`, the clips I approved on 12 Nov), made general and given the explainer layer: the agent cursor, its selection box, the slow push-in and the definition tab. It needs Bun, Google Chrome in `/Applications` and ffmpeg. Run `bun install` in `kit/` once.
+Contents: A project · explain.json · A scene · Helpers on `H$` · Commands
+
+`<skill>/kit/` draws and renders the assets: a frame-stepped renderer with the explainer layer (the agent cursor, its selection box, the slow push-in, the definition tab and the change marks). It needs Bun, Google Chrome (in `/Applications`, or wherever `CHROME_PATH` points) and ffmpeg. Run `bun install` in `<skill>/kit/` once.
 
 ## A project
 
-One folder per video, usually `videos/<video>/explainers/`:
+One folder per video: `videos/<video>/explainers/` in the claude-editing repository, anywhere else an `explainers/` folder beside the video's other files:
 
 | Path | What it is |
 |---|---|
@@ -14,7 +16,7 @@ One folder per video, usually `videos/<video>/explainers/`:
 | `check/phone.png` | The phone sheet, one strip per asset |
 | `build/` | Frames while rendering; git ignores it |
 
-Start by copying `kit/example/`: one flip ("Scale from 0.97") where the agent double-clicks the old value in the code block and the new one lands on the word. For a card that's worth watching (a flaw a pointer causes, what it costs, and a change that's the only thing moving), copy from `videos/design-hacks/design-part-2/explainers/` (`scenes/src/`, a file per few cards joined by `tools/bundle.sh` and picked by asset id).
+Start by copying `<skill>/kit/example/`: one flip ("Scale from 0.97") where the agent double-clicks the old value in the code block and the new one lands on the word. For a card that's worth watching (a flaw a pointer causes, what it costs, and a change that's the only thing moving), copy from `videos/design-hacks/design-part-2/explainers/` when the claude-editing repository is present (`scenes/src/`, a file per few cards joined by its `tools/bundle.sh` and picked by asset id); otherwise match `examples/gold-cards.jpg`.
 
 ## explain.json
 
@@ -92,28 +94,28 @@ Every scene is a pure function of time: `seek(t)` draws the frame at t, so the r
 | `glidePt`, `pressAt` | A single glide or press, for a proof beat the agent runs itself |
 | `selection(ctx.panel, { color })` | The selection box with corner handles; `.set(x, y, w, h, o)` |
 | `tab(ctx.panel, { x, y, text })` | The definition tab, for a slot whose clip draws its own |
-| `pair(parent, { x, y, w, h, labels, colors, dots })` | A side by side (`forms.md`): two equal wells in the box with a 30 px label over each, Before and After unless you pass a fix's values. Returns `{ b, a, labels, ww, wh }`; build the component once as `build(well, side)` and call it for both |
+| `pair(parent, { x, y, w, h, labels, colors, labelSize, dots })` | A side by side (`forms.md`): two equal wells in the box with a label over each: Before and After at 24 px (chrome), or a fix's two values at 30 px when you pass `colors`. `labelSize` overrides both. Returns `{ b, a, labels, ww, wh }`; build the component once as `build(well, side)` and call it for both |
 | `cursor`, `finger` | A plain pointer and the fingertip disc, for interactions that aren't the agent's |
 | `fpx(n)` | n px in the final frame, in panel px: text is `fpx(26)` or more, an outline `fpx(2)` |
 | `AGENT_COLORS` | Blue, violet, magenta, teal, in the order they're assigned |
-| `markLife(t, { T, fix })` | A change mark's timeline (SKILL.md, Mark the change) as `{ draw, k, o }`: drawn in over T − 1.25 to T − 0.95, green as a `fix`-second ease-in-out fix lands, gone by T + 1.25. Pass it to a mark's `set` |
+| `markLife(t, { T, fix })` | A change mark's timeline (`marks.md`) as `{ draw, k, o }`: drawn in over T − 1.25 to T − 0.95, green as a `fix`-second ease-in-out fix lands, gone by T + 1.25. Pass it to a mark's `set` |
 | `markTurn(u)` | Red to green between 45% and 65% of a fix's progress `u`: pass `k: markTurn(u)` when your fix runs on another curve |
 | `markLine(box, { z, width, dash })` | A guide through points: `.set([[x, y], ...], life)`, with a `null` in the points to lift the pen |
 | `markBand(box, { z, dark, axis, hatch })` | A hatched band over an empty space: `.set(x, y, w, h, life)`. Never over a part's own fill |
 | `markMeasure(box, { z, dark })` | A dimension line with a tick at each end, for space inside a filled part, drawn outside it: `.set(x1, y1, x2, y2, life)` |
 | `markBox(box, { z, corners, round, dash, fill, dark })` | Corner brackets 6-8 px clear of a part (the default), a ring (`round: true`), or with `corners: false` a full box (`dash: null` for solid, as for a box on a letter): `.set(x, y, w, h, { ...life, r })` |
-| `sweep(box, { z, grip })` | A before\|after sweep's line and grip: `.set(x, top, bottom, { o, gripY, k })`, grey at `k` 0 while it waits, green at 1 once it moves. Build the subject twice, isolate each copy (`isolation: isolate`, or a part's own z-index escapes and stays on top), and clip the after copy to the left of x |
+| `sweep(box, { z, grip })` | A before\|after sweep's line and grip (`marks.md`): `.set(x, top, bottom, { o, gripY, k })`, grey at `k` 0 while it waits, green at 1 once it moves. Build the subject twice, isolate each copy (`isolation: isolate`, or a part's own z-index escapes and stays on top), and clip the after copy to the left of x |
 | `MARK` | The marks' red (the flaw) and green (the fix), and their light pair for dark surfaces (`dark: true` on any mark). Put every mark inside the box that holds what it marks and pass that box's zoom as `z`, so it rides the zoom and the push-in at its final width |
 
 ## Commands
 
 ```bash
-bun skills/charles-explainers-assets/kit/render.mjs <project>                 # every asset into assets/, with its stills
-bun skills/charles-explainers-assets/kit/render.mjs <project> --only 01-a,03-b
-bun skills/charles-explainers-assets/kit/render.mjs <project> --stills 4.0,5.2  # PNGs in build/stills/ to check a scene
-bun skills/charles-explainers-assets/kit/check.mjs <project>                  # check/phone.png
-bun skills/charles-explainers-assets/kit/glance.mjs <project>                 # check/glance/<id>.png, the muted glance's frame grid
-bun skills/charles-explainers-assets/kit/words.mjs <project>                  # sizes, contrast and reading rates, measured
+bun <skill>/kit/render.mjs <project>                 # every asset into assets/, with its stills
+bun <skill>/kit/render.mjs <project> --only 01-a,03-b
+bun <skill>/kit/render.mjs <project> --stills 4.0,5.2  # PNGs in build/stills/ to check a scene
+bun <skill>/kit/check.mjs <project>                  # check/phone.png
+bun <skill>/kit/glance.mjs <project>                 # check/glance/<id>.png, the muted glance's frame grid
+bun <skill>/kit/words.mjs <project>                  # sizes, contrast and reading rates, measured
 ```
 
 A 9.0 s clip at 60 fps and 2× takes about 30 s, and four render at once (`--jobs`). `check.mjs` draws the state tag on, crops each frame to the band and shrinks it to the slot's width on a phone: 280 px for the hack card.

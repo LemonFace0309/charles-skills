@@ -633,16 +633,19 @@
      laid out the same on every card. pair(panel, { x, y, w, h, labels, colors, gap, dots }) returns
      { b, a, wells, ww, wh, top }: b and a are the wells (clipped, ww × wh panel px, each with its own (0, 0) at its
      top-left). Build the component once as a function of the side and call it for both, so the two can't drift
-     apart. labels default to Before / After in the ink colour (a principle). A fix that differs in feel passes its
-     values instead, and colors: ['var(--red-ink)', 'var(--green-ink)']. dots: false drops the dot grid. */
-  function pair(parent, { x = 0, y = 0, w = W, h = H, labels = ['Before', 'After'], colors, gap = fpx(24), dots = true, z = 1 } = {}) {
-    const size = fpx(30), lh = Math.round(size * 1.25), under = fpx(12);
+     apart. labels default to Before / After in the ink colour (a principle): chrome, read once and then known by
+     position, at 24 final px. A fix that differs in feel passes its values instead, and colors: ['var(--red-ink)',
+     'var(--green-ink)']: they're the clip's one glance text, so they stay at 30. labelSize overrides both (an older
+     card that must keep its 30 px Before/After). dots: false drops the dot grid. */
+  function pair(parent, { x = 0, y = 0, w = W, h = H, labels = ['Before', 'After'], colors, labelSize, gap = fpx(24), dots = true, z = 1 } = {}) {
+    const size = labelSize ?? fpx(colors ? 30 : 24), lh = Math.round(size * 1.25), under = fpx(12);
     const ww = (w - gap) / 2, top = y + lh + under, wh = y + h - top;
     const tags = [];
     const wells = [0, 1].map((i) => {
       const lx = x + i * (ww + gap);
       tags[i] = div(parent, { x: lx, y, text: labels[i], style: { font: `600 ${size}px/${lh}px Inter, sans-serif`, color: colors ? colors[i] : 'var(--ink)',
         letterSpacing: '-0.01em', whiteSpace: 'nowrap', zIndex: z } });
+      tags[i].classList.add(colors ? 'value' : 'label');   // words.mjs judges a label at 24 px and a value at 30
       return div(parent, { x: lx, y: top, w: ww, h: wh, style: { overflow: 'hidden', borderRadius: px(fpx(8)), zIndex: z, background: 'var(--well)',
         ...(dots ? { backgroundImage: `radial-gradient(circle, var(--well-dot) ${fpx(1.3)}px, transparent ${fpx(1.7)}px)`,
           backgroundSize: `${fpx(18)}px ${fpx(18)}px`, backgroundPosition: `${fpx(9)}px ${fpx(9)}px` } : {}) } });
