@@ -1,0 +1,187 @@
+{
+ "floor_db": [
+  -16.9,
+  -19.8,
+  -24.1,
+  -33.8
+ ],
+ "holes": [
+  [
+   -0.40002267573696143,
+   -0.28950113378684805
+  ],
+  [
+   4.911768707482993,
+   4.944671201814059
+  ]
+ ],
+ "islands": [
+  {
+   "start": 0.466,
+   "end": 4.142,
+   "text": "Also have the letter react to your cursor movement. It's just a nice touch."
+  },
+  {
+   "start": 4.397,
+   "end": 4.442,
+   "text": ""
+  },
+  {
+   "start": 5.27,
+   "end": 5.609,
+   "text": "I'll send you my unslop skill."
+  },
+  {
+   "start": 5.644,
+   "end": 8.228,
+   "text": "Comment unslop and I'll send you my unslop skill."
+  }
+ ],
+ "words": [
+  {
+   "word": "Also",
+   "start": 0.316,
+   "end": 0.776
+  },
+  {
+   "word": "have",
+   "start": 0.776,
+   "end": 0.956
+  },
+  {
+   "word": "the",
+   "start": 0.956,
+   "end": 1.116
+  },
+  {
+   "word": "letter",
+   "start": 1.116,
+   "end": 1.416
+  },
+  {
+   "word": "react",
+   "start": 1.416,
+   "end": 1.776
+  },
+  {
+   "word": "to",
+   "start": 1.776,
+   "end": 1.956
+  },
+  {
+   "word": "your",
+   "start": 1.956,
+   "end": 2.076
+  },
+  {
+   "word": "cursor",
+   "start": 2.076,
+   "end": 2.376
+  },
+  {
+   "word": "movement.",
+   "start": 2.376,
+   "end": 2.716
+  },
+  {
+   "word": "It's",
+   "start": 3.036,
+   "end": 3.156
+  },
+  {
+   "word": "just",
+   "start": 3.156,
+   "end": 3.316
+  },
+  {
+   "word": "a",
+   "start": 3.316,
+   "end": 3.516
+  },
+  {
+   "word": "nice",
+   "start": 3.516,
+   "end": 3.716
+  },
+  {
+   "word": "touch.",
+   "start": 3.716,
+   "end": 4.036
+  },
+  {
+   "word": "I'll",
+   "start": 5.12,
+   "end": 5.34
+  },
+  {
+   "word": "send",
+   "start": 5.34,
+   "end": 5.72
+  },
+  {
+   "word": "you",
+   "start": 5.72,
+   "end": 5.72
+  },
+  {
+   "word": "my",
+   "start": 5.72,
+   "end": 5.72
+  },
+  {
+   "word": "unslop",
+   "start": 5.72,
+   "end": 5.72
+  },
+  {
+   "word": "skill.",
+   "start": 5.72,
+   "end": 5.72
+  },
+  {
+   "word": "Comment",
+   "start": 5.494,
+   "end": 5.954
+  },
+  {
+   "word": "unslop",
+   "start": 5.954,
+   "end": 6.494
+  },
+  {
+   "word": "and",
+   "start": 6.494,
+   "end": 6.674
+  },
+  {
+   "word": "I'll",
+   "start": 6.674,
+   "end": 6.954
+  },
+  {
+   "word": "send",
+   "start": 6.954,
+   "end": 7.134
+  },
+  {
+   "word": "you",
+   "start": 7.134,
+   "end": 7.274
+  },
+  {
+   "word": "my",
+   "start": 7.274,
+   "end": 7.414
+  },
+  {
+   "word": "unslop",
+   "start": 7.414,
+   "end": 7.894
+  },
+  {
+   "word": "skill.",
+   "start": 7.894,
+   "end": 8.114
+  }
+ ]
+}

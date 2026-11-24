@@ -1,6 +1,7 @@
 ---
 name: charles-claude-editing
-description: Edit raw talking-head videos into engaging, organic-looking Instagram Reels / TikToks - cut dead space and stumbles, keep the last clean take, 2-3 word captions, retention-maxing image/video overlays (pop-culture stickers, cutouts, split screens, tweet screenshots), sound effects, a background track from the music folder, and a TikTok-title-style hook when asked. Covers news and education/entertainment videos. Use this whenever Charles shares a talking-head .MOV/.mp4 and asks to edit, cut, caption, add a hook, add overlays/b-roll/images/a split screen, add music or sound effects, "make it a reel", "minoify" it, or fix any of those in a video already edited this way - even if only one of those steps is asked for.
+description: "Edits Charles' raw talking-head footage into a finished Instagram Reel or TikTok: cuts dead space tight without clipping a word, keeps his last clean take, adds 2-3 word captions, overlays, splits, sound effects, music and a hook title when asked. Use when he shares a talking-head .MOV or .mp4 to edit, cut, caption or \"minoify\", or asks to fix any of that in a reel already cut this way."
+compatibility: "Needs ffmpeg and ffprobe, Python 3 with numpy (scipy for level_voice.py, Pillow for the check sheets and captions.py), and uv to run faster-whisper for the voice map. On a Mac, avconvert converts iPhone HDR takes and Photos receives the finished reel. Uses the claude-editing repository's tools/reelkit, assets/music and assets/sound-effects when it runs there, and works in any folder without them."
 ---
 
 # Goal
@@ -8,6 +9,10 @@ description: Edit raw talking-head videos into engaging, organic-looking Instagr
 * The goal of editing is to maximize viewer retention. The viewer should constantly have something new to look at, without ever feeling overwhelmed
 * Keep it organic, like I made it myself on my phone. Use the real thing over a recreation of it: the actual post, footage, app or website, not a mock-up, stock image or AI version. If something looks like a template or AI slop, don't use it
 * If something isn't covered here, do whatever best serves those two goals
+
+This skill runs long. After a context summary or a restart, re-read this file and the video's own notes (its README, `cuts.json`, the edit's plan) before going on.
+
+`<skill>` is this skill's folder. Its scripts run from the video's edit folder with the take at `../footage/raw.mov`, the layout Charles' repositories use; pass `--raw`, `--cuts` and `--work` when yours differs. The frame's numbers (safe area, caption band, slot sizes, pacing, loudness) are in `<skill>/reel-spec.json`, which the other editing skills read too.
 
 
 # Decide these first
@@ -23,47 +28,86 @@ Did I ask you to open on a split screen?
 ```
 
 
+# Run it
+
+Walk these in order. Each step leaves a file, so a run that stops can pick up from what's on disk.
+
+1. **Check the take.** `ffprobe -v error -select_streams v:0 -show_entries stream=color_transfer -of csv=p=0 <take>`. `arib-std-b67` is iPhone HLG HDR: convert it to SDR before anything else (`avconvert -p Preset1920x1080 -s <take> -o ../footage/raw.mov` on a Mac, ffmpeg's `zscale` and `tonemap` elsewhere). Why: cut next to my SDR takes, an HDR take looks washed out or blown out.
+2. **Map my voice.** `uv run --with faster-whisper --with numpy python <skill>/scripts/voice_map.py --prompt "<the script>"` writes `work/voice_map.json`: every stretch of sound in the take, each transcribed on its own. Why: a transcript of the whole file merges my repeated takes into one or drops them.
+3. **Pick the takes.** Write `cuts.json`: one phrase per line I say, in reel order, each the last clean take (General), as `{"text", "in", "out"}` from the stretches.
+4. **Tighten.** `python3 <skill>/scripts/tighten.py --split`, read what it proposes, then run it again with `--write`. It moves every in and out onto my sound, never past anything that could be my word, keeps breaths and clicks next to a line out of the joins (`avoid`), and cuts every pause of 0.35 s or more inside a line. Put a pause back only when I'm holding a beat looking at the lens. Listen to every line it marks LISTEN.
+5. **Cut.** `python3 <skill>/scripts/cut_take.py` writes `work/cut.mov` (ProRes, local only), `work/cut_voice.wav` and `work/cut.cuts.json`.
+6. **Prove the sound.** `python3 <skill>/scripts/check_cut.py --sheet work/joins_sound.png` must end "every word whole, every join tight". Fix each FAIL the way it says, cut again, check again. Before you show me the cut, run it once more with `--hear` (under `uv run --with faster-whisper --with numpy`) and read what it heard.
+7. **Prove the picture.** `python3 <skill>/scripts/check_joins.py`, then look at every row of `work/joins_picture.jpg` (Cuts).
+8. **Level my voice.** `uv run --with numpy --with scipy python <skill>/scripts/level_voice.py`: gain only, every line to -16 LUFS while I speak.
+9. **Lay out each line** (Choosing the Layout, Image/Video Overlays, Pacing).
+10. **Captions and the hook** (Captions, Hook Title).
+11. **Music, then sound effects** (Music, Sound Effects).
+12. **Mix**: my levelled voice, the music 8-9 dB under it with no sidechain ducking, the effects at or under my voice, then one gain to -14 LUFS integrated through a look-ahead peak limiter.
+13. **Export** (Export), then walk the checklist below.
+
+When the repository has `tools/reelkit/` (Charles' claude-editing), its `reelkit.py` renders steps 9-13 (captions, hook, overlays, splits, sound effects, the encode) and `mix_reel.py` makes the mix. Anywhere else, ffmpeg does the rest (`overlay` with `enable='between(t,a,b)'` for each asset, `gblur` for the blurred backdrop, and the mix with `loudnorm` and `alimiter`), then `<skill>/scripts/captions.py` burns the captions and the hook over it and encodes the export.
+
+
+# Before you show me a cut
+
+* `check_cut.py` ends "every word whole, every join tight", and `--hear` heard every line's first and last word
+* Every row of `check_joins.py`'s sheet: nothing kept of me relaxing, glancing at my notes or reaching for the phone
+* Every caption checked against what I said: names, numbers, the comment keyword (caps, quotes, yellow), blocked words censored
+* Nothing I need to see under the platform's header, the username and caption zone, or the button column, and no caption over my face unless it's blurred
+* Something new on screen every 2-3 s, and nothing still for more than 3 s unless I'm reading it out or it's the payoff
+* Every sound effect lands on the frame its event happens
+* The mix: my voice at -16 LUFS while I speak, the music 8-9 dB under it, -14 LUFS integrated
+* The export's size, codec and bitrate (Export)
+
+
 # General
 
 * Cut any dead space that exists in the video. Stumbles, false starts and the moments after I finish a line all count (see Cuts)
-* When I say a line more than once, keep the last take I get through without a stumble or a mixed-up word, and cut the takes before it. I redo a line when I mess it up, so the last clean take is the one I meant. Transcribe each stretch of speech on its own (this repository's tools/reelkit/voice_map.py does): a transcript of the whole file merges repeated takes into one or drops them
-* Safe area (1080x1920): the IG/TikTok header covers the top 250 px, the username and caption sit below y 1500, and the buttons run down the right side below y 840. Keep text at least 80 px from the sides, 140 px below y 840. Be aware of these areas and don't put key information in them, but don't cut off or shift videos and pictures in a weird way because of them. Footage and images can still extend into those areas
-* No gimmicks: no pop-ins, rounded corners (except for the hook title), black-background splits or emoji tiles
+* When I say a line more than once, keep the last take I get through without a stumble or a mixed-up word, and cut the takes before it. I redo a line when I mess it up, so the last clean take is the one I meant
+* Safe area (1080x1920): the platform's header covers the top 200 px, the username, caption and audio sit below y 1500, and the like, comment and share buttons run down the right side, right of x 940 from y 840 down. Keep text at least 60 px inside both sides, and left of x 940 below y 840. Don't put key information in those areas, but don't cut off or shift videos and pictures in a weird way because of them: footage and images can still run into them
+* No gimmicks: no pop-ins, rounded corners (except for the hook title), black-background splits, emoji tiles, glow rims, lens ripples, card bounces or sparkly shimmers. The change itself is the wow, so nothing gets decorated on top of it
 * My framing is usually close, with my face filling the middle of the frame. In that case never zoom or punch in on my face. Only add slow zooms between cuts when my face is smaller than the middle third of the frame. Cover jump cuts with B-roll instead
-* Never isolate or denoise my voice. It struggles to do that well
+* Never stretch my footage to fill a frame: run it as filmed, or zoom it evenly by at most 6% and shift it. Why: a warped face looks wrong at once
+* Never isolate or denoise my voice. It struggles to do that well, and it makes my voice sound processed. Level it with gain only (level_voice.py)
+* Keep B-roll or a visual I've already approved. Don't remake it to fit a later change: keep it, or ask
 * If I give you a reference reel, copy its structure, pacing and B-roll, but never its caption style. Captions always follow this file
 
 
 # Cuts
 
+* Read a take's sound on the file's own timeline. My phone's takes have holes in their audio timestamps, so decoding closes them and the decoded clock runs up to a second behind the picture. Every script here reads through `timeline_audio.py`; planning cuts on the decoded clock once cut the ends off "poli-" and "touch"
+* Cut the sound only in the silence between phrases, never inside one, and never set an in or out by eye or from a transcript's word times. Transcribers end words early on a final "s", "t" or "sh". tighten.py sets them from the sound and check_cut.py proves them
 * Cut on the picture as well as the sound. The moment I finish a line I start to relax (ex: looking down at my script, dropping a hand, reaching to stop the recording), and even 0.3 s of that makes a cut look sloppy
 * End each clip within 2 frames at 30 fps (0.07 s) of my voice stopping, with the whole last word kept, trailing "s" or "t" included
-* If I start to relax before then, end on the frame before it starts. If it starts before the word is over, cut the picture there and start the next clip's picture that many frames early, so the rest of the word plays over it (an L-cut, up to 4 frames). If it starts any earlier, or during my last word, use an earlier clean take of the line or cover it with B-roll. Never clip a word to hide a movement
+* If I start to relax before then, end on the frame before it starts. If it starts before the word is over, cut the picture there and start the next clip's picture that many frames early, so the rest of the word plays over it (an L-cut, `"lcut"` in cuts.json, up to 4 frames). If it starts any earlier, or during my last word, use an earlier clean take of the line or cover it with B-roll. Never clip a word to hide a movement
+* Never a J-cut (holding frames of me after my sound, or starting my picture late): held frames read as me pausing. When my hand swings into the frame at a line's edge, paint it out of those frames instead
+* Never keep a frame of me glancing at my notes: end the clip before the glance, or cover it. In a list reel, leave 0.27 s after each item
 * Start each clip 1 frame before I speak. If I'm still settling into place there, use an earlier clean take of the line or cover those frames with B-roll
-* So a join keeps at most 0.1 s of silence, with no breaths, clicks or lip smacks. Measure it from the sound, not from where the cut sits: a breath or a pause before my first word counts, and it shows me getting ready (this repository's tools/reelkit/check_gaps.py measures every join). A beat I hold mid-line while still looking at the lens (ex: before a punchline) is delivery, not dead space, so keep it
+* So a join keeps at most 0.1 s of silence, measured from my sound, with no breaths, clicks or lip smacks: a breath or a pause before my first word shows me getting ready. A beat I hold mid-line while still looking at the lens (ex: before a punchline) is delivery, not dead space, so keep it
 * The reel's last clip can run up to 0.15 s after my last word, as long as I haven't started to relax
-* These limits are tight enough to clip a word, so cut the sound only in the silence between words, never inside one (this repository's tools/reelkit/check_cuts.py fails any join that splits a word)
-* Before you show me a cut, look at the frames on both sides of every join and the reel's last frames (this repository's tools/reelkit/check_joins.py draws them). Redo any join where I visibly start to relax
+* These limits are tight enough to clip a word, which is what check_cut.py is for. It reads every band against my own line, because a final "s", "t" or "f" is quiet below 3 kHz and a broadband loudness test calls it silence
+* Before you show me a cut, look at the frames on both sides of every join and the reel's last frames (check_joins.py draws them). Redo any join where I visibly start to relax
 
 
 # Hook Title (the text caption at the top)
 
 * No hook title unless I explicitly ask for one
-* When I do: Helvetica Neue Bold near the top of the video, black text on a white background with rounded borders, inside the 80 px side margins. Make it look like TikTok's native text with a background: each line is wrapped individually, so the background bends where a shorter line meets a longer one
+* When I do: Helvetica Neue Bold near the top of the video, black text on a white background with rounded borders, inside the 60 px side margins and below the platform's header. Make it look like TikTok's native text with a background: each line is wrapped individually, so the background bends where a shorter line meets a longer one (reelkit's `make_hook`, or `captions.py --hook`)
 * Two lines max. Three is fine when the hook won't fit in two at full size, or when a CAPS word gets its own line
 * Usually keep it up for 3-5 s (my first sentence). It can stay longer as long as there's no overlay or B-roll that should replace it
 
 
 # Captions
 
-* Helvetica Neue Bold, ~66 px, white with a thin black outline and a soft shadow. Sentence case, apart from the comment keyword (below)
-* Around y 1380, inside the safe area. If an asset sits there, move the captions above or below it, never over it. While a split screen is up, they go on the seam
+* Helvetica Neue Bold, 66 px, white with a 3 px black outline and a soft shadow. Sentence case, apart from the comment keyword (below)
+* Centred at y 1380, inside the caption band (y 1320-1500). If an asset sits there, move the captions above or below it, never over it. While a split screen is up, they go on the seam
 * Never over my face unless everything behind them is blurred. When an asset pushes them up, right under my mouth is as high as they go
 * 2-3 words each line
 * No animations/transitions
 * Go over the captions yourself to make sure the ones coming back from a transcription service are accurate to the context of what I'm saying. Sometimes transcription services suffer with names too, so fix those
-* Censor any words that tiktok may block the video for, in the captions and the hook (ex: say s*****e instead of suicide)
-* Caption the comment keyword (the word I ask viewers to comment) in caps, inside quotes, with the word and its quotes in yellow and the usual black outline: Comment “SCREENSHOTS”. It's the one word viewers have to type, so it shouldn't blend in with the words around it. In the hook, write it in caps and quotes in the hook's own black (in this repository, reelkit's `keywords` does the captions)
+* Censor any words that TikTok may block the video for, in the captions and the hook (ex: say s*****e instead of suicide)
+* Caption the comment keyword (the word I ask viewers to comment) in caps, inside quotes, with the word and its quotes in yellow (#FFD60A) and the usual black outline: Comment “SCREENSHOTS”. It's the one word viewers have to type, so it shouldn't blend in with the words around it. In the hook, write it in caps and quotes in the hook's own black (reelkit's `keywords`, or `captions.py --keyword`)
 
 
 # Image/Video Overlays
@@ -85,10 +129,13 @@ Did I ask you to open on a split screen?
    * Don't create AI generated photographs unless I explicitly ask, because they create an uncanny feeling. Animations and graphics are fine
    * Screenshots of tweets and other social media are great
    * Make sure it's accurate to what I'm talking about (ex: the current Mac mini, not an older model)
-* Web pages: dark mode, starting at the visual part, not the intro text. Keep the content inside the 80 px side margins. Light mode pages w/ text running into the screen edge look ugly
+* Web pages: dark mode, starting at the visual part, not the intro text. Keep the content inside the 60 px side margins. Light mode pages w/ text running into the screen edge look ugly
+* A screen recording of a tutorial is motion design over real captures of the UI: one continuous camera move, typing rebuilt so it reads, a cursor with rings on its clicks, menus opened from what was tapped. A raw low-frame-rate capture looks broken on a phone
+* A flashed example clip (a generated video, a demo) opens on its peak, the impact or the leap, never the run-up. Generated clips climax late, so play the slice that holds the peak, at 1x-2x
+* A mini gameplay clip (Subway Surfers style) sits small in open background at my face's height, beside the list, never under the captions. Check every frame against my face, and shrink it rather than move it from line to line
 * For big claims, show the source (official release, headline) with the words I'm saying highlighted
 * Make your own motion graphics and recordings instead of using templates. When I explain a concept, build a visual for it (text, diagrams, graphs, beautiful animations). This is especially potent in educational videos
-* When I explain a term, a fix, a technique, a number or a mechanism, ask charles-explainers-assets for the visual at the slot's size, with its text area, my word times and the change words. Place what it returns, and put clicks on its cues
+* When I explain a term, a fix, a technique, a number or a mechanism, ask charles-explainers-assets for the visual at the slot's size, with its text area, my word times and the change words. Place what it returns, and put clicks on its cues. Without that skill, build the visual yourself to the same brief: the real thing changing on my word, readable in the seconds it's up
 * When you show a list or sequence as a row of pictures, don't use icons. Use organic-looking images you find online, cropped into squares/rectangles
 * Graphs and charts are okay. Screenshots of real ones from other sources are great. If you make one yourself, it has to look professional and clean, and be accurate and detailed, w/ well timed animations. A sloppy one comes across as AI slop
 * If I read out a list, put it up as an overlay with blur, each item revealed as I say it (plain caption-style text, not a screenshot). If I read it slowly (more than ~4 s between items), take the overlay down between items and bring it back for the next one, so it stays engaging
@@ -139,22 +186,31 @@ What does the viewer get from this asset?
 * When I ask you to open on a split (ex: me reading a Reddit post, a video demo showing something cool, tech news with a demo), put my first sentence on the seam as hook text, then the 2-3 word captions on the seam while the split is up
 * Motion graphics from the charles-arcade-assets skill fit any of these. Pick the layout first, then ask charles-arcade-assets for the asset at that size, with the area its text has to stay inside. You place what it renders
 * Teaching visuals from charles-explainers-assets fit the same way: pick the layout and slot first, then ask for the visual at that size
+* The slot sizes those skills render to are in reel-spec.json, with the 1280x630 card above my face and the 1280x1550 tall card
 
 
 # Music
 
-* Pick the folder in this repository's assets/music that fits the mood of the video (chill, emotional storytelling, funny, motivational, suspenseful, upbeat, wholesome)
+* Pick the mood folder that fits the video (chill, emotional storytelling, funny, motivational, suspenseful, upbeat, wholesome) from the repository's `assets/music/` when it has one. Without it, ask me for a track or a folder: never pick a song from memory, because its licence and mood are unknown
 * Exposés and serious news always get suspenseful (conspiracy/suspense-building)
 * Move the music around to fit the video better. It doesn't need to begin from the start, so skip quiet intros
-* Keep the music about 8-9 dB under my voice while I'm talking. Ducking it harder than that makes my voice sound isolated
+* Keep the music 8-9 dB under my voice while I'm talking, with no sidechain ducking. My pauses are too short to duck in and out of, and ducking it harder makes my voice sound isolated
 
 
 # Sound Effects
 
-* Only on moments that earn one: a camera shutter when a screenshot appears, a pointer click on a highlight or tap, a soft whoosh on a big transition. Bias towards premium and clean sounds like these. Get them from free online sources or the clean ones in my folder (ding, discord ping, apple pay, metallic riser)
-* Meme sounds from my folder (assets/sound-effects in this repository, ex: vine boom, Cinema Sins dun) at most once per video, and only on a punchline
+* Only on moments that earn one, and only on something you can see happen on that frame: a camera shutter when a screenshot appears, a pointer click on a highlight or tap, a soft whoosh on a big transition. A sound with nothing visible causing it reads as a mistake. Bias towards premium and clean sounds like these. Get them from free online sources or the clean ones in my folder (`assets/sound-effects/` in the repository: ding, discord ping, apple pay, metallic riser)
+* Check that each sound's hit lands on its frame. A sound file that opens with silence lands late by that much: trim the silence, or place the file by its hit, not its start
+* Meme sounds from my folder (ex: vine boom, Cinema Sins dun) at most once per video, and only on a punchline
 * No more than ~6 per minute. Too much and it gets annoying, but adding them in a timely and tasteful way improves the quality of the video
 * Keep them at or under my voice level
+
+
+# Fixing a Word
+
+* When I misspeak one word and there's no clean take, a clone of my voice can say that one word (ElevenLabs, my voice). One word fits in: a long phrase, sped up to fit, sounds generated. For more than a word, keep my take and correct the caption with an asterisk
+* When I record a pickup myself (audio only, from a voice memo), splice in the whole phrase, not single words, with my lips hidden under an overlay, and paste it raw: loudness matched only, no stretching, pitch shifting or EQ. Check the read sounds as lively as the take around it first
+* A line that's voice-over keeps me on screen: a blurred replay of me, or a B-roll card over my face
 
 
 # Export
@@ -164,7 +220,7 @@ What does the viewer get from this asset?
 * Every position in this file is on the 1080x1920 grid. At 2160x3840, double it
 * H.264, CRF 16 at 2160x3840 (about 25 Mbps), AAC 256k. Less smears fine text and grain
 * A talking head with only captions and the hook can stay 1080x1920
-* Save every finished reel to my Apple Photos. I post from my phone, so that's where I check it. Replace an old version rather than leaving both
+* On a Mac, save every finished reel to my Apple Photos. I post from my phone, so that's where I check it. Replace an old version rather than leaving both. Elsewhere, put the export where I asked and say where it is
 
 
 # News Videos

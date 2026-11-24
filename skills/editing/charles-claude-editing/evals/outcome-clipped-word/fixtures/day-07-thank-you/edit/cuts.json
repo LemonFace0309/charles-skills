@@ -1,0 +1,29 @@
+{
+ "gap": 0.1,
+ "out_max": 0.05,
+ "lead": 0.03,
+ "tail": 0.12,
+ "lead_max": 0.035,
+ "phrases": [
+  {
+   "text": "Also have the letter react to your cursor movement. It's just a nice touch.",
+   "in": 0.534,
+   "out": 3.96
+  },
+  {
+   "text": "Comment unslop and I'll send you my unslop skill.",
+   "in": 5.722,
+   "out": 8.206
+  }
+ ],
+ "avoid": [
+  [
+   0.449,
+   0.519
+  ],
+  [
+   5.642,
+   5.707
+  ]
+ ]
+}
