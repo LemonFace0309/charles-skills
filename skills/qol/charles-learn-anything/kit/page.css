@@ -114,6 +114,9 @@ main { max-width: 1200px; margin: 0 auto; padding: 52px 32px 150px; }
 .recap li { position: relative; padding-left: 30px; }
 .recap li::before { content: ""; position: absolute; left: 4px; top: .55em; width: 12px; height: 7px; border-left: 2.5px solid var(--accent); border-bottom: 2.5px solid var(--accent); transform: rotate(-45deg); }
 .score { font-size: 15px; color: var(--ink-2); margin: 4px 0 18px; }
+.sources { margin: 6px 0 26px; padding-left: 18px; display: grid; gap: 5px; font-size: 13px; line-height: 1.45; color: var(--ink-3); }
+.sources a { color: var(--ink-2); text-decoration: underline; text-decoration-color: var(--line); text-underline-offset: 3px; transition: color .15s ease, text-decoration-color .15s ease; }
+@media (hover: hover) { .sources a:hover { color: var(--ink); text-decoration-color: currentColor; } }
 
 /* the player */
 .player { position: fixed; left: 50%; bottom: max(18px, env(safe-area-inset-bottom)); transform: translateX(-50%); z-index: 20; display: flex; align-items: center; gap: 4px; padding: 7px; background: var(--surface); border: 1px solid var(--line); border-radius: 999px; box-shadow: var(--shadow); }

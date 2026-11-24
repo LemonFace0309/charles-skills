@@ -1,6 +1,7 @@
 ---
 name: charles-learn-anything
-description: "Teach any topic as a short interactive lesson that opens in Chrome: one idea per screen, each hung on a real-life example, the key terms and an outline first, a predict-first question where people usually guess wrong, small demos to play with that change on the word the narrator says, stand-out facts, dot jots under every step, an acronym or phrase when there's a set to remember, quick checks with instant feedback, and a natural voice that reads along with each word highlighted at the speed you pick. Use when someone says teach me, help me understand, learn anything, walk me through, explain X step by step, make me a lesson on X, or I want to actually get X, and wants to understand a concept fast and properly rather than read a long answer."
+description: "Builds a short interactive lesson that opens in Chrome: one idea per screen on a real example, key terms first, a predict-first question, small demos that change on the narrator's word, quick checks and a read-along voice. Takes about ten minutes; the voice costs a few cents. Use when someone wants to properly learn a topic (\"teach me X\", \"make me a lesson\"). A quick answer goes to charles-eli14."
+compatibility: "Python 3 (standard library only) and Google Chrome. Optional: FAL_KEY for a natural Kokoro voice from fal.ai, about $0.02 per 1,000 characters (without it the page uses the browser's own voice for free), and ffmpeg to keep the audio files small."
 ---
 
 # Goal
@@ -84,8 +85,9 @@ Why: a conversational style with "you" helps people learn (personalization, d 1.
 
 - Give each one its own paragraph starting with `> `, at most 40 words. The page shows it as a callout, and the voice reads it like any other paragraph.
 - Only facts you've checked against a source you trust: official documentation, a paper, or an established publication that says where its number came from. If you can't confirm one, leave it out; if sources disagree on a number, leave the number out; and never round a number to make it more striking. Check every other number in the narration the same way.
+- Record each check in the step's `sources`: `{ "claim": "<words copied from the step's say>", "title": "<the source's title>", "url": "<link>" }`. Every stand-out fact needs one, and so does every number that's a fact about the world (a measurement, a standard, a date, a statistic). A number from a made-up example, or one the lesson works out itself (4 samples give 5 shades), needs none. The build fails on a stand-out fact without a source and on a claim that isn't in the narration word for word, and the page lists every source after the quiz.
 
-Why: surprise and curiosity make people remember, and a line set apart from the rest is remembered better than the same line mid-paragraph. They're also the facts people repeat to friends, so a wrong one spreads.
+Why: surprise and curiosity make people remember, and a line set apart from the rest is remembered better than the same line mid-paragraph. They're also the facts people repeat to friends, so a wrong one spreads, and a source the learner can open is how they check it.
 
 **Dot jots.** Give every step `jots`: 2 to 4 bullets of at most 8 words each, the step's points as the learner would write them in their notes. The page lists them under the narration and the voice doesn't read them, so numbers and symbols are fine, in the narration's names and notation. Write them fresh; never copy a sentence from the narration.
 
@@ -102,7 +104,7 @@ Does the lesson have a fixed set of 3 or more things to remember (stages, types,
 ```
 
 - When the lesson has more than one set, pick the one they're most likely to mix up or forget the order of.
-- Say it in the narration as a `> ` callout, and put it in that step's jots.
+- Say it in the narration as a `> ` callout, put it in that step's jots, and put the phrase itself in the step's `aid` ("edges, image, time"), so the build reads that callout as a memory aid rather than a fact without a source.
 - At most 2 per lesson. Never an acronym that needs explaining itself, or a letter that stands for a stretched word.
 
 Why: a memory aid helps people recall a set and its order, but only a fixed set, and a forced one is one more thing to learn.
@@ -117,11 +119,13 @@ Why: a memory aid helps people recall a set and its order, but only a fixed set,
 ## 9. Build, open and check it
 
 ```bash
-python3 <this skill's folder>/kit/build.py ~/Learn/<topic-slug> --open
+python3 <skill>/kit/build.py ~/Learn/<topic-slug> --open
 ```
 
+`<skill>` is this skill's folder, the one holding this SKILL.md.
+
 - The voice: Kokoro on fal.ai when `FAL_KEY` is in the environment or a `.env` (in the lesson folder, the folder you run from, or your home folder). It sounds natural and costs about $0.02 per 1,000 characters, so about $0.12 for a 900-word lesson, and every sentence is cached, so a rebuild only pays for what changed. Without a key, the page reads with the browser's own voice for free, which sounds more robotic. Never pay for a voice the user didn't ask for.
-- Fix every error the build prints. It checks steps, questions and demo names.
+- Fix every error the build prints. It checks steps, questions, demo names and sources, and lists every source it found.
 - Then open every step once with the audio muted and confirm the demo draws, its controls work, each cue lands on its word and the predict step unblurs after an answer. Why: a broken demo in step 2 ends the lesson.
 
 # Deliver
@@ -146,7 +150,9 @@ The page open in Chrome, and in the chat: where it is (`~/Learn/<topic-slug>/bui
       "widgetOptions": { "any": "settings this step's demo reads" },
       "image": "assets/diagram.png",
       "caption": "One line under the picture.",
-      "check": { "q": "…", "choices": ["…", "…"], "answer": 1, "why": "…" }
+      "check": { "q": "…", "choices": ["…", "…"], "answer": 1, "why": "…" },
+      "sources": [{ "claim": "Words copied from this step's say", "title": "The source's title", "url": "https://…" }],
+      "aid": "The memory aid's phrase, when this step's > callout is one"
     }
   ],
   "recap": ["…"],
@@ -154,4 +160,4 @@ The page open in Chrome, and in the chat: where it is (`~/Learn/<topic-slug>/bui
 }
 ```
 
-Only `title`, `steps`, and each step's `title` and `say` are required. Use `widget` or `image`, not both.
+Only `title`, `steps`, and each step's `title` and `say` are required, plus `sources` for a step with a stand-out fact. Use `widget` or `image`, not both.

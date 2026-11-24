@@ -4,7 +4,8 @@
   python3 build.py <lesson dir> [--tts auto|kokoro|none] [--voice NAME] [--open]
 
 <lesson dir> holds lesson.json, and optionally widgets.js (the lesson's interactive pieces) and assets/ (images).
-Writes <lesson dir>/build/index.html plus build/audio/. Narration:
+It checks the lesson first and stops on an error, including a stand-out fact with no source or a source whose claim
+isn't in its step's narration, then prints every source. Writes <lesson dir>/build/index.html plus build/audio/. Narration:
   kokoro  Kokoro-82M on fal.ai (needs FAL_KEY). Natural, about $0.02 per 1,000 characters, so about $0.12 for a
           900-word lesson. The default when a key is set.
   none    no audio files; the page reads aloud with the browser's own voice, free but more robotic.
@@ -194,6 +195,40 @@ def build_audio(lesson, out, cache, engine, voice, key, log):
 
 
 # ---------- checks ----------
+def plain(text):
+    """Narration as the voice reads it, for matching a source's claim: no ** or [[cues]], one space, lower case."""
+    text = re.sub(r"\[\[[\w-]+\]\]\s?", "", text or "").replace("**", "")
+    return re.sub(r"\s+", " ", text).strip().lower()
+
+
+def check_sources(st, where, errs, warns):
+    """Every stand-out fact (a > callout that isn't the step's memory aid) carries a source whose claim is words from
+    that fact, and every claim is words from the step's narration, so a rewrite can't leave a source behind."""
+    srcs = [s for s in st.get("sources") or []]
+    said = plain(st.get("say", ""))
+    for s in srcs:
+        if not (isinstance(s, dict) and s.get("claim") and s.get("title") and re.match(r"https?://\S+$", str(s.get("url", "")))):
+            errs.append(f"{where}: each source needs a claim, a title and an http(s) url")
+        elif plain(s["claim"]) not in said:
+            errs.append(f"{where}: the source claim \"{s['claim']}\" isn't in this step's narration word for word")
+    claims = [plain(s["claim"]) for s in srcs if isinstance(s, dict) and s.get("claim")]
+    aid = plain(st.get("aid", ""))
+    aid_found = False
+    for raw in re.split(r"\n\s*\n", st.get("say", "").strip()):
+        if not raw.lstrip().startswith(">"):
+            continue
+        body = plain(re.sub(r"^\s*>\s?", "", raw))
+        if aid and aid in body:
+            aid_found = True
+            continue
+        if not any(c and c in body for c in claims):
+            first = " ".join(body.split()[:8])
+            errs.append(f"{where}: the stand-out fact \"{first}…\" has no source. Add one to the step's sources, with words "
+                        "from the fact as its claim, or cut the fact if you can't confirm it")
+    if aid and not aid_found:
+        warns.append(f"{where}: its aid \"{st['aid']}\" isn't in any > callout of this step")
+
+
 def check(lesson, widgets_js):
     errs, warns = [], []
     steps = lesson.get("steps") or []
@@ -228,6 +263,7 @@ def check(lesson, widgets_js):
                 n = sum(len(p) for p in parse(raw))
                 if n > 40:
                     warns.append(f"{where}: a callout of {n} words; keep a stand-out fact or memory aid to 40")
+        check_sources(st, where, errs, warns)
         for kind in ("predict", "check"):
             q = st.get(kind)
             if q and not (q.get("q") and 2 <= len(q.get("choices", [])) <= 4 and 0 <= q.get("answer", -1) < len(q["choices"]) and q.get("why")):
@@ -265,6 +301,10 @@ def main():
         for e in errs:
             print(f"error    {e}")
         sys.exit(1)
+    sources = [(st["id"], s) for st in lesson["steps"] for s in st.get("sources") or []]
+    print(f"sources: {len(sources)}" if sources else "sources: none (a number that's a fact about the world still needs one)")
+    for sid, s in sources:
+        print(f"  {sid}: {s['claim']}: {s['title']} <{s['url']}>")
     out = src / "build"
     cache = out / "cache"
     cache.mkdir(parents=True, exist_ok=True)

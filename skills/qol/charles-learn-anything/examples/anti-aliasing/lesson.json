@@ -38,7 +38,14 @@
           "cols"
         ]
       },
-      "caption": "Turn pixels off to see the real line. Fewer pixels across means bigger squares and a rougher edge."
+      "caption": "Turn pixels off to see the real line. Fewer pixels across means bigger squares and a rougher edge.",
+      "sources": [
+        {
+          "claim": "1,920 columns and 1,080 rows",
+          "title": "ITU-R BT.709, parameter values for the HDTV standards",
+          "url": "https://www.itu.int/rec/R-REC-BT.709"
+        }
+      ]
     },
     {
       "id": "staircase",
@@ -69,7 +76,19 @@
           "cols"
         ]
       },
-      "caption": "The blue outline is the real edge. Blue dots are the points the computer checks, filled where the shape covers them."
+      "caption": "The blue outline is the real edge. Blue dots are the points the computer checks, filled where the shape covers them.",
+      "sources": [
+        {
+          "claim": "CDs sample 44,100 times a second",
+          "title": "Henning Schulzrinne, Explanation of the 44.1 kHz CD sampling rate (Columbia University)",
+          "url": "https://www.cs.columbia.edu/~hgs/audio/44.1.html"
+        },
+        {
+          "claim": "just over twice the highest pitch you can hear",
+          "title": "Purves et al., Neuroscience, 2nd edition: The Audible Spectrum",
+          "url": "https://www.ncbi.nlm.nih.gov/books/NBK10924/"
+        }
+      ]
     },
     {
       "id": "coverage",
@@ -142,7 +161,19 @@
         "Backwards wagon wheels are aliasing in time"
       ],
       "widget": "motion",
-      "caption": "Same shapes, same pixels. Left: one check per pixel. Right: shaded by coverage."
+      "caption": "Same shapes, same pixels. Left: one check per pixel. Right: shaded by coverage.",
+      "sources": [
+        {
+          "claim": "Film takes 24 pictures a second",
+          "title": "Britannica, Motion-picture technology: Introduction of sound",
+          "url": "https://www.britannica.com/technology/motion-picture-technology/Introduction-of-sound"
+        },
+        {
+          "claim": "The wheels that seem to spin backwards in old westerns",
+          "title": "Live Science, What Makes Wheels Appear to Spin Backward?",
+          "url": "https://www.livescience.com/32406-what-makes-wheels-appear-to-spin-backward.html"
+        }
+      ]
     },
     {
       "id": "shortcuts",
@@ -163,7 +194,8 @@
         ],
         "answer": 1,
         "why": "FXAA works on the final picture: it finds edges and softens them, which costs almost nothing but blurs a little."
-      }
+      },
+      "aid": "edges, image, time"
     }
   ],
   "recap": [

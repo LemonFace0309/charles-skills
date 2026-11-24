@@ -1,0 +1,143 @@
+{
+  "title": "Anti-aliasing",
+  "subtitle": "Why slanted lines turn into staircases on a screen, and how computers smooth them out.",
+  "terms": [
+    {
+      "term": "pixel",
+      "def": "One of the tiny squares a screen is made of. Each one shows a single colour at a time."
+    },
+    {
+      "term": "sample",
+      "def": "One check of the picture at a single point, used to decide what colour a pixel gets."
+    },
+    {
+      "term": "aliasing",
+      "def": "The jagged staircase you get when a smooth edge is forced onto a grid of pixels."
+    },
+    {
+      "term": "coverage",
+      "def": "How much of a pixel's area a shape covers, from 0% to 100%."
+    }
+  ],
+  "steps": [
+    {
+      "id": "grid",
+      "title": "A screen is a grid of tiny squares",
+      "say": "Everything on a screen is drawn on a grid of **pixels**, tiny squares that can each show only one colour at a time. A 1080p screen has 1,920 columns and 1,080 rows of them, about two million in total.\n\nSmooth shapes don't fit that grid. A slanted line or the curve of a letter has to be rebuilt out of whole squares, and the edges are where it shows. Drag the slider to see the same shape with fewer or more pixels.\n\n> A phone screen today has about 400 million pixels, two hundred times more than a 1080p TV.",
+      "jots": [
+        "Screens are grids of one-colour pixels",
+        "1080p is about two million pixels",
+        "Edges are where the grid shows"
+      ],
+      "widget": "pixels",
+      "widgetOptions": {
+        "mode": "aliased",
+        "cols": 18,
+        "controls": [
+          "pixelate",
+          "cols"
+        ]
+      },
+      "caption": "Turn pixels off to see the real line. Fewer pixels across means bigger squares and a rougher edge.",
+      "sources": [
+        {
+          "claim": "1,920 columns and 1,080 rows",
+          "title": "ITU-R BT.709, parameter values for the HDTV standards",
+          "url": "https://www.itu.int/rec/R-REC-BT.709"
+        }
+      ]
+    },
+    {
+      "id": "staircase",
+      "title": "Sampling",
+      "predict": {
+        "q": "A slanted black edge covers 30% of a white pixel. The computer checks only the centre of that pixel. What colour can the pixel end up?",
+        "choices": [
+          "Black or white, nothing in between",
+          "A light grey, 30% of the way to black",
+          "Whatever colour its neighbours are"
+        ],
+        "answer": 0,
+        "why": "Checking one point gives a yes or no answer: the shape either covers the centre or it doesn't. So each pixel comes out all black or all white."
+      },
+      "say": "To pick a pixel's colour, the computer takes a **sample**: it checks one point, usually the centre of the pixel → does the shape cover it? [[samples]]If it does, the pixel gets the shape's colour. If it doesn't, it gets the background.\n\nAlong a slanted edge, that answer flips from no to yes in sudden jumps, one row at a time, so the edge comes out as a staircase. This is called **aliasing**. The grid is too coarse to show the real edge, so you see a pattern of steps that isn't really there.\n\n> The name comes from sound. A high note sampled too slowly plays back as a lower note, an alias of the real one. That's why CDs sample 44,100 times a second, just over twice the highest pitch you can hear.",
+      "jots": [
+        "One sample: is the centre covered?",
+        "Yes-or-no pixels make a staircase: aliasing",
+        "Sound aliases too: CDs sample 44,100 a second"
+      ],
+      "widget": "pixels",
+      "widgetOptions": {
+        "mode": "aliased",
+        "cols": 18,
+        "showEdge": true,
+        "controls": [
+          "samples-toggle",
+          "cols"
+        ]
+      },
+      "caption": "The blue outline is the real edge. Blue dots are the points the computer checks, filled where the shape covers them.",
+      "sources": [
+        {
+          "claim": "CDs sample 44,100 times a second",
+          "title": "Henning Schulzrinne, Explanation of the 44.1 kHz CD sampling rate (Columbia University)",
+          "url": "https://www.cs.columbia.edu/~hgs/audio/44.1.html"
+        },
+        {
+          "claim": "just over twice the highest pitch you can hear",
+          "title": "Purves et al., Neuroscience, 2nd edition: The Audible Spectrum",
+          "url": "https://www.ncbi.nlm.nih.gov/books/NBK10924/"
+        }
+      ]
+    },
+    {
+      "id": "shortcuts",
+      "title": "The shortcuts games actually use",
+      "say": "Few games can afford 16 samples for every pixel, so they use cheaper tricks. **MSAA**, short for multisample anti-aliasing, takes extra samples only along the edges of shapes, where they matter, and one sample everywhere else. You get clean edges for much less work.\n\nOther methods clean up the finished picture instead. **FXAA**, fast approximate anti-aliasing, finds edges in the final image and softens them. It costs almost nothing but blurs things a little. **TAA**, temporal anti-aliasing, reuses samples from the frames before, at a slightly different spot each frame, so it smooths edges and flicker, though fast motion can leave faint trails.\n\n> To keep them apart, remember edges, image, time: MSAA works on the edges, FXAA on the finished image, and TAA across time.",
+      "jots": [
+        "MSAA takes extra samples only along the edges of every shape",
+        "FXAA: softens the finished image, cheaply",
+        "TAA: borrows from earlier frames",
+        "Edges, image, time"
+      ],
+      "check": {
+        "q": "Which method softens edges in the finished image, cheaply, at the risk of a slight blur?",
+        "choices": [
+          "MSAA",
+          "FXAA",
+          "Supersampling"
+        ],
+        "answer": 1,
+        "why": "FXAA works on the final picture: it finds edges and softens them, which costs almost nothing but blurs a little."
+      }
+    }
+  ],
+  "recap": [
+    "A screen is a grid of pixels, and each pixel shows one colour at a time.",
+    "Checking one point per pixel gives yes-or-no colours, so slanted edges become staircases. That's aliasing.",
+    "Anti-aliasing shades edge pixels by how much the shape covers them, and your eye blends the greys into a smooth edge.",
+    "More samples per pixel give smoother edges but cost more work, so games use shortcuts like MSAA, FXAA and TAA."
+  ],
+  "quiz": [
+    {
+      "q": "Why does a slanted line look like a staircase without anti-aliasing?",
+      "choices": [
+        "The pixels are too dim",
+        "Each pixel is all one colour, decided by one yes-or-no check",
+        "The line is drawn with too many samples"
+      ],
+      "answer": 1,
+      "why": "One check per pixel means each pixel is fully on or fully off, and along a slant those jumps line up into steps."
+    },
+    {
+      "q": "What does anti-aliasing change about an edge pixel?",
+      "choices": [
+        "Its size",
+        "Its colour, mixed by how much of it the shape covers",
+        "Its position on the grid"
+      ],
+      "answer": 1,
+      "why": "The grid never changes. Anti-aliasing only changes the colours of edge pixels, using their coverage."
+    }
+  ]
+}

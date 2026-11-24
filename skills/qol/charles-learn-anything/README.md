@@ -17,6 +17,7 @@ Add `-g` to install it for every project, or copy this folder into `~/.claude/sk
 - Asks you to predict first where people usually guess wrong, then shows the answer, and checks you with a quick question after a few steps
 - Gives the hard ideas a small demo you can play with, which changes on the exact word the narrator says
 - Hangs every idea on a real-life example, sets the stand-out facts apart, ends each step with dot jots, and gives you an acronym or a phrase when there's a set to remember
+- Checks every stand-out fact and real-world number against a source, and lists the sources at the end, so you can check them too
 - Reads it all in a natural voice at 0.75x to 2x, with Space to pause and the arrow keys to move between steps
 
 Every choice comes from learning research (pre-training, segmenting, predicting before the reveal, quizzing with

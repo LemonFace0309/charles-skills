@@ -312,6 +312,18 @@
       L.quiz.forEach((q, k) => questionCard(box, q, `Question ${k + 1}`, 'quiz.' + k, upd));
       upd();
     }
+    // Where each stand-out fact and real-world number came from, in step order (build.py checks every one).
+    const sources = steps.flatMap((st) => st.sources || []);
+    if (sources.length) {
+      box.appendChild(el('p', 'kicker', 'Sources'));
+      const ul = el('ul', 'sources');
+      for (const s of sources) {
+        const li = el('li', null, `${s.claim}: `);
+        const a = el('a', null, s.title); a.href = s.url; a.target = '_blank'; a.rel = 'noopener';
+        li.appendChild(a); ul.appendChild(li);
+      }
+      box.appendChild(ul);
+    }
     const again = el('button', 'go ghost', 'Start over'); again.type = 'button';
     again.addEventListener('click', () => { S.answers = {}; go(-1, false); });
     box.appendChild(again);
