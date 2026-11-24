@@ -132,7 +132,7 @@ def cmd_page(a):
     if r.returncode or not out.exists():
         sys.exit(f"capture failed: {r.stderr[-600:] or r.stdout[-600:]}")
     if a.crop:
-        from PIL import Image  # only --crop needs Pillow (run it with the repo venv)
+        from PIL import Image  # only --crop needs Pillow (SKILL.md, Setup)
         im = Image.open(out)
         x, y, cw, ch = (int(v) * a.scale for v in a.crop.split(","))
         im.crop((x, y, x + cw, y + ch)).save(out)

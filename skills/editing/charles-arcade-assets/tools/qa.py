@@ -18,7 +18,7 @@ and a frame torn between two shots (the top from one, the bottom from the next) 
 --ranges (asset sets) checks edges and limits sparse and still to the ranges: the gaps are hold beats nobody
 sees. A ranges.json is [[start, end], ...] or {"card": [[s, e], ...], ...} (every list is checked).
 --cut is the mean colour change (0-255) that counts as a cut; lower it if real cuts go unreported.
-Needs ffmpeg and numpy (the repo venv). Prints nothing but "clean" when there is nothing to fix.
+Needs ffmpeg and numpy (SKILL.md, Setup). Prints nothing but "clean" when there is nothing to fix.
 """
 import argparse, json, subprocess, sys
 

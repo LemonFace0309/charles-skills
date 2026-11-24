@@ -1,12 +1,12 @@
 # Web, social and device UI (`ui-web.css`, `ui-web.js`)
 
+Contents: Components · Helpers · Blueprints (wide, 1280x630; all cut in finished and fill the frame)
+
 Real products rebuilt at about 2x desktop scale for the 1280x630 card: Chrome, GitHub, iPhone lock screen and
 notifications, the App Store, Instagram, data tables, news, search, Slack, Gmail, Google Calendar, Meet, the
 Meta Ad Library, Google Sheets and receipts, and the phone and growth UI (iOS alerts, home screen and app launch,
-sheets, sign-up walls, paywalls, the tap). Every class starts with `.wb-`. The working demo of every component is
-`work/kit-web/` (render `out/demo.mp4`, contact sheets `out/sheet_0N.jpg`); copy markup from its
-`compositions/` rather than writing it from scratch. Phone, growth and map demos: `work/kit-phone/` (wide, tall,
-full; `out/<name>.mp4`, `out/sheet_0N.jpg`; frame-adaptive scenes in `scenes/`, refreshed by `remount.py`).
+sheets, sign-up walls, paywalls, the tap). Every class starts with `.wb-`. Copy markup from the blueprints at the
+end of this file rather than writing it from scratch.
 
 - **Icons:** `<i data-i="name"></i>`. Names: back fwd reload x plus minus check tune star star-f heart heart-f
   puzzle kebab more-h search eye fork issue pr actions code folder file book law link history comment send repost
@@ -15,7 +15,7 @@ full; `out/<name>.mp4`, `out/sheet_0N.jpg`; frame-adaptive scenes in `scenes/`, 
   attach image trash pen font undo redo print paint percent copy sort arrow-r expand calendar folder-move cloud
   apps help gear task fx bold italic strike meta fb ig msgr adbox ig-logo gmail cal31 sheets apple google
   mail-f branch terminal desktop zip loc.
-- **Image slots:** `<img class="wb-avatar|wb-logo|wb-favicon|wb-appicon|wb-thumb|wb-shot" src="assets/...">`.
+- **Image slots:** `<img class="wb-avatar|wb-logo|wb-favicon|wb-appicon|wb-thumb|wb-shot">`, its `src` a file in `assets/`.
   Fill them with real images from `tools/source.py`. Until then, give the img `data-ph="kind:text"` and no `src`:
   `person:<name>` (portrait), `avatar:<name>` (initials), `logo:<brand>` (claude, stripe, shopify, gmail, github,
   slack, instagram, meta, microsoft, google, calendly; any other name gets a letter mark), `thumb:<seed>` (a

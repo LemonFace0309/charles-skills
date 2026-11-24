@@ -5,11 +5,9 @@ shadow. Every role, expression and pose is exact and free, and it stays crisp at
 or AI-tool video. For any other topic the host is **the pal** (`shape: "pal"`): the critter's neutral cousin, a
 round mint bun on two feet with oval eyes, a mouth, blush and stubby mitts, in the same 12u × 8u box. Every
 helper, role, prop and wearable below works on it (wearables are refitted to its head and torso). Generated
-characters (`tools/cast.py`) are actors with the same helpers (`cast.js`, reference/cast.md), and any blueprint's
-`HOST` can be one. The working demos are `work/kit-critter/`
-(`out/demo.mp4`, `out/demo_contact.jpg`) and `work/kit-iter/` (the pal, the new blueprints, the landing page
-skins: `out/kit-iter.mp4`, `out/demo_sheet_1.jpg`); the props review sheets are `cast/props/review/review.png`
-and `review_2.png`.
+characters (`tools/cast.py`) are actors with the same helpers (`cast.js`, references/cast.md), and any blueprint's
+`HOST` can be one. The props library's review sheets are `cast/props/review/review.png` and `review_2.png`, in the
+sprite library (SKILL.md, Setup).
 
 Markup: `<div class="critter" id="b01-crit" style="left:…; top:…; --u:16px"></div>`. The box is 12u × 8u with the
 feet on its bottom edge. `--u` sets the size: 16 px is Jake's card scale at 1280x630 (about 15% of the card's

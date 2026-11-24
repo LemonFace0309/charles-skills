@@ -1,9 +1,7 @@
 # Camera, transitions and motion (`motion.js`)
 
 Every helper takes the timeline first and is seek-safe. Positions are measured once, when the scene builds, with
-offset chains inside the scene, so give the boxes they measure explicit sizes. The working demo of every helper is
-`work/kit-motion/` (`out/demo.mp4`, 12 fps strip `out/demo_best_12fps.jpg`; `compositions/k1`-`k14`, and `ft`, the
-`AR.frame` precision test).
+offset chains inside the scene, so give the boxes they measure explicit sizes.
 
 **Camera rule.** A beat cuts in complete and stays locked. The camera moves only for a reason: a cut-in to a closer
 framing of the same plate (`AR.zoomCut`), a push onto content as it fills (`AR.frame`, about 1.45x in 0.25 s), a

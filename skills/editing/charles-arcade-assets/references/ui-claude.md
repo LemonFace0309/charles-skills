@@ -4,8 +4,8 @@ The Claude apps rebuilt at about 2x desktop scale: the Claude Code terminal, the
 deep dark), home, chat, steps rail, search, other-model reply cards, artifacts, split view, docs, checklists,
 slides, the permission dialog, the Usage page and a docked dashboard. Every class starts with `.cl-`. Each
 surface is sized in `em` from its own font-size, so one number rescales it: `.cl-term` 32 px mono, `.cl-app` 30 px
-(`.cl-dense` 22 px), `.cl-doc` 30 px. The working demo of every component is `work/kit-claude/` (`out/demo.mp4`,
-sheets `out/sheet_0N.jpg`; recipes d01-d09 in `compositions/`); copy markup from there.
+(`.cl-dense` 22 px), `.cl-doc` 30 px. Copy markup from the blueprints at the end of this file rather than writing
+it from scratch.
 
 The first two lines of a scene are `AR.names(); AR.clIcons();`. `AR.clIcons()` draws the inline SVGs:
 `<i data-cl-icon="name">` (plus, chev-down, chev-right, up, mic, wave, sidebar, panel, comment, expand, close, doc,
@@ -13,7 +13,7 @@ lock, calendar, clock, copy, thumb-up, thumb-down, pencil, cap, code, cup, bulb,
 gear, chart, table, image, checks, text, shapes, download, play, more, enter, sprout, grid, folder, chats, star,
 prev, next, pause, branch, terminal), `<i class="cl-logo">` (the pixel critter), `<i class="cl-spark">` (the coral
 starburst) and `<div class="cl-cursor">` (the arrow pointer). Real logos and avatars go in
-`<img class="cl-slot" src="assets/...">` inside their slot (`tools/source.py`); a `.cl-mark` letter tile is the
+`<img class="cl-slot">` inside their slot, its `src` a file in `assets/` (`tools/source.py`); a `.cl-mark` letter tile is the
 draft placeholder.
 
 ## Components

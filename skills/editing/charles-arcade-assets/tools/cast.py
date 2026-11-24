@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Make a recurring character for a video, or give one more poses. Run with the repo venv (.venv/bin/python).
+"""Make a recurring character for a video, or give one more poses. Run with a Python that has Pillow and numpy.
 
   cast.py new  <castdir> --desc "<the character>" [--type humanoid|creature|object] [--like <castdir>]
                          [--photo face.jpg] [--face right|left] [--sets base,act] [--screen magenta|green]
@@ -848,7 +848,7 @@ def report(castdir, wanted, failed):
         if lost:
             lines.append(f"The cast works without {', '.join(lost)}; draw any a beat needs as a single pose:")
             descs = CREATURE if s == "creature" else THING if s == "object" else POSE
-            lines += [f'  .venv/bin/python {HERE}/cast.py pose {castdir} --name {n} --desc "{descs[n]}"' for n in lost]
+            lines += [f'  {sys.executable} {HERE}/cast.py pose {castdir} --name {n} --desc "{descs[n]}"' for n in lost]
     if lines:
         print("\n".join(lines))
     if failed:

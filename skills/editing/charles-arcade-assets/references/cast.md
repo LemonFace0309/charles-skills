@@ -4,10 +4,9 @@ A character made with `tools/cast.py` (pixel Charles from a photo, a goo monster
 placed by its feet, flipped, posed, holding and wearing library props, talking in the critter's bubbles, hopping
 with a ground shadow. cast.js reads `assets/cast/<name>/cast.json` once when a scene builds; its anchors (written
 by `cast.py measure`, and by new/add/pose) say where each pose's feet, head top, face and hands are. A cast without
-anchors logs a warning: run `.venv/bin/python $T/tools/cast.py measure assets/cast/<name>`. Open its `anchors.png`
+anchors logs a warning: run `python3 <skill>/tools/cast.py measure assets/cast/<name>`. Open its `anchors.png`
 before giving it hand props: when a hand dot sits inside the body (arms held against the torso fool the measure),
-set that pose's hand points in cast.json by hand, and note them, because running `measure` again overwrites them. Working demo:
-`work/kit-cast/` (`out/kit-cast.mp4`, `tall/out/kit-cast-tall.mp4`; `labs/remount.py` re-applies its edits).
+set that pose's hand points in cast.json by hand, and note them, because running `measure` again overwrites them.
 
 Any blueprint that features the host takes `HOST`: "critter" (the default), "pal", or a cast folder ("charles").
 Critter-only calls (`AR.crit.eyes`, `AR.crit.arms`) do nothing to an actor, and `AR.cast.act` does nothing to a

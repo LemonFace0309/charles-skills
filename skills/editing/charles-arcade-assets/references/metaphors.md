@@ -1,5 +1,7 @@
 # What to show for what is said
 
+Contents: Cast for the topic · The library · The rules that make it work · Segment format for a tool or skill launch · Format for an education or listicle video · Worked examples (Jake's reels, measured frame by frame)
+
 The whole style rests on one move: take the words being spoken and draw them **literally, as a moment from a
 video game**: the mascot doing it, the product doing it, or the real thing itself. Not a diagram of the idea,
 not an icon: the thing itself, happening. A muted viewer should still get the joke.
@@ -23,7 +25,7 @@ The cast is decided per video, before the beat sheet. Keep it small: a host and 
   - **the goal**, what the viewer becomes: "god tier" as a crowned wizard, a trophy, a level-up aura;
   - **the rival**: the other product, the competitor, the old way.
 - Every blueprint that features the host takes `HOST`: "critter", "pal", or the folder of a cast.py character
-  (Charles from his photo hosts the whole video, crowned at the end; reference/cast.md).
+  (Charles from his photo hosts the whole video, crowned at the end; references/cast.md).
 - **Two-sided stories** (an app and its users, a seller and a buyer, a creator and a viewer): the host plays the
   product, or the creator's side, and causes the mistakes and the fixes; a `cast.py` character plays the user, the
   player who walks through it; the crowd plays users in bulk. Either of the two acting counts as the mascot acting.

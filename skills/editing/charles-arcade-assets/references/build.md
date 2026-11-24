@@ -1,5 +1,7 @@
 # Building scenes in HyperFrames
 
+Contents: Blueprints · Timing · The kit · Custom scene skeleton · Names in one place · HyperFrames rules that bite · Commands
+
 A project is HTML: `index.html` mounts one scene file per beat (`compositions/<id>.html`), and HyperFrames
 seeks a paused GSAP timeline frame by frame to render it. `tools/new_project.py` makes the project,
 `tools/mount.py` writes the beat hosts from `beats.json`, and every scene uses the kit, loaded once by
@@ -10,7 +12,7 @@ apps), `annotate.css/js` (marker circles, notes, stamps, counters) and `dataviz.
 
 ## Blueprints
 
-Tested scene files in `$T/blueprints/`, in four layouts: wide (`blueprints/wide/<name>.html`, laid out at
+Tested scene files in `<skill>/blueprints/`, in four layouts: wide (`blueprints/wide/<name>.html`, laid out at
 1280x630, for cards and landscape panels: width/height 1.3 or more), tall card (`blueprints/tallcard/<name>.html`,
 1280x1550, the card that covers the face: 0.75 to 0.95), short (`blueprints/short/<name>.html`, 1080x960, for
 frames in between) and tall (`blueprints/<name>.html`, 1080x1920). List one in `beats.json`
@@ -81,9 +83,10 @@ The tall-card layout (1280x1550, the card that covers the face) has its own set 
 | `crowd-signs` | a bigger crowd across the lower half, paddles over their heads, the meter on top | critter.md |
 | `tier-list`, `loot-bar`, `book-reveal`, `author-card` | the wide scenes laid out for the tall card (title on top, author under the floor, rows of 250 px tiles) | cast.md |
 
-quest-map and setup-flow have no 1080x1920 version; mount.py copies the tall-card one. Set `MAP.bottom` to 470
-and the banner's top to 262 px, and keep setup-flow's two windows inside y 250-1450 (`work/kit-phone/full`
-shows both).
+quest-map and setup-flow have no 1080x1920 version; mount.py copies the tall-card one. At 1080x1920 everything
+the viewer reads sits between the platform's header and the caption band (y 200 to 1320, `<skill>/reel-spec.json`):
+set `MAP.bottom` to 600, which keeps the lowest node and its tag above y 1320, and the banner's top to 212 px, and
+keep setup-flow's two windows inside y 200 to 1320.
 
 Blueprints are starting points, not templates to fill blindly. Change layout, add a second prop, cut what the
 beat does not need. For a moment no blueprint covers, write a custom scene from the skeleton below, using the
@@ -213,9 +216,11 @@ line in `names.js` and a re-render.
   line the voice says), is 30 px or more on the phone (43 px or more in a 1280x630 card). Supporting UI text
   that should look real (a chat reply, table rows, file names) can be 18-22 px on the phone (26-30 px in the
   card); texture text (timestamps, sizes, chrome) down to about 12 px on the phone (18 px in the card). When the
-  viewer must read something small, push the camera onto it (`AR.frame`). On 1080x1920 keep text between y 250
-  and y 1450 and x 80-1000 (the platform UI covers the rest); in any other frame, inside the text area charles-claude-editing
-  gives. Footage and art can fill the whole frame.
+  viewer must read something small, push the camera onto it (`AR.frame`). On 1080x1920 keep text between the
+  platform's header and the caption band (y 200 to 1320), 60 px from the sides, and left of the button column below
+  y 840 (x 940): the platform's UI covers the rest, and the captions sit in the band (`<skill>/reel-spec.json`). In any
+  other frame, keep it inside the text area charles-claude-editing gives, or 60 px inside every edge. Footage and art
+  can fill the whole frame.
 - Emoji render (Apple Color Emoji on this Mac). Use them when the emoji is the subject (the "rocket, sparkles,
   lightning" of an emoji feature grid); draw UI icons as inline SVG.
 - An element that starts hidden is hidden in its CSS (`opacity: 0`) or by `fromTo`, not by
@@ -248,11 +253,10 @@ Run from the project folder; `npx --yes hyperframes@0.8.217 <cmd>` (the pinned v
 
 | Need | Command |
 |---|---|
-| word timings | `hf transcribe assets/voice.m4a -d . --json`, then `.venv/bin/python $T/tools/onsets.py transcript.json assets/voice.m4a` (snaps the word after each pause to its sound), then `python3 $T/tools/words.py transcript.json` |
-| word times inside phrases | `.venv/bin/python $T/tools/onsets.py transcript.json assets/voice.m4a --check --strip review/words.png` (every word more than 0.1 s off its sound, with the time; `--words a,b` only the hit words; moves nothing) |
-| move confirmed words | `.venv/bin/python $T/tools/onsets.py transcript.json assets/voice.m4a --move paywall,27.68` (takes the suggestion) or `--move moment=29.22` (your own) |
-| look at a hit | `python3 $T/tools/words.py transcript.json --strip review/w.png --from 27.3 --to 29.6` (spectrogram, waveform, each word's start) |
-| assets at several sizes | `python3 $T/tools/new_project.py videos/<video>/graphics/<name> --set card:1280x630,tall:1280x1550,full:1080x1920 --duration <s>` (one project per size, one shared assets/; prints each render command) |
+| word timings | `python3 <skill>/tools/words_pass.py <project>` (transcribes, snaps the word after each pause to its sound, then draws every word still more than 0.1 s off on `review/words.png` and prints the phrases and words; `--keys a,b` checks only the hit words) |
+| move confirmed words | `python3 <skill>/tools/onsets.py transcript.json <audio> --move paywall,27.68` (takes the suggestion) or `--move moment=29.22` (your own) |
+| look at a hit | `python3 <skill>/tools/words.py transcript.json --strip review/w.png --from 27.3 --to 29.6` (spectrogram, waveform, each word's start) |
+| assets at several sizes | `python3 <skill>/tools/new_project.py <project> --set card:1280x630,tall:1280x1550,full:1080x1920 --duration <s>` (one project per size, one shared assets/; prints each render command) |
 | lint + runtime + layout gate | `hf check --json` (fix every error; layout and craft warnings are advice) |
 | look at moments | `hf snapshot --at 0.4,1.9,3.2 --no-end -o review/` (writes PNGs and `contact-sheet.jpg`) |
 | one scene's frames | `hf snapshot --composition b05 --frames 6 -o review/b05` |
@@ -261,5 +265,5 @@ Run from the project folder; `npx --yes hyperframes@0.8.217 <cmd>` (the pinned v
 | render a reel or an asset | `hf render -o out/<name>.mp4` |
 | render an overlay with transparency | `hf render --format webm -o out/<name>.webm` (or `--format mov` for ProRes 4444) |
 
-Renders are fast on this Mac (a 22 s reel took 13 s), snapshots and checks take 20-60 s; run renders in the
+Renders are fast (a 22 s reel took 13 s on an M-series Mac), snapshots and checks take 20-60 s; run renders in the
 background anyway.

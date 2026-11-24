@@ -23,7 +23,7 @@ nothing the second time.
 
 Prints each word that moved and by how much. Writes --out (default: the transcript itself, after keeping the
 original once as <name>.raw.json). Run it after every `hf transcribe`, before planning beats. Needs ffmpeg and
-numpy (the repo venv).
+numpy (SKILL.md, Setup).
 
 --check reports, without moving anything, every word whose start is more than --tol seconds (default 0.1) from
 where its sound starts, with that time. Inside phrases recognisers drift by 0.1-0.25 s: early into the word

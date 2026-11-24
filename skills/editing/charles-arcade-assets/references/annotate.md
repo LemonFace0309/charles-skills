@@ -1,7 +1,6 @@
 # Marks, stamps, counters and charts (`annotate.css/js`, `dataviz.css/js`)
 
-The working demo of everything here is `work/kit-annotate/` (render `out/demo.mp4`, sheet `out/demo_sheet.jpg`);
-copy markup from its `compositions/`.
+Copy markup from the blueprints at the end of this file rather than writing it from scratch.
 
 ## Annotations (`annotate.css`, `annotate.js`)
 

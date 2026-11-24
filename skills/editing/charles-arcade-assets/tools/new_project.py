@@ -17,11 +17,10 @@ loaded by every size), cast/, art/, logos/, clips/. Fetch, generate and key ever
 every size sees it. Transcribe in <dir>. It prints each project's mount and render commands; renders go to
 <dir>/out/part_<start>_<W>x<H>.mp4 (--start names them: the set's start in the source video, default 0).
 """
-import argparse, json, os, re, shutil, subprocess, sys
+import argparse, json, os, re, shlex, shutil, subprocess, sys
 from pathlib import Path
 
 SKILL = Path(__file__).resolve().parent.parent
-T = "skills/charles-arcade-assets"
 HF = "npx --yes hyperframes@0.8.217"
 SHARED = ("art", "cast", "clips", "logos")
 
@@ -37,6 +36,18 @@ def cast_library():
         if (folder / "assets" / "arcade-cast").is_dir():
             return folder / "assets" / "arcade-cast"
     return SKILL / "cast"
+
+
+def default_cast():
+    """claude and gpt when the sprite library has them. Without the library a project starts with no sprites: the
+    critter and the pal are drawn in code, and tools/cast.py new makes any other character."""
+    lib = cast_library()
+    have = [name for name in ("claude", "gpt") if (lib / name).is_dir()]
+    if len(have) < 2:
+        print(f"no claude and gpt sprites in {lib}: {'copying only ' + have[0] if have else 'copying no sprites'}. The "
+              "critter and the pal are drawn in code; make other characters with tools/cast.py new, or point "
+              "ARCADE_CAST at a sprite library.")
+    return ",".join(have)
 
 
 def copy_cast(assets, cast):
@@ -162,25 +173,29 @@ def asset_set(args):
     for name, w, h, proj, note in rows:
         print(f"  {name:6} {w}x{h}  {proj}/  ({note})")
     print("Each size is its own project: write its beats.json, then mount, check and render it:")
+    mount = shlex.quote(str(SKILL / "tools" / "mount.py"))
     for name, w, h, proj, note in rows:
-        print(f"  python3 {T}/tools/mount.py {proj}")
+        print(f"  python3 {mount} {shlex.quote(str(proj))}")
     for name, w, h, proj, note in rows:
-        print(f"  cd {proj} && {HF} render -o ../out/part_{tag}_{w}x{h}.mp4")
+        print(f"  cd {shlex.quote(str(proj))} && {HF} render -o ../out/part_{tag}_{w}x{h}.mp4")
     print(f"Fetch and generate into {assets}/ (art, cast, logos, photos, web), put names and facts in "
-          f"{assets}/names.js and shared CSS/JS in video.css and video.js: every size uses them. Transcribe in "
-          f"{root}/ (one transcript for the set).")
+          f"{assets}/names.js and shared CSS/JS in video.css and video.js: every size uses them. Run the words pass on "
+          f"{root}/ (tools/words_pass.py: one transcript for the set).")
 
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("dir")
     ap.add_argument("--audio")
-    ap.add_argument("--cast", default="claude,gpt")
+    ap.add_argument("--cast", help="cast members from the sprite library, comma-separated (default: claude,gpt when "
+                    "the library has them, else none)")
     ap.add_argument("--size", default="1080x1920")
     ap.add_argument("--duration", type=float, help="clip mode: the part's length in seconds")
     ap.add_argument("--set", help="several sizes sharing one assets folder: name:WxH,name:WxH,...")
     ap.add_argument("--start", type=float, default=0.0, help="--set: the set's start in the source video (names renders)")
     args = ap.parse_args()
+    if args.cast is None:
+        args.cast = default_cast()
     if args.set:
         asset_set(args)
     else:

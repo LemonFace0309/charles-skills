@@ -28,8 +28,9 @@ Add `-g` to install it for every project, or copy this folder into `~/.claude/sk
 ## Needs
 
 Node 22+, Python 3 with Pillow and numpy, ffmpeg, Google Chrome, and a fal.ai key (`FAL_KEY`) for the art. It renders
-with HyperFrames, which runs through npx. My sprite library isn't included, so you generate your own cast
-(`tools/cast.py new`) and point `ARCADE_CAST` at it.
+with HyperFrames, which runs through npx. My sprite library isn't included: the Claude critter and its neutral
+cousin are drawn in code, `tools/cast.py new` makes any other character from a description or a photo, and
+`ARCADE_CAST` points the skill at a library of your own.
 
 ## Pairs with
 

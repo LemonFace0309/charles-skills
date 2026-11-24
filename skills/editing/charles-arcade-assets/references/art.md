@@ -1,11 +1,13 @@
 # Making the art
 
+Contents: One look, every time · The cast · Real things · Checking art before using it · Video (hero moments only) · Costs (October 2026)
+
 All art comes from `tools/fal.py` (Nano Banana Pro for images, MiniMax / Kling / Gemini for video) and is
 cleaned with `tools/sprites.py`. Code draws everything that must be exact: text, numbers, health bars, UI.
 Generated images never carry text that matters.
 
 Commands are written out in full (zsh does not split a command stored in a variable): `fal.py` runs on the
-system `python3`, `sprites.py` on the repo venv (`.venv/bin/python`, see SKILL.md setup).
+system `python3`, `sprites.py` on the Python that has Pillow and numpy (SKILL.md, Setup).
 
 ## One look, every time
 
@@ -26,7 +28,7 @@ matters in the middle 70%. A tall card (1280x1550) uses `4:5`.
 
 **Plates with screens** (monitors, a TV, a phone in the scene): ask for the screens as "a perfectly flat solid
 #00FF00 bright green rectangle, with no reflections, no content and no bezel glare". Then
-`.venv/bin/python $T/tools/sprites.py screen raw.png assets/art/<name>.png` cuts the screens out and prints each
+`python3 <skill>/tools/sprites.py screen raw.png assets/art/<name>.png` cuts the screens out and prints each
 one's rect and corners (also in `<name>.screens.json`). In the scene, put the live UI (a rebuilt app, a chart, a
 captured page) behind the plate and fit it to a screen with `AR.mountScreen` (build.md), so the app plays inside
 the pixel monitor, angled monitors included, and the camera can push into it.
@@ -37,7 +39,7 @@ the pixel monitor, angled monitors included, and the camera can push into it.
 > pixel dark outline, flat lighting with one small highlight. A single ⟨object⟩, centered, on a perfectly flat
 > solid magenta #FF00FF background. No floor, no ground line, no shadow, no text, no border.
 
-Then `.venv/bin/python $T/tools/sprites.py key raw.png assets/art/<name>.png`: it removes the magenta
+Then `python3 <skill>/tools/sprites.py key raw.png assets/art/<name>.png`: it removes the magenta
 backdrop (with its haze and ghost copies) and anything close to pure magenta, keeps darker shading inside the
 outline, and trims. It also pulls leftover screen colour out of the cut edge (no green or pink rim). It drops dust
 and the bits a ghost copy leaves in the haze, but keeps parts drawn on the clean screen, such as a held prop or
@@ -73,10 +75,12 @@ mirror a sprite with an inner `<div class="flip">` around its poses, never with 
 character), in one command, about $0.45 ($0.60 when a sheet has to be redrawn):
 
 ```bash
-.venv/bin/python $T/tools/cast.py new videos/<video>/graphics/x/assets/cast/slop --type creature --desc "a gooey purple-grey slime blob monster with two mismatched sparkle eyes, dripping glossy violet gradient goo" --screen green
-.venv/bin/python $T/tools/cast.py new videos/<video>/graphics/x/assets/cast/charles --photo charles.jpg --desc "wearing a black t-shirt"
-.venv/bin/python $T/tools/cast.py new videos/<video>/graphics/x/assets/cast/teal --like assets/arcade-cast/gpt --desc "recoloured teal"
+python3 <skill>/tools/cast.py new <project>/assets/cast/slop --type creature --desc "a gooey purple-grey slime blob monster with two mismatched sparkle eyes, dripping glossy violet gradient goo" --screen green
+python3 <skill>/tools/cast.py new <project>/assets/cast/charles --photo charles.jpg --desc "wearing a black t-shirt"
+python3 <skill>/tools/cast.py new <project>/assets/cast/teal --like <cast>/gpt --desc "recoloured teal"
 ```
+
+`<cast>` is the sprite library (SKILL.md, Setup); `--like` takes any character folder, so a cast.py character works there too.
 
 It draws the reference, the `base` and `act` pose sheets (idle, walk_a, walk_b, jump, cheer, sad; point, think,
 shock, talk), keys and slices them, and puts every pose at one body size on one canvas. Add `--sets base,act,fight`
@@ -96,17 +100,17 @@ fails again is named in a FAILED line, with a `cast.py pose` command for each mi
 cast.json remembers the screen, type and note, so `add` and `pose` reuse them.
 
 Every pose records its anchors in cast.json: feet, head top, face, both hands and the head's width, plus the
-reference pose's standing height (`height`). cast.js places the character by them (reference/cast.md). Poses are
+reference pose's standing height (`height`). cast.js places the character by them (references/cast.md). Poses are
 sized by matching the reference pose's head, so a mallet held overhead or a sack never shrinks the body, and set
 on the shared canvas by their feet; a pose too big for the canvas grows the canvas for every pose (padded, never
 shrunk). Open `anchors.png` (dots on the head top, face, hands and feet of every pose) next to `review.png`.
-A cast made before, or with poses edited by hand: `.venv/bin/python $T/tools/cast.py measure <castdir> [...]`
+A cast made before, or with poses edited by hand: `python3 <skill>/tools/cast.py measure <castdir> [...]`
 (no fal calls, about a second a pose). It also refits from `extra/` any pose whose whole body came out another
 size; `--no-refit` only measures. A pose drawn with other proportions (a bigger head, a crouch) is flagged
 "unsure" and left as drawn; its anchors are approximate.
 
 **A pose a beat needs that does not exist** (holding a magnifying glass, wearing a miner helmet, sitting at a
-desk): `.venv/bin/python $T/tools/cast.py pose <castdir> --name detective --desc "wearing small round black
+desk): `python3 <skill>/tools/cast.py pose <castdir> --name detective --desc "wearing small round black
 glasses and holding a magnifying glass"`. It is fitted to the reference pose's head size and placed by its feet (the canvas grows when a prop needs
 room), so it swaps with
 the other poses without jumping. `cast.py add <castdir> --sets act` draws a whole missing set. A creature's or
@@ -158,9 +162,9 @@ a second copy of the subject, a drawn floor or shadow under a prop, extra limbs,
 colour, wrong shape, eyes moved), mush instead of crisp pixels, or a busy foreground where sprites must stand.
 When it drew the wrong thing (a strawberry that reads as a tomato), a retry rarely fixes it: rewrite the prompt
 with what makes the object recognisable (seeds on the skin, a leafy green top, the shape).
-Put the keyed sprites on one review sheet, `.venv/bin/python $T/tools/sprites.py sheet review.png a.png b.png ...`,
+Put the keyed sprites on one review sheet, `python3 <skill>/tools/sprites.py sheet review.png a.png b.png ...`,
 and open it: it is flat teal so a hole or a speck left by the key shows. If keying ate part of an object, or a
-pink or purple object went with the backdrop, use `python3 $T/tools/fal.py rmbg --image raw.png --out cut.png`
+pink or purple object went with the backdrop, use `python3 <skill>/tools/fal.py rmbg --image raw.png --out cut.png`
 (then `sprites.py trim`) or regenerate on `--screen green` (#00FF00).
 
 ## Video (hero moments only)
@@ -171,7 +175,7 @@ code animating stills, which lands exactly on the words.
 
 1. Build the still first: the scene plate with the cast composited into it, or generate the full scene image
    with the cast (pass both `ref_raw.png` files as `--ref`). No text, no HUD in the still.
-2. `python3 $T/tools/fal.py video --image still.png --prompt "..." --model minimax --duration 5 --out assets/clips/<name>.mp4`
+2. `python3 <skill>/tools/fal.py video --image still.png --prompt "..." --model minimax --duration 5 --out assets/clips/<name>.mp4`
    - `minimax` (H3 Max): fast (~15 s), cheap (~$0.16), the most dynamic action. Default.
    - `kling` (Kling 4): pass `--end end_frame.png` to land on an exact final pose; slowest (~3-4 min), ~$0.80.
    - `gemini` (Omni Flash): 8 s, ~$0.24; tends to idle for the first 2-3 s.

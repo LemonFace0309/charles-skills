@@ -1223,7 +1223,7 @@
      bottom, bad, plate, seed, px, route: {under, dash}}) draws an overworld into parent: a pixel island (or `plate`, an
      image path), the dashed route START -> 1..N -> goal, and the nodes. pts: [[x, y], ...] for START, each node and the
      goal (default: a zig-zag, left to right in a wide parent, bottom to top in a tall one, between `top` px from the top
-     and `bottom` px from the bottom, e.g. top 330 and bottom 470 keep a 1080x1920 route inside y 250-1450). icon: a pixel
+     and `bottom` px from the bottom, e.g. top 280 and bottom 600 keep a 1080x1920 route between the platform's header at y 200 and the caption band at y 1320). icon: a pixel
      glyph (flag chest chest-open wall lock star bulb), an image path, or text (an emoji). Returns {el, nodes, pts, size}
      where nodes[0] is START, nodes[1..N] the steps and nodes[N+1] the goal. */
   AR.questMap = function (parent, cfg = {}) {
