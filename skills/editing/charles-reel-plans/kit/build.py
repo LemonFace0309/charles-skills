@@ -222,7 +222,7 @@ def hook_block(plan, beats, until_default, length_for_sub):
         # 56 and 40 rather than 22 Backgrounds' 45 and 36, which read small on a phone
         return {"style": "title", "lines": lines, "sub": sub, "y": hk.get("y", 256), "size": hk.get("size", 56),
                 "sub_size": hk.get("sub_size", 40), "sub_gap": hk.get("sub_gap", 2), "until": None}
-    return {"style": "tiktok", "lines": lines, "y": hk.get("y", 280), "size": hk.get("size", 72), "pad": hk.get("pad", 30),
+    return {"style": "tiktok", "lines": lines, "y": hk.get("y", 240), "size": hk.get("size", 72), "pad": hk.get("pad", 30),
             "until": hk.get("until", until_default)}
 
 

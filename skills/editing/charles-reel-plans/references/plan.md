@@ -75,7 +75,7 @@ The page draws a backdrop as one pane over everything below the asset, from the 
 ## A hook
 
 - A list reel: `{"style": "title", "lines": ["Evolution of Design"], "sub": "(20 years in under {under} seconds)"}`. Helvetica Neue Medium 56 at y 256, the subtitle Regular 40 two px under it, up the whole reel (`size`, `sub_size`, `sub_gap`; the edit's `title_size`, `sub_size` and `sub_gap`). `{under}` becomes the next multiple of 5 s at or above where the list ends.
-- A talk reel, only when he asked for a hook: `{"style": "tiktok", "lines": ["I reverse engineered", "Tinder's algorithm"], "until": 3.5}`. Black Helvetica Neue Bold 72 in white boxes, each line its own box, at y 280, or on the seam when the reel opens on a split. It stays up until `until`, by default the end of his first sentence (the first line whose `say` ends in . ? or !), kept to 3-5 s. Two lines at most (charles-claude-editing, Hook Title).
+- A talk reel, only when he asked for a hook: `{"style": "tiktok", "lines": ["I reverse engineered", "Tinder's algorithm"], "until": 3.5}`. Black Helvetica Neue Bold 72 in white boxes, each line its own box, its top at y 240 (the top of reel-spec.json's headline band, where the edit puts it), or on the seam when the reel opens on a split. It stays up until `until`, by default the end of his first sentence (the first line whose `say` ends in . ? or !), kept to 3-5 s. Two lines at most (charles-claude-editing, Hook Title).
 
 ## The list block
 
