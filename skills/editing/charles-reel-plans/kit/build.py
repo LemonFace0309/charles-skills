@@ -1,9 +1,6 @@
 """Build a video's plan page from its edit/plan.json and SCRIPT.md: the player (a moving mockup of the reel playing with
-its music, a play bar and a safe-area toggle), then the script as he reads it, the caption options and every asset with
-its source. Nothing else goes around the player: no Instagram UI, music picker or now-playing line (Charles, 16 Nov
-2026: "too much fluff around the video player section"), but the sections stay ("Still include the other sections...
-like the assets and the script and the video caption options") and so does the safe-area toggle ("that was actually
-useful").
+its music, a play bar, and the Safe area and Instagram UI toggles), then the script as he reads it, the caption options,
+every asset with its source and the references. Nothing else goes around the player.
 
   python3 -I <skill>/kit/build.py <video folder>           # build/plan.html, <assets_dir>/SOURCES.md, build/music/
   python3 -I <skill>/kit/build.py <video folder> --site    # also build/site/, the shareable copy, to publish as an Artifact
@@ -15,7 +12,7 @@ build/plan.html opens straight from disk. build/site/index.html has no head (the
 and carries its CSS, script and data inline; its media (the reel's assets and the music) sit under build/site/media/,
 listed in build/site/files.json. Publish it with the Artifact tool: file_path build/site/index.html, root build/site,
 files = files.json. Publishing the same file path again keeps the link. The build also prints the checks against
-charles-claude-editing's rules.
+charles-claude-editing's rules, with every number taken from <skill>/reel-spec.json (that skill's frame, copied here).
 """
 import base64
 import copy
@@ -43,7 +40,19 @@ VID = {".mp4", ".webm", ".mov", ".m4v"}
 ACRONYMS = {"ios": 3, "ai": 2, "nft": 3, "nfts": 4, "ui": 2, "ux": 2, "css": 3, "api": 3, "url": 3, "gpu": 3, "ceo": 3, "mrr": 3}
 HOLD = 1.2                 # page.js holds the last frame this long before it loops
 LIMITS = (255, 60e6)       # what one Artifact publish takes: files, bytes
-SAFE_TOP, SAFE_BOTTOM, RAIL_X, RAIL_Y, SIDE = 250, 1500, 940, 840, 80   # charles-claude-editing's safe area
+# The frame every editing skill lays a reel out on: charles-claude-editing owns reel-spec.json and this skill carries an
+# identical copy, so the checks and the page follow the edit's numbers wherever the skill is installed.
+SPEC_FILE = KIT.parent / "reel-spec.json"
+try:
+    SPEC = json.loads(SPEC_FILE.read_text())
+except (OSError, ValueError) as e:
+    sys.exit(f"Can't read {SPEC_FILE} ({e}). It's a copy of charles-claude-editing's reel-spec.json: put it back.")
+W = SPEC["frame"]["width"]
+SAFE_TOP, SAFE_BOTTOM = SPEC["platform"]["top"], SPEC["platform"]["bottom"]          # the header, the username and caption
+RAIL_X, RAIL_Y = SPEC["platform"]["buttons"]["left"], SPEC["platform"]["buttons"]["top"]   # the like, comment, share column
+SIDE = SPEC["text_inset"]["px"]
+PACE, AUDIO = SPEC["pacing"], SPEC["audio"]
+LIST_SLACK = 12            # list_reel.py lets a list's columns reach 12 px into the side inset
 # What each layout does to everything behind its asset (his footage and the reel's own title, list, stopwatch and hook):
 # "blur" is charles-claude-editing's overlay with blur. A visual can set its own "backdrop". page.js keeps the same
 # table and draws each kind; when the editing skill's layouts change, change both tables, never a single beat.
@@ -57,9 +66,15 @@ def backdrop_of(v):
 # His face on the 1080x1920 grid, from his eye line (`eye_line`): brows about 70 px above it, chin about 300 under it
 # and about 400 px wide around `face_x` (the medians of the face boxes on 34 of his cuts, videos/*/edit/work/face.json).
 # His lower lip sits about 0.74 of the way from eyes to chin (face.swift on four of his takes), 190-220 px at his usual
-# sizes; LIP takes the low end, so captions placed right under his mouth on a smaller face aren't flagged (23 Nov 2026).
+# sizes; LIP takes the low end, so captions placed right under his mouth on a smaller face aren't flagged.
 BROW, LIP, CHIN, FACE_W = 70, 190, 300, 400
-CAPTION_HOME = 1380        # charles-claude-editing: captions sit around y 1380 unless an asset sits there
+CAPTION_HOME = SPEC["captions"]["talking_head_centre_y"]   # where captions sit unless an asset sits there
+CAPTION_SIZE = SPEC["captions"]["size_px"]
+
+
+def text_room(y):
+    """How wide centred text may run at height y: inside the side insets, and clear of the button column below its top."""
+    return 2 * (RAIL_X - W / 2) if y > RAIL_Y else W - 2 * SIDE
 
 
 def clear_of_face(eye, half):
@@ -168,14 +183,18 @@ def list_block(plan, beats):
     colw = [max(widths[:per_col]), max(widths[per_col:] or [0])]
     x0 = (1080 - colw[0] - colw[1] - L["col_gap"]) / 2
     x1 = x0 + colw[0] + L["col_gap"] + colw[1]
-    if x0 < 68 or x1 > 1012:
+    lo, hi = SIDE - LIST_SLACK, W - SIDE + LIST_SLACK
+    # rows that reach below the button column's top have to stay left of it too
+    hi = min(hi, RAIL_X) if L["row0"] + (per_col - 1) * L["pitch"] + L["size"] / 2 > RAIL_Y else hi
+    if x0 < lo or x1 > hi:
         widest = max(rows, key=lambda r: width(r["label"]))["label"]
-        sys.exit(f"The list is too wide ({x0:.0f} to {x1:.0f} px; it has to stay inside 68 to 1012). Shorten the widest "
-                 f"labels (\"{widest}\" is {width(widest):.0f} px) or narrow number_width / col_gap.")
+        sys.exit(f"The list is too wide ({x0:.0f} to {x1:.0f} px; it has to stay inside {lo:.0f} to {hi:.0f}, from "
+                 f"reel-spec.json's text inset and button column). Shorten the widest labels (\"{widest}\" is "
+                 f"{width(widest):.0f} px) or narrow number_width / col_gap.")
     stop_at = max(b["start"] + b["dur"] for b in beats if b.get("row") is not None)
     # A list that leads into a tutorial can count DOWN instead ("countdown": {"until": <beat index>, "label": "Video
     # tutorial in", "hide": true}): the timer reaches 00.00 as that line starts, with its label over the plate, and with
-    # "hide" the title, list and timer leave the screen there (animation-styles, 19 Nov 2026).
+    # "hide" the title, list and timer leave the screen there.
     cd = L.get("countdown")
     countdown = None
     if cd:
@@ -200,7 +219,7 @@ def hook_block(plan, beats, until_default, length_for_sub):
     if sub and "{under}" in sub:        # "(20 years in under {under} seconds)": the next 5 s up from where the list ends
         sub = sub.replace("{under}", str(5 * math.ceil(length_for_sub / 5 - 1e-9)))
     if style == "title":
-        # 56 and 40 rather than 22 Backgrounds' 45 and 36: "this text hook should probably be a little bigger" (16 Nov 2026)
+        # 56 and 40 rather than 22 Backgrounds' 45 and 36, which read small on a phone
         return {"style": "title", "lines": lines, "sub": sub, "y": hk.get("y", 256), "size": hk.get("size", 56),
                 "sub_size": hk.get("sub_size", 40), "sub_gap": hk.get("sub_gap", 2), "until": None}
     return {"style": "tiktok", "lines": lines, "y": hk.get("y", 280), "size": hk.get("size", 72), "pad": hk.get("pad", 30),
@@ -236,19 +255,25 @@ def box(v, caption_y, eye, under_chin):
 def checks(plan, vd, beats, hook, lst, music, under_chin):
     """The rules from charles-claude-editing that a plan can break, measured. Each failure is one sentence for the page."""
     out = []
-    cap_y, cap_size, eye = plan.get("caption_y", 1380), plan.get("caption_size", 66), plan.get("eye_line", 860)
+    cap_y, cap_size, eye = plan.get("caption_y", CAPTION_HOME), plan.get("caption_size", CAPTION_SIZE), plan.get("eye_line", 860)
     cap_w = measurer(cap_size)
+    most = SPEC["captions"]["words_per_line"][1]
     total = beats[-1]["start"] + beats[-1]["dur"]
     for n, b in enumerate(beats, 1):
         lines = [line for c in b["cards"] for line in c["lines"]]
+        bv = b["visual"]
+        line_y = bv.get("seam", 936) if bv and bv["place"] == "split" else (b.get("caption_y") or cap_y)   # a split's sit on the seam
         for line in lines:
             words = len(line.split())
-            if words > 3:
-                out.append(f"Line {n}: the caption \"{line}\" has {words} words; captions take 2-3 a line.")
+            if words > most:
+                out.append(f"Line {n}: the caption \"{line}\" has {words} words; captions take "
+                           f"{'-'.join(map(str, SPEC['captions']['words_per_line']))} a line.")
             elif words == 1 and len(lines) > 1 and b["caption_explicit"]:
                 out.append(f"Line {n}: \"{line}\" is a one-word caption line; join it to the line next to it.")
-            if cap_w(line) > 1080 - 2 * SIDE:
-                out.append(f"Line {n}: the caption \"{line}\" is {cap_w(line):.0f} px wide, past the 80 px side margins.")
+            if cap_w(line) > text_room(line_y):
+                why = f"left of the buttons from x {RAIL_X}" if line_y > RAIL_Y else f"inside the {SIDE} px side insets"
+                out.append(f"Line {n}: the caption \"{line}\" is {cap_w(line):.0f} px wide; at y {line_y} captions get "
+                           f"{text_room(line_y):.0f} px, {why}. Shorten it or break it into two cards.")
         said = " ".join(lines + [b["label"] or ""]).lower()
         for word in BLOCKED:
             if re.search(rf"\b{re.escape(word)}\b", said):
@@ -256,9 +281,8 @@ def checks(plan, vd, beats, hook, lst, music, under_chin):
         v = b["visual"]
         cy = b.get("caption_y") or cap_y
         fl = 540 + plan.get("face_x", 0) - FACE_W / 2          # his face's left edge; eye_line is his eyes' height
-        # Captions stay off his face while it's on screen and sharp ("make sure the captions don't block my face when
-        # the full blur isn't on", 23 Nov 2026). An asset at y 1380 can push them up to right under his mouth ("keep
-        # captions underneath my mouth and above the demo", 12 Nov), never onto it.
+        # Captions stay off his face while it's on screen and sharp. An asset at the caption line can push them up to
+        # right under his mouth, never onto it.
         if lines and backdrop_of(v) == "none" and not (v and v["place"] in ("split", "screen")):
             half = max(len(c["lines"]) for c in b["cards"]) * cap_size * 1.12 / 2   # page.js centres a card on its y
             if abs(plan.get("face_x", 0)) < (max(cap_w(line) for line in lines) + FACE_W) / 2:
@@ -276,7 +300,8 @@ def checks(plan, vd, beats, hook, lst, music, under_chin):
             continue
         x, y, w, h = box(v, cy, eye, under_chin)
         if v["place"] == "bottom" and SAFE_BOTTOM - (cap_y + 45) < 160:
-            out.append(f"Line {n}: \"bottom\" needs room under the captions; set caption_y to 1295 or less for this line.")
+            out.append(f"Line {n}: \"bottom\" needs room under the captions; set caption_y to {SAFE_BOTTOM - 45 - 160} or "
+                       "less for this line.")
         if b["cards"] and v["place"] not in ("split", "screen") and y < (b.get("caption_y") or cap_y) + 45 and y + h > (b.get("caption_y") or cap_y) - 45:
             out.append(f"Line {n}: the captions sit on the asset; move this line's caption_y above or below it.")
         # An asset over his face (brows to mouth) with nothing blurred behind leaves the title and the list crisp over a
@@ -307,10 +332,11 @@ def checks(plan, vd, beats, hook, lst, music, under_chin):
         if run and still == run[0]:
             run[2] += b["dur"]
             continue
-        if run and run[2] > 3.05:
+        if run and run[2] > PACE["max_still_s"] + 0.05:
             where = f"Line {run[1]}" if run[1] == n - 1 else f"Lines {run[1]}-{n - 1}"
-            out.append(f"{where}: {Path(run[0]).name} stays up {run[2]:.1f} s, past 3 s. Give part of it another asset, or set "
-                       "long_ok if he's reading it or it's complex (a tweet, code, a diagram he keeps pointing at).")
+            out.append(f"{where}: {Path(run[0]).name} stays up {run[2]:.1f} s, past {PACE['max_still_s']:g} s. Give part of it "
+                       "another asset, or set long_ok if he's reading it or it's complex (a tweet, code, a diagram he keeps "
+                       "pointing at).")
         run = [still, n, b["dur"]] if still else None
     if not lst:                                   # a list reel's list changes on every line
         run, start = 0.0, 1
@@ -319,34 +345,39 @@ def checks(plan, vd, beats, hook, lst, music, under_chin):
                 run, start = 0.0, n + 1
                 continue
             run += b["dur"]
-            if run > 4.0:
+            if run > PACE["max_without_new_s"]:
                 where = f"Line {n}" if start == n else f"Lines {start}-{n}"
-                out.append(f"{where}: {run:.1f} s with nothing new on screen; give {'it' if start == n else 'one of them'} an asset (the limit is 4 s).")
+                out.append(f"{where}: {run:.1f} s with nothing new on screen; give {'it' if start == n else 'one of them'} an "
+                           f"asset (the limit is {PACE['max_without_new_s']:g} s).")
                 run = -1e9
     if hook.get("style") == "tiktok" and hook.get("lines"):
         hw = measurer(hook["size"])
         if len(hook["lines"]) > 2:
             out.append(f"The hook has {len(hook['lines'])} lines; two at most, three only when a CAPS word gets its own.")
         for line in hook["lines"]:
-            if hw(line) + 2 * hook["pad"] > 1080 - 2 * SIDE:
-                out.append(f"The hook line \"{line}\" is too wide for the 80 px margins; split it or shorten it.")
+            if hw(line) + 2 * hook["pad"] > text_room(hook["y"]):
+                out.append(f"The hook line \"{line}\" is too wide for the {SIDE} px side insets; split it or shorten it.")
         if hook.get("until") and not 2.5 <= hook["until"] <= 5.5:
             out.append(f"The hook stays up {hook['until']:.1f} s; keep it to his first sentence, 3-5 s.")
     m = plan.get("music") or {}
+    library = (repo_root(vd) / "assets/music").is_dir()         # claude-editing keeps tracks in mood folders there
+    low, high = AUDIO["music_under_voice_db"]
     if not music["tracks"]:
-        out.append("No music: pick a track from assets/music/<mood>/.")
-    elif not 8 <= float(m.get("under", 8.5)) <= 9:
-        out.append(f"The music sits {m.get('under')} dB under his voice; keep it 8-9 dB.")
-    for e in ([m] if m.get("file") else []) + m.get("alternatives", []):
+        out.append("No music: pick a track from assets/music/<mood>/." if library else "No music: ask Charles for a track.")
+    elif not low <= float(m.get("under", (low + high) / 2)) <= high:
+        out.append(f"The music sits {m.get('under')} dB under his voice; keep it {low:g}-{high:g} dB.")
+    for e in (([m] if m.get("file") else []) + m.get("alternatives", [])) if library else []:
         mood = Path(e["file"]).parent.name
         if mood not in MOODS:
             out.append(f"{Path(e['file']).name} isn't in a mood folder of assets/music/ ({', '.join(sorted(MOODS))}).")
     sfx = [b for b in plan["beats"] if b.get("sfx")]
-    if total and len(sfx) / (total / 60) > 6:
-        out.append(f"{len(sfx)} sound effects in {total:.0f} s is more than 6 a minute.")
+    per_min = AUDIO["sfx_per_minute_max"]
+    if total and len(sfx) / (total / 60) > per_min:
+        out.append(f"{len(sfx)} sound effects in {total:.0f} s is more than {per_min} a minute.")
     memes = [b["sfx"] for b in sfx if any(k in b["sfx"].lower() for k in MEME_SOUNDS)]
-    if len(memes) > 1:
-        out.append(f"{len(memes)} meme sounds ({', '.join(memes)}); one per video at most, on a punchline.")
+    if len(memes) > AUDIO["meme_sfx_per_reel_max"]:
+        out.append(f"{len(memes)} meme sounds ({', '.join(memes)}); {AUDIO['meme_sfx_per_reel_max']} per video at most, on a "
+                   "punchline.")
     return out
 
 
@@ -568,7 +599,7 @@ def refs_for(plan, vd):
                 sys.exit(f"references: reference {n}'s image has to be a still ({', '.join(sorted(IMG))}), not {src.suffix}")
             if src.exists():
                 item["image"] = f"../{r['image']}"
-            else:   # a still of someone else's post stays local (AGENTS.md), so on another computer the card goes without
+            else:   # a still of someone else's post is never committed, so on another computer the card goes without
                 print(f"  references: {n}'s image {r['image']} isn't on this computer, so its card shows the platform instead")
         out.append({k: v for k, v in item.items() if v})
     return out
@@ -579,7 +610,7 @@ def assets_for(plan, vd, beats, groups, under_chin):
     it with its source and licence; spares stay in SOURCES.md) and one per other thing a line shows, with every line it's
     on. Lines that show the same file as the same thing (a clip that carries on, a card that comes back) share a card."""
     by_group = {g["id"]: g for g in groups}
-    cap_y, eye, root = plan.get("caption_y", 1380), plan.get("eye_line", 860), repo_root(vd)
+    cap_y, eye, root = plan.get("caption_y", CAPTION_HOME), plan.get("eye_line", 860), repo_root(vd)
     cards, index = [], {}
     for i, b in enumerate(beats):
         v, g = b["visual"], b["group"]
@@ -700,7 +731,7 @@ def build(vd):
     default_pace = plan.get("pace", "list" if is_list else "talk")
     default_caps = plan.get("captions", not is_list)            # a list reel's list is its captions
     # Before filming each line is an estimate (Timing in references/plan.md, or its `dur`); once edit/cuts.json exists,
-    # the cut's timings win. Nothing reads the script aloud: the AI copies of his voice "sounded like shit" (19 Nov 2026).
+    # the cut's timings win. Nothing reads the script aloud: he rejected every AI copy of his voice.
     beats, t, row, planned = [], 0.0, 0, []
     for i, b in enumerate(plan["beats"]):
         pace = b.get("pace") or ("end" if is_list and b.get("number") is None and i == len(plan["beats"]) - 1 else default_pace)
@@ -745,7 +776,8 @@ def build(vd):
     data = {
         "title": plan["title"], "format_name": plan.get("format_name", f"{plan.get('format', 'talking-head')} reel"),
         "total": total, "timed": "cut" if cuts else "estimate", "beats": beats, "groups": groups,
-        "reel": {"hook": hook, "list": lst, "captions": {"y": plan.get("caption_y", 1380), "size": plan.get("caption_size", 66)},
+        "reel": {"hook": hook, "list": lst, "captions": {"y": plan.get("caption_y", CAPTION_HOME), "size": plan.get("caption_size", CAPTION_SIZE)},
+                 "safe": {"top": SAFE_TOP, "bottom": SAFE_BOTTOM, "rail_x": RAIL_X, "rail_y": RAIL_Y, "side": SIDE},
                  "eye_line": plan.get("eye_line", 860),
                  # a collage PNG is the zone plus a 40 px margin, placed 40 px up and left of the zone (collages.py)
                  "under_chin": (lambda z: [z[0] - 40, z[1] - 40, z[2] - z[0] + 80, z[3] - z[1] + 80])(

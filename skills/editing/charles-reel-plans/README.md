@@ -39,8 +39,10 @@ The line playing lights up in the script, and a click on any line or asset jumps
 
 ## Needs
 
-Python 3 with Pillow and NumPy, ffmpeg, and Google Chrome. Claude Code's Artifact tool publishes the page; without it,
-`build/plan.html` opens from disk.
+Python 3 with Pillow and NumPy, ffmpeg, and Google Chrome. The cold playback test needs Node 18+ with playwright-core
+(`npm install --prefix <this folder>/kit playwright-core` if your project doesn't have it). Claude Code's Artifact tool
+publishes the page; without it, `build/plan.html` opens from disk. It's built around my repository (format playbooks, a
+music library sorted by mood), and works in any folder without them: give it a track and it plans around that.
 
 ## Pairs with
 

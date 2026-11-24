@@ -20,7 +20,9 @@
   const useMemory = location.protocol !== "file:" && typeof fetch === "function" && !!URL.createObjectURL;
   const R = V.reel;
   const HOLD = 1.2;                    // the last frame holds this long before the loop starts again
-  const SAFE_TOP = 250, SAFE_BOTTOM = 1500;
+  // reel-spec.json's platform zones and text inset, which kit/build.py passes in
+  const SAFE = R.safe || { top: 200, bottom: 1500, rail_x: 940, rail_y: 840, side: 60 };
+  const SAFE_TOP = SAFE.top, SAFE_BOTTOM = SAFE.bottom;
 
   const $ = (sel, el = document) => el.querySelector(sel);
   function h(tag, attrs = {}, ...kids) {
@@ -629,6 +631,16 @@
   scrub.addEventListener("input", () => seek(Number(scrub.value)));
   // the hatched safe area (what Instagram's header, caption and buttons cover, and the side margins) and Instagram's UI
   const optSafe = $("#opt-safe"), optIg = $("#opt-ig");
+  {   // the Safe area toggle draws the same zones the build checks against
+    const s = $("#safe");
+    const set = (sel, st) => { const el = $(sel, s); if (el) Object.assign(el.style, st); };
+    set(".safe-top", { height: px(SAFE.top) });
+    set(".safe-bottom", { top: px(SAFE.bottom) });
+    set(".safe-right", { left: px(SAFE.rail_x), top: px(SAFE.rail_y), height: px(SAFE.bottom - SAFE.rail_y) });
+    s.querySelectorAll(".safe-margin").forEach((m) => Object.assign(m.style, { top: px(SAFE.top), height: px(SAFE.bottom - SAFE.top) }));
+    set(".safe-margin-l", { left: px(SAFE.side) });
+    set(".safe-margin-r", { left: px(1080 - SAFE.side - 2) });
+  }
   optSafe.addEventListener("change", () => { $("#safe").hidden = !optSafe.checked; });
   optIg.addEventListener("change", () => { $("#ig").hidden = !optIg.checked; });
 

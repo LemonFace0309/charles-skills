@@ -1,0 +1,16 @@
+[
+ {
+  "file": "1-ios7-icons.png",
+  "kind": "art",
+  "what": "iOS 7's home screen icons",
+  "source": "own",
+  "license": "own"
+ },
+ {
+  "file": "2-squircle-curve.png",
+  "kind": "art",
+  "what": "A squircle next to a rounded square",
+  "source": "own",
+  "license": "own"
+ }
+]

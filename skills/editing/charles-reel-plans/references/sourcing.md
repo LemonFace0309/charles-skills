@@ -1,6 +1,6 @@
 # Sourcing the assets
 
-Start `research/ASSET-BRIEF.md` from the template below, and give each sourcing agent that file and its own groups. `videos/evolution-of-design/research/ASSET-BRIEF.md` is a filled-in one: 21 years, four agents, 73 images.
+Start `research/ASSET-BRIEF.md` from the template below, and give each sourcing agent that file and its own groups. In the claude-editing repository, `videos/evolution-of-design/research/ASSET-BRIEF.md` is a filled-in one: 21 years, four agents, 73 images.
 
 ## The brief template
 
@@ -84,5 +84,5 @@ or paywall.
 - The Wayback Machine sometimes mixes eras: the October 2013 iOS page loaded an older iOS 6 badge. Crop to the part that's right.
 - Apple's marketing images bleed off their edges (the iOS 7 close-up cut the phone in half), which breaks "show assets whole". An archived product page captured at 2x usually has the whole device.
 - Some famous artifacts only exist as tiny non-free copies (Doge, The Dress, iBooks' wooden shelf). Swap them for another real artifact from the same time instead of upscaling. A few small ones still read at collage size, like the 530 px Fail Whale.
-- Media in `videos/` that was never pulled from Git LFS is a pointer file Pillow can't open. Render the page it came from (the HTML in `gen/` or `page/`) with capture.py, or `git lfs pull --include` the one file.
+- In a repository that keeps media in Git LFS (claude-editing does), a file that was never pulled is a pointer Pillow can't open. Render the page it came from (the HTML in `gen/` or `page/`) with capture.py, or `git lfs pull --include` the one file.
 - Claude in Chrome refuses to return text containing URL query strings, so return media ids or bare paths, not full image URLs.

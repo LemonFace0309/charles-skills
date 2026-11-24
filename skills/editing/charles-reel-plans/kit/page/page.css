@@ -316,17 +316,18 @@ h1 { margin: 0; font-size: 26px; line-height: 1.15; font-weight: 600; letter-spa
 .ig-caption { margin-top: 18px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
 .ig-sound { margin-top: 10px; font-size: 30px; opacity: 0.9; }
 
-/* the safe area: what Instagram covers, hatched, and the side margins */
+/* the safe area: what Instagram covers, hatched, and the side insets. page.js sets these from reel-spec.json; the
+   numbers here are the same, for a page built without them */
 .safe { position: absolute; inset: 0; z-index: 5; pointer-events: none; font-family: var(--sans); }
 .safe > div { position: absolute; background: repeating-linear-gradient(135deg, rgba(255, 60, 60, 0.26) 0 14px, rgba(255, 60, 60, 0.1) 14px 28px); }
 .safe span { position: absolute; left: 24px; top: 18px; font-size: 30px; font-weight: 600; color: #fff; text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6); }
-.safe-top { left: 0; right: 0; top: 0; height: 250px; }
+.safe-top { left: 0; right: 0; top: 0; height: 200px; }
 .safe-bottom { left: 0; right: 0; top: 1500px; bottom: 0; }
 .safe-right { left: 940px; right: 0; top: 840px; height: 660px; }
 .safe-right span { left: 12px; font-size: 24px; }
-.safe .safe-margin { top: 250px; height: 1250px; width: 2px; background: rgba(255, 60, 60, 0.7); }
-.safe-margin-l { left: 80px; }
-.safe-margin-r { left: 998px; }
+.safe .safe-margin { top: 200px; height: 1300px; width: 2px; background: rgba(255, 60, 60, 0.7); }
+.safe-margin-l { left: 60px; }
+.safe-margin-r { left: 1018px; }
 
 /* ---- ?solo: the reel alone at 1080x1920, for exporting frames ---------------------------------------------------- */
 body.solo { background: #000; padding: 0; }

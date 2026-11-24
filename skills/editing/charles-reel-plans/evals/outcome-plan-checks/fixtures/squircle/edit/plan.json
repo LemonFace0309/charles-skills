@@ -1,0 +1,62 @@
+{
+ "title": "Why every app icon is a squircle",
+ "format": "talk",
+ "eye_line": 860,
+ "music": {
+  "file": "music/tone.mp3",
+  "at": 0,
+  "under": 5,
+  "why": "fixture"
+ },
+ "beats": [
+  {
+   "say": "Every app icon on your phone is the same shape.",
+   "caption_y": 900,
+   "visual": {
+    "place": "above",
+    "src": "assets/beats/icons/1-ios7-icons.png",
+    "what": "iOS 7's home screen icons"
+   }
+  },
+  {
+   "say": "And it's not actually a rounded square.",
+   "caption": [
+    [
+     "This one has way too many words"
+    ]
+   ],
+   "sfx": "vine boom",
+   "visual": {
+    "place": "below",
+    "src": "assets/beats/icons/2-squircle-curve.png",
+    "what": "A squircle next to a rounded square"
+   }
+  },
+  {
+   "say": "Apple switched to a shape called a squircle back in 2013 with iOS 7."
+  },
+  {
+   "say": "Its curve starts earlier, so the corners blend into the sides."
+  },
+  {
+   "say": "Your eye reads that smooth curve as one calm shape.",
+   "visual": {
+    "place": "below",
+    "src": "assets/beats/icons/1-ios7-icons.png",
+    "what": "iOS 7's home screen icons"
+   }
+  },
+  {
+   "say": "A plain rounded square has a visible kink where the corner meets the side.",
+   "sfx": "vine boom",
+   "visual": {
+    "place": "below",
+    "src": "assets/beats/icons/1-ios7-icons.png",
+    "what": "iOS 7's home screen icons"
+   }
+  },
+  {
+   "say": "Follow for more."
+  }
+ ]
+}
