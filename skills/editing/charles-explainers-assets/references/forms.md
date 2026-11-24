@@ -1,6 +1,6 @@
 # Forms
 
-How each form from the tree in SKILL.md is built, and the gold to copy. Gold paths are in the claude-editing repository: use them when it's present, and the sheets in `examples/` otherwise. Copy the gold's structure (crop, sizes, timing) and change its content; a copy that only changes the words isn't done.
+How each form from the tree in SKILL.md is built, and the gold to copy. Gold paths are in the claude-editing repository: use them when it's present, and the sheets in `examples/` otherwise. Copy the gold's structure (crop, sizes, timing) and change its content; a copy that only changes the words isn't done. A form is the same in both looks; the look's file says how it's dressed.
 
 ## Demo + definition tab
 
@@ -13,10 +13,10 @@ Gold: `videos/eradicating-ai-slop/design-terms/` (`terms/index.html`, `tools/ree
 
 ## Flip in place
 
-Gold: `videos/eradicating-ai-slop/unslop-designs/` for stills, `videos/design-hacks/motion/` (kit v3, `scenes/`) for motion. `kit/example/` is a motion flip with the agent cursor making the change. `videos/practical-design-tips/explainers/` marks every change (`marks.md`), with every kind of mark across its 20 cards (`examples/gold-marks.jpg`).
+Gold: `videos/eradicating-ai-slop/unslop-designs/` for stills, `videos/design-hacks/motion/` (kit v3, `scenes/`) for motion. `kit/example/` is a motion flip with the agent cursor making the change. `videos/practical-design-tips/explainers/` marks every change (`marks.md`), with every kind of mark across its 20 cards (`examples/clean-marks.jpg`). In the studio look: `videos/design-hacks/design-part-2/explainers/` (`examples/studio-flips.jpg`, `studio-flips.md`).
 
 - **One crop and one scale for both states.** A slow push-in, if the flip has one, runs straight through the change and never restarts on it. The state tag sits on the card's corner and flips on the change. Why: anything that moves besides the fix reads as part of the fix.
-- **The camera holds.** One framing for the whole flip, under the slow push. A zoom is for a lesson too small to see (under 4 px in the final frame): one move, settled 0.3 s before the change and never reversed (SKILL.md, Make it worth watching). Why: a punch-in and a pull-back on every card read as tacky. Gold: `videos/design-hacks/design-part-2/explainers/` (`examples/gold-cards.jpg`).
+- **The camera holds.** One framing for the whole flip, under the slow push. A zoom is for a lesson too small to see (under 4 px in the final frame): one move, settled 0.3 s before the change and never reversed (SKILL.md, Make it worth watching). Why: a punch-in and a pull-back on every card read as tacky. Gold: `videos/design-hacks/design-part-2/explainers/` (`examples/studio-flips.jpg`).
 - **The before shows the flaw happening:** a pointer or a fingertip triggers it, or time does. A demo built for the line is cropped so the flaw is the subject, and its change mark sits on the part that will change (`marks.md`). A still flaw on a real page (a crop of a site, where it's one detail among many) gets its red mark 0.2 s after the cut, as in the real-thing form below.
 - **The change** lands on the change word, and the mark moves with it, turning green. Nothing else moves from 0.3 s before the word to 0.5 s after it. The agent cursor makes the change when the fix has something on screen to take hold of; when a plain pointer is already using the product, the code can change by itself (`agent-cursor.md`).
 - **The after** includes the proof beat: the same interaction again, now right, run by the pointer that caused the flaw (the arrow on desktop UI, the fingertip on a phone).
@@ -26,14 +26,15 @@ Gold: `videos/eradicating-ai-slop/unslop-designs/` for stills, `videos/design-ha
 
 Two kinds, from the two branches of the tree: a principle (the same component without it and with it) and a fix whose versions differ only in feel.
 
-Gold for the layout: the posted cards of `videos/ux-principles/` (`videos/ux-principles/kit/cards-sheet.png`, `videos/ux-principles/source/cards.html`). The card is white, 960×400, with the tab on its top-left edge, two equal wells 24 px apart and a label over each. Keep that layout and drop what they got wrong: grey 21 px sublabels describing each demo, and a sentence in the tab. `pair()` in the kit draws the wells and labels (`kit.md`). `videos/eradicating-ai-slop/unslop-animations/` (148K plays) is the same idea for fixes, but its panels are too grey and its labels too small to copy.
+Gold for the layout: the posted cards of `videos/ux-principles/` (`videos/ux-principles/kit/cards-sheet.png`, `videos/ux-principles/source/cards.html`). The card is white, with the tab on its top-left edge, two equal wells 24 px apart and a label over each. Keep that layout, at the slot's size (`slots.md`: the posted 960×400 card ran past the safe area), and drop what they got wrong: grey 21 px sublabels describing each demo, and a sentence in the tab. `pair()` in the kit draws the wells and labels (`kit.md`). `videos/eradicating-ai-slop/unslop-animations/` (148K plays) is the same idea for fixes, but its panels are too grey and its labels too small to copy.
 
 Both kinds:
 - **One component, twice.** Use the same component, crop, size and copy in both panels, so the only difference is what the principle or fix changes. Build it once as a function of the side (`build(well, side)`) so the two can't drift apart. Why: the difference is the lesson, so anything else that differs is a false lead.
 - **A real component in colour, as big as its panel allows.** Its moving part stays 40 px or bigger in the final frame: a toast, a dock, a checkout button, never a grey stand-in. If it can't fit at that size in half the card, it's the wrong component for a side by side; pick a smaller real one.
 - **Both start on the same frame** from the same pose, at real speed. In a longer line the pair loops together about once a second, a cycle starts on the change word, and each cycle changes something (another item, a harder flick) so it counts as new (SKILL.md, Timing, Never stale).
-- **A short side by side** (a list's short items): the after's move is done by 0.6 s, and the before plays its flaw at real speed, even past the cut (a 2 s spinner). The end pose still shows the difference: the trace of what differed when that's a path or a spacing (the arc's dotted path, a tick for each frame), or the state that differs (the before's spinner still turning). When the two would end alike (squash and stretch, anticipation, secondary action) and the line runs 1.45 s or more, run the pair again on a new item (the next card, another icon), starting within 0.25 s of the first run's end and done 0.25 s before the next line. A new item is a new event, not a replay. Why: the comparison is the lesson, and two identical panels held for a second show none.
+- **A short side by side** (a line under 2 s in a reel whose items run longer; a fast list's items are After only): the after's move is done by 0.6 s, and the before plays its flaw at real speed, even past the cut (a 2 s spinner). The end pose still shows the difference: the trace of what differed when that's a path or a spacing (the arc's dotted path, a tick for each frame), or the state that differs (the before's spinner still turning). When the two would end alike (squash and stretch, anticipation, secondary action) and the line runs 1.45 s or more, run the pair again on a new item (the next card, another icon), starting within 0.25 s of the first run's end and done 0.25 s before the next line. A new item is a new event, not a replay. Why: the comparison is the lesson, and two identical panels held for a second show none.
 - **Left is always before, right after.**
+- **In the studio look** both wells are lit in the card's colour family, and nothing else about them differs (`looks/studio.md`).
 - **No agent cursor:** nothing is being fixed on screen, so a press shows as the element's own pressed state. When pointing is the lesson (Fitts's law, a hit area, where people look for the cart), or a gesture's speed is (a flick), each panel gets a plain cursor or one fingertip. So does a change whose cause would otherwise be invisible: the pointer hovering over the choices in Hick's law, or a keycap that presses as the selection moves (frequency of use). Both pointers start from the same spot on the same frame. Why: two pointers are two more things to watch unless they're the subject, but a tap with nothing tapping has no visible cause.
 - **Show the difference, don't describe it.** No sublabels that say what the demo shows ("Rigid", "No wind-up", "Everything at once"). Why: the panels already show it, and in about a second there's no time for a third read.
 
@@ -49,15 +50,17 @@ A fix that differs in feel:
 
 ## After only
 
-Gold: `videos/design-hacks/motion/assets/02-press-feedback.mp4`.
+Gold: `videos/design-hacks/motion/assets/02-press-feedback.mp4`; for a fast list, `videos/app-psychology/explainers-v2/` (`examples/studio-list.jpg`).
 
 - The fix in action for the whole line, looping, tagged After. Nothing stands in for a missing before.
+- **In a fast list** (items up about 1.5 s or less) every fix and principle is an After only, so it fills the whole card and carries no label: when every card is an After, the word says nothing. The move starts within 0.15 s of the cut and is done by 0.6 s (SKILL.md, Timing). The card keeps its definition tab: a term's or a principle's meaning, inside the reading time (`text.md`).
 
 ## The real thing, marked
 
-Gold: `videos/eradicating-ai-slop/slop-tells/` (`tools/make_examples.py`, `picks.json`).
+Gold: `videos/eradicating-ai-slop/slop-tells/` (`tools/make_examples.py`, `picks.json`); in the studio look, `videos/eradicating-ai-slop/slop-tells-2/explainers/`.
 
-- **In a list, the plain screenshot cuts in on the item's first word,** and the red marks snap on 0.2 s later. Hard cut to the next item on its word.
+- **Find and crop the instance** with `real-instances.md` (steps 1-2): a page that really did it, the tell big enough, true to the tab and out of place, every crop edge in a gap between lines of ink.
+- **In a list, the plain screenshot cuts in on the item's first word,** and the red marks snap on 0.2 s later. Hard cut to the next item on its word. The studio look instead puts the tell back onto the page with one move and marks it as it lands (`real-instances.md`, steps 3-7).
 - **The red never covers the tell.** Text gets an underline or a box. Round things get a ring. A line or a shape that is itself the tell (a border, a divider, a pill) gets arrows from open space or a rule under it. An outline encloses its thing completely and never cuts through it. Why: the viewer has to see the tell itself, not the mark.
 - **Crop so the marked part sits near the top** of the slot. The bottom can fall under the caption.
 - **A reveal** (what a product secretly does): the effect comes first, on the real screen, while I set it up (the Boost counter jumping between real captures). The evidence comes in on the word that names the cause, and its mark lands on that word.

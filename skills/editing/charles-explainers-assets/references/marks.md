@@ -25,7 +25,7 @@ What does my line say changes?
 │   └── THE AGENT grabs it and carries it there on the word, its selection round it. In a swap
 │       it carries one part, and the other glides into the place it left
 ├── How big one part is, or its shape (go bigger, a tighter radius, a bigger hit area)
-│   └── THE AGENT selects it and drags its corner handle (or its radius handle) on the word.
+│   └── THE AGENT selects it and drags its corner handle (or its radius handle), the new size landing on the word.
 │       A part you can't see, like a hit area, shows as its selection box
 ├── What a part says (a button's label, a link's words)
 │   ├── In one label (a word or a phrase) → THE AGENT selects it in its colour (a double-click
@@ -43,7 +43,7 @@ What does my line say changes?
 │   └── CORNER BRACKETS 6-8 px outside each part (round the shadow's reach, for a shadow), or
 │       a ring round something small and round. A new colour on text or a surface sweeps
 │       through it left to right; a shadow or a swatch changes in place. A stroke too thin to
-│       see changing gets magnified first (SKILL.md, Look)
+│       see changing gets magnified first (SKILL.md, Magnify, then mark)
 ├── Which parts stand out (everything bold, two primary buttons side by side)
 │   └── CORNER BRACKETS round the parts that lose their emphasis, turning green as they do
 └── Something new appears (an empty state's next step, a missing label)
@@ -74,4 +74,4 @@ With the change at T (`markLife` in the kit):
 
 ## Gold
 
-`examples/gold-marks.jpg`: the 20 practical design tips cards (one left out for its stand-in name), a moment before and after each change, with every branch of the tree among them. Their scenes, when the claude-editing repository is present: `videos/practical-design-tips/explainers/scenes/tips.js`.
+`examples/clean-marks.jpg`: the 20 practical design tips cards (one left out for its stand-in name), a moment before and after each change, with every branch of the tree among them. Their scenes, when the claude-editing repository is present: `videos/practical-design-tips/explainers/scenes/tips.js`.

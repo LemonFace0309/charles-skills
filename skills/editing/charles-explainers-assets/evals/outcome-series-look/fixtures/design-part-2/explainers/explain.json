@@ -1,0 +1,23 @@
+{
+  "video": "10 more niche design hacks (part 2)",
+  "format": "hack reel",
+  "look": "studio",
+  "slot": { "name": "hack-card", "w": 1080, "h": 960, "band": [300, 890], "scale": 0.72 },
+  "render": { "fps": 60, "scale": 2 },
+  "lines": [
+    {
+      "id": "01", "say": "Disable the submit button while the form is sending, so a double click can't sign someone up twice.",
+      "term": "Disable on submit", "takeaway": "One click, one submit",
+      "change": { "word": "Disable", "occurrence": 1, "t": null },
+      "idea": { "object": "paper receipts that a double click prints", "move": "the second receipt slides back in on the word", "colour": "emerald" },
+      "assets": [{ "id": "01-disable-on-submit", "form": "flip", "why": "the flaw is two receipts a viewer watches print", "dur": 9.0, "tFix": 4.5 }]
+    },
+    {
+      "id": "07", "say": "Validate on blur, not while people are still typing their email.",
+      "term": "Validate on blur", "takeaway": "Judge a field after it's left",
+      "change": { "word": "blur", "occurrence": 1, "t": null },
+      "idea": { "object": "a rubber stamp that marks the field INVALID at the first letter", "move": "after the word it waits until the field is left, then stamps VALID", "colour": "teal" },
+      "assets": [{ "id": "07-validate-on-blur", "form": "flip", "why": "the stamp causes the flaw and makes the fix", "dur": 9.0, "tFix": 4.5 }]
+    }
+  ]
+}

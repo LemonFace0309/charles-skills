@@ -10,7 +10,7 @@ prompts.json, in the project: {"name": {"prompt": "...", "size": "square_hd" | "
 512), and appends {name, endpoint, prompt, seconds, date} to gen/jobs.jsonl.
 
 The key is OPENAI_API_KEY from the environment, or from the nearest .env above the project. It is never printed.
-Pick the model fresh (references/objects.md): the default was the best transparent-capable one on 22 Nov 2026.
+Pick the model fresh (references/studio-objects.md): the default was the best transparent-capable one on 22 Nov 2026.
 """
 import base64, json, os, pathlib, subprocess, sys, time, urllib.error, urllib.request
 from concurrent.futures import ThreadPoolExecutor

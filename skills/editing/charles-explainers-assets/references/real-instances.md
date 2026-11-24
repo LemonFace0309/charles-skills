@@ -4,6 +4,8 @@ When a line claims something about what AI or a real product makes (a tell, a ha
 
 Why: a recreation is a guess at the look, and the viewer checks it against the AI-built pages they've seen, so a recreated tell doesn't look like the real thing. My first AI-tells reel, raw crops of pages four models built with the tell marked in red, is my most-watched list reel.
 
+Steps 1 and 2 (find it, crop it) serve both looks. Steps 3-7 are the studio look's card, where the tell pops back onto the page; the clean look shows the plain crop and marks it (`forms.md`, The real thing, marked).
+
 The worked example, when the claude-editing repository is present: `videos/eradicating-ai-slop/slop-tells-2/explainers/`. It has `real/instances.mjs` (crops and states), `real/layers.py` (the cut-outs), `real/scan.mjs` (ranking candidates across a corpus), `scenes/src/20-real.js` (the cards) and round 4 of `DESIGN-LOG.md`.
 
 ## 1. Find the instance
@@ -79,7 +81,7 @@ The mark snaps on 0.06 s after the tell lands. Leave it off when the move alread
 
 Never ring a diagonal glyph. A red ring round ↗ reads as a "no" sign, so box it.
 
-## 7. Frame it
+## 7. Frame it (the studio look)
 
 - Set the crop in an 18 px mat of the card's colour, with the screen's corners at 12 px (the card's 30 less the mat). Why: AI pages are mostly near-black or white, so without the mat, neighbouring cards look like one.
 - Grain goes on the mat only. The page is the evidence, so it stays as rendered.

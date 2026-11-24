@@ -16,7 +16,9 @@ One folder per video: `videos/<video>/explainers/` in the claude-editing reposit
 | `check/phone.png` | The phone sheet, one strip per asset |
 | `build/` | Frames while rendering; git ignores it |
 
-Start by copying `<skill>/kit/example/`: one flip ("Scale from 0.97") where the agent double-clicks the old value in the code block and the new one lands on the word. For a card that's worth watching (a flaw a pointer causes, what it costs, and a change that's the only thing moving), copy from `videos/design-hacks/design-part-2/explainers/` when the claude-editing repository is present (`scenes/src/`, a file per few cards joined by its `tools/bundle.sh` and picked by asset id); otherwise match `examples/gold-cards.jpg`.
+Start by copying `<skill>/kit/example/`: one flip ("Scale from 0.97") where the agent double-clicks the old value in the code block and the new one lands on the word. For a card that's worth watching (a flaw a pointer causes, what it costs, and a change that's the only thing moving), copy the closest gold scene of the reel's look when the claude-editing repository is present: `videos/practical-design-tips/explainers/scenes/tips.js` in the clean look; `videos/design-hacks/design-part-2/explainers/` in the studio look (`scenes/src/`, a file per few cards plus its own card for the hack slot, `99-card.js`, picked by asset id). Otherwise match the look's gold sheets in `examples/`.
+
+The studio look adds `kit/studio/`: `studio.js` (the stage, light and motion helpers, `L`), `studio-card.js` (the term card every builder sits in), `bundle.sh` (joins them with the project's `scenes/src/*.js` into `scenes/cards.js` and writes `kit.lock`; `--no-card` leaves out the term card for a project that brings its own), `fal_gen.py` and `openai_gen.py` (the photographed objects), `bbox.py` (an object's visible bounds), `sheet.sh` (stills over a frame of footage) and `neighbours.py` (no two cards in a row alike). Never edit `studio.js`, `studio-card.js` or its fonts in place for one project: `kit.lock` hashes them, and every older project would refuse to rebuild. For another slot, copy `studio-card.js` into the project's `scenes/src/`, change its `CARD` there, and bundle with `--no-card`.
 
 ## explain.json
 
@@ -24,6 +26,7 @@ Start by copying `<skill>/kit/example/`: one flip ("Scale from 0.97") where the 
 {
   "video": "10 niche animation hacks",
   "format": "hack reel",
+  "look": "clean",
   "slot": { "name": "hack-card", "w": 1080, "h": 960, "band": [300, 890], "scale": 0.72 },
   "render": { "fps": 60, "scale": 2 },
   "ground": "#e6e9ee",
@@ -42,6 +45,7 @@ Start by copying `<skill>/kit/example/`: one flip ("Scale from 0.97") where the 
 }
 ```
 
+- **`look`:** `clean` or `studio` (SKILL.md, The two looks). The next video in the series reads it to keep the look.
 - **`slot`:** the panel's size in design px, the band the viewer sees (`[top, bottom]`, the whole panel if left out) and the panel's scale into the final 1080×1920 frame. `fpx()` and the phone check use the scale, so get it from the editor or `slots.md`.
 - **`form`:** `flip`, `side-by-side`, `after-only`, `demo-tab`, `real-thing`, `measure`, `cause-effect`, `level` or `showcase`, from the tree in SKILL.md.
 - **`tFix`:** where a flip changes. A flip is 9.0 s with `tFix` 4.5 (SKILL.md, The contract). Leave it out for an asset with no change.
