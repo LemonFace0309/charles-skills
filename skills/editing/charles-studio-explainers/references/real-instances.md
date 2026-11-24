@@ -2,9 +2,9 @@
 
 When a line claims something about what AI or a real product makes (a tell, a habit, a default), the card shows a page that really made it: a crop rendered from that page's own code, the tell put back onto it with one move, then marked in red. Never a recreation.
 
-Why: Charles, 23 Nov 2026, on cards that recreated AI-built pages: "the graphics you rendered don't always look like the ai slop versions of them that people are used to. Try actually rendered instances of them popping up on actual websites when people vibecode a website with ai". Then: "as much as possible show real instances of the tells (like in our first video for ai tells)". That first reel (474,291 plays) was raw crops of pages four models built, with the tell marked in red. A recreation is a guess at the look, and the viewer is checking it against pages they've seen.
+Why: a recreation is a guess at the look, and the viewer checks it against the AI-built pages they've seen, so a recreated tell doesn't look like the real thing. My first AI-tells reel, raw crops of pages four models built with the tell marked in red, is my most-watched list reel.
 
-The worked example is in claude-editing: `videos/eradicating-ai-slop/slop-tells-2/explainers/`. It has `real/instances.mjs` (crops and states), `real/layers.py` (the cut-outs), `real/scan.mjs` (ranking candidates across a corpus), `scenes/src/20-real.js` (the cards) and round 4 of `DESIGN-LOG.md`.
+The worked example, when the claude-editing repository is present: `videos/eradicating-ai-slop/slop-tells-2/explainers/`. It has `real/instances.mjs` (crops and states), `real/layers.py` (the cut-outs), `real/scan.mjs` (ranking candidates across a corpus), `scenes/src/20-real.js` (the cards) and round 4 of `DESIGN-LOG.md`.
 
 ## 1. Find the instance
 

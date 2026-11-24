@@ -1,33 +1,32 @@
 ---
 name: charles-studio-explainers
-description: "Make the explainer cards in my reels look hand-made by a design studio instead of plain UI mock-ups: each line gets an idea (a real instance cropped from a page that really did it when the line is about what AI or a product makes, the moment it fires in an app or game people know, recreated, or a real object that puns on it), one signature move, one colour family lit from a side and big confident type, on charles-explainers-assets' timing and readability rules, then hill-climbed with fresh critics against a reference. Use when explainer graphics are called boring, plain, flat, generic or not engaging, when I want cards that look like a studio made them or match a reference (Tobi Donadon's Construct Design), when I say hill climb the visuals, when a list, hack or principle reel needs a card per item, or when I want real instances of AI tells. Triggers on: boring cards, studio look, make it pop, like this reference, hill climb, explainer graphics, before/after cards, real instances."
+description: "Makes Charles' explainer cards look made by a design studio: an idea per line (a real instance, a moment from an app people know, or an object that puns on it), one colour family lit from a side, big type and one signature move, on charles-explainers-assets' timing rules, hill-climbed with fresh critics. Use when explainer cards look plain, boring or generic, or should match a studio reference."
+compatibility: "Needs charles-explainers-assets installed beside it (its renderer, checks and contract), Bun, Google Chrome, ffmpeg, and Python 3 with Pillow. Generated objects need FAL_KEY, or OPENAI_API_KEY, in the environment or a .env above the project. Works in any folder; past videos in the claude-editing repository serve as gold when present."
 ---
 
 # Goal
 
 Every card still teaches its line in the second a phone viewer gets, and now it also looks like a studio made it: an idea you could say in one sentence, the real thing or a real-looking object acting it out, one colour family lit from a side, and one move a person would describe to a friend ("the anchor drops on the price", "a coin scratches off +40 XP").
 
-Why: my first cards for 20 Psychology Principles were clean white UI side by sides, and I said: "Make the explainer graphics MUCH more interesting. Reference this reel and hill climb until we can make it like this" (22 Nov 2026, pointing at Tobi Donadon's article "How to Make Claude Design Like a Real Studio" and his Construct Design library). Clean and correct isn't enough to hold a scroll. A clear idea, a rich material and a move that lands are.
+Why: clean, correct UI side by sides don't hold a scroll; a clear idea, a rich material and a move that lands do. A moment people have felt in an app they use (a streak about to reset, a prize wheel) reads faster than a clever metaphor. And when the line is about what AI makes, viewers judge a recreation against the real pages they've seen, so the card shows a real one. The rounds behind these rules are in `references/history.md`.
 
-Then, after five rounds of object metaphors: "try to use practical examples from mobile apps. Not ones that are too abstract. Think of what the best apps and games use like Monopoly Go, Duolingo, Candy Crush, etc. U can even recreate UI from iconic/well known apps to create a familiarity effect" (23 Nov 2026). A moment people have felt in an app they use reads faster than a clever metaphor.
-
-And when the line is about what AI makes, a recreation isn't enough either: "as much as possible show real instances of the tells (like in our first video for ai tells)" (23 Nov 2026). Viewers judge a recreated AI page against the real ones they've seen.
+This skill builds on charles-explainers-assets: its renderer, checks and contract. When that skill isn't installed beside this one, say so and ask to install it (`npx skills add LemonFace0309/charles-skills --skill charles-explainers-assets`); don't rebuild its renderer here. The reel's layout numbers are in `<skill>/reel-spec.json`. This skill runs long: after a context summary or a restart, re-read this file, the project's `explain.json` and its `DESIGN-LOG.md` before going on.
 
 # Keep from charles-explainers-assets
 
 Load it first. Its contract wins on everything it covers, and this skill only adds the look:
 
-- **The slot, the clip length and the frame:** for a list reel's term card, a transparent 1080x480 clip at reel y 1080 with the card at x 80-950, y 1150-1500, inside the safe area. On a card that flips in place (the hack-reel card), there's no Before tile and the look goes on the one stage: `references/flip-cards.md`.
+- **The slot, the clip length and the frame:** for a list reel's term card, a transparent 1080x480 clip at reel y 1080 with the card at x 80-950, y 1150-1500, inside the frame's safe area (`reel-spec.json`). On a card that flips in place (the hack-reel card), there's no Before tile and the look goes on the one stage: `references/flip-cards.md`.
 - **Timing:**
   - The After's move starts by 0.15 s and is done by 0.6 s.
   - Nothing sits frozen. Hold the end pose under a slow push-in, with a living loop such as a bob, a flicker or a spin.
   - The change from the previous item's tab happens in the first 0.14 s.
 - **One subject and one change at a time.** Where there's a Before, the Before and the After show the same thing, with and without the principle.
-- **In a fast list, drop the Before.** When each item is up for about 1.4 s (a 20-item list reel), show only the After, filling the whole card, with no Before or After labels. Why: "having a before doesn't really add that much value" (23 Nov 2026), and it took a third of the card. Keep a Before for slower formats, where the contrast is the lesson (hack reels, Day N).
+- **In a fast list, drop the Before.** When each item is up for about 1.4 s (a 20-item list reel), show only the After, filling the whole card, with no Before or After labels. Why: a Before adds little in 1.4 s and takes a third of the card. Keep a Before for slower formats, where the contrast is the lesson (hack reels, Day N).
 - **Words on screen:**
   - The tab says what the principle means in plain words, on one line.
-  - Words the viewer must read are 26 px or more in the final frame.
-  - The words that carry the principle are 34 px or more.
+  - Words the viewer must read are 26 px or more in the final frame, and the words that carry the principle 34 px or more.
+  - Before and After are 24 px labels: chrome, read once and then known by position (`L.stage` draws them).
 - **The phone check:** `check.mjs`, `glance.mjs` and `words.mjs` in that skill's kit, and a frame from mid-move and the end pose of every card, looked at over a frame of my footage.
 
 # The studio layer
@@ -46,11 +45,11 @@ Load it first. Its contract wins on everything it covers, and this skill only ad
    ```
 
    **The real moment.** If people have felt the principle in an app or game, recreate that moment, big:
-   - Duolingo's streak about to reset, a daily prize wheel, Candy Crush's out-of-moves screen;
-   - Monopoly Go's free dice gift, a dating app's blurred likes, Spotify Wrapped, the App Store's ratings card;
+   - a streak about to reset, a daily prize wheel, a candy game's out-of-moves screen;
+   - a board game's free dice gift, a dating app's blurred likes, a year-in-review card, the App Store's ratings card;
    - an iOS reminder and its notification.
 
-   Use the app's own look (its type, its colours, its button style), without logos or mascots. Never put generic names in it (Maya, Noah, Leo, Sarah, Alex): they mark a screen as generated. Write the app's own copy, never a caption to the viewer.
+   Use the app's own look (its type, its colours, its button style), without logos or mascots. Write the app's own copy, never a caption to the viewer. A person on the card is Charles (charles@example.com), never a stand-in like Maya, Noah or Sarah, which marks a screen as generated.
 
    **An idea before a template.** Only when there's no real moment to show, find the real-world object that is a pun on the principle:
    - an anchor for price anchoring, a wooden decoy duck for the decoy effect, a wax seal for commitment;
@@ -59,34 +58,33 @@ Load it first. Its contract wins on everything it covers, and this skill only ad
 
    Say the card in one sentence before building it. If you can't, there's no idea yet.
 
-   Never put a UI widget on the studio side (a checklist, a leaderboard, price rows, a score card, a share pill). Turn it into the object it stands for: a receipt that prints, game pieces on numbered steps, kraft price tags, an enamel pin you'd wear. Why: round 4's critic read those widgets as the default Claude builds.
-2. **Photographed materials, never game icons,** except inside a recreated game screen, where the game's own glossy icons (a gift, dice, a treasure chest) are the real thing. Generate each object as a studio product photograph, with real wear, on a transparent background (`references/objects.md`). Why: the first critic's single most wrong note was glossy, toy-like 3D icons. They "read as a mobile-game ad", and the reference's objects (a marble orb, a crystal prism, a card over a tile grid) look photographed.
+   Never put a UI widget on the studio side (a checklist, a leaderboard, price rows, a score card, a share pill). Turn it into the object it stands for: a receipt that prints, game pieces on numbered steps, kraft price tags, an enamel pin you'd wear. Why: those widgets are what Claude builds by default, so they read as the default.
+2. **Photographed materials, never game icons,** except inside a recreated game screen, where the game's own glossy icons (a gift, dice, a treasure chest) are the real thing. Generate each object as a studio product photograph, with real wear, on a transparent background (`references/objects.md`). Why: glossy, toy-like 3D icons read as a mobile-game ad, while the reference's objects (a marble orb, a crystal prism, a card over a tile grid) look photographed.
 3. **Lit, not pasted.** Each object gets:
    - its world's light on its lit side and its deep colour on the far side;
    - a cast shadow on the backdrop, and a contact shadow where it stands;
    - grain over the whole card, type and photos included (`L.obj`, `L.stage`). A real instance's page is the one exception: it stays as rendered, with grain on its mat only.
 
-   Flames light their card and even the type beside them. Why: round 3's critic, of photos set on a gradient without these: "nothing sits in light", a template with stock PNGs.
+   Flames light their card and even the type beside them. Why: a photo set on a gradient without these reads as a stock PNG on a template: nothing sits in light.
 4. **One colour family per card,** lit on its object, with the deep colour behind the type. Two or three cards in 20 stand on cream instead, with dark ink and one loud colour, and never black. Every word you must read passes 4.5:1. Why:
-   - The critic flagged the stock violet, magenta and orange gradient as the AI tell.
-   - The reference puts one loud hero on cream, and round 3 had no neutral ground at all.
-   - A near-black world turns the card into a hole on my black T-shirt.
-   - A light behind the type put most white headlines at 2-4:1.
+   - the stock violet, magenta and orange gradient is an AI tell;
+   - the reference puts one loud hero on cream, and a set with no neutral ground tires the eye;
+   - a near-black world turns the card into a hole on my black T-shirt;
+   - a light behind the type put most white headlines at 2-4:1.
 
-   **No two cards in a row share a colour.** Two light cards count as the same colour, whether white, grey, cream or a pale tint. Recreated app screens are often white, so when a white screen's neighbour is light too, put its panel on a coloured stage: a paywall on a savings green, the Calendar icon on its red. Run `kit/neighbours.py` on the clips in list order. Why: each card replaces the last in the same slot, so a repeat reads as one card that changed its words. Charles, 23 Nov 2026: "don't have back to back same colours". Round 6 had put a lime Wrapped card before the lime runner, and four pairs of white or pale cards in a row.
+   **No two cards in a row share a colour.** Two light cards count as the same colour, whether white, grey, cream or a pale tint. Recreated app screens are often white, so when a white screen's neighbour is light too, put its panel on a coloured stage: a paywall on a savings green, the Calendar icon on its red. Run `kit/neighbours.py` on the clips in list order. Why: each card replaces the last in the same slot, so a repeat reads as one card that changed its words.
 
-   Brand colours: keep the hue, and use its deeper shade for words. Duolingo's orange on white is 2.2:1, and #b85c00 is 4.5:1. White text on a bright game button gets a dark outline, the way games draw it.
-5. **A light you can name, standing still.** Light each world softly from its object's side, and give every glow a source. Why: in round 2 a pool of light that slid onto the After bleached the very numbers it pointed at. The critic called it "the single most wrong note", AI glow rather than studio light. The Before only dims to about 78% as the After plays.
+   Brand colours: keep the hue, and use its deeper shade for words. A bright orange on white is 2.2:1, and #b85c00 is 4.5:1. White text on a bright game button gets a dark outline, the way games draw it.
+5. **A light you can name, standing still.** Light each world softly from its object's side, and give every glow a source. Why: a pool of light that slid onto the After bleached the very numbers it pointed at, and read as AI glow rather than studio light. The Before only dims to about 78% as the After plays.
 6. **Before is the default, After is the studio, and few words.**
    - Before is a flat tile in the card's own colour, with one element Claude builds by default in plain type at 26 px or more. Never a black block, which reads as a dead third of the card.
-   - After is the object on its world. It says its point in three words or fewer, as the biggest type on the card, and some of its words are up by 0.3 s.
-   - The labels are 24 px chrome. Why: round 3 put 20-30 words on a card that a phone viewer sees for 1.4 s.
+   - After is the object on its world. It says its point in three words or fewer, as the biggest type on the card, and some of its words are up by 0.3 s. Why: a phone viewer sees the card for about 1.4 s.
    - Numbers get a second voice:
      - thin numerals for prices and gaps;
      - dot-matrix for scores and counters;
      - mono for small print on receipts, tickets and tags.
 
-     The Before stays in plain regular weight. Why: one bold sans everywhere was round 4's second biggest note.
+     The Before stays in plain regular weight. Why: one bold sans everywhere reads as a default, and refined type belongs to the After.
    - Words keep 40 px inside the card's edges. The payoff (the seal, the prize) is always whole, and props drawn in code look as real as the photos: paper gets warm stock, grain and a curl shade.
 7. **Four layouts across the set:**
    - the object beside its words;
@@ -101,7 +99,7 @@ Load it first. Its contract wins on everything it covers, and this skill only ad
    - No two letters touch.
    - The object rests wholly on the letters.
 
-   Why: Charles called round 6's "You're a runner" weird spacing. "You're a" floated 88 px above the word, -0.045em left its letters all but touching, and half the shoe hung past the last r.
+   Why: spaced from the line boxes, "You're a" floated 88 px above "runner", tight tracking left its letters all but touching, and half the shoe hung past the last r.
 8. **One signature move, built from Disney's principles:**
    - a wind-up before the pop;
    - a squash on landing;
@@ -117,15 +115,23 @@ Load it first. Its contract wins on everything it covers, and this skill only ad
 
 # Steps
 
-1. **Read the reference,** if I gave one. Write down what it does in plain terms: the ideas, the materials, the light, the colour, the type and the moves. Save its images in the video's `research/reference/`, which stays local.
+1. **Read the reference,** if I gave one. Write down what it does in plain terms: the ideas, the materials, the light, the colour, the type and the moves. Save its images in the project's `research/reference/` and keep them out of git: they're other designers' work.
 2. **Write the beat sheet,** as charles-explainers-assets does, and add to each line its idea: the object, the move and the colour family.
 3. **Explore three directions,** rendered side by side on two or three lines, before building all of them (`references/hill-climb.md`). One of them can be your own synthesis.
 4. **Render the real instances** for the lines that have them (`references/real-instances.md`), then **generate the objects** for the rest with `kit/fal_gen.py` and look at each one on a mid colour. Make every changed state of an object (a happy plush and a sad one, a candle and the candle in ice) with the edit endpoint from the first image, so the two match. Measure each object's visible bounds with `kit/bbox.py` before you place it.
-5. **Build** with `kit/studio.js` on charles-explainers-assets' renderer, one file of builders per few cards, joined by `kit/bundle.sh`.
-6. **Hill-climb.** Render stills at 0.3 s and at the end pose, sheet them over my footage (`kit/sheet.sh`), and have a fresh critic score them against the reference. Fix the biggest problem first, re-render, look again, and log every round in the video's `DESIGN-LOG.md`.
+5. **Build** with `kit/studio.js` on charles-explainers-assets' renderer, one file of builders per few cards in `scenes/src/`, joined by `kit/bundle.sh <project>`. The bundle locks the project to the kit it was built with (`kit.lock`): a later bundle refuses when the kit has changed since, and says which files did. Pass `--update-kit` only when you mean to take the new kit, then compare an untouched card against the last export. Why: re-rendering an old project with today's kit changes its finished cards even when nothing in the project changed.
+6. **Hill-climb.** Render stills at 0.3 s and at the end pose, sheet them over my footage (`kit/sheet.sh`), and have a fresh critic score them against the reference. Fix the biggest problem first, re-render, look again, and log every round in the project's `DESIGN-LOG.md`.
    - Stop at the bar I named, or when three rounds in a row don't raise the score.
    - Fix by eye too. Collisions, clipped text and blow-outs show up on the sheets before any critic sees them.
-7. **Run charles-unslop, emil-animations and charles-polish over every card,** and fix what they find: generic names and copy, entrances from scale 0, springs past bounce 0.3, numbers that roll more digits than changed, dead frames mid-move, collisions. I asked for this pass on 23 Nov 2026.
+7. **Check every card for the six faults that reach finished cards,** and fix what fails:
+   - **Names and copy.** A person is Charles (charles@example.com) and a screen carries the app's own copy, never a stand-in name or a caption to the viewer. Why: a stand-in name marks the screen as generated, and a caption breaks the recreation.
+   - **Entrances from nothing.** Nothing scales in from 0: start from 0.95 or more, or travel in. Why: real objects always have a shape, and a pop from nothing reads as cheap.
+   - **Springs past bounce 0.3.** Springs stay at or under 0.3 bounce (`L.spring` with k 300-500, c 14-20), and rigid things don't squash at all. Why: more overshoot turns a material into a toy.
+   - **Numbers that roll more than changed.** Only the digits that change roll (`roller`), the old digit up and out, the new one up and in, over 0.2 s. Why: rolling every digit hides which part changed.
+   - **Dead frames mid-move.** Read each move frame by frame from the rendered clip (craft.md, Motion): no stretch inside it where nothing moves, done by 0.6 s, then only real-life motion on top of the push-in. Why: a pause inside a move reads as a stutter.
+   - **Collisions.** Nothing crosses a label, the tab's corner, the card's edge or another object by accident, at any frame, including the end of the push-in. Why: an accidental overlap reads as a bug.
+
+   Why this list and not a whole UI pass: rules made for app screens (body weights of 400-500, no gloss, sentence case everywhere) fight recreated game screens and big display type, so the pass checks only what a card needs.
 8. **Run charles-explainers-assets' phone and words checks, and `kit/neighbours.py`** over the clips in list order, then deliver.
 
 # Deliver
@@ -136,4 +142,5 @@ The same as charles-explainers-assets:
 - `explain.json` with each line's tab, takeaway and source;
 - the phone sheet;
 - the generated objects in `gen/`, with `gen/jobs.jsonl` saying the model, the prompt and the date;
-- `DESIGN-LOG.md` with each critic round's scores and what it changed.
+- `DESIGN-LOG.md` with each critic round's scores and what it changed;
+- `kit.lock`, so a later re-render uses the same kit or says it can't.

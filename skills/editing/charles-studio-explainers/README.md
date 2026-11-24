@@ -20,6 +20,7 @@ Add `-g` to install it for every project, or copy this folder into `~/.claude/sk
 - Checks the set in list order so no two cards in a row share a colour (`kit/neighbours.py`)
 - Works on cards that flip in place too (a flaw, then the fix on my word): the object becomes what causes the flaw, like a rubber stamp that marks a field INVALID at the first letter
 - Keeps the same timing and readability as my explainer skill, and improves the cards round by round with fresh critics against a reference until they match it
+- Locks each project to the kit it was built with (`kit.lock`), so re-rendering an old set months later gives the same cards, or says the kit has changed
 
 ## Try it
 

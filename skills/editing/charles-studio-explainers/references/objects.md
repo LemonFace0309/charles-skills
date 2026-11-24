@@ -11,9 +11,9 @@ Pick it fresh each time, because lineups change every few weeks:
 3. Use one that renders a transparent background itself (GPT Image 2.6 takes `background: "transparent"`), so no cut-out step blurs the edges.
 4. Record the model and the date in `gen/jobs.jsonl`. `kit/fal_gen.py` does that for every job.
 
-The key is `FAL_KEY` in the repository's `.env`. The script reads it without printing it.
+The key is `FAL_KEY`, from the environment or the nearest `.env` above the project. The script reads it without printing it.
 
-If fal answers 403 "Exhausted balance", tell me so I can top it up, and carry on with `kit/openai_gen.py`: the same prompts file sent to OpenAI's Images API with the repository's `OPENAI_API_KEY`, which had the same model (`gpt-image-2.6-flare`) on 22 Nov 2026. It has no edit endpoint wired in, so a second state of an object waits for fal.
+If fal answers 403 "Exhausted balance", tell me so I can top it up, and carry on with `kit/openai_gen.py`: the same prompts file sent to OpenAI's Images API with `OPENAI_API_KEY` (the environment, or a `.env` above the project), which had the same model (`gpt-image-2.6-flare`) on 22 Nov 2026. It has no edit endpoint wired in, so a second state of an object waits for fal.
 
 ## The prompt
 
@@ -23,14 +23,14 @@ A studio product photograph, never an icon:
 
 - **Name real materials and real wear:** cast iron with rust freckles, kraft paper and cotton twine, brass with fine scratches, felt with visible stitching, a poured wax seal.
 - **Keep the light the same across the set** (softbox from the upper right), so every object belongs to one shoot.
-- **Never ask for "a premium game icon", "toy-like" or "candy".** That wording made the first set (a lacquered chest, a candy-glass flame), which the critic called a mobile-game ad.
+- **Never ask for "a premium game icon", "toy-like" or "candy".** That wording made the first set (a lacquered chest, a candy-glass flame), which read as a mobile-game ad.
 
 ## States
 
 When the card needs an object in two states (a happy plush and a sad one, a candle and the same candle frozen in ice, a flame and the same flame in ice), make the second with the edit endpoint (`openai/gpt-image-2.6/flare/edit`) from the first image. Start the prompt with "The exact same [object], same shape, colour, material, lighting and framing, but [the change]". Two separate generations drift apart.
 
 - **Words on an object:** GPT Image 2.6 engraves and prints short words cleanly, such as birch blocks engraved Sleep, Focus and Calm, or a desk calendar printed THU 20. Make the variants with the edit endpoint from the first, changing only the word, and they line up exactly. The 20 Psychology Principles calendar's THU and MON images share every edge, so Thursday's page is clipped from one and torn away over the other.
-- **Fix a wrong detail with an edit, not a new generation:** the alarm clock read 10:10 under "8:00 AM" (round 3's critic), and one edit set its hands to 8:00.
+- **Fix a wrong detail with an edit, not a new generation:** the alarm clock read 10:10 under "8:00 AM", and one edit set its hands to 8:00.
 
 ## Placing them
 
