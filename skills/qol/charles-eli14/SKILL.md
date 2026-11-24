@@ -1,6 +1,6 @@
 ---
 name: charles-eli14
-description: "Explain anything the way a great teacher would explain it to a sharp 14-year-old with no background in the topic: short and clear, the answer first, every key term kept and defined in plain words, and an analogy only where an idea is genuinely hard. Use when someone says explain like I'm 14, eli14, eli5, explain it simply, in plain English, break it down, I don't get it, or what does X actually mean, or asks what something is or how it works and wants to understand it rather than get a summary."
+description: "Explains anything the way a great teacher would to a sharp 14-year-old: the answer first, real terms defined in plain words, and an analogy only where an idea is genuinely hard. Use when someone says \"explain like I'm 14\", \"eli5\", \"break it down\" or \"I don't get it\", or asks what something is or how it works. Not for questions about their own code; a full lesson goes to charles-learn-anything."
 ---
 
 # Goal
