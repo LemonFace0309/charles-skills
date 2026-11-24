@@ -1,6 +1,10 @@
 # Signs of slop
 
+Contents: Surfaces and color · Type · Icons · Spacing · Copy · Components · Landing pages and heroes · Visuals · Motion · Structure · Fake specificity · Current defaults · Template look
+
 Go through every group and note each sign you find with where it lives. Each line pairs the sign with its fix.
+
+Checked 24 Nov 2026 against current model output. Tells change as models change: a list this old can flag what models no longer do and miss what they do now. When it is more than three months old, have a current model build one screen from a plain one-line prompt, compare that screen with this list, and treat what it does by default as a sign even if it isn't listed.
 
 ## Surfaces and color
 
@@ -15,7 +19,7 @@ Go through every group and note each sign you find with where it lives. Each lin
 
 ## Type
 
-- Headings at weight 800 or 900 → 400 to 500 and size for hierarchy
+- Headings at weight 800 or 900 in the interface family → 400 to 500 and size for hierarchy. A display face chosen for its character may keep its heavy weight on one display line (SKILL.md, Type)
 - Uppercase labels with wide tracking, like `NAVIGATION` or `PAID THIS MONTH` → sentence case at normal or slightly open tracking
 - Too many sizes and weights on one screen → a few sizes from the scale, weights 400 and 500
 - Numbers in mixed formats, like `$48,210` next to `$124,860.40`, or `07` → one format, tabular figures
@@ -107,15 +111,27 @@ Go through every group and note each sign you find with where it lives. Each lin
 - Generic mock names, like Maya, Sarah, Alex or Acme → a specific, real-sounding person and detail
 - Metaphors broken by behaviour, like paper fading in → behave like the real object
 
+## Current defaults
+
+What generated pages cluster around in Nov 2026. Each is right for some brief, so it's a sign only when the brief left that choice free and the product's world doesn't call for it.
+
+- A warm cream page (near #F4F1EA) with a high-contrast serif headline and a terracotta or clay accent (near #D97757) → the world's own surface and an accent from it
+- A near-black page with one acid-green or vermilion accent → a ramp tinted toward the world, and an accent with a reason
+- A broadsheet layout on a product that isn't editorial: hairline rules everywhere, zero radius, dense newspaper columns → a layout set by what the content needs
+- The card kit: content chopped into identical rounded cards, one radius on everything, the same soft grey shadow under each, gradient washes behind → fewer containers, radius by size, one depth cue per surface
+- Template chrome: a tracked uppercase eyebrow above every heading, meta joined with middle dots (`A · B · C`), labels built as `WORD — fragment`, a tinted near-black standing in for black, a monospace face for small data labels, an arrow appended to every link and button → plain sentence-case labels, one phrase instead of a chain, the interface face for numbers with tabular figures
+- One word or phrase in a headline set apart in italic, bold or a color → a plain headline, or an idea the whole line carries
+- Numbered markers (01 / 02 / 03) on content that isn't a sequence → no numbers, or numbers only for real steps and timelines
+
 ## Template look
 
 These are not slop, but they are what a cleaned up screen falls back to when nobody made a decision. Watch for them after the passes.
 
-- Pure grey #161616 page, Inter, white text and the old brand color on one button, on a product whose world is warm or bright → a ramp tinted toward the world and an accent from it
+- A pure grey #161616 page in the model's default sans, white text and the old brand color on one button, on a product whose world is warm or bright → a ramp tinted toward the world and an accent from it
 - A headline that would fit another product if you swapped the name → say what this product does, with its own nouns
 - A hero visual that is an empty box or a generic picture → a product preview in code or an image from the world
 - Every product getting the same layout, type and palette → let the direction choose
 
 ---
 
-Adapted from unslop by Damir Sokolovsky ([@heydamir](https://x.com/heydamir)), CC BY 4.0: changed the glass, icon and chrome lines, and added Structure and Fake specificity. Keep this credit in copies and adaptations.
+Adapted from unslop by Damir Sokolovsky ([@heydamir](https://x.com/heydamir)), CC BY 4.0: changed the glass, icon and chrome lines, and added Structure, Fake specificity and Current defaults. Keep this credit in copies and adaptations.

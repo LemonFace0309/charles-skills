@@ -1,12 +1,13 @@
 ---
 name: charles-unslop
-description: "Turn AI-looking UI into a designed interface with its own point of view: audit the tells, write a direction from the product, delete before restyling, fix spacing, color, icons, copy, type, layout and details in order, then give the screen one rich moment only this product could have. Use when a screen looks AI-generated, vibe-coded, generic or templated, when reviewing agent-built UI, or when asked to unslop, de-slop or make something stop looking like AI. Triggers on purple gradients, gradient text, glassmorphism, glows, emoji icons, sparkles, pill badges, centered heroes, three-card and bento grids, greeting headlines, fake proof, uppercase tracked labels, uneven spacing, pulsing elements. For making a screen that is already designed feel finished, use charles-polish."
+description: "Turns AI-looking UI into a designed interface with a point of view: audits the tells, writes a direction from the product, deletes before restyling, fixes spacing, colour, icons, copy, type and layout, then adds one moment only it could have. Use when a screen looks AI-generated, vibe-coded or templated, or to unslop agent-built UI. A designed screen that needs finishing goes to charles-polish."
 license: CC-BY-4.0
+compatibility: "Needs a way to render the screen it judges (any browser tool). An image generation tool is optional, for scenes and objects."
 ---
 
 # Unslop
 
-Adapted from [unslop](https://github.com/heydamir/unslop) by Damir Sokolovsky ([@heydamir](https://x.com/heydamir)), CC BY 4.0, merged with Emil Kowalski's unslop-design skill and with feedback from Charles Liu's "Removing AI Slop" series. Changes: the passes were reordered around subtraction, and the rules on backgrounds, brand icons and materials were rewritten. Keep this credit in copies.
+Adapted from [unslop](https://github.com/heydamir/unslop) by Damir Sokolovsky, [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/), with changes listed in README.md. Keep this credit in copies.
 
 Nobody can point at the one element that makes a screen look generated. A model picks the most common option for every decision at once, and fifty median choices compound into a watermark. So fixing one element does nothing: walk the whole screen, in order.
 
@@ -14,7 +15,7 @@ Removing the tells is half the job. A clean screen that could belong to any prod
 
 ## Run it
 
-1. **Render it.** Screenshot the screen at its real size and judge that, not the code. If it will be seen small (a phone, a video, a thumbnail), judge it at that size too.
+1. **Render it.** Screenshot the screen at its real size and judge that, not the code. Use any browser tool at the screen's real viewport; with charles-polish installed, its `scripts/web-frames.mjs` captures every width in light and dark in one run. If it will be seen small (a phone, a video, a thumbnail), judge it at that size too.
 2. **Audit.** Walk [references/signs.md](references/signs.md). List every sign, one line each, with where it lives.
 3. **Choose the scope** from the audit:
    - Signs across color, type, icons and copy → run everything below.
@@ -80,6 +81,7 @@ The order matters: rhythm changes how everything else reads, and copy length dec
 - One accent in the chrome, covering a few percent of the screen. Unchosen purple is the loudest tell, so derive the hue from the world.
 - Working screens people stare at (apps, dashboards) keep neutral surfaces; color lives in the content.
 - Delete gradient text, colored glows and colored shadows, neon borders, and blobs behind content.
+- Success, warning and error are hues from this palette, or moved toward it, never a framework's stock green and red: a stock check on a tinted page reads as borrowed. Real-world meanings stay, so an error is still red-ish. The recipe is in tokens.md, Status colours.
 - Text keeps 4.5:1, including over backgrounds.
 
 ### 3. Icons
@@ -97,8 +99,8 @@ The order matters: rhythm changes how everything else reads, and copy length dec
 - Fake proof gets deleted. If a claim can't be checked, ask, then make it specific or cut it. A real number is the strongest copy there is.
 
 ### 5. Type
-- Choose type for the character. One interface family plus at most one partner, used for one distinctive decision. A display face appears once.
-- Weights 400–500, 600 for rare emphasis. Hierarchy comes from size and color, never 800–900.
+- Choose type for the character, by the process in tokens.md, Type: the first family that comes to mind is the default a designer would suspect, so it's ruled out. One interface family plus at most one partner, used for one distinctive decision. A display face appears once.
+- Weights 400–500, 600 for rare emphasis. Hierarchy comes from size and color, never 800–900. The one exception: a display face chosen for its character may use its heavy weights on one display line (a hero headline, a big number), because there the weight is the face's personality, not a way to rank text. Interface text stays at 600 or under.
 - Sentence case. Uppercase with wide tracking becomes sentence case, unless the real object you borrowed is uppercase, like a stamped tag or a boarding pass.
 - `tabular-nums` and one number format across the screen. Negative tracking only on display sizes.
 

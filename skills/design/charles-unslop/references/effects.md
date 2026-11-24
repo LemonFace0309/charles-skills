@@ -1,5 +1,7 @@
 # Effects
 
+Contents: Glyphs (with an implementation) · Halftone dots · Dithering · Duotone · Performance
+
 Code treatments that turn an image into something made for this page. They are optional. Use one only when it fits the character in the direction, on the main visual only, and never as decoration on other elements.
 
 ## Glyphs
@@ -17,7 +19,8 @@ Keep the cell between 6 and 10px, use the mono from the type choice, and color t
 ### Implementation
 
 ```js
-function glyphs(canvas, image, { cell = 8, chars = ". :1740$%", font = "Geist Mono", fps = 8 } = {}) {
+// font: the monospace the type choice picked; ui-monospace is only the fallback.
+function glyphs(canvas, image, { cell = 8, chars = ". :1740$%", font = "ui-monospace, monospace", fps = 8 } = {}) {
   const ctx = canvas.getContext("2d");
   const columns = Math.floor(canvas.width / cell);
   const rows = Math.floor(canvas.height / cell);

@@ -39,5 +39,10 @@ actual product".
 
 ## Credits
 
-Adapted from [unslop](https://github.com/heydamir/unslop) by Damir Sokolovsky, and draws on Emil Kowalski's unslop
-design skill. Like the original, this skill is under CC BY 4.0.
+Adapted from [unslop](https://github.com/heydamir/unslop) by Damir Sokolovsky
+([@heydamir](https://x.com/heydamir)), and draws on Emil Kowalski's unslop design skill and the feedback on my
+"Removing AI Slop" series. What I changed: the passes are reordered around deleting first; the rules on backgrounds,
+brand icons and materials are rewritten; the colour tokens are rebuilt in OKLCH with status colours that come from the
+page's palette; the font list became a way to choose type; and motion values come from
+[charles-polish](../charles-polish/). Like the original, this skill is under
+[CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
