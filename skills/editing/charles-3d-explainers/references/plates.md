@@ -1,5 +1,7 @@
 # Plates: generated stills as 2.5D sets
 
+Contents: Plate or model? · Making a plate · Prompt recipe · Using it in a shot · Camera moves: how far before it breaks · Overlays in a plate · What the plate does for you · Troubleshooting
+
 A plate is a cinematic still, generated with AI, that the kit turns into a set the 3D camera can move through. The still
 is wrapped onto a dense mesh pushed out by its depth map, so from the camera that "took" the picture it looks exactly
 like the still, and as the camera moves, near things slide past far things with real parallax and real lens blur.
@@ -45,7 +47,7 @@ Writes to `<project>/assets/plates/`:
 | `kitchen.json` | camera field of view, near/far in metres, prompt, models, cost |
 | `costs.jsonl` | one line per paid call |
 
-Cost and time: about $0.19 and one to two minutes per plate ($0.15 for the still, about $0.035 for MoGe-3 depth).
+Cost and time (fal prices, Nov 2026): about $0.19 and one to two minutes per plate ($0.15 for the still, about $0.035 for MoGe-3 depth).
 `--res 4K` doubles the image cost. A re-run with the same prompt is free (cached); `--force` makes a new one.
 
 Other modes:

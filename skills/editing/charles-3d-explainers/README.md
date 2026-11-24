@@ -1,6 +1,6 @@
 # charles-3d-explainers
 
-[![I reverse engineered Instagram, with 3D cutaways (click to play)](examples/reels/instagram-3d.jpg)](examples/reels/instagram-3d.mp4)
+[![I reverse engineered Instagram, with 3D cutaways (click to play)](examples/reels/instagram-3d.jpg)](../../../.github/assets/3d-explainers-instagram.mp4)
 
 Turns a voiceover into a premium 3D explainer reel, or into 3D cutaways for a talking-head video.
 
@@ -22,7 +22,7 @@ Add `-g` to install it for every project, or copy this folder into `~/.claude/sk
 
 Two of my reels, re-edited with 3D cutaways (click to play): the Instagram one at the top, and Tinder.
 
-[![I reverse engineered Tinder, with 3D cutaways](examples/reels/tinder-3d.jpg)](examples/reels/tinder-3d.mp4)
+[![I reverse engineered Tinder, with 3D cutaways](examples/reels/tinder-3d.jpg)](../../../.github/assets/3d-explainers-tinder.mp4)
 
 A whole reel made from scratch, on how noise-cancelling headphones work ([`examples/noise-cancel`](examples/noise-cancel),
 a project to copy, with [`examples/hook-dive`](examples/hook-dive) for the 3 s diving hook):

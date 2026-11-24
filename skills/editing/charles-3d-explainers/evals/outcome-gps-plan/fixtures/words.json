@@ -1,0 +1,203 @@
+{
+ "text": "How does your phone know exactly where you are? Four satellites, 20,000 kilometres up, each send the time. Your phone compares the four times, and only one spot on Earth fits them all.",
+ "words": [
+  {
+   "text": "How",
+   "start": 0.15,
+   "end": 0.41,
+   "type": "word"
+  },
+  {
+   "text": "does",
+   "start": 0.46,
+   "end": 0.78,
+   "type": "word"
+  },
+  {
+   "text": "your",
+   "start": 0.83,
+   "end": 1.14,
+   "type": "word"
+  },
+  {
+   "text": "phone",
+   "start": 1.19,
+   "end": 1.55,
+   "type": "word"
+  },
+  {
+   "text": "know",
+   "start": 1.6,
+   "end": 1.91,
+   "type": "word"
+  },
+  {
+   "text": "exactly",
+   "start": 1.96,
+   "end": 2.42,
+   "type": "word"
+  },
+  {
+   "text": "where",
+   "start": 2.47,
+   "end": 2.83,
+   "type": "word"
+  },
+  {
+   "text": "you",
+   "start": 2.88,
+   "end": 3.14,
+   "type": "word"
+  },
+  {
+   "text": "are?",
+   "start": 3.19,
+   "end": 3.45,
+   "type": "word"
+  },
+  {
+   "text": "Four",
+   "start": 3.82,
+   "end": 4.14,
+   "type": "word"
+  },
+  {
+   "text": "satellites,",
+   "start": 4.19,
+   "end": 4.79,
+   "type": "word"
+  },
+  {
+   "text": "20,000",
+   "start": 4.96,
+   "end": 5.32,
+   "type": "word"
+  },
+  {
+   "text": "kilometres",
+   "start": 5.37,
+   "end": 5.97,
+   "type": "word"
+  },
+  {
+   "text": "up,",
+   "start": 6.02,
+   "end": 6.23,
+   "type": "word"
+  },
+  {
+   "text": "each",
+   "start": 6.4,
+   "end": 6.71,
+   "type": "word"
+  },
+  {
+   "text": "send",
+   "start": 6.76,
+   "end": 7.08,
+   "type": "word"
+  },
+  {
+   "text": "the",
+   "start": 7.13,
+   "end": 7.39,
+   "type": "word"
+  },
+  {
+   "text": "time.",
+   "start": 7.44,
+   "end": 7.75,
+   "type": "word"
+  },
+  {
+   "text": "Your",
+   "start": 8.12,
+   "end": 8.43,
+   "type": "word"
+  },
+  {
+   "text": "phone",
+   "start": 8.48,
+   "end": 8.84,
+   "type": "word"
+  },
+  {
+   "text": "compares",
+   "start": 8.89,
+   "end": 9.4,
+   "type": "word"
+  },
+  {
+   "text": "the",
+   "start": 9.45,
+   "end": 9.71,
+   "type": "word"
+  },
+  {
+   "text": "four",
+   "start": 9.76,
+   "end": 10.07,
+   "type": "word"
+  },
+  {
+   "text": "times,",
+   "start": 10.12,
+   "end": 10.48,
+   "type": "word"
+  },
+  {
+   "text": "and",
+   "start": 10.65,
+   "end": 10.92,
+   "type": "word"
+  },
+  {
+   "text": "only",
+   "start": 10.97,
+   "end": 11.28,
+   "type": "word"
+  },
+  {
+   "text": "one",
+   "start": 11.33,
+   "end": 11.59,
+   "type": "word"
+  },
+  {
+   "text": "spot",
+   "start": 11.64,
+   "end": 11.96,
+   "type": "word"
+  },
+  {
+   "text": "on",
+   "start": 12.01,
+   "end": 12.22,
+   "type": "word"
+  },
+  {
+   "text": "Earth",
+   "start": 12.27,
+   "end": 12.63,
+   "type": "word"
+  },
+  {
+   "text": "fits",
+   "start": 12.68,
+   "end": 12.99,
+   "type": "word"
+  },
+  {
+   "text": "them",
+   "start": 13.04,
+   "end": 13.36,
+   "type": "word"
+  },
+  {
+   "text": "all.",
+   "start": 13.41,
+   "end": 13.67,
+   "type": "word"
+  }
+ ]
+}

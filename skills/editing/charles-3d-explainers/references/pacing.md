@@ -1,5 +1,7 @@
 # Pacing: how often things change, and how it stays readable
 
+Contents: 1. The numbers · 2. Shot length · 3. Something new about every second · 4. Camera moves · 5. Transitions · 6. The running example and the HUD · 7. Numbers on screen · 8. The hook: the first 2 seconds · 9. Fast but not chaotic · 10. Structure of a whole video · 11. Checklist for your own cut
+
 Measured on the same twelve 9:16 reels as look.md: five 2.5-minute dark 3D explainers (the main target), five 30 to
 46 s 3D story reels with very fast pacing, and two 72 s explainers built from UI on 3D screens and line doodles.
 

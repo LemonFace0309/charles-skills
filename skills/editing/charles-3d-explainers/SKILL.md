@@ -1,6 +1,7 @@
 ---
 name: charles-3d-explainers
-description: "Make premium, cinematic 3D explainer videos and 3D cutaways timed to a voiceover: dark 3D worlds lit with one warm accent, glowing signal paths, hero numbers that land on the word, labels pinned to parts, a running HUD counter, live app screens on 3D devices, and continuous camera moves with real depth of field and motion blur, rendered with three.js in headless Chrome (bun). Use whenever Charles asks for 3D explainers, 3D motion design, 'how X works' visuals, documentary-style or cinematic 3D, educational 3D animation, 3D b-roll for a voiceover, or 3D cutaways that replace parts of a talking-head video, for a whole reel or for one slot of a video he is editing (charles-claude-editing asks for an asset at a size)."
+description: "Makes cinematic 3D explainers and 3D cutaways timed to a voiceover: dark worlds with one warm accent, signal paths, hero numbers on the word, live app screens on 3D devices and continuous camera moves with depth of field, rendered with three.js. Use for 3D explainers, 'how X works' visuals or 3D b-roll, for talking-head cutaways, or when charles-claude-editing asks for a 3D asset."
+compatibility: "Needs Bun, Google Chrome (headless; or set CHROME_PATH) and ffmpeg; run bun install in the skill's kit folder once. FAL_KEY (environment or a .env) pays for transcription (ElevenLabs Scribe on fal) and the optional AI models, plates and character clips; without it, give new.mjs a transcript with --words and build everything in code. Works in any folder."
 ---
 
 # Goal
@@ -11,6 +12,9 @@ The bar is a premium motion-design studio, never "three.js demo" and never AI sl
 
 `K` is this skill's `kit/` folder. Use absolute paths and bun (`export PATH=$HOME/.bun/bin:$PATH`), never node.
 
+This skill runs long. After a context summary or a restart, re-read this file and the project's `plan.md` before
+going on: the plan records what each pass changed, so the next pass doesn't undo it.
+
 # What you are making
 
 | Ask | Output |
@@ -20,15 +24,18 @@ The bar is a premium motion-design studio, never "three.js demo" and never AI sl
 | **Cutaways** for a talking-head reel: replace stretches of the face with 3D beats | one project per stretch on the creator's own voice, delivered as clips plus a cut list (section "Cutaways") |
 | **Overlay**: an object floating over footage | ask before promising alpha; the kit renders opaque frames |
 
-Slot sizes the editor uses: 1080x1920 new screen, 1080x960 half split, 1080x768 top-40% split, 1280x630 card above
-the face, 1280x1550 tall card. Set `size` in project.json. Positions in this file are for 1080x1920: scale them, and
-keep text 60 px inside every edge of the slot (the overlay defaults already scale: type and x by W/1080, y by H/1920;
-`--audit` checks the 60 px).
+The slot sizes the editor uses, the platform's safe area, the caption band and the text inset are
+charles-claude-editing's, in `<skill>/reel-spec.json` (an identical copy ships in this folder; where a number in this
+file and the spec ever disagree, the spec wins). Set `size` in project.json to the slot's size. Positions in this
+file are for 1080x1920: scale them, and keep text 60 px inside every edge of the slot (the overlay defaults already
+scale: type and x by W/1080, y by H/1920). `--audit` checks the 60 px in a slot asset; on a full 1080x1920 reel it
+lets text come within 40 px of the sides, so check a reel's sides by eye.
 
 # Setup (once per machine)
 
 - `cd K && bun install`. Google Chrome must be installed (render.mjs finds it, or set `CHROME_PATH`).
 - `FAL_KEY` in the environment or a `.env` up the tree, for transcription and the AI tools (models, plates, clips).
+  Without one, pass `new.mjs` a transcript you already have (`--words`) and build every prop in code.
 
 # Workflow
 
@@ -46,7 +53,8 @@ Walk these steps in order, every time. Never render a final before step 7 passes
    against "Pacing". If Charles is around and did not say "just do it", show him the plan before building.
 4. **Build** one shot module per camera setup in `shots/`, registered in `project.json` with its start on a word
    onset. Start from the closest snippet in `references/kit.md` or a project in `examples/`. Read `references/look.md`
-   before you light anything.
+   before you light anything. kit.md is about 1,800 lines, too long to read whole: read its Contents line, find the
+   section you need with `grep -n '^## ' <skill>/references/kit.md`, and read from that line to the next section.
 5. **Stills.** `bun K/render.mjs <dir> --stills <t1,t2,...>` at every key word + 0.2 s. Look at each one at phone
    size. render.mjs prints each still's tone (YAVG, YLOW, YHIGH, SATAVG) against look.md's ranges: fix every still it
    flags (give a shot row whose world is not night a `tone` key: space, screen, warm or hot). Fix and re-render until each
@@ -280,12 +288,15 @@ staircase). Never the same transition three times in a row unless the story repe
 
 # Type (numbers in references/look.md section 2)
 
+The first four bands are `reel-spec.json`'s (`platform.top` and `bands`); the caption line's centre and the quiet
+bottom are this skill's own.
+
 | Band | y (1080x1920) | What |
 |---|---|---|
 | Top UI | 0 to 200 | nothing |
 | Headline | 240 to 660 | title, hero number, HUD, section word |
 | Subject | 650 to 1270 | the one focal object |
-| Captions | 1320 to 1470 | one line, centred at about y 1432 (`captions.bottom` 450) |
+| Captions | 1320 to 1500 | one line, centred at about y 1432 (`captions.bottom` 450) |
 | Bottom | 1540 to 1920 | quiet world only: the platform covers it |
 
 - **Captions** come from the words: the kit breaks them on phrases (never after 'a', 'the', 'of', 'to', 'and' or
@@ -372,8 +383,9 @@ A simple form (box, cylinder, lathe, extrusion)?               → build it: bev
 A named product the voice keeps returning to (AirPods, a game console) that the kit prop does not make
   recognisable from a still?                                     → the same model.mjs route below: a generic bud on a
                                                                  stick lost a judge's vote
-A specific real object with a complex shape (a tooth, an engine)? → bun K/model.mjs (--dry first; about $0.53 and
-                                                                 2 to 3 min, cached), then props.model with a kit
+A specific real object with a complex shape (a tooth, an engine)? → bun K/model.mjs (--dry first: it prints the cost;
+                                                                 about $0.53 and 2 to 3 min at fal's Nov 2026 prices,
+                                                                 cached), then props.model with a kit
                                                                  material (clay, satin, plastic): AI textures have light
                                                                  baked in. Anything with moving parts or a cutaway is
                                                                  built procedurally: a generated mesh cannot move a part
@@ -412,7 +424,8 @@ A real brand, product UI or logo?                              → the real logo
   what reads as cheap.
 - `references/pacing.md`: measured event cadence, shot lengths, camera moves, transitions, the running example, the
   HUD, the hook, whole-video structure.
-- `references/kit.md`: every API, the project.json schema, CLI flags, tested snippets and gotchas.
+- `references/kit.md`: every API, the project.json schema, CLI flags, tested snippets and gotchas. Read one section
+  at a time (step 4).
 - `references/plates.md`: AI plates turned into 2.5D sets for real interiors and places.
 - `references/characters.md`: people doing things, in 1 to 1.5 s beats.
 - `examples/`: complete projects to copy from.

@@ -2,7 +2,8 @@
 
 Everything the kit can do, as it is now: the shot contract, `project.json`, every field on `k`, the overlays, the
 engine modules, every prop, the command-line tools, and tested snippets for the common jobs. `K` is the skill's
-`kit/` folder. Run everything with `bun` (three 0.180, GSAP 3.13, headless Google Chrome). Complete projects to copy:
+`kit/` folder. Run everything with `bun` and headless Google Chrome. The libraries are pinned in `kit/package.json`, which is
+where to check the current versions: as of Nov 2026, three 0.180 and GSAP 3.13. Complete projects to copy:
 `examples/noise-cancel/` (a whole 37 s reel, silent; its contact sheet is in `out/`) and `examples/hook-dive/` (a 3.4 s
 diving hook).
 
@@ -1077,7 +1078,7 @@ motion measures'. The JSON adds
 
 **plate.mjs**: `bun K/plate.mjs <project> --name N --prompt "..." [--ref img.png]... [--aspect 9:16] [--res 2K|4K]
 [--seed N] [--depth moge|dav2] [--image still.png] [--redepth] [--no-style] [--force] [--dry] [--keep-raw]` writes
-`assets/plates/N.png`, `N-depth.png`, `N.json` and logs costs to `assets/plates/costs.jsonl` (about $0.19 a plate;
+`assets/plates/N.png`, `N-depth.png`, `N.json` and logs costs to `assets/plates/costs.jsonl` (about $0.19 a plate at fal's Nov 2026 prices;
 `--dry` prints the prompt and the estimate). Details in `references/plates.md`.
 
 **clip.mjs**: `bun K/clip.mjs <project> --name N --prompt "what happens" [--first-frame still.png | --frame "the still" [--ref img.png]...] [flags]`
@@ -1099,7 +1100,7 @@ audio), `costs.jsonl`. Cached by input: a re-run with the same request costs not
 | `--still-only` | Stop after the first frame (make the character sheet, or check a frame before paying for video). |
 | `--last-frame end.png` | End on this frame (Kling 4, Gemini Omni Flash, H3 Max, Seedance; not Kling 4 Flash). |
 | `--dur 5` | Seconds to generate, clamped to the model's range. 3 is enough for one quick action (40% cheaper, denser motion). |
-| `--endpoint kling/v4/image-to-video` | Video model. Tested: `kling/v4/image-to-video` (default, 720p, $0.157/s, 3.5 to 5.5 min), `kling/v4/flash/image-to-video` ($0.094/s, about 80 s), `google/gemini-omni-flash/v1.2/image-to-video` ($0.082/s, about 1 min, adds camera moves), `minimax/h3-max/image-to-video` ($0.08/s list, 30 s, invents details), `bytedance/seedance-2.0/fast/image-to-video` ($0.24/s, refuses faces). Other fal image-to-video endpoints get the common field names. |
+| `--endpoint kling/v4/image-to-video` | Video model. Tested in Nov 2026, at that month's fal prices: `kling/v4/image-to-video` (default, 720p, $0.157/s, 3.5 to 5.5 min), `kling/v4/flash/image-to-video` ($0.094/s, about 80 s), `google/gemini-omni-flash/v1.2/image-to-video` ($0.082/s, about 1 min, adds camera moves), `minimax/h3-max/image-to-video` ($0.08/s list, 30 s, invents details), `bytedance/seedance-2.0/fast/image-to-video` ($0.24/s, refuses faces). Other fal image-to-video endpoints get the common field names. |
 | `--res` | The model's resolution option (default its cheapest good one: 720p, 768P for H3 Max). |
 | `--take N` | A new take of the same request (take 1 stays cached); raw file `raw/N-tN.mp4`. |
 | `--trim a,b` | Keep seconds a..b of the generated clip. |
@@ -1119,7 +1120,8 @@ default model).
 3. Cleaning: no cameras or lights, weld, simplify to the triangle target, smooth normals welded by position, textures as JPEG at 2048 or less (data maps at half), meshopt compression (`props.model()` decodes it).
 4. A three-view preview in the kit's night look.
 
-Every step is cached by its input under `~/.cache/charles-3d-explainers/models/`. Writes `assets/models/<n>.glb`, `<n>.png` (preview), `<n>-ref.png`, `<n>.json`, and appends paid calls to `assets/models/costs.jsonl`. A typical object costs $0.53 and takes 2 to 3 min. It ends up 40 to 100k triangles and 0.2 to 1.2 MB.
+Every step is cached by its input under `~/.cache/charles-3d-explainers/models/`. Writes `assets/models/<n>.glb`, `<n>.png` (preview), `<n>-ref.png`, `<n>.json`, and appends paid calls to `assets/models/costs.jsonl`. A typical object costs $0.53 and takes 2 to 3 min. The prices in this section are fal's list prices as of Nov 2026,
+kept in `kit/model.mjs`; `--dry` prints the estimate, and each endpoint's page on fal.ai has today's price. It ends up 40 to 100k triangles and 0.2 to 1.2 MB.
 
 | Flag | |
 |---|---|

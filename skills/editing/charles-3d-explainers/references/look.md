@@ -1,5 +1,7 @@
 # Look: what makes the frames read as premium
 
+Contents: 1. The frame plan · 2. Type · 3. Palettes by world · 4. Light · 5. Materials · 6. Depth of field · 7. Atmosphere · 8. Composition · 9. What reads as cheap or AI-made · 10. Checklist for your own stills
+
 Every rule here comes with a number measured from the reference reels, and where it maps onto the kit, the setting
 to use. Pixel values are in the 1080 x 1920 layout space that `ui.js` uses. Luminance is sRGB 0 to 255.
 
@@ -15,12 +17,15 @@ product/kitchen world.
 
 ## 1. The frame plan
 
+The zones are `reel-spec.json`'s (the platform's top and the headline, subject and caption bands, shared with
+charles-claude-editing); the measured column is where the reference reels put things.
+
 | Zone | y (px) | What goes there | Measured |
 | --- | --- | --- | --- |
 | Top UI | 0 to 200 | nothing | no overlay text in any reference starts above y 230 |
 | Headline band | 240 to 660 | hook title, hero number, HUD, section word | title first line top 250 to 325, hero top 240 to 460, HUD digits top 255 to 275 |
 | Subject band | 650 to 1270 | the one focal object | centroid of sharp detail: median x 0.49 to 0.51, y 0.45 to 0.53 of the frame; 10th to 90th percentile y 0.34 to 0.66 |
-| Caption band | 1330 to 1500 | captions | one-line caption centred at y 1389 to 1457 |
+| Caption band | 1320 to 1500 | captions | one-line caption centred at y 1389 to 1457 |
 | Bottom | 1540 to 1920 | quiet world only | the platform's caption and buttons cover it |
 
 - Keep the subject centred. In 82 to 98% of 3D frames the centroid of the sharp detail sits inside the central box;
@@ -345,8 +350,9 @@ frame:
    unit 0.3 to 0.4 x, sub-label 0.2 to 0.45 x.
 6. HUD: fixed corner, condensed, zero-padded, cyan, in the same place in every shot.
 7. Labels: 44 px or larger, two or fewer on screen, beside the anchor, no leader line unless the anchor is ambiguous.
-8. No text above y 200 or below y 1540, none within 40 px of the sides, none over the subject (`--audit` reports the
-   first three).
+8. No text above y 200 or below the caption band (y 1500), none within 60 px of the sides, none over the subject.
+   `--audit` reports all four, but on a full 1080x1920 reel it lets text come within 40 px of the sides and down to
+   y 1540, so check a reel's sides and foot by eye.
 9. Depth of field fits the shot: in an object shot only the subject is sharp, with discs behind it; a world shot is
    sharp across the floor or the planet and full of detail.
 10. Materials: visible bevels, at least two roughness levels, micro-detail at three scales on anything that fills more

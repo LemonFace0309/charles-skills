@@ -1,5 +1,7 @@
 # Characters: short beats of a person doing something
 
+Contents: 1. Character beat or object shot? · 2. The route, and how it was chosen · 3. Making a beat with clip.mjs · 4. Prompt templates · 5. One person across beats · 6. Holding and cutting · 7. Grading to the palette · 8. Clips inside a shot · 9. What fails · 10. Cost and time per beat
+
 A character beat is 1 to 1.5 s of a person acting out the line: someone in bed at night scrolling a phone, a thumb
 swiping a card, a passenger wincing at engine noise, a crowd all looking down at their phones. The kit makes them as
 AI video clips started from a first frame in the kit's look, graded to the palette, then cut into the edit or played
@@ -7,7 +9,7 @@ inside a 3D shot. This file covers when to use one, how to make one that matches
 breaks.
 
 The method: one character sheet per video (Nano Banana Pro), one first frame per beat made from that sheet, the
-frame animated by Kling 4 image-to-video, and the clip graded by `kit/clip.mjs`. About $0.62 and 6 minutes per beat.
+frame animated by Kling 4 image-to-video, and the clip graded by `kit/clip.mjs`. About $0.62 and 6 minutes per beat (fal prices, Nov 2026).
 
 ## 1. Character beat or object shot?
 
@@ -44,7 +46,7 @@ was judged on stills and strips at phone size against `look.md`.
 **Route b, AI video from a kit-look first frame (the route clip.mjs uses).** The first frames were made with Nano
 Banana Pro from one character sheet, then animated by five video models for 4 s each:
 
-| Model (fal endpoint) | Bed, scrolling | Thumb swipe | Plane, wince | Same person | Failures seen | Time | Cost, 4 s |
+| Model (fal endpoint) | Bed, scrolling | Thumb swipe | Plane, wince | Same person | Failures seen | Time | Cost, 4 s (Nov 2026) |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | Kling 4 (`kling/v4/image-to-video`, 720p) | thumb flicks, a blink, a gentle push | swipes at 0.4 to 0.75 s, the card leaves, the next one slides in | jolt at 0.5 s, wince, hand to the ear cup by 1.5 to 2 s | best: face, hair and hoodie hold for the whole clip | a hair flip on the jolt; the thumb ends pointing up | 3.5 to 5.3 min | $0.63 |
 | Kling 4 Flash (`kling/v4/flash/image-to-video`) | (kit-render frame) blinks, eyes move, the screen glow flickers | not run | milder wince, the hand rises at about 1.7 s | as good as Kling 4 | none seen | 76 to 85 s | $0.38 |
@@ -281,6 +283,8 @@ the same frame rendered after two others came out bit-identical, so the clip is 
   actions; there is no face to act with.
 
 ## 10. Cost and time per beat
+
+fal's list prices as of Nov 2026; each endpoint's page on fal.ai has today's.
 
 | Step | Cost | Time |
 | --- | --- | --- |
