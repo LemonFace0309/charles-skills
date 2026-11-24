@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
-"""Tools for building App Store screenshot sets (see ../SKILL.md).
+"""Tools for building App Store and Google Play screenshot sets (see ../SKILL.md).
 
-  render <set.html> [--out DIR]          frames/NN.png at 1320 x 2868, preview.jpg, search.png
+  render <set.html> [--out DIR]          frames/NN.png at the store size, preview.jpg, search.png
   art "<prompt>" --out art/x.png         one generated image (objects, materials, worlds; never people)
       [--size 1024x1536] [--transparent] [--quality high|medium] [--ref img ...] [--n 2]
+  model                                  which image model `art` will use, and why
   cutout <photo> <out.png>               a person or object cut out with BiRefNet (fal.ai)
-  font "<Google Fonts family spec>" --out fonts/    e.g. "Instrument Serif:ital@0;1", "Anton"
+  font "<Google Fonts family spec>" --out fonts/    e.g. "<Family>:ital@0;1"
   board <set-dir>... --out board.html [--title T] [--embed]
 
 Keys: OPENAI_API_KEY (art) and FAL_KEY (cutout), from the environment or a .env in or above the working folder.
@@ -25,11 +26,13 @@ import requests
 from PIL import Image
 
 FW, FH, SCALE = 440, 956, 3
-# App Store sizes a set renders to: the frame's CSS size times --scale must be one of these.
-STORE_SIZES = {(1320, 2868): "iPhone 6.9in", (2064, 2752): "iPad 13in", (1398, 2034): "iPhone Duo"}            # one frame in CSS px, rendered @3x
+# Store sizes a set renders to (checked 24 Nov 2026): the frame's CSS size times --scale must be one of these.
+STORE_SIZES = {(1320, 2868): "iPhone 6.9in", (2064, 2752): "iPad 13in", (1398, 2034): "iPhone Duo",
+               (1080, 1920): "Google Play phone"}
 EXPORT = (FW * SCALE, FH * SCALE)       # 1320 x 2868: Apple's 6.9" iPhone size
 CHROME = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
-IMAGE_MODEL = os.environ.get("SHOTS_IMAGE_MODEL", "gpt-image-2.6-sunburst")
+# Used only when the model list can't be read. Models change every few weeks, so `art` looks up the newest one first.
+PINNED_MODEL = "gpt-image-2.6-sunburst"     # the newest gpt-image model on 24 Nov 2026
 
 
 def env_key(name):
@@ -160,11 +163,37 @@ def strip(frames, height, gap, bg):
 
 # ---------------------------------------------------------------- art
 
+def image_model(key):
+    """SHOTS_IMAGE_MODEL wins. Otherwise the newest full-size gpt-image model this key can use, by the date OpenAI
+    created it; mini variants only when nothing else is listed, because quality comes before price here."""
+    if os.environ.get("SHOTS_IMAGE_MODEL"):
+        return os.environ["SHOTS_IMAGE_MODEL"], "set by SHOTS_IMAGE_MODEL"
+    try:
+        r = requests.get("https://api.openai.com/v1/models", headers={"Authorization": f"Bearer {key}"}, timeout=20)
+        r.raise_for_status()
+        listed = [m for m in r.json().get("data", []) if m.get("id", "").startswith("gpt-image")]
+        full = [m for m in listed if "mini" not in m["id"]] or listed
+        if full:
+            best = max(full, key=lambda m: m.get("created", 0))
+            return best["id"], "the newest gpt-image model this key can use"
+        print(f"warning: the key lists no gpt-image model; trying {PINNED_MODEL}", file=sys.stderr)
+    except Exception as e:
+        print(f"warning: couldn't read the model list ({str(e)[:160]}); trying {PINNED_MODEL}", file=sys.stderr)
+    return PINNED_MODEL, "the pinned fallback (24 Nov 2026)"
+
+
+def model(args):
+    name, why = image_model(env_key("OPENAI_API_KEY"))
+    print(f"{name}  ({why})")
+
+
 def art(args):
     key = env_key("OPENAI_API_KEY")
     out = Path(args.out)
     out.parent.mkdir(parents=True, exist_ok=True)
-    fields = {"model": IMAGE_MODEL, "prompt": args.prompt, "size": args.size, "quality": args.quality,
+    model_id, why = image_model(key)
+    print(f"image model: {model_id} ({why})")
+    fields = {"model": model_id, "prompt": args.prompt, "size": args.size, "quality": args.quality,
               "n": args.n, "output_format": "png"}
     if args.transparent:
         fields["background"] = "transparent"
@@ -186,7 +215,8 @@ def art(args):
                 dest = out if len(data) == 1 else out.with_name(f"{out.stem}-{i + 1}{out.suffix}")
                 dest.write_bytes(base64.b64decode(item["b64_json"]))
                 side = {k: v for k, v in fields.items() if k != "prompt"}
-                side.update(prompt=args.prompt, ref=args.ref, seconds=round(time.time() - t0, 1))
+                side.update(prompt=args.prompt, ref=args.ref, seconds=round(time.time() - t0, 1),
+                            date=time.strftime("%Y-%m-%d"), model_from=why)
                 dest.with_suffix(".json").write_text(json.dumps(side, indent=1))
                 print(f"{dest}  ({side['seconds']}s)")
             return
@@ -359,7 +389,8 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sub = ap.add_subparsers(dest="cmd", required=True)
     p = sub.add_parser("render"); p.add_argument("html"); p.add_argument("--out")
-    p.add_argument("--scale", type=float, default=3, help="device scale: 3 for iPhone and iPhone Duo, 2 for iPad")
+    p.add_argument("--scale", type=float, default=3, help="device scale: 3 for iPhone, iPhone Duo and Google Play phones, 2 for iPad")
+    sub.add_parser("model")
     p = sub.add_parser("art"); p.add_argument("prompt"); p.add_argument("--out", required=True)
     p.add_argument("--size", default="1024x1536"); p.add_argument("--quality", default="high")
     p.add_argument("--transparent", action="store_true"); p.add_argument("--ref", nargs="*")
@@ -369,7 +400,7 @@ def main():
     p = sub.add_parser("board"); p.add_argument("sets", nargs="+"); p.add_argument("--out", required=True)
     p.add_argument("--title", default="Screenshot sets"); p.add_argument("--embed", action="store_true")
     args = ap.parse_args()
-    {"render": render, "art": art, "cutout": cutout, "font": font, "board": board}[args.cmd](args)
+    {"render": render, "art": art, "model": model, "cutout": cutout, "font": font, "board": board}[args.cmd](args)
 
 
 if __name__ == "__main__":

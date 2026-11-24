@@ -1,11 +1,12 @@
 ---
 name: charles-store-screenshots
-description: "Design and render App Store (and Play Store) screenshot sets that look like the best on the store: a two-frame hook, frames that bleed into one world, one named signature move, real app UI at its best moment, characterful type and one brand personality chosen from five style lanes (fun / gen z, chaotic, clean / editorial, aesthetic, Y2K). Each set is one HTML strip built from real captures, real photos and generated objects, rendered to exact 1320 x 2868 PNGs and checked at search-result size. Use when someone wants App Store screenshots, product-page or store-listing creative, screenshot concepts or variations, a redesign of an existing set, or a critique of one."
+description: "Designs and renders App Store and Google Play screenshot sets that compete on the store: a two-frame hook, frames that read as one world, one signature move, real app UI at its best moment and one brand style, built in HTML from real captures and rendered to each store's exact sizes. Use when someone wants store screenshots, concepts or variations, a redesign of a set, or a critique of one."
+compatibility: "Needs Python 3 with Playwright, Pillow and requests, and Google Chrome, to render. Generated art needs OPENAI_API_KEY and cutouts need FAL_KEY, from the environment or a .env in or above the working folder."
 ---
 
 # Store screenshots
 
-A screenshot set is one strip of frames designed as one picture. Frames 1–2 are the hook: one composition that makes people want the rest. Every seam is crossed, so the set feels like a single world you scroll through, and each later frame shows one real moment of the app. Sets are built in HTML, so type and real UI stay crisp, with generated objects and real photos composited in, and rendered to Apple's exact size.
+A screenshot set is one strip of frames designed as one picture. Frames 1–2 are the hook: one composition that makes people want the rest. Every seam is crossed, so the set feels like a single world you scroll through, and each later frame shows one real moment of the app. Sets are built in HTML, so type and real UI stay crisp, with generated objects and real photos composited in, and rendered to the store's exact size.
 
 Before planning, read [references/craft.md](references/craft.md): the lane tree, hook techniques, seam recipes, type, copy and the tells. For reference sets, read [references/swipe.md](references/swipe.md).
 
@@ -29,15 +30,17 @@ Every set passes all ten. Each exists because breaking it made sets look templat
    - Two typefaces at most.
    - One device treatment: a phone, frameless cards or floating UI.
    - One light direction.
-   - One emphasis per headline, done the same way all set long.
+   - At most one emphasis per headline, done one way all set long. In the clean/editorial and aesthetic lanes it's optional.
    - Between frames, change exactly one variable: background colour, scale, crop, or light/dark.
 
-   Why: consistency reads as a real brand, and one changing variable keeps the swipe interesting without breaking it.
+   Why: consistency reads as a real brand, and one changing variable keeps the swipe interesting without breaking it. A single accented word is also one of the commonest tells of a generated page, so when a set uses one it has to be the lever (the proof number, the word the app's own UI uses), never a habit on every headline.
 8. **Real people, generated things.** Faces and bodies come from real photos you have the rights to (the app's coach, team or users). Generate only objects, materials, skies, worlds and lettering. Never generate a real person, and never alter a real person's body. Why: generated people carry the tells (hands, skin, eyes) that make a set read as AI, and editing someone's body is a line we don't cross.
 9. **None of the tells.** Check every frame against the list in craft.md. Why: each tell makes a set read as generated or templated, and one is enough.
 10. **Real proof where people decide.** Show the strongest proof the listing has, in this order: an Apple award (Editors' Choice, App of the Year, Apple Design Award), a rating with its volume ("4.8 ★ · 974K ratings"), a chart rank with its category, a named press quote. Put one or two of them in frames 1–2, as one line or a laurel pair at least 16 px tall, smaller than the headline and clear of it. Why: social proof and authority are the strongest trust levers a listing has, and search shows only the first three frames, so proof saved for the last frame reaches few people. A rating without its volume reads as a claim; the volume makes it a crowd.
 
 Never print a rating, user count, award or press mention that isn't real and current. When the app has none yet, the proof is the people behind it and true product facts.
+
+On Google Play, bar 10 turns around: leave ratings, ranks, awards, press quotes, download counts, prices and calls to action ("Download now") out of the frames. Play's preview-asset guidelines ask for none of them, and a set that has them can lose promotion. There the proof is the real UI and true product facts.
 
 ## Run it
 
@@ -46,8 +49,9 @@ Needs Python 3 with Playwright, Pillow and requests, plus Google Chrome. Art nee
 ```bash
 python3 <skill>/scripts/shots.py render <set.html> [--scale 2]            # frames/, preview.jpg, search.png
 python3 <skill>/scripts/shots.py art "<prompt>" --out art/x.png [--transparent] [--size 1536x1024] [--ref img]
+python3 <skill>/scripts/shots.py model                                   # the image model art will use, and why
 python3 <skill>/scripts/shots.py cutout <photo> <out.png>                # BiRefNet
-python3 <skill>/scripts/shots.py font "Instrument Serif:ital@0;1" --out fonts/
+python3 <skill>/scripts/shots.py font "<Family>:ital@0;1" --out fonts/
 python3 <skill>/scripts/shots.py board <set-dir>... --out board.html [--embed]   # search view + full strips
 ```
 
@@ -124,15 +128,23 @@ Run `board` across the sets and open it for the user. It opens with every set's 
 - With five or more versions, cover at least four of the five lanes, and include light, dark and saturated sets.
 - Every version gets the full bar. One weak version lowers the whole board.
 
-## Other devices
+## Other devices and Google Play
+
+Checked 24 Nov 2026 against [Apple's screenshot specifications](https://developer.apple.com/help/app-store-connect/reference/screenshot-specifications) and [Google Play's preview assets page](https://support.google.com/googleplay/android-developer/answer/9866151). Both change; check them again before a launch.
 
 | Device | Frame (CSS px) | Render | Export |
 | --- | --- | --- | --- |
 | iPhone 6.9" | 440 × 956 | `--scale 3` | 1320 × 2868 |
 | iPad 13" | 1032 × 1376 | `--scale 2` | 2064 × 2752 |
 | iPhone Duo (outer display) | 466 × 678 | `--scale 3` | 1398 × 2034 |
+| Google Play phone | 360 × 640 | `--scale 3` | 1080 × 1920 |
 
 Set `--fw` and `--fh` on `:root` to the frame size. `render` flags any size the store doesn't take.
+
+A Google Play set differs in three ways:
+- **Sizes:** each side between 320 and 3,840 px, the long side at most twice the short one, JPEG or a 24-bit PNG with no transparency (`render` writes RGB PNGs), and up to 8 per device type.
+- **Words:** no rank, award, rating, price or call-to-action text (bar 10).
+- **Captures:** from the Android build, with Android's status and navigation bars. Why: people holding an Android phone spot an iPhone screen at once, and it reads as an app that wasn't made for them.
 - Use each device's own captures: the iPad layout, or the Duo's outer display with its status rail. Never put an iPhone capture in a bigger frame. Why: each device's set is shown to people holding that device, and a scaled phone screen reads as an app that wasn't made for it.
 - Recompose for the canvas. The headline size, the screen's width, the hero's scale and where seam objects sit all change with the frame's shape.
 - Generate every device from one script with per-device numbers, so the copy and art stay identical and one edit reaches all of them.

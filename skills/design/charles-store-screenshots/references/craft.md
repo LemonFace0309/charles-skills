@@ -1,5 +1,7 @@
 # Craft
 
+Contents: Lanes · Hooks · Seams · Type · Copy · Psychology · UI · Colour · Art · The tells · Review
+
 ## Lanes
 
 Walk this tree once per set. It picks the lane; the lane sets the defaults below.
@@ -51,12 +53,13 @@ Pick one per set, and use a different one for each version.
 
 ## Type
 
-- **Faces:** brand fonts first. Otherwise, by lane:
-  - serif: Instrument Serif, Newsreader, Fraunces, Playfair is banned
-  - condensed: Anton, Big Shoulders Display, Mona Sans at 75% width
-  - grotesk: Inter Tight, Space Grotesk, Bricolage Grotesque
-  - mono for labels: JetBrains Mono, IBM Plex Mono
-- **Emphasis:** one word per headline, by a single method for the whole set: accent colour, italic serif, weight, a highlight bar, or the app's own UI (a chat bubble, a tag).
+- **Faces:** the brand's own fonts first, because a set in the app's type reads as the app. Otherwise walk this:
+  1. Take the role the lane asks for (the Lanes table): a serif, a condensed face for caps, a grotesk, or a mono for labels.
+  2. Look for that role in the app's world: its own UI type, its packaging, its posters, the lettering of the thing it's about.
+  3. Rule out the first family that comes to mind and any family you'd use on every set. Those are the faces generated sets share, and they make a set read as a template.
+  4. Two faces at most (bar 7); the second gets one job.
+  5. Check it at search size: the headline still reads at bar 4's sizes, and every glyph the copy needs exists, in every language you ship.
+- **Emphasis:** at most one word per headline, by a single method for the whole set: accent colour, italic serif, weight, a highlight bar, or the app's own UI (a chat bubble, a tag). It's optional in the clean/editorial and aesthetic lanes (bar 7).
 - **Sizes:** see the bar. Hook lettering can be any size above that. Line height is 0.9–1.0 for caps and condensed faces, and 1.0–1.1 for sentence case.
 - **Line breaks:** break by meaning ("Know what / to lift next"). No orphan word, and no line more than twice as long as another.
 - **Space:** at least 32 px between the headline and the frame edge, and 24 px to the UI below it. Overlapping a headline onto a photo or object is deliberate, and the headline stays readable.
@@ -85,8 +88,8 @@ Pick each set's levers from this table and write them in the plan comment as `le
 
 | Lever | When | In the set | Why it works |
 | --- | --- | --- | --- |
-| Social proof | Always, if the listing has a rating, award, chart rank or press | Bar 10: one or two items in frames 1–2; a rating always with its volume | People follow what many others chose (the bandwagon effect). A crowd ("974K ratings") persuades; a bare score ("4.8 ★") reads as a claim |
-| Authority | An Apple award, Editors' Choice or a named publication | Its exact name ("Apple Watch App of the Year"), laurels allowed, never another brand's logo | Trust transfers from a judge the viewer already trusts, and one strong credential makes everything after it look better (the halo effect) |
+| Social proof | Always on the App Store, if the listing has a rating, award, chart rank or press. Never on Google Play (SKILL.md, bar 10) | Bar 10: one or two items in frames 1–2; a rating always with its volume | People follow what many others chose (the bandwagon effect). A crowd ("974K ratings") persuades; a bare score ("4.8 ★") reads as a claim |
+| Authority | An Apple award, Editors' Choice or a named publication, on the App Store only | Its exact name ("Apple Watch App of the Year"), laurels allowed, never another brand's logo | Trust transfers from a judge the viewer already trusts, and one strong credential makes everything after it look better (the halo effect) |
 | Processing fluency | Always | Bar 3 and 4: six words, 40 px, 4.5:1 | Text that's easier to read is judged truer, and the app easier to use |
 | Curiosity gap | Always, frames 1–2 | Leave the hook's image or sentence unfinished at the seam | An open loop nags until it's closed (the Zeigarnik effect), so people swipe to close it |
 | Isolation effect | Always | One accent per frame, on the one word or number that matters | The one thing that differs is the thing remembered |
@@ -127,6 +130,8 @@ Examples:
 Reject and regenerate any image with melted or extra details, wrong lettering, a light direction that doesn't match the set, plastic CGI sheen in a photographic set, or anything shaped like a person.
 
 ## The tells
+
+Checked 24 Nov 2026. Tells change as image and design models change: when this list is more than three months old, make one set from a plain prompt with current models, and add what it does by default.
 
 Fail a frame that shows any of these:
 
