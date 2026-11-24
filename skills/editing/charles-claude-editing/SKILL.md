@@ -18,6 +18,16 @@ This skill runs long. After a context summary or a restart, re-read this file an
 # Decide these first
 
 ```
+Is it in one of my formats (a playbook in the repository's formats/)?
+├── Yes → read the playbook, look at the last posted video in that format (its edit and its export), and edit in
+│   that style. The playbook wins wherever it's more specific than this file
+└── No → the defaults here
+
+Is there a plan for it (edit/plan.json, from charles-reel-plans)?
+├── Yes → start from it: its script, assets, layout per line, music and caption are the first draft. This file and
+│   the format win wherever the plan disagrees, so change what they call for and tell me what changed
+└── No → choose the layouts as you edit (Choosing the Layout)
+
 Is it news (layoffs, announcements, someone else's findings)?
 ├── Yes → also follow News Videos at the bottom. It wins wherever it disagrees with the defaults
 └── No, it's education/entertainment → just the defaults
