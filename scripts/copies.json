@@ -1,0 +1,48 @@
+[
+  {
+    "why": "One frame layout for every editing skill. charles-claude-editing owns it; each other editing skill ships a copy so it still works when it's installed on its own.",
+    "source": "skills/editing/charles-claude-editing/reel-spec.json",
+    "copies": [
+      "skills/editing/charles-reel-plans/reel-spec.json",
+      "skills/editing/charles-explainers-assets/reel-spec.json",
+      "skills/editing/charles-studio-explainers/reel-spec.json",
+      "skills/editing/charles-3d-explainers/reel-spec.json",
+      "skills/editing/charles-arcade-assets/reel-spec.json"
+    ]
+  },
+  {
+    "why": "charles-polish captures and measures with the same scripts as charles-unreasonable-craft. Fix them there, then copy them across.",
+    "source": "skills/design/charles-unreasonable-craft/scripts/web-frames.mjs",
+    "copies": ["skills/design/charles-polish/scripts/web-frames.mjs"]
+  },
+  {
+    "why": "Shared by web-frames.mjs, sheet.mjs and edges.mjs.",
+    "source": "skills/design/charles-unreasonable-craft/scripts/lib.mjs",
+    "copies": ["skills/design/charles-polish/scripts/lib.mjs"]
+  },
+  {
+    "why": "Contact sheets of a recording, frame by frame.",
+    "source": "skills/design/charles-unreasonable-craft/scripts/sheet.mjs",
+    "copies": ["skills/design/charles-polish/scripts/sheet.mjs"]
+  },
+  {
+    "why": "Edge and gap measurements from a capture.",
+    "source": "skills/design/charles-unreasonable-craft/scripts/edges.mjs",
+    "copies": ["skills/design/charles-polish/scripts/edges.mjs"]
+  },
+  {
+    "why": "iOS Simulator stills and recordings.",
+    "source": "skills/design/charles-unreasonable-craft/scripts/sim.sh",
+    "copies": ["skills/design/charles-polish/scripts/sim.sh"]
+  },
+  {
+    "why": "The scripts' dependencies, pinned the same way in both skills.",
+    "source": "skills/design/charles-unreasonable-craft/scripts/package.json",
+    "copies": ["skills/design/charles-polish/scripts/package.json"]
+  },
+  {
+    "why": "The scripts' lockfile.",
+    "source": "skills/design/charles-unreasonable-craft/scripts/package-lock.json",
+    "copies": ["skills/design/charles-polish/scripts/package-lock.json"]
+  }
+]

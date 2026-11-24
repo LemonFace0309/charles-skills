@@ -29,6 +29,23 @@ Instagram DM on their phone, looking for one skill, so the READMEs come first an
 - Renaming a skill breaks every install and every link that uses the old name. Only do it when Charles asks, and then
   add the old name to `site/links.json` so the short link keeps working.
 
+## Writing a skill
+
+- The description is what an agent reads before it decides to load a skill, and every installed skill shares one
+  listing, cut to fit a budget: 1% of the context by default, 2% on Charles' Macs, where over 100 skills share it.
+  Past the budget, the least-used skills lose their descriptions and stop loading on their own. Write it in the third
+  person and under 400 characters: what it makes or fixes, when to use it in the words people type, and the sibling
+  it hands off to. `scripts/check.mjs` fails one over 500 characters or written with "I" or "my".
+- Every skill on design, editing and qol has `evals/`: two `trigger-*` cases that must load it, a `no-trigger-*` near
+  miss that must not, and an `outcome-*` case with a known answer (`templates/skill/evals/` shows the shapes). After
+  changing a description or a rule, run `node scripts/eval.mjs <skill>` and `node scripts/eval.mjs <skill> outcomes`
+  from a terminal signed in to Claude Code. Known answers live only in `graders/`, never where the skill reads.
+- A skill works in any folder. A path into claude-editing (tools/reelkit, formats/, videos/, assets/music/) is "when
+  present", with a fallback, and `compatibility:` in the frontmatter says what the skill needs beyond the agent.
+- `scripts/copies.json` lists files that are copies of one source: the editing skills' `reel-spec.json`, which
+  charles-claude-editing owns, and charles-polish's capture scripts, which come from charles-unreasonable-craft.
+  Change the source, copy it across, and the check confirms they match.
+
 ## Links
 
 - ManyChat's "Get the skill" buttons point at short links, `https://lemonface0309.github.io/charles-skills/<keyword>/`,
@@ -39,7 +56,9 @@ Instagram DM on their phone, looking for one skill, so the READMEs come first an
 
 - Run `node scripts/check.mjs`. GitHub runs it on every push, and it fails on a broken link, a missing install line, a
   `SKILL.md` name that doesn't match its folder, frontmatter `npx skills` can't parse (it skips that skill), or a skill
-  missing from a README or the plugin list.
+  missing from a README or the plugin list. On design, editing and qol it also fails on a long or first-person
+  description, a copy that differs from its source, a reference over 100 lines with no contents line, a skill path
+  with no shelf, and a skill without its evals.
 - Write READMEs the way the existing ones read: first person, plain words, short sentences, real examples. A README
   carrying `<!-- text-only -->` under its title is one Charles decided needs no picture; leave it that way.
 - Several sessions can share a checkout. Stage only your own paths and commit right away.

@@ -4,3 +4,6 @@ node_modules/
 __pycache__/
 .env*
 _site/
+
+# claude plugin eval writes each run here
+evals/results/

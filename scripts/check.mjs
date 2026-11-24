@@ -100,6 +100,67 @@ for (const [keyword, name] of Object.entries(readJSON('site/links.json'))) {
   if (byName.has(keyword)) err(`site/links.json: "${keyword}" is already a skill name`);
 }
 
+// The rules below are errors on the shelves Charles installs (design, editing, qol) and a to-do list on drops, whose
+// launch copy is left as it shipped.
+const STRICT = new Set(['design', 'editing', 'qol']);
+const flag = (s, msg) => (STRICT.has(s.shelf) ? err : warn)(msg);
+const DESC_MAX = 500;
+
+// Files that must stay identical copies of one source (scripts/copies.json says which, and why).
+for (const group of readJSON('scripts/copies.json')) {
+  if (!exists(group.source)) { err(`scripts/copies.json: ${group.source} doesn't exist`); continue; }
+  const want = fs.readFileSync(path.join(ROOT, group.source));
+  for (const copy of group.copies) {
+    if (!exists(copy)) err(`${copy} is missing: copy it from ${group.source} (${group.why})`);
+    else if (!fs.readFileSync(path.join(ROOT, copy)).equals(want)) err(`${copy} differs from ${group.source}: change the source, then copy it across (${group.why})`);
+  }
+}
+
+const mdFiles = (s) => {
+  const out = ['SKILL.md'];
+  for (const sub of ['references', 'reference']) {
+    const dir = path.join(s.dir, sub);
+    if (fs.existsSync(dir)) for (const f of fs.readdirSync(dir)) if (f.endsWith('.md')) out.push(`${sub}/${f}`);
+  }
+  return out;
+};
+
+for (const s of skills) {
+  const d = s.frontmatter?.description ?? '';
+  // The listing every agent sees is shared by every installed skill, so a long description costs all of them.
+  if (d.length > DESC_MAX) flag(s, `${s.rel}/SKILL.md: the description is ${d.length} characters; keep it under ${DESC_MAX} (aim for 400)`);
+  // Descriptions are third person. Quoted phrases are what people type ("explain like I'm 14"), so they don't count.
+  const unquoted = d.replace(/"[^"]*"|“[^”]*”|'[^']*'/g, '');
+  if (/\b(I|I'm|me|my|mine|myself)\b/.test(unquoted)) flag(s, `${s.rel}/SKILL.md: write the description in the third person ("Edits Charles' reels", not "edits my reels")`);
+
+  for (const rel of mdFiles(s)) {
+    const text = fs.readFileSync(path.join(s.dir, rel), 'utf8');
+    const lines = text.split('\n');
+    // A path that names a skill without its shelf broke when the skills moved onto shelves; a skill's own files are
+    // reached from its folder (<skill>/...), another skill's from its shelf (skills/<shelf>/<name>/...).
+    lines.forEach((line, i) => {
+      for (const m of line.matchAll(/(?<![\w/.-])skills\/(charles-[a-z0-9-]+)\//g)) err(`${s.rel}/${rel}:${i + 1}: skills/${m[1]}/ has no shelf; write <skill>/... for this skill's own files`);
+    });
+    // Every relative markdown link in what the agent reads resolves.
+    for (const { target, line } of relativeTargets(text)) {
+      const abs = path.resolve(path.dirname(path.join(s.dir, rel)), target);
+      if (!fs.existsSync(abs)) flag(s, `${s.rel}/${rel}:${line} links to ${target}, which doesn't exist`);
+    }
+    // A long reference opens with a contents line, so an agent can read only the part it needs.
+    if (rel !== 'SKILL.md' && lines.length > 100 && !/^\s*(\*\*)?(contents|table of contents)\b/im.test(lines.slice(0, 25).join('\n'))) {
+      flag(s, `${s.rel}/${rel} is ${lines.length} lines: open it with a "Contents:" line naming its sections`);
+    }
+  }
+
+  // Every skill carries evals: prompts that should load it, a near miss that shouldn't, and one known-answer outcome.
+  const evals = path.join(s.dir, 'evals');
+  const cases = fs.existsSync(evals) ? fs.readdirSync(evals).filter((c) => fs.existsSync(path.join(evals, c, 'prompt.md'))) : [];
+  const has = (re) => cases.some((c) => re.test(c));
+  if (!has(/^trigger-/) || !has(/^no-trigger-/) || !has(/^outcome-/)) {
+    flag(s, `${s.rel}/evals/ needs trigger-*, no-trigger-* and outcome-* cases (prompt.md + graders/), run with node scripts/eval.mjs ${s.name}`);
+  }
+}
+
 for (const w of warnings) console.log(`warning  ${w}`);
 for (const e of errors) console.log(`error    ${e}`);
 console.log(`\n${skills.length} skills on ${SHELVES.length} shelves: ${errors.length} errors, ${warnings.length} warnings`);
