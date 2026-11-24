@@ -1,6 +1,7 @@
 ---
 name: charles-polish
-description: "Push a working interface from fine to exceptional: hill-climb it through levels, fix the invisible details, and make motion correct frame by frame. Use when a screen or component works but feels off or unfinished, when asked to polish, refine, take it further, or make it feel great, when adding or reviewing animation, or when reviewing UI against a high craft bar. Triggers on polish, feels off, make it better, level up, hover and press states, focus rings, tabular numbers, layout shift, hit areas, optical alignment, easing, springs, duration, transitions, choreography, reveal, morph, flash, jank, stutter, sound and haptic feedback. If the screen still looks AI-generated, run charles-unslop first."
+description: "Takes a working interface from fine to exceptional: names the weakest thing, fixes the invisible details (states, hit areas, contrast, layout shift, type) and makes motion correct, checked frame by frame. Use when a screen works but feels off or unfinished, or to polish or review UI, motion, easing, or hover and press states. A screen that still looks AI-made goes to charles-unslop first."
+compatibility: "The rules need nothing beyond the agent. The capture and measuring scripts need Node 18+ (npm install --prefix <skill>/scripts), Google Chrome or CHROME_PATH, ffmpeg for recordings, and Xcode's simctl for the iOS Simulator."
 ---
 
 # Polish
@@ -11,7 +12,7 @@ Most work stops at level 3 of 10, because it works and it's easy to stop. The di
 
 ## Run it
 
-1. **Render it,** at its real size and at the smallest size it will be seen. Capture each state and each motion as frames. Measure in the pixels people see: on a scaled stage, a 42 px button may be 37 px on screen.
+1. **Render it,** at its real size and at the smallest size it will be seen. Capture each state and each motion as frames (Verify, below, has the scripts). Measure in the pixels people see: on a scaled stage, a 42 px button may be 37 px on screen.
 2. **Score it** against the anchors below and name the weakest thing on screen in one sentence.
 3. **Structure:** fix hierarchy and containers before details. Polishing the wrong structure is wasted work.
 4. **States:** map every state, including empty, loading, error and success, and design the unhappy ones.
@@ -81,8 +82,8 @@ Absence is what gets noticed, so run all of these. If you're short on time, star
 | Contrast | Body and labels ≥4.5:1, large text and icons ≥3:1, measured over the real background. Nothing people must read under 12 px at the viewing size | "Legible" isn't a judgment call |
 | Press | `scale(0.96)`, never below 0.95 | Tactile without exaggeration |
 | Hover | Named properties, ~150ms; gate to `(hover: hover)`; no layout change | `transition: all` animates things you didn't choose |
-| Focus | Keep it; neutral color only | Brand-colored rings clash |
-| Hit area | ≥44×44 touch, ≥40×40 desktop, via a pseudo-element; never overlapping; make whole surfaces the target | Small targets miss (Fitts's law) |
+| Focus | Never remove it. A 2px ring at 3:1 or more against the surface it sits on and against the unfocused state; neutral (a text-role color) when that passes, otherwise the color that reaches 3:1 | Keyboard users lose their place without it (WCAG 1.4.11 and 2.4.13 ask for 3:1). Brand-colored rings often clash, so neutral comes first, but a grey ring on grey is invisible |
+| Hit area | ≥44×44pt on iOS, ≥48×48dp on Android, ≥40×40px on desktop, via a pseudo-element; never overlapping; make whole surfaces the target | Small targets miss (Fitts's law), and each platform sets its own minimum |
 | Stacking | `isolation: isolate` or a fixed z-index scale | `9999` means nobody knows |
 | Decoration | `pointer-events: none`, `user-select: none` | It can't steal clicks |
 | First paint | Resolve state before render: never default-then-correct | Prevents flashes |
@@ -178,9 +179,15 @@ Choose each sound from the product's own world by naming the real object that ma
 
 ## Verify frame by frame
 
-Drag every scrubbed control slowly out and back, and read each frame on the way back. A value going to zero must get there continuously: scale a feather, blur or stroke with the shape it belongs to, because at a fixed width it stays on screen as a soft dot until the shape pops off. When two layers hand over, close the inner one fully before fading the outer one.
+Motion you haven't looked at frame by frame isn't verified: an eye on a running page misses the one-frame pops that make it feel off. The scripts in `<skill>/scripts` capture and count for you. Install them once with `npm install --prefix <skill>/scripts`.
 
-Motion you haven't looked at frame by frame isn't verified. Drive it from a controllable clock and capture at 60 fps. Don't try to eyeball hundreds of frames: plot the pixel difference between neighboring frames first, because a pop is a spike and a dead stretch is a flat line. Then look at the frames around each one in a labeled strip. Screenshots time out on a busy machine, so run one capture at a time. Check:
+1. **Capture on a virtual clock.** `node <skill>/scripts/web-frames.mjs <url or file.html> --motion 1200 --trigger click:<selector> --widths 390,1440` writes one PNG per frame at 60 fps and a contact sheet labelled in ms. Time is faked and stepped exactly, so every run gives the same frames, where a real-time recording drops and doubles them. Triggers are `load`, `click:`, `hover:`, `scroll:<y>` and `js:<code>`; `--clip x,y,w,h` zooms in, and `--reduced-motion` and `--scheme dark` cover the other paths. Without `--motion` it captures stills at every width. Every run writes `console.txt`, which must be empty.
+2. **Plot before you read.** `node <skill>/scripts/frame-diff.mjs <frames folder>` plots how much each frame changes from the last. A pop, a flash or a swap is a red spike with still frames around it, and a dead stretch between two moves is shaded grey. Read the frames it names first, then the whole contact sheet. Hundreds of frames are too many to eyeball; the plot tells you where to look.
+3. **Recordings** (the iOS Simulator, a device, anything ffmpeg reads): `<skill>/scripts/sim.sh start out.mp4`, do the interaction, `sim.sh stop out.mp4`, then `node <skill>/scripts/sheet.mjs out.mp4 sheet.png --auto --keep frames/` and `frame-diff.mjs frames/`.
+4. **Measure, don't eyeball.** `node <skill>/scripts/edges.mjs <capture.png> --rows y0-y1 --scale 2` prints each element's edges and the gaps between them in points, for the alignment, hit area and spacing rows of the details table.
+5. **Scrubbed controls:** drag each one slowly out and back and read every frame on the way back. A value going to zero must get there continuously: scale a feather, blur or stroke with the shape it belongs to, because at a fixed width it stays on screen as a soft dot until the shape pops off. When two layers hand over, close the inner one fully before fading the outer one.
+
+Run one capture at a time, because screenshots time out on a busy machine. Check:
 
 - [ ] **First frame:** the response starts at once. A simulated network wait, a press being held or a scripted hand reaching isn't a dead frame, but the wait still shows something happening.
 - [ ] **Origin:** if something emanates from a trigger, measure it. The start point equals the trigger's center in screen space, including under any camera or scale transform. Print the numbers. Motion that reads in order, like a chart filling left to right, is exempt.

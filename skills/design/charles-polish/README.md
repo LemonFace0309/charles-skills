@@ -24,6 +24,12 @@ Add `-g` to install it for every project, or copy this folder into `~/.claude/sk
 /charles-polish review the settings screen without changing anything
 ```
 
+## Needs
+
+Nothing for the rules. To capture and measure motion frame by frame, the scripts in `scripts/` need Node 18 or newer,
+Google Chrome and, for recordings, ffmpeg (Xcode for the iOS Simulator). Install them once with
+`npm install --prefix scripts` from this folder.
+
 ## Pairs with
 
 [charles-unslop](../charles-unslop/) first if the screen still looks AI-made, and

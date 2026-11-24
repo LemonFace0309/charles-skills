@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="card.css">
+</head>
+<body>
+  <article class="card">
+    <p class="label">Orders this week</p>
+    <p class="count" id="count">0</p>
+    <button class="btn" id="open">Details</button>
+  </article>
+  <div class="modal" id="modal"><p>Order details</p></div>
+  <div class="toast">Saved</div>
+  <script>
+    let n = 0;
+    const el = document.getElementById("count");
+    const tick = setInterval(() => { n += 7; el.textContent = n.toLocaleString(); if (n > 1400) clearInterval(tick); }, 30);
+    document.getElementById("open").onclick = () => document.getElementById("modal").classList.add("open");
+  </script>
+</body>
+</html>
