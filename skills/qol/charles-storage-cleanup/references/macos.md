@@ -1,5 +1,7 @@
 # macOS cleanup notes
 
+Contents: Space accounting and audit records, Active-use checks, Applications and complete uninstalls, Package stores and runtime retirement, Administrator batches and reliable completion, Generated dependencies, builds, and caches, Android, iOS, and downloaded builds, Git temporary pack recurrence, Optional transparent compression.
+
 Read only the sections relevant to the candidates under consideration. Commands below are inspection examples, not authorization to mutate their targets.
 
 ## Space accounting and audit records

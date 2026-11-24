@@ -1,58 +1,105 @@
 ---
 name: charles-storage-cleanup
-description: Investigate Mac disk usage, find rarely used apps and overlooked storage, and clean authorized disposable caches, runtimes, devices, research artifacts, and development files while preserving active work.
+description: "Finds what is filling a Mac's disk and cleans only what is safe: measures usage, explains recent growth, finds rarely used apps and overlooked caches, runtimes, simulators and build output, and deletes only what the request authorizes while protecting active work. Use when the Mac is out of space or the disk is full, or someone asks what is taking up storage or what is safe to delete."
+compatibility: "macOS. Python 3 (standard library only) for scripts/inventory.py. Uses du, df, ps, lsof and mdls, plus the native tools of whatever it cleans (xcrun simctl, avdmanager, npm, conda and the like)."
 ---
 
-# Storage Cleanup
+# Storage cleanup
 
-Recover space from confirmed disposable artifacts, explain recent growth, and preserve active work. Measure success with free bytes on the actual data volume.
+Free real space on the Mac's data volume without losing anything someone still needs. The result is the change in free bytes on that volume, measured before and after. The size of what was deleted isn't the result: APFS clones and snapshots share blocks, so deleting a 40 GB folder can free almost nothing.
 
-## Scope and authorization
+## What the request allows
 
-When the request authorizes removing unused files, delete confirmed disposable candidates without repeated confirmation. An inventory-only request stays read-only. Skill discovery alone grants no deletion permission. Carry forward the user's selected items, exclusions, age limits, and recent-use conditions across passes; a request to inspect more locations does not revoke a previous keep instruction.
+- **"Clean up", "delete", "free up space"** allows deleting what this skill confirms is disposable, without asking again for each item. Why: the person asked for the result, and a question per cache wastes their time.
+- **"What's taking space", "report only", "don't delete"** is read-only. Measure and list. Change nothing.
+- **Loading this skill allows nothing.** Only the person's own words do.
+- **Their choices carry forward** across passes: the items they picked, what they said to keep, age limits ("older than a month") and recent-use conditions. "Look in more places" never cancels an earlier "keep X". Why: a later pass that forgets a keep deletes something they protected.
+- **A generic "clear unused files" never covers** source code, uncommitted work, credentials, unique research or media, current releases, or the data inside VMs and containers. Those need the person to name them.
 
-Keep active apps, builds, Git writers, and emulators running. Do not cancel a job to turn its files into deletion candidates. Preserve source, uncommitted work, credentials, unique research/media, current releases, and persistent VM/container data unless their removal is explicitly authorized. A generic request to clear unused files does not supply that authorization. An old modification time, ignored Git status, or absent open handle alone does not establish disposability. Skip uncertain candidates and continue useful cleanup elsewhere.
+## Always keep
 
-## Choose the depth
+- **Anything in use:** running apps, builds, Git operations, emulators and their data. Never stop a job to make its files deletable. Why: a killed build, or a cache cleared under a running install, breaks someone's work, and the space comes back anyway.
+- **Anything uncertain.** An old modification date, an ignored-by-Git status or the lack of an open file handle doesn't prove a thing is disposable on its own. Skip it, say why, and keep cleaning elsewhere.
+- **Anything a check couldn't clear.** A probe that failed, timed out or was cut short means "use unknown", not "unused". Missing last-use metadata on an app means unknown too.
 
-- For a named deletion, inspect that selection and its dependencies, then complete the authorized cleanup. A whole-app uninstall includes its own helpers and startup registrations; cache-only cleanup does not.
-- For general cleanup, unused-app reviews, "what else," or "search more extensively," use [the discovery checklist](references/discovery.md). Cover installed software, both Library trees, hidden package stores, runtimes, developer/research output, devices, media/downloads, and OS-managed storage. Do not stop at the largest project or `~/Library/Caches`.
-- When explaining a large folder, break it into source, generated output, installed environments, Git history, and unique assets. Describe what the largest payloads actually contain and why they exist before recommending removal.
+## Pick the depth
 
-## Workflow
+- **A named target** ("delete the Android emulators", "uninstall DaVinci"): inspect that selection and what depends on it, then finish it. A whole-app uninstall includes the app's own helpers and startup registrations; a cache-only cleanup doesn't.
+- **A general cleanup, an unused-app review, "what else?", "look harder":** walk [the discovery checklist](references/discovery.md) through every family: installed software, both Library trees, hidden package stores, runtimes, developer and research output, devices, media and downloads, and storage macOS manages. Never stop at the biggest project or at `~/Library/Caches`. Why: forgotten space is usually spread across many 200 MB to 2 GB stores, not one giant folder.
+- **"Why is this folder so big?":** split it into source, generated output, installed environments, Git history and unique assets, and say what the largest pieces actually hold and why they exist before suggesting any removal.
 
-1. **Baseline and map the machine.** Record local time, data-volume free bytes, recent cleanup receipts, mounts, and active work. Store audits privately outside repositories, under `~/Library/Logs/storage-cleanup/`. Start with filesystem-bounded directory sizes, including hidden directories and shared/system application data; deepen large branches with bounded probes.
-2. **Cover overlooked families.** In a broad audit, work through the discovery checklist and record each family as measured, absent, excluded, or not fully inspected. Follow configured cache/SDK locations and sibling or agent workspaces. Revisit newly exposed smaller contributors after large removals. Previously deleted paths and old measurements are not new opportunities.
-3. **Establish disposability and inactivity.** Identify reconstruction inputs, an obsolete duplicate, or a documented cache purpose. Distinguish the eligible subset from an entire installation or cache pool. Independently inspect relevant processes, arguments/cwd, open files, and running devices. Refresh checks before deletion. A failed or truncated usage probe leaves use unknown. Missing app-use metadata means unknown use.
-4. **Remove in measured batches.** Log exact paths, sizes, reasons, reconstruction metadata, and methods. Prefer supported SDK/device/package-manager commands. For direct removal, validate the specific path, avoid symlink targets, and preserve nonstandard data or local patches. Name each target by its literal absolute path: agent safety checks refuse recursive removals built from shell variables, and an empty variable can widen one to a parent. Do not use blanket repository cleaning. Finish all eligible user-level work and prepare one reviewable exact batch before requesting necessary administrator authentication; verify the child job's result rather than only the authorization helper's exit status.
-5. **Investigate recurrence.** If free space falls again, compare observations and trace writers. Repeated abandoned Git packs warrant checking background `git add` and generated payloads. Use a backed-up, scoped machine-local exclusion only for confirmed generated material; verify tracked files and useful new reports/scripts remain visible. Do not blindly copy another project's ignore patterns.
-6. **Verify and report.** Check removed paths, retained active resources, unchanged dependency lockfiles, and readable Git commits where relevant. After runtime removal, verify retained dependent environments and the default executable. After an uninstall, check the app, its selected remnants, and its own services. Report current free space, measured recovery, concurrent growth, reinstall requirements, unresolved items, and coverage gaps. Folder allocations and deletion totals are not physical recovery estimates.
+## Run it
 
-For an opportunity list, give stable numbers, exact paths or selectors, measured eligible sizes, contents/purpose, use evidence, and the condition for safe removal. Separate regenerable caches, optional installed software, and data needing a user decision. Do not inflate savings with overlapping parents/children, all versions when one must remain, empty device registrations, sparse-disk maximum capacity, or personal artifacts labeled as cache. If fewer than the requested number of useful verified candidates remain, report that and the uninspected areas instead of padding the list.
+1. **Baseline.** Record the local time, the data volume's free bytes (`df -k /System/Volumes/Data`), earlier cleanup receipts, mounts and what's running. Keep the audit private and outside every Git repository, in `~/Library/Logs/storage-cleanup/<date-time>/`. Start with directory sizes that stay on one filesystem (`du -x`), hidden folders and shared app data included, then go deeper only into the large branches, with time limits on each probe.
+2. **Cover every family** (broad audits). Mark each one measured, absent, excluded or not fully inspected. Follow configured cache and SDK locations, sibling projects and agent workspaces. After a big removal, look again at the smaller stores it was hiding. A path already deleted, or an old measurement, isn't a new opportunity.
+3. **Prove each candidate is disposable and idle.** Walk "Safe to delete?" below. Check processes, their arguments and working folders, open files and running devices, and check again right before deleting.
+4. **Delete in measured batches.** Log each exact path, its size, the reason, what rebuilds it and how it was removed. Prefer the tool's own command (`xcrun simctl delete`, `avdmanager delete avd`, `npm cache clean --force`, `conda clean`). For a direct removal, check the exact path, never follow a symlink to its target, and keep any custom data or local patches inside it. Write every target as a literal absolute path: agent safety checks refuse recursive removals built from shell variables, because an empty variable widens the target to its parent. Never clean a whole repository. Finish everything a normal user can delete first, then put whatever needs an administrator into one reviewable batch, and check the result of the job itself, not only that authorization succeeded.
+5. **If free space falls again,** compare snapshots and find the writer. Temporary Git packs that keep coming back usually mean a background `git add` is ingesting generated files: follow [the Git procedure](references/macos.md#git-temporary-pack-recurrence). Exclude only confirmed generated material, in that repository's own local exclude file rather than a shared `.gitignore`, back the file up first, and check that tracked files and useful new reports stay visible. Never copy another project's ignore patterns.
+6. **Verify and report** (below).
 
-| Candidate | Evidence needed in addition to inactivity |
+## Safe to delete?
+
+Walk this for every candidate:
+
+```
+Is it inside what the person asked to clean, and not something they said to keep?
+├── No → leave it. If it's large, list it as an opportunity.
+└── Yes → Is anything using it: a process, an open file, a booted device, a running build or install?
+    ├── Yes, or a check failed → leave it, and say which check.
+    └── No → What is it?
+        ├── A cache or download its tool rebuilds (package caches, test browsers, updater archives, build caches)
+        │   → delete the stale part with the tool's own clean command or its exact path. Keep what the current
+        │     version or a live worker needs.
+        ├── Generated project output (dependencies, builds, DerivedData)
+        │   → only when its lockfile and build inputs stay and nothing tracked or hand-made is inside. Say it must
+        │     be reinstalled before the project runs again.
+        ├── Something installed (an app, extension, runtime, simulator, emulator)
+        │   → only when the request covers it and its row below passes. Try the vendor's or tool's uninstaller first.
+        ├── A duplicate (an installer, an APK or IPA, an archived profile)
+        │   → only when a kept copy matches by version or hash and the current release stays.
+        └── Something people made (source, media, research, chats, credentials, VM and container disks)
+            → never as cleanup. List it as a decision for the person.
+```
+
+On top of being idle, each kind needs its evidence:
+
+| Candidate | Evidence it also needs |
 | --- | --- |
-| Dependencies/builds | Known generated installation/output; retained lockfiles, build inputs, or environment metadata; no tracked/custom content lost |
-| APK/IPA/installers | Obsolete or redundant artifact; retain current release/reviewer builds and any unique analysis evidence |
-| Emulators/simulators | Known disposable QA device with no current task/data dependency; shutdown alone is insufficient |
-| Git temporary packs | Git garbage classification, stable separate observations, no live writer/handle, valid history preserved |
-| Model/package caches | Re-downloadable contents; preserve authentication, installed environments, active models, and persistent data |
-| Rarely used apps/extensions | Bundle or extension identity, measured payload, current activity, and recorded last use or an explicit unknown; retained user data and shared components |
-| Old/duplicate runtimes | Architecture, version, default selection, executable links, dependent environments, and embedded app runtimes; pool size is not all removable |
-| Downloads/history/logs | The user's exact age and recent-use criteria, supported record timestamps where applicable, and no unique required content or live writer |
+| Dependencies and builds | It's known generated output; its lockfiles, build inputs or environment metadata stay; no tracked or custom file goes with it |
+| Installers, APKs, IPAs | It's obsolete or a duplicate; the current release, the builds reviewers use and any unique analysis evidence stay |
+| Emulators and simulators | It's a known throwaway test device with no current task or data on it. Being shut down isn't enough |
+| Git temporary packs | Git classifies it as garbage; its size and inode stay the same across separate checks; no live writer or open handle; history stays readable |
+| Model and package caches | Its contents download again; logins, installed environments, active models and persistent data stay |
+| Rarely used apps and extensions | Bundle or extension identity, measured size, current activity, and a recorded last use or an explicit "unknown"; the person's data and shared components stay |
+| Old or duplicate runtimes | Architecture, version, default choice, command links, dependent environments and runtimes embedded in apps are all checked. The pool's size isn't what's removable |
+| Downloads, history, logs | The person's own age and recent-use rules, real timestamps where the format has them, and no unique needed content or live writer |
 
-## Tools and conditional details
+## Two examples
 
-Use [the discovery checklist](references/discovery.md) for broad audits. Read the relevant sections of [macOS cleanup notes](references/macos.md) before app/runtime uninstalls, privileged cleanup, Git objects, devices/SDKs, or compression. They also cover activity probes, APFS sharing, and virtual DeviceFS accounting.
+**A cache that rebuilds.** `~/Library/Caches/ms-playwright` is 2.4 GB and holds two Chromium builds. The project's lockfile pins the newer Playwright, and `ps -axo pid=,args=` shows nothing running from that folder. Delete the older build's exact folder, keep the newer one, and log that Playwright downloads the old one again if an old project asks for it. Then run `df` again: the change it shows is the result, not the folder's size on paper.
 
-The bundled helper inventories **metadata only**; it never decides what to delete or removes files. It skips symlinks and child filesystems, deduplicates hardlinks per root, and compares earlier snapshots. Paths below assume the default personal skill location; resolve relative to this skill if installed elsewhere.
+**An old simulator runtime.** The person asked to remove simulators they haven't used in a month. `xcrun simctl list devices --json` shows four devices on iOS 18.2, none booted, each with a `lastBootedAt` from August, and no project's deployment target or test plan needs 18.2. Delete the four with `xcrun simctl delete <UDID>`, then the runtime with `xcrun simctl runtime delete <id>`. If the runtime only exists under `/System/Library/AssetsV2` with the `restricted` flag, the tool can't remove it: point the person to Xcode Settings › Components, or leave it and report it. Never turn off SIP.
+
+## Report
+
+- **Lead with free space now,** the measured change, and any space other jobs used up in the meantime.
+- **List what was removed:** path, size, reason, and what reinstalls it. Then what's unresolved, and the families or folders that weren't fully inspected.
+- **Then the opportunities that are left,** grouped as regenerable caches, optional installed software, and data that needs the person's decision. Each line has a stable number, the exact path or selector, the measured size of the part that's eligible, what it holds, the evidence of use, and the condition that would make it safe.
+- **Never inflate a total:** no parent and child counted twice, no "all versions" when one must stay, no empty device registrations, no virtual disk's maximum capacity, no personal files called cache. Folder sizes and deletion totals aren't recovered space: only `df` before and after is.
+- **If fewer real candidates remain than were asked for,** say so and name what wasn't inspected. Never pad the list.
+- **Check before claiming done:** removed paths are gone, kept active resources still work, lockfiles are unchanged and Git history still reads. After a runtime removal, check the environments that depended on it and the default executable. After an uninstall, check the app, its leftovers and its services. Name anything that must be reinstalled before reuse.
+
+## Tools
+
+- [The discovery checklist](references/discovery.md) for broad audits.
+- [The macOS notes](references/macos.md). Read the section for what you're about to touch before an app or runtime uninstall, an administrator batch, Git objects, devices and SDKs, or compression. They also cover use probes, APFS block sharing and the DeviceFS virtual view.
+- `<skill>/scripts/inventory.py` reads metadata only. It never decides what to delete and never removes anything. It skips symlinks and other filesystems, counts a hardlinked file once per root, and compares with an earlier snapshot.
 
 ```bash
 cleanup_audit="$HOME/Library/Logs/storage-cleanup/$(date +%Y%m%d-%H%M%S)"
 umask 077
 mkdir -p "$cleanup_audit"
-python3 "<this skill's folder>/scripts/inventory.py" \
-  --root "$HOME/Developer" --output "$cleanup_audit/inventory.json"
+python3 "<skill>/scripts/inventory.py" --root "$HOME/Developer" --output "$cleanup_audit/inventory.json"
 ```
 
-Use `--help` for additional roots, output limits, and `--compare`. `--max-depth` limits directory summaries, not traversal: scan selected roots progressively and bound expensive probes. Broad scans can take time; keep the user updated and inspect compact summaries rather than dumping inventories. A partial scan must remain labeled partial.
+Add roots with more `--root` flags, compare with `--compare <earlier inventory.json>`, and see `--help` for the rest. `--max-depth` limits the summaries, not the walk, so scan one root at a time. A broad scan takes minutes: tell the person what's running and read the compact summary, never the whole file. A partial scan stays labeled partial.

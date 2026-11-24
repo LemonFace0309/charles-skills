@@ -1,0 +1,48 @@
+{
+  "devices": {
+    "com.apple.CoreSimulator.SimRuntime.iOS-18-2": [
+      {
+        "udid": "6F1C2B9E-4D3A-4F7B-9E21-0C5D8A7B3E11",
+        "name": "iPhone 15",
+        "state": "Shutdown",
+        "isAvailable": true,
+        "lastBootedAt": "2026-08-14T16:02:37Z",
+        "deviceTypeIdentifier": "com.apple.CoreSimulator.SimDeviceType.iPhone-15",
+        "dataPath": "/Users/charles/Library/Developer/CoreSimulator/Devices/6F1C2B9E-4D3A-4F7B-9E21-0C5D8A7B3E11/data",
+        "logPath": "/Users/charles/Library/Logs/CoreSimulator/6F1C2B9E-4D3A-4F7B-9E21-0C5D8A7B3E11"
+      },
+      {
+        "udid": "A0D4E6F2-9B1C-47E8-8D2F-5C3B1A9E7D42",
+        "name": "iPad Air 11-inch (M2)",
+        "state": "Shutdown",
+        "isAvailable": true,
+        "lastBootedAt": "2026-08-02T10:41:09Z",
+        "deviceTypeIdentifier": "com.apple.CoreSimulator.SimDeviceType.iPad-Air-11-inch-M2",
+        "dataPath": "/Users/charles/Library/Developer/CoreSimulator/Devices/A0D4E6F2-9B1C-47E8-8D2F-5C3B1A9E7D42/data",
+        "logPath": "/Users/charles/Library/Logs/CoreSimulator/A0D4E6F2-9B1C-47E8-8D2F-5C3B1A9E7D42"
+      },
+      {
+        "udid": "3B7E9C1D-2A4F-4E6B-B8D1-9F0A2C4E6B73",
+        "name": "iPhone SE (3rd generation)",
+        "state": "Shutdown",
+        "isAvailable": true,
+        "lastBootedAt": "2026-07-21T19:15:50Z",
+        "deviceTypeIdentifier": "com.apple.CoreSimulator.SimDeviceType.iPhone-SE-3rd-generation",
+        "dataPath": "/Users/charles/Library/Developer/CoreSimulator/Devices/3B7E9C1D-2A4F-4E6B-B8D1-9F0A2C4E6B73/data",
+        "logPath": "/Users/charles/Library/Logs/CoreSimulator/3B7E9C1D-2A4F-4E6B-B8D1-9F0A2C4E6B73"
+      }
+    ],
+    "com.apple.CoreSimulator.SimRuntime.iOS-26-1": [
+      {
+        "udid": "C9E2A4F6-7B3D-41C8-A5E9-2D6F8B0C1A94",
+        "name": "iPhone 17 Pro",
+        "state": "Booted",
+        "isAvailable": true,
+        "lastBootedAt": "2026-11-24T07:31:12Z",
+        "deviceTypeIdentifier": "com.apple.CoreSimulator.SimDeviceType.iPhone-17-Pro",
+        "dataPath": "/Users/charles/Library/Developer/CoreSimulator/Devices/C9E2A4F6-7B3D-41C8-A5E9-2D6F8B0C1A94/data",
+        "logPath": "/Users/charles/Library/Logs/CoreSimulator/C9E2A4F6-7B3D-41C8-A5E9-2D6F8B0C1A94"
+      }
+    ]
+  }
+}

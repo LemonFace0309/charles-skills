@@ -1,0 +1,3 @@
+$ df -k /System/Volumes/Data
+Filesystem   1024-blocks      Used Available Capacity iused      ifree %iused  Mounted on
+/dev/disk3s5   482797652 474562048   4032212   100% 3204412   40322120    7%   /System/Volumes/Data

@@ -1,0 +1,114 @@
+{
+  "captured_at": "2026-11-24T07:52:10.418000+00:00",
+  "disk": {
+    "path": "/System/Volumes/Data",
+    "free_bytes": 4128985088,
+    "total_bytes": 494384795648
+  },
+  "roots": [
+    {
+      "path": "/Users/charles",
+      "allocated_bytes": 301772000000,
+      "logical_bytes": 352004000000,
+      "unique_files": 2140337
+    }
+  ],
+  "directories": [
+    {
+      "path": "/Users/charles/Movies/raw-takes",
+      "allocated_bytes": 24300000000,
+      "logical_bytes": 24310000000,
+      "unique_files": 212
+    },
+    {
+      "path": "/Users/charles/Library/Containers/com.docker.docker/Data/vms/0/data",
+      "allocated_bytes": 18100000000,
+      "logical_bytes": 68719476736,
+      "unique_files": 3
+    },
+    {
+      "path": "/Users/charles/Library/Developer/Xcode/DerivedData",
+      "allocated_bytes": 6230000000,
+      "logical_bytes": 6610000000,
+      "unique_files": 48210
+    },
+    {
+      "path": "/Users/charles/Library/Developer/Xcode/DerivedData/Pathlete-bxqkzwdhfgwqrnfjcbyzlxyfgcse",
+      "allocated_bytes": 5120000000,
+      "logical_bytes": 5480000000,
+      "unique_files": 39007
+    },
+    {
+      "path": "/Users/charles/Library/Caches",
+      "allocated_bytes": 5912000000,
+      "logical_bytes": 6004000000,
+      "unique_files": 61348
+    },
+    {
+      "path": "/Users/charles/Library/Caches/Homebrew/downloads",
+      "allocated_bytes": 1905000000,
+      "logical_bytes": 1905100000,
+      "unique_files": 37
+    },
+    {
+      "path": "/Users/charles/.npm/_cacache",
+      "allocated_bytes": 3410000000,
+      "logical_bytes": 3288000000,
+      "unique_files": 118204
+    },
+    {
+      "path": "/Users/charles/.npm/_npx/9f2c41b0e7d6a8c3",
+      "allocated_bytes": 382000000,
+      "logical_bytes": 341000000,
+      "unique_files": 21996
+    },
+    {
+      "path": "/Users/charles/Library/Developer/CoreSimulator/Devices/C9E2A4F6-7B3D-41C8-A5E9-2D6F8B0C1A94",
+      "allocated_bytes": 2240000000,
+      "logical_bytes": 2390000000,
+      "unique_files": 30112
+    },
+    {
+      "path": "/Users/charles/Library/Developer/CoreSimulator/Devices/A0D4E6F2-9B1C-47E8-8D2F-5C3B1A9E7D42",
+      "allocated_bytes": 1615000000,
+      "logical_bytes": 1702000000,
+      "unique_files": 24881
+    },
+    {
+      "path": "/Users/charles/Library/Developer/CoreSimulator/Devices/6F1C2B9E-4D3A-4F7B-9E21-0C5D8A7B3E11",
+      "allocated_bytes": 1402000000,
+      "logical_bytes": 1488000000,
+      "unique_files": 22430
+    },
+    {
+      "path": "/Users/charles/Library/Developer/CoreSimulator/Devices/3B7E9C1D-2A4F-4E6B-B8D1-9F0A2C4E6B73",
+      "allocated_bytes": 1093000000,
+      "logical_bytes": 1160000000,
+      "unique_files": 19978
+    },
+    {
+      "path": "/Users/charles/Developer/shop/node_modules",
+      "allocated_bytes": 912000000,
+      "logical_bytes": 845000000,
+      "unique_files": 41220
+    }
+  ],
+  "largest_files": [
+    {
+      "path": "/Users/charles/Library/Containers/com.docker.docker/Data/vms/0/data/Docker.raw",
+      "allocated_bytes": 18099000000,
+      "logical_bytes": 68719476736,
+      "mtime": 1795500000.0
+    },
+    {
+      "path": "/Users/charles/Movies/raw-takes/2026-11-02 take 3.mov",
+      "allocated_bytes": 2480000000,
+      "logical_bytes": 2480000000,
+      "mtime": 1793600000.0
+    }
+  ],
+  "recent_large_files": [],
+  "skipped": [],
+  "errors": [],
+  "accounting": "Allocated file blocks, deduplicated by inode within each root. Directory rows overlap: a parent includes its children."
+}

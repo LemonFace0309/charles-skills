@@ -1,0 +1,10 @@
+$ ps -axo pid=,args=
+    1 /sbin/launchd
+  402 /System/Library/CoreServices/Finder.app/Contents/MacOS/Finder
+  611 /Applications/Safari.app/Contents/MacOS/Safari
+ 4120 /Applications/Xcode.app/Contents/MacOS/Xcode
+ 8871 /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild -workspace Pathlete.xcworkspace -scheme Pathlete -destination platform=iOS Simulator,name=iPhone 17 Pro build
+ 9013 node /Users/charles/.npm/_npx/9f2c41b0e7d6a8c3/node_modules/.bin/figma-developer-mcp --stdio
+ 9120 /Applications/Xcode.app/Contents/Developer/Applications/Simulator.app/Contents/MacOS/Simulator
+ 9311 /Library/Developer/PrivateFrameworks/CoreSimulator.framework/Versions/A/XPCServices/SimulatorTrampoline.xpc/Contents/MacOS/SimulatorTrampoline
+ 9840 /bin/zsh -il
