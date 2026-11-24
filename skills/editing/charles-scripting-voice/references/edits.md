@@ -1,6 +1,6 @@
 # What Charles changed in AI scripts
 
-Each row is a line an AI wrote for him and what he actually said on camera. Every change was his. The `evals/` cases are left out of this file on purpose, so they can test the skill.
+Each row is a line an AI wrote for him and what he actually said on camera. Every change was his. Three reels are kept out of this file on purpose, so they can test the skill.
 
 ## The moves, by how often he made them
 

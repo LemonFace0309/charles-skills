@@ -1,6 +1,8 @@
 # His lines, by job
 
-Real lines from his reels, as he said them on camera, with the reel's date and Instagram plays (read Nov 16, 2026). 2025 lines come from the unscripted Gleam vlogs ("Road to 50K MRR"); 2026 lines from the reels in `videos/`. Pick the closest line and adapt it before writing one from scratch. The `evals/` reels are left out.
+Contents: Hooks, Moving through a list, Explaining, Telling a story, Turns and evidence, Quoting his past self, Talking to the viewer, Jokes (always about himself), His take, Reactions, Wraps, Asks.
+
+Real lines from his reels, as he said them on camera, with the reel's date and Instagram plays (read Nov 16, 2026). 2025 lines come from the unscripted Gleam vlogs ("Road to 50K MRR"); 2026 lines from his posted reels. Pick the closest line and adapt it before writing one from scratch. Three reels are kept out of this file on purpose, so they can test the skill.
 
 ## Hooks
 

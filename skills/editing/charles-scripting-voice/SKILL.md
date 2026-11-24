@@ -1,13 +1,13 @@
 ---
 name: charles-scripting-voice
-description: "Write or rewrite the words Charles says on camera (reel scripts, hooks, item lines, explanations, calls to action) so they sound like him talking, not like an AI script. Use whenever a session drafts a script, voiceover or hook for one of his reels, adapts someone else's reel into his words, or rewrites a line \"in my voice\", and whenever he says a script sounds AI, robotic, stiff or \"super AI like\". Triggers on: script, scripting, voiceover, VO, hook, CTA, talking head, lines to read, read on camera, \"in my voice\", \"my voice\", \"sounds like me\", \"sounds AI\", \"make it sound natural\"."
+description: "Writes or rewrites the words Charles says on camera (hooks, item lines, explanations, calls to action) so they sound like him talking, not like an AI script, built from his real rewrites. Use when a session drafts a reel script, voiceover or hook, adapts someone else's reel into his words, or he says a line sounds AI or stiff. Written prose such as post captions or READMEs is out of scope."
 ---
 
 # Goal
 
 Charles reads a script once, to his phone, and it has to sound like him telling a friend about something he found: plain words, his own reactions and facts, sentences that keep going with "and then", "so" and "which". Every AI draft he has filmed, he rewrote while filming. He cut the jokes, softened the punchy claims and put his own angle in (`references/edits.md` has 22 of those rewrites, line by line). Write the version he would have said, so he can read it straight.
 
-This skill covers spoken words only. On-screen text and editing belong to charles-claude-editing; written prose (READMEs, captions) to emil-unslop-writing.
+This skill covers spoken words only. On-screen text and editing belong to charles-claude-editing. Written prose (READMEs, post captions) goes to emil-unslop-writing when it's installed, and otherwise gets plain writing without these rules: they're built for speech, and a caption written like a spoken run-on reads badly.
 
 # Steps
 
@@ -15,7 +15,7 @@ Walk all six for every script, even a single hook.
 
 ## 1. Load the format and the facts
 
-- If the video is in one of our formats, read its playbook (`formats/README.md` lists them). Keep its fixed lines word for word, such as the Day N opener "This is the ___ AI gives you." with its "Now it feels ___." payoffs, and the accent reels' "___ and ___. <verdict>. Add a little ___. Now ___." Steps 2 to 6 apply to every other line.
+- When the repository has format playbooks (claude-editing's `formats/README.md` lists them) and the video is in one of those formats, read its playbook. Keep a format's fixed lines word for word, such as the Day N opener "This is the ___ AI gives you." with its "Now it feels ___." payoffs, and the accent reels' "___ and ___. <verdict>. Add a little ___. Now ___." Without playbooks, keep word for word any fixed line Charles gives you. Steps 2 to 6 apply to every other line.
 - Before writing a line, list the facts each item needs: the name, a number, who made it, what it does on screen, and what Charles himself uses, built or found. If you have no angle of his for the video, ask him for one ("Do you use any of these?") rather than inventing it. Skip this for a fast list of hacks or terms (step 4).
 
 Why: a line sounds like him when it carries a fact only he has ("I personally have two of these at home", "it was actually created by my co-founder"). An AI fills that gap with a joke, and the joke is the first thing he cuts.
@@ -52,7 +52,7 @@ What is this line for?
 └── The ask (the last line) → "Comment "<word>" and I will send you <the thing>." Add "and follow for part two" only inside a series. With no keyword: "Follow for more." For a story he's still living: "If you wanna see ___, follow along."
 ```
 
-`references/lines.md` has his real lines for each job, with the reel and its views. Pick the closest one and adapt its shape to the new facts. Never paste one of his lines word for word into a new video: his followers have heard it, and a repeated joke or hook makes the reel feel recycled. The exceptions are a format's fixed lines and the item openers ("So first off", "Next up"). For more, `research/charles-voice/` has every reel he's posted, transcribed.
+`references/lines.md` has his real lines for each job, with the reel and its views. Pick the closest one and adapt its shape to the new facts. Never paste one of his lines word for word into a new video: his followers have heard it, and a repeated joke or hook makes the reel feel recycled. The exceptions are a format's fixed lines and the item openers ("So first off", "Next up"). When the repository has `research/charles-voice/` (claude-editing does), it holds every reel he's posted, transcribed, for more examples of a job.
 
 ## 3. Cut what he cuts
 
@@ -96,7 +96,3 @@ Read every line aloud at speaking speed. Fix any line where you trip, run out of
 # Deliver
 
 The script as he'll read it: one sentence or beat per line, hook first, the ask last, screen notes in angle brackets. Give the target length and the word count under it. Nothing else goes inside the lines.
-
-# Test a change to this skill
-
-`evals/README.md` has three cases with known answers (what he actually said) and the steps to compare a rewrite with and without this skill. Never copy their lines into `references/`, or the test stops meaning anything.

@@ -40,7 +40,20 @@ reel and its views.
 ## Make it yours
 
 It's tuned to me. To make it sound like you, swap `references/lines.md` and `references/edits.md` for your own lines
-and your own rewrites of AI drafts, then test the change against the three cases in `evals/`.
+and your own rewrites of AI drafts, then swap the three known-answer cases in `evals/` for three of your own reels and
+test the change (below).
+
+## Test a change
+
+`evals/` holds three of my reels with known answers: an AI draft or a brief as the input, and what I actually said on
+camera, which only the graders see. Run them before keeping a change to the skill:
+
+```bash
+node scripts/eval.mjs charles-scripting-voice outcomes
+```
+
+That's from a clone of this repo. `evals/README.md` has the command for anywhere else, where each case came from, and
+the results so far. Never copy their lines into `references/`, or the test stops meaning anything.
 
 ## Pairs with
 
