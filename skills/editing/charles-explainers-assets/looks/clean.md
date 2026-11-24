@@ -8,11 +8,11 @@ Sleek and minimal: the real component and its code on one calm ground. Nothing d
 
 - **One calm neutral ground for the whole reel:** #e6e9ee in the hack-reel card, white in the term card, as posted (`references/slots.md`). Match the slot's, or the gold check reads yours as greyer. Why: a quiet ground lets the component's own colour carry the card, and a ground that never changes is chrome the viewer stops seeing.
 - **One accent for the UI;** the content brings the rest (album art, product photos, a brand panel, a dark browser with colourful tabs). Why: a white or grey component on the grey ground is a wireframe, and the accent rule was never a reason to keep a card grey. Design hacks part 2's first build, a small grey component on a big grey card, was "way too boring".
-- **Never cream, a gradient ground, grain or glow.** Why: cream and gradient grounds are on my AI-tells list, and colour worlds, grain and light are the studio look's tools; borrowing them blurs the two looks.
+- **Never cream, a gradient ground, grain or glow.** Why: cream and gradient grounds are on my AI-tells list, and colour worlds, grain and light are the playful look's tools; borrowing them blurs the two looks.
 
 ## What points at the change
 
-The pointer, the mark and the highlighted token are this look's signature, never a colour or a material. The studio look uses them too wherever no object causes the flaw; here they're all that points at the change:
+The pointer, the mark and the highlighted token are this look's signature, never a colour or a material. The playful look uses them too wherever no object causes the flaw; here they're all that points at the change:
 
 - **Marks and targets** on every flip whose difference is a still property: a guide that straightens, a hatched band, a dimension line, corner brackets, a selection box or a sweep, red on the flaw and green as it's fixed (`references/marks.md`).
 - **The agent cursor** where the agent changes the design itself: it drags a hit area out, carries a part, retypes a label (`references/agent-cursor.md`). Otherwise a plain arrow or a fingertip uses the product, and the code changes by itself on the word.

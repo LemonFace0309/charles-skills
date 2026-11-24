@@ -9,7 +9,7 @@
 //   all       every case
 //
 // By default the skill competes with every skill on the shelves Charles installs (design, editing, qol), as it does in
-// a real session: a wrapper plugin in a temp folder links them all in. --with-drops adds the drops shelf, and --alone
+// a real session: a wrapper plugin in a temp folder links them all in, and copies the tested skill. --with-drops adds the drops shelf, and --alone
 // loads the skill by itself. Each run is a full Claude Code session on your own login, so run this from a terminal
 // that `claude auth status` shows as signed in. Reports stay on this computer (--no-publish).
 import { spawnSync } from 'node:child_process';
@@ -59,6 +59,16 @@ if (!alone) {
     // finds in the plugin, so another skill's cases would run too.
     const dir = path.join(target, 'skills', s.name);
     fs.mkdirSync(dir);
+    if (s.name === name) {
+      // The tested skill is copied in for real, without its evals/ and node_modules: the eval sandbox refuses a read
+      // through a link that leaves the plugin, so an outcome run couldn't open a linked references/ or looks/ file
+      // and planned from SKILL.md alone (25 Nov 2026).
+      fs.cpSync(s.dir, dir, { recursive: true, filter: (src) => {
+        const parts = path.relative(s.dir, src).split(path.sep);
+        return parts[0] !== 'evals' && !parts.includes('node_modules');
+      } });
+      continue;
+    }
     for (const entry of fs.readdirSync(s.dir)) if (entry !== 'evals') fs.symlinkSync(path.join(s.dir, entry), path.join(dir, entry));
   }
   // The eval dir must be a real folder inside the plugin (a link that leaves it is refused), so this skill's cases are

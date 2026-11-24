@@ -1,19 +1,19 @@
-# The studio look
+# The playful look
 
-Contents: The slot and its words · The studio layer · Steps · Deliver
+Contents: The slot and its words · The playful layer · Steps · Deliver
 
-Every card still teaches its line in the second a phone viewer gets, and also looks like a studio made it: an idea you could say in one sentence, the real thing or a real-looking object acting it out, one colour family lit from a side, and one move a person would describe to a friend ("the anchor drops on the price", "a coin scratches off +40 XP"). Everything in SKILL.md applies; this file adds only what's this look's own.
+Every card still teaches its line in the second a phone viewer gets, and also looks like a design studio made it: an idea you could say in one sentence, the real thing or a real-looking object acting it out, one colour family lit from a side, and one move a person would describe to a friend ("the anchor drops on the price", "a coin scratches off +40 XP"). Everything in SKILL.md applies; this file adds only what's this look's own.
 
 Why: clean, correct UI side by sides didn't hold a scroll on my principles reels; a clear idea, a rich material and a move that lands do. A moment people have felt in an app they use (a streak about to reset, a prize wheel) reads faster than a clever metaphor. And when the line is about what AI makes, viewers judge a recreation against the real pages they've seen, so the card shows a real one. The rounds behind these rules are in `references/history.md`. After a context summary, re-read this file and the project's `DESIGN-LOG.md` too.
 
 ## The slot and its words
 
-- **The studio term card:** a transparent 1080x480 clip at reel y 1080, with the card at x 80-950, y 1150-1500 (`references/slots.md`). On a card that flips in place (the hack-reel card), the look goes on the one stage: `references/studio-flips.md`. Where an object causes the flaw, its move is the mark; otherwise pick the mark with `references/marks.md`, as the clean look does.
+- **The playful term card:** a transparent 1080x480 clip at reel y 1080, with the card at x 80-950, y 1150-1500 (`references/slots.md`). On a card that flips in place (the hack-reel card), the look goes on the one stage: `references/playful-flips.md`. Where an object causes the flaw, its move is the mark; otherwise pick the mark with `references/marks.md`, as the clean look does.
 - **Words:** the tab says what the principle means in plain words, on one line, inside SKILL.md's reading time (16 characters for a 1.2 s item, 22 at most). The words that carry the principle are 34 px or more in the final frame, and the Before and After labels are 24 px chrome that `L.stage` draws.
 
-## The studio layer
+## The playful layer
 
-`references/studio-craft.md` has each rule with its numbers and the reason for it. In short:
+`references/playful-craft.md` has each rule with its numbers and the reason for it. In short:
 
 1. **The real thing first.** Walk this for every line:
 
@@ -40,8 +40,8 @@ Why: clean, correct UI side by sides didn't hold a scroll on my principles reels
 
    Say the card in one sentence before building it. If you can't, there's no idea yet.
 
-   Never put a UI widget on the studio side (a checklist, a leaderboard, price rows, a score card, a share pill). Turn it into the object it stands for: a receipt that prints, game pieces on numbered steps, kraft price tags, an enamel pin you'd wear. Why: those widgets are what Claude builds by default, so they read as the default.
-2. **Photographed materials, never game icons,** except inside a recreated game screen, where the game's own glossy icons (a gift, dice, a treasure chest) are the real thing. Generate each object as a studio product photograph, with real wear, on a transparent background (`references/studio-objects.md`). Why: glossy, toy-like 3D icons read as a mobile-game ad, while the reference's objects (a marble orb, a crystal prism, a card over a tile grid) look photographed.
+   Never put a UI widget on the playful side (a checklist, a leaderboard, price rows, a score card, a share pill). Turn it into the object it stands for: a receipt that prints, game pieces on numbered steps, kraft price tags, an enamel pin you'd wear. Why: those widgets are what Claude builds by default, so they read as the default.
+2. **Photographed materials, never game icons,** except inside a recreated game screen, where the game's own glossy icons (a gift, dice, a treasure chest) are the real thing. Generate each object as a studio product photograph, with real wear, on a transparent background (`references/playful-objects.md`). Why: glossy, toy-like 3D icons read as a mobile-game ad, while the reference's objects (a marble orb, a crystal prism, a card over a tile grid) look photographed.
 3. **Lit, not pasted.** Each object gets:
    - its world's light on its lit side and its deep colour on the far side;
    - a cast shadow on the backdrop, and a contact shadow where it stands;
@@ -54,11 +54,11 @@ Why: clean, correct UI side by sides didn't hold a scroll on my principles reels
    - a near-black world turns the card into a hole on my black T-shirt;
    - a light behind the type put most white headlines at 2-4:1.
 
-   **No two cards in a row share a colour.** Two light cards count as the same colour, whether white, grey, cream or a pale tint. Recreated app screens are often white, so when a white screen's neighbour is light too, put its panel on a coloured stage: a paywall on a savings green, the Calendar icon on its red. Run `kit/studio/neighbours.py` on the clips in list order. Why: each card replaces the last in the same slot, so a repeat reads as one card that changed its words.
+   **No two cards in a row share a colour.** Two light cards count as the same colour, whether white, grey, cream or a pale tint. Recreated app screens are often white, so when a white screen's neighbour is light too, put its panel on a coloured stage: a paywall on a savings green, the Calendar icon on its red. Run `kit/playful/neighbours.py` on the clips in list order. Why: each card replaces the last in the same slot, so a repeat reads as one card that changed its words.
 
    Brand colours: keep the hue, and use its deeper shade for words. A bright orange on white is 2.2:1, and #b85c00 is 4.5:1. White text on a bright game button gets a dark outline, the way games draw it.
 5. **A light you can name, standing still.** Light each world softly from its object's side, and give every glow a source. Why: a pool of light that slid onto the After bleached the very numbers it pointed at, and read as AI glow rather than studio light.
-6. **Few words, and a side by side is still one component twice.** A fast list has no Before (SKILL.md, Pick the form). A slower reel's principle card is `references/forms.md`'s side by side: the same component without the principle and with it, in two equal wells, both lit in the card's colour family, so the principle is the only difference. Why: the two looks act the same, and a plain default beside a studio object made the look a second difference (the Before tile of the 20 Psychology Principles' early rounds, dropped before anything shipped).
+6. **Few words, and a side by side is still one component twice.** A fast list has no Before (SKILL.md, Pick the form). A slower reel's principle card is `references/forms.md`'s side by side: the same component without the principle and with it, in two equal wells, both lit in the card's colour family, so the principle is the only difference. Why: the two looks act the same, and a plain default beside a playful object made the look a second difference (the Before tile of the 20 Psychology Principles' early rounds, dropped before anything shipped).
    - The After, or a fast list's card, says its point in three words or fewer, as the biggest type on the card, and some of its words are up by 0.3 s. Why: a phone viewer sees the card for about 1.4 s.
    - Numbers get a second voice:
      - thin numerals for prices and gaps;
@@ -100,10 +100,10 @@ These replace SKILL.md's Build step and add to its checks.
 
 1. **Read the reference,** if I gave one. Write down what it does in plain terms: the ideas, the materials, the light, the colour, the type and the moves. Save its images in the project's `research/reference/` and keep them out of git: they're other designers' work.
 2. **Add to the beat sheet** each line's idea: the object or moment, the move and the colour family.
-3. **Explore three directions,** rendered side by side on two or three lines, before building all of them (`references/studio-hill-climb.md`). One of them can be your own synthesis.
-4. **Render the real instances** for the lines that have them (`references/real-instances.md`), then **generate the objects** for the rest with `kit/studio/fal_gen.py` and look at each one on a mid colour. Make every changed state of an object (a happy plush and a sad one, a candle and the candle in ice) with the edit endpoint from the first image, so the two match. Measure each object's visible bounds with `kit/studio/bbox.py` before you place it.
-5. **Build** with `kit/studio/studio.js` on the kit's renderer, one file of builders per few cards in `scenes/src/`, joined by `kit/studio/bundle.sh <project>` (add `--no-card` when the project brings its own card for another slot, as design hacks part 2's `99-card.js` does for the hack-reel card). The bundle locks the project to the studio kit it was built with (`kit.lock`): a later bundle refuses when the kit has changed since, and says which files did. Pass `--update-kit` only when you mean to take the new kit, then compare an untouched card against the last export. Why: re-rendering an old project with today's kit changes its finished cards even when nothing in the project changed.
-6. **Hill-climb.** Render stills at 0.3 s and at the end pose, sheet them over my footage (`kit/studio/sheet.sh`), and have a fresh critic score them against the reference. Fix the biggest problem first, re-render, look again, and log every round in the project's `DESIGN-LOG.md`.
+3. **Explore three directions,** rendered side by side on two or three lines, before building all of them (`references/playful-hill-climb.md`). One of them can be your own synthesis.
+4. **Render the real instances** for the lines that have them (`references/real-instances.md`), then **generate the objects** for the rest with `kit/playful/fal_gen.py` and look at each one on a mid colour. Make every changed state of an object (a happy plush and a sad one, a candle and the candle in ice) with the edit endpoint from the first image, so the two match. Measure each object's visible bounds with `kit/playful/bbox.py` before you place it.
+5. **Build** with `kit/playful/studio.js` on the kit's renderer, one file of builders per few cards in `scenes/src/`, joined by `kit/playful/bundle.sh <project>` (add `--no-card` when the project brings its own card for another slot, as design hacks part 2's `99-card.js` does for the hack-reel card). The bundle locks the project to the studio kit it was built with (`kit.lock`): a later bundle refuses when the kit has changed since, and says which files did. Pass `--update-kit` only when you mean to take the new kit, then compare an untouched card against the last export. Why: re-rendering an old project with today's kit changes its finished cards even when nothing in the project changed.
+6. **Hill-climb.** Render stills at 0.3 s and at the end pose, sheet them over my footage (`kit/playful/sheet.sh`), and have a fresh critic score them against the reference. Fix the biggest problem first, re-render, look again, and log every round in the project's `DESIGN-LOG.md`.
    - Stop at the bar I named, or when three rounds in a row don't raise the score.
    - Fix by eye too. Collisions, clipped text and blow-outs show up on the sheets before any critic sees them.
 7. **Check every card for the six faults that reach finished cards,** and fix what fails:
@@ -111,17 +111,17 @@ These replace SKILL.md's Build step and add to its checks.
    - **Entrances from nothing.** Nothing scales in from 0: start from 0.95 or more, or travel in. The one exception is a real instance's tell, which pops from 55% because its arrival is the event (`references/real-instances.md`, step 5). Why: real objects always have a shape, and a pop from nothing reads as cheap.
    - **Springs that overshoot more than 30%.** Keep `L.spring`'s c at 0.72 × √k or more: its default (k 260, c 18) overshoots 12%, and the approved cards ran k 300-500 with c 14-20. Rigid things don't squash at all. Why: more overshoot turns a material into a toy.
    - **Numbers that roll more than changed.** Only the digits that change roll (`roller`), the old digit up and out, the new one up and in, over 0.2 s. Why: rolling every digit hides which part changed.
-   - **Dead frames mid-move.** Read each move frame by frame from the rendered clip (`references/studio-craft.md`, Motion): no stretch inside it where nothing moves, done by 0.6 s, then only real-life motion on top of the push-in. Why: a pause inside a move reads as a stutter.
+   - **Dead frames mid-move.** Read each move frame by frame from the rendered clip (`references/playful-craft.md`, Motion): no stretch inside it where nothing moves, done by 0.6 s, then only real-life motion on top of the push-in. Why: a pause inside a move reads as a stutter.
    - **Collisions.** Nothing crosses a label, the tab's corner, the card's edge or another object by accident, at any frame, including the end of the push-in. Why: an accidental overlap reads as a bug.
 
    Why this list and not a whole UI pass: rules made for app screens (body weights of 400-500, no gloss, sentence case everywhere) fight recreated game screens and big display type, so the pass checks only what a card needs.
-8. **Run the phone check** (SKILL.md) and `kit/studio/neighbours.py` over the clips in list order, then deliver.
+8. **Run the phone check** (SKILL.md) and `kit/playful/neighbours.py` over the clips in list order, then deliver.
 
 ## Deliver
 
 On top of SKILL.md's hand-over:
 
-- every clip of the studio term card with alpha at 2x for the edit (`render.mjs` writes ProRes 4444), and VP9 with alpha at 1x for the plan page;
+- every clip of the playful term card with alpha at 2x for the edit (`render.mjs` writes ProRes 4444), and VP9 with alpha at 1x for the plan page;
 - `explain.json` with each line's tab, takeaway and source;
 - the generated objects in `gen/`, with `gen/jobs.jsonl` saying the model, the prompt and the date;
 - `DESIGN-LOG.md` with each critic round's scores and what it changed;

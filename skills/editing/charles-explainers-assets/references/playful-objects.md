@@ -9,11 +9,11 @@ Pick it fresh each time, because lineups change every few weeks:
 1. Check the date.
 2. List what fal has for text-to-image (`https://fal.ai/api/models?keywords=<name>`). On 22 Nov 2026 the newest top models were GPT Image 2.6 (`openai/gpt-image-2.6/flare/text-to-image`, 4 Nov 2026), Seedream 5.5 and Nano Banana 2.1.
 3. Use one that renders a transparent background itself (GPT Image 2.6 takes `background: "transparent"`), so no cut-out step blurs the edges.
-4. Record the model and the date in `gen/jobs.jsonl`. `kit/studio/fal_gen.py` does that for every job.
+4. Record the model and the date in `gen/jobs.jsonl`. `kit/playful/fal_gen.py` does that for every job.
 
 The key is `FAL_KEY`, from the environment or the nearest `.env` above the project. The script reads it without printing it.
 
-If fal answers 403 "Exhausted balance", tell me so I can top it up, and carry on with `kit/studio/openai_gen.py`: the same prompts file sent to OpenAI's Images API with `OPENAI_API_KEY` (the environment, or a `.env` above the project), which had the same model (`gpt-image-2.6-flare`) on 22 Nov 2026. It has no edit endpoint wired in, so a second state of an object waits for fal.
+If fal answers 403 "Exhausted balance", tell me so I can top it up, and carry on with `kit/playful/openai_gen.py`: the same prompts file sent to OpenAI's Images API with `OPENAI_API_KEY` (the environment, or a `.env` above the project), which had the same model (`gpt-image-2.6-flare`) on 22 Nov 2026. It has no edit endpoint wired in, so a second state of an object waits for fal.
 
 ## The prompt
 
@@ -35,7 +35,7 @@ When the card needs an object in two states (a happy plush and a sad one, a cand
 ## Placing them
 
 - **Resize each to 512 px** (`<name>-512.png`). That's plenty for a card drawn at 2x.
-- **Measure each object's visible bounds** with `kit/studio/bbox.py` (fractions of the image). Stacking (an arch on two cubes), dropping into a cup or resting on a floor shadow all need the real edges, not the image's.
+- **Measure each object's visible bounds** with `kit/playful/bbox.py` (fractions of the image). Stacking (an arch on two cubes), dropping into a cup or resting on a floor shadow all need the real edges, not the image's.
 - **Measure what you place things on or in:** an envelope's opening (the card slides out above it and hides below it), a step's top (where a meeple's feet go), a pin's enamel (where a glint runs). The 20 Psychology Principles cards measured each from the photo's pixels before placing anything.
 - **When code fills part of an object** (a Polaroid's window, a calendar's page, a screen), ask for the object straight on and square to the frame, then measure that part's bounds (its dark or white pixels) and fit the content to them exactly. A tilted print put the stat off-register, with the window showing on both sides (round 3).
 - **Look at every object on a mid-colour background before you use it.** Reject:
@@ -47,4 +47,4 @@ When the card needs an object in two states (a happy plush and a sad one, a cand
 
 ## Cost and time
 
-About 15-35 s a generation. Six run at once (`kit/studio/fal_gen.py` uses a thread pool). A full set of 20-35 objects, retries included, took under 10 minutes.
+About 15-35 s a generation. Six run at once (`kit/playful/fal_gen.py` uses a thread pool). A full set of 20-35 objects, retries included, took under 10 minutes.

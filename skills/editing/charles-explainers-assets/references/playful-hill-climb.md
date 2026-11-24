@@ -4,7 +4,7 @@ How to get from "much more interesting" to the reference: directions first, then
 
 ## Explore before you build
 
-- **Prototype three different directions on two or three lines.** Vary the stage, the material and the move, not just the colour. Render them side by side at 0.3 s and at the end pose, over a frame of my footage, with `kit/studio/sheet.sh`.
+- **Prototype three different directions on two or three lines.** Vary the stage, the material and the move, not just the colour. Render them side by side at 0.3 s and at the end pose, over a frame of my footage, with `kit/playful/sheet.sh`.
 - **Your own synthesis can be a fourth direction.** Name what each one does better than the others.
 - **Fix system-wide choices before any one card.** Every round of the 20 Psychology Principles run, the critic's single most wrong note was a choice every card shared: game icons, then a moving light, then nothing sitting in light, then a default UI loader, then an After that was only a louder Before.
 - **Decide early whether the job is a consistent card system or 20 one-offs,** and tell the critics which. A shared Before | After frame across 20 cards has a ceiling against a library of one-off pieces: by the fourth round every critic ask was about the system (a one-off composition per card, a wider type range, bespoke material UI), not a card.

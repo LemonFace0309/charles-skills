@@ -32,7 +32,7 @@ LOCK="$P/kit.lock"
 CARDS="$P/scenes/cards.js"
 
 refuse() {
-  echo "The studio kit changed since $(basename "$P") was bundled: $1." >&2
+  echo "The playful look's kit changed since $(basename "$P") was bundled: $1." >&2
   echo "Re-rendering now would change the finished cards (grain, colours, timing) though nothing in the project changed." >&2
   echo "To take the new kit on purpose: $0 $P --update-kit, then compare an untouched card against the last export." >&2
   exit 1
@@ -56,11 +56,11 @@ fi
 
 mkdir -p "$P/scenes" "$P/fonts"
 if [ "$UPDATE" = 1 ]; then cp -f "$KIT"/fonts/*.woff2 "$P/fonts/"; else cp -n "$KIT"/fonts/*.woff2 "$P/fonts/" 2>/dev/null || true; fi
-{ echo "/* Built by charles-explainers-assets/kit/studio/bundle.sh from kit $KIT_HASH. Edit scenes/src/, not this file. */"
+{ echo "/* Built by charles-explainers-assets/kit/playful/bundle.sh from kit $KIT_HASH. Edit scenes/src/, not this file. */"
   cat "$KIT/studio.js"; echo
   for f in "$P"/scenes/src/*.js; do cat "$f"; echo; done
   if [ "$CARD" = 1 ]; then cat "$KIT/studio-card.js"; fi; } > "$CARDS"
-{ echo "# The studio kit (charles-explainers-assets/kit/studio) this project was bundled with. bundle.sh refuses to rebuild when the kit"
+{ echo "# The playful look's kit (charles-explainers-assets/kit/playful) this project was bundled with. bundle.sh refuses to rebuild when the kit"
   echo "# changes; --update-kit takes the new kit. Hashes are the first 16 hex digits of each file's SHA-256."
   echo "kit $KIT_HASH"
   printf '%s\n' "$LOCK_NOW"; } > "$LOCK"

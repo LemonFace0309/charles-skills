@@ -2,7 +2,7 @@
 
 Contents: The idea · Real app moments · The stage · Type · Motion · The tells
 
-The studio look, rule by rule, with the numbers that worked on the 20 Psychology Principles cards and the reason for each. When the claude-editing repository is present, its gold is `videos/app-psychology/explainers-v2/`: `scenes/src/80-apps-a.js` and `85-apps-b.js` hold the 20 builders, and `DESIGN-LOG.md` records how each rule was earned. `history.md` has the rounds.
+The playful look, rule by rule, with the numbers that worked on the 20 Psychology Principles cards and the reason for each. When the claude-editing repository is present, its gold is `videos/app-psychology/explainers-v2/`: `scenes/src/80-apps-a.js` and `85-apps-b.js` hold the 20 builders, and `DESIGN-LOG.md` records how each rule was earned. `history.md` has the rounds.
 
 ## The idea
 
@@ -28,7 +28,7 @@ The studio look, rule by rule, with the numbers that worked on the 20 Psychology
   | Social comparison | Meeples on numbered steps | You hop up to the step just below the person above you |
 
 - **The test:** someone could describe the card to a friend in one sentence. If the sentence is "a nicer screen", there's no idea yet. And the After must change the thing the principle changes: an alarm clock that answered "Daily reminder" with a louder reminder missed implementation intentions, which are about adding a time and a place.
-- **Never a UI widget in the After.** A checklist, a leaderboard, price rows, a score card, a share pill or a frosted panel is what Claude builds by default, so on the studio side it reads as the default. Turn it into the object it stands for: the checklist into a receipt that prints, the leaderboard into game pieces on steps, plan rows into price tags, a share button into a pin you'd wear.
+- **Never a UI widget in the After.** A checklist, a leaderboard, price rows, a score card, a share pill or a frosted panel is what Claude builds by default, so on the playful side it reads as the default. Turn it into the object it stands for: the checklist into a receipt that prints, the leaderboard into game pieces on steps, plan rows into price tags, a share button into a pin you'd wear.
 
 ## Real app moments
 
@@ -67,7 +67,7 @@ When the line is about apps, show the moment it fires in one people already use.
 ## The stage
 
 - **The card:** 870x350, radius 30, with the scene as its own background (no white frame). The black tab sits on its top-left edge, inset 22 px, in Helvetica Neue Bold 30. On a long line the tab covers the whole top edge, so objects at rest bleed off the bottom or the right edge, never the top: an anchor ring cut flat at the top read as the tab slicing it. Bring moving things in from the right or the bottom too (the running shoe comes in toe first from the right); only a fast drop comes through the top.
-- **A side by side** (a slower reel's principle): `forms.md`'s two equal wells, both lit in the card's family, the same component in each. The early rounds' Before tile (a 270 px default beside the studio After) is gone: it made the look a second difference, and a graphite block on every colour read as a dead black third.
+- **A side by side** (a slower reel's principle): `forms.md`'s two equal wells, both lit in the card's family, the same component in each. The early rounds' Before tile (a 270 px default beside the playful After) is gone: it made the look a second difference, and a graphite block on every colour read as a dead black third.
 - **The labels:** "Before" and "After" in Inter 650 at 24 px, on one line at y 36: chrome the viewer learns by position. At 32 px they were as loud as the tab.
 - **Nothing crosses a label:** content starts below the Before and After labels (y 76 or lower near them). Keep every word 40 px inside the card's edges, and keep the payoff (the prize, the seal) whole.
 - **Words:** the After says its point in three words or fewer ("Built by you", "Fresh start", "See who else"), and some of its words are on screen by 0.3 s. Why: 20-30 words a card can't be read in 1.4 s, and a card with no words at 0.3 s shows an object without its point.
@@ -80,7 +80,7 @@ When the line is about apps, show the moment it fires in one people already use.
   - One family per card: a single saturated base, lit softly from the object's side, falling off to the deep colour at the far corner (`L.fam(light, mid, deep, at)`), with soft-light grain at 0.2.
   - Rotate families so neighbours never share one. The 20 used tangerine, blue night, teal, coral, green, sky, mustard, crimson, ocean, deep lime, hot pink, caramel, mint, cobalt, peach, ice, emerald, cherry, electric blue and chartreuse.
   - **Never two light cards in a row,** whether white, grey, cream or a pale tint: on a phone they read as the same colour. Recreated app screens are often white, so a white screen whose neighbour is light too goes on a coloured stage. A working order: purple, white, green, sky, red-orange, yellow, indigo, mint, periwinkle, dark green, white, royal blue, iOS grey, red, teal, amber, navy, white, pink, lime, with a paywall panel on a savings green, a plan picker on deep indigo, the Calendar icon on its own red, a league badge on navy and a Wrapped card in bubblegum pink.
-  - **Check it with `kit/studio/neighbours.py <clips dir>`.** It reads each card's stage from a 22 px band just inside the card's edges, because that's what changes when a card swaps in. A white panel or a giant word in the middle can't fool it. It flags any card within 0.1 of the one before in OKLab, which caught white then white (0.000), white then iOS grey (0.038) and grey then pale mint (0.039). The closest pair it passed was mint then periwinkle, at 0.22. The most common colour on the card is the wrong measure: a paywall read as white and a runner card as the word's ink.
+  - **Check it with `kit/playful/neighbours.py <clips dir>`.** It reads each card's stage from a 22 px band just inside the card's edges, because that's what changes when a card swaps in. A white panel or a giant word in the middle can't fool it. It flags any card within 0.1 of the one before in OKLab, which caught white then white (0.000), white then iOS grey (0.038) and grey then pale mint (0.039). The closest pair it passed was mint then periwinkle, at 0.22. The most common colour on the card is the wrong measure: a paywall read as white and a runner card as the word's ink.
   - Never a two-blob mesh, never the violet, magenta and orange mix, and never a world darker than its family's mid colour.
   - **Cream for two or three cards in 20** (`L.cream()`): dark ink and one loud colour (a cobalt price, a pink call to action, a red headline). The reference puts one loud hero on cream, and 20 colour worlds with no neutral ground tire the eye. Never black: the card sits on my black T-shirt.
   - No more than four of one hue family in a set, spread apart.

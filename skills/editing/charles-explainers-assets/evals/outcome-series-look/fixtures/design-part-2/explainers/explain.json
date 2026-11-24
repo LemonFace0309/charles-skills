@@ -1,7 +1,7 @@
 {
   "video": "10 more niche design hacks (part 2)",
   "format": "hack reel",
-  "look": "studio",
+  "look": "playful",
   "slot": { "name": "hack-card", "w": 1080, "h": 960, "band": [300, 890], "scale": 0.72 },
   "render": { "fps": 60, "scale": 2 },
   "lines": [

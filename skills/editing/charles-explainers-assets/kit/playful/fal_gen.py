@@ -10,7 +10,7 @@ prompts.json, in the project: {"name": {"prompt": "...", "endpoint": "openai/gpt
 gen/<name>-512.png, and appends {name, endpoint, prompt, seconds, date} to gen/jobs.jsonl.
 
 The key is FAL_KEY from the environment, or from the nearest .env above the project. It is never printed.
-Pick the endpoint fresh (references/studio-objects.md): the default is the best transparent-capable model on 22 Nov 2026.
+Pick the endpoint fresh (references/playful-objects.md): the default is the best transparent-capable model on 22 Nov 2026.
 """
 import base64, json, mimetypes, os, pathlib, subprocess, sys, time, urllib.request
 from concurrent.futures import ThreadPoolExecutor

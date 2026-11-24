@@ -1,8 +1,8 @@
 # Flip cards
 
-The studio look on a card that flips in place: the hack-reel card (`slots.md`), one stage that shows a flaw, changes on my word and proves the fix. There's no Before tile and no After side, so the studio layer goes on the one stage. SKILL.md ("Make it worth watching") has the motion rules; this page has what the look needs.
+The playful look on a card that flips in place: the hack-reel card (`slots.md`), one stage that shows a flaw, changes on my word and proves the fix. There's no Before tile and no After side, so the playful layer goes on the one stage. SKILL.md ("Make it worth watching") has the motion rules; this page has what the look needs.
 
-Gold, when the claude-editing repository is present: `videos/design-hacks/design-part-2/explainers/`. `scenes/src/00-stage.js` has the light and the pointers, and `DESIGN-LOG.md` has the rounds. `examples/studio-flips.jpg` shows the approved cards.
+Gold, when the claude-editing repository is present: `videos/design-hacks/design-part-2/explainers/`. `scenes/src/00-stage.js` has the light and the pointers, and `DESIGN-LOG.md` has the rounds. `examples/playful-flips.jpg` shows the approved cards.
 
 - **The interface stays, and the object is its cause.** A hack is about an interface (a button, a form, a toast), so the card shows that interface, as one sheet at a size where its words read. The object is the thing that does what the line is about:
   - a rubber stamp that marks a field INVALID at the first letter, for "don't show errors while people are typing";

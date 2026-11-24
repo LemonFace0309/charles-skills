@@ -1,7 +1,7 @@
 ---
 name: charles-explainers-assets
-description: "Builds the visual for each point Charles makes in a reel, timed to his words: a before/after flip or side by side, the real thing, or an example acting it out, in a clean look (marks, agent cursors) or a colourful studio look (app moments, photographed objects). Use when a reel explains a term, fix or principle, when explainer cards look plain or busy, or when charles-claude-editing asks for one."
-compatibility: "Needs Bun, Google Chrome and ffmpeg (run bun install in <skill>/kit once). The studio look also needs Python 3 with Pillow, and FAL_KEY or OPENAI_API_KEY for its photographed objects. Written for Charles' reel pipeline: charles-claude-editing calls it with a slot, word times and change words. Works in any folder; inside the claude-editing repository it also reuses the hack-reel list kit, reelkit's tags.js and past videos as gold."
+description: "Builds the visual for each point Charles makes in a reel, timed to his words: a before/after flip or side by side, the real thing, or an example acting it out, in a clean look (marks, agent cursors) or a colourful playful look (app moments, photographed objects). Use when a reel explains a term, fix or principle, when explainer cards look plain or busy, or when charles-claude-editing asks for one."
+compatibility: "Needs Bun, Google Chrome and ffmpeg (run bun install in <skill>/kit once). The playful look also needs Python 3 with Pillow, and FAL_KEY or OPENAI_API_KEY for its photographed objects. Written for Charles' reel pipeline: charles-claude-editing calls it with a slot, word times and change words. Works in any folder; inside the claude-editing repository it also reuses the hack-reel list kit, reelkit's tags.js and past videos as gold."
 ---
 
 # Goal
@@ -16,22 +16,23 @@ This skill runs long. After a context summary or a restart, re-read this file, t
 
 Both looks follow everything in this file: the forms, the frame budget, the timing, the words and the phone check. A look decides only the ground, the colour, how the subject is styled and what points the eye at the change.
 
-| | Clean | Studio |
+| | Clean | Playful |
 |---|---|---|
 | Feel | Sleek and minimal | Colourful and playful |
 | Ground | One calm neutral for the whole reel | A colour world per card, lit from one side, with grain |
 | Subject | The real component, in its product's own colour | A moment from an app or game people know, a real page, or a photographed object that puns on the line |
 | What points at the change | Red-to-green marks, targets and the agent cursor | The object's one move where an object causes the flaw; otherwise the same marks and cursor |
-| Its rules | `looks/clean.md` | `looks/studio.md` |
-| Gold | `examples/clean-marks.jpg` | `examples/studio-flips.jpg`, `examples/studio-list.jpg` |
+| Its rules | `looks/clean.md` | `looks/playful.md` |
+| Gold | `examples/clean-marks.jpg` | `examples/playful-flips.jpg`, `examples/playful-list.jpg` |
 
 Pick the look before the beat sheet, and write it into `explain.json` as `"look"`:
 
 ```
 Which look?
-├── I asked for a look by name or by its feel ("the clean look", "minimal", "the studio look",
-│   "colourful", "playful", a design studio's work as the reference) → that one. A note about
-│   busyness ("too busy", "much more simple") isn't a look: it's the frame budget
+├── I asked for a look by name or by its feel ("the clean look", "minimal", "the playful
+│   look", "colourful", "playful", "studio", a design studio's work as the reference) → that
+│   one. A note about busyness ("too busy", "much more simple") isn't a look: it's the frame
+│   budget
 ├── The plan or the editor's brief for this video names one → that one
 ├── The video continues a series → the series' last video's look: its explain.json "look", or,
 │   for one made before 25 Nov 2026, the list below
@@ -39,7 +40,7 @@ Which look?
 └── Otherwise → ask me, with one frame from each look's gold, before writing the beat sheet
 ```
 
-A series is one topic's run under one name: design hacks part 1 and part 2 are one series, and the animation, mobile and typography hacks are three. The latest of each made before 25 Nov 2026, in the claude-editing repository: studio for design hacks part 2, app psychology, claude principles and slop tells 2; clean for the animation, mobile and typography hacks, practical design tips, 20 design laws, UX principles, design terms and the Day N reels.
+A series is one topic's run under one name: design hacks part 1 and part 2 are one series, and the animation, mobile and typography hacks are three. The latest of each made before 25 Nov 2026, in the claude-editing repository: playful for design hacks part 2, app psychology, claude principles and slop tells 2; clean for the animation, mobile and typography hacks, practical design tips, 20 design laws, UX principles, design terms and the Day N reels.
 
 Why: the look is my call for each video, and a series keeps its look because viewers know a series by its cards. A reel never mixes looks: its chrome (the card, the tab, the labels, the code block, the cursor) stays the same from the first item to the last.
 
@@ -59,17 +60,17 @@ You return:
   - Anything else is the demo's own run from its opening pose, looping where its form loops, with its main move's time in `explain.json`.
 - **`explain.json`:** the look; per line, the takeaway and the change word and time; per asset, its form and a one-line reason, its in and out times, every word shown with its times, and the cursor's actions; and click cues on the clearest changes, about four in 45 s at most, never on two lines in a row, inside the six sound effects a minute.
 - **`check/phone.png`:** the phone check (below), from `kit/check.mjs`.
-- **In the studio look,** its own records too (`looks/studio.md`, Deliver).
+- **In the playful look,** its own records too (`looks/playful.md`, Deliver).
 
 Whoever draws the card owns it. In the hack-reel card the list kit draws the card, its tab and the change between assets, from your `explain.json`; check what the editor draws in any other slot. Where clips are only laid end to end, each clip carries its own card, its tab and, in its first 0.12 s, the fade-through from the previous card; a slot rendered as one span (a Day N card) is yours too. Never yours: captions, music, sound, the list, title and timer, and where the slot sits. Never burn my spoken words into a clip.
 
 # Workflow
 
 1. **Pick the look** (The two looks), and read its file in `looks/`.
-2. **Beat sheet first.** Before building anything, write into `explain.json` for every line: the takeaway in 8 words or fewer, the change word, the subject (the real thing the line is about), and the form of each asset. The studio look adds each line's idea: the moment or object, its move and its colour family. Why: a line without a written takeaway gets decoration instead of an explanation.
+2. **Beat sheet first.** Before building anything, write into `explain.json` for every line: the takeaway in 8 words or fewer, the change word, the subject (the real thing the line is about), and the form of each asset. The playful look adds each line's idea: the moment or object, its move and its colour family. Why: a line without a written takeaway gets decoration instead of an explanation.
 3. **Pick the form** with the tree below, and give long lines their extra assets. For every flip, pick its mark with `references/marks.md`.
 4. **Fit the frame budget** below.
-5. **Build** with the kit (`references/kit.md`): the form from `references/forms.md`, every word from `references/text.md`, and the look's own steps from its file (the studio look tries three directions before it builds them all). Copy the closest gold scene or `kit/example/`; never start from a blank page.
+5. **Build** with the kit (`references/kit.md`): the form from `references/forms.md`, every word from `references/text.md`, and the look's own steps from its file (the playful look tries three directions before it builds them all). Copy the closest gold scene or `kit/example/`; never start from a blank page.
 6. **Time it** to my words (Timing).
 7. **Run the phone check,** then the look's own checks. Fix the largest fault first, re-render, check again.
 8. **Hand over** the clips, `explain.json` and the sheet.
@@ -169,7 +170,7 @@ Simple within a frame doesn't mean plain. A card is worth watching when its subj
 - **The agent comes only where it changes the design itself** (it drags a hit area out, carries a part, retypes a label). When a plain pointer is already using the product, the code changes by itself on the word (`references/agent-cursor.md`). Why: one agent doing both jobs made up to five trips in 3.5 s.
 - **Start at rest.** The editor cuts a flip in at the change minus my line's lead-in (`win.b`). The scene is in a clean pose there, from 0.3 s before it, and its first action starts 0.2-0.4 s later. Why: a hard cut onto a toast half-way down reads as a glitch.
 
-Gold for this section: `examples/studio-flips.jpg`, design hacks part 2's ten approved cards, the build these rules came from (their scenes, when the claude-editing repository is present: `videos/design-hacks/design-part-2/explainers/scenes/src/`). `examples/clean-marks.jpg` holds them in the clean look.
+Gold for this section: `examples/playful-flips.jpg`, design hacks part 2's ten approved cards, the build these rules came from (their scenes, when the claude-editing repository is present: `videos/design-hacks/design-part-2/explainers/scenes/src/`). `examples/clean-marks.jpg` holds them in the clean look.
 
 # Timing
 
@@ -180,12 +181,12 @@ Gold for this section: `examples/studio-flips.jpg`, design hacks part 2's ten ap
 - **Short items** (a line under 2 s, and every item of a list whose lines mostly are): the main move starts within 0.15 s of the cut and is done by 0.6 s, then the end pose holds under the slow push-in. A flip changes on its word instead and is done 0.45 s after it (a sweep 0.55 s). No loop, no proof beat, and the agent only when its action is the change itself. Why: a replay mid-item reads as a glitch. A short side by side follows `references/forms.md`.
 - **Every main move finishes 0.25 s before the next line starts.**
 - **Demos play at real speed and loop about once a second,** holding the start pose 0.25 s and the end pose 0.4 s, so a 200 ms move is seen four or five times. Never slow a demo whose lesson is timing or feel: slowed down, the fast one looks sluggish. The exception is a line about a path's shape (arcs, squash and stretch), which may run at 0.5× with both versions at the same speed.
-- **Never stale.** Something is always moving: the demo, the cursor, a transition or, when nothing else is, a linear push-in on the whole subject from the cut (1.2-2% a second on an asset up for a second or two, where the kit's `push()` defaults to 2% and the studio card runs 1.2%; 0.6% on one up for more than 3 s; under 4% in all). Nothing sits frozen for more than 0.6 s, and no more than 1.5 s passes between one new thing ending and the next starting. A loop's repeat, or the same action giving the same result, isn't new; an action is new when its result differs. Why: a frozen picture under my voice reads as dead air.
+- **Never stale.** Something is always moving: the demo, the cursor, a transition or, when nothing else is, a linear push-in on the whole subject from the cut (1.2-2% a second on an asset up for a second or two, where the kit's `push()` defaults to 2% and the playful card runs 1.2%; 0.6% on one up for more than 3 s; under 4% in all). Nothing sits frozen for more than 0.6 s, and no more than 1.5 s passes between one new thing ending and the next starting. A loop's repeat, or the same action giving the same result, isn't new; an action is new when its result differs. Why: a frozen picture under my voice reads as dead air.
 - **Between assets in one card,** the same object at a new state morphs (shared parts glide and resize); a new subject fades through (the old one goes in a frame, the card reshapes, the new one comes in from 97.5% scale). Never a cross-dissolve: its double exposure is unreadable at phone size.
 
 # Mark the change
 
-Every flip whose difference is a still property (a colour, a size, a gap, a word, an alignment) marks the part that changes, red on the flaw in the before, moving with the fix on my word as it turns green. A flaw the viewer watches happen is its own mark, and so is a studio object whose move causes the flaw and makes the fix. `references/marks.md` has the tree that picks the mark (a guide, a hatched band, a dimension line, corner brackets, a sweep, or the agent moving the part itself), its timeline and its rules. Why: without a mark, anyone looking at the wrong part sees nothing change.
+Every flip whose difference is a still property (a colour, a size, a gap, a word, an alignment) marks the part that changes, red on the flaw in the before, moving with the fix on my word as it turns green. A flaw the viewer watches happen is its own mark, and so is a playful object whose move causes the flaw and makes the fix. `references/marks.md` has the tree that picks the mark (a guide, a hatched band, a dimension line, corner brackets, a sweep, or the agent moving the part itself), its timeline and its rules. Why: without a mark, anyone looking at the wrong part sees nothing change.
 
 # Words on screen
 
@@ -213,7 +214,7 @@ Every word on screen adds something I don't say: what a term means, the value th
 - **The demo runs on the values it teaches:** the real 150 ms ease-out, the real 0.97, exactly the CSS in its code block. My audience copies them, and some check.
 - **Performance flaws are reproduced on the render's clock:** hold frames at the rate the flaw really causes (a new frame every 33-83 ms), because a frame-stepped render never drops one.
 - **Colour that means something:** red only for the flaw, green only for the fix, and each agent's colour on its cursor and what it selects. The content's own colour (album art, photos, a brand panel) and the code's syntax colours don't count, and the look sets the ground and everything else (`looks/`). Why: colour carries meaning on the controls and the marks.
-- **None of my own AI tells:** no monospace eyebrows or "01/10" labels, pills, badges, emoji, section numbering, stock gradients (the violet, magenta and orange mix) or glows with no source. I made a reel listing them, and my audience watched it. The clean look also refuses cream, gradient grounds and any glow; the studio look uses cream and lit colour only on its own terms (`looks/studio.md`).
+- **None of my own AI tells:** no monospace eyebrows or "01/10" labels, pills, badges, emoji, section numbering, stock gradients (the violet, magenta and orange mix) or glows with no source. I made a reel listing them, and my audience watched it. The clean look also refuses cream, gradient grounds and any glow; the playful look uses cream and lit colour only on its own terms (`looks/playful.md`).
 - **Same chrome, different subjects:** the card, tab, Before and After labels, code block and cursor look and sit the same all reel; the subjects alternate (type, interface, motion; desktop, phone, close-up) so neighbours never look alike.
 - **Magnify, then mark:** when the difference is under 4 px in the final frame, crop tighter or zoom the whole subject first. Never a lens or a callout bubble.
 - **Render at 2×** and scale down once: 1080-wide cards' small text looked soft in Photos.
@@ -230,4 +231,4 @@ Before handing over, for every clip. Each check names the fault it catches; thes
 6. **Truth:** the code is complete and is what the demo does, the values are real, and nothing claims what I didn't say.
 7. **Safe area:** everything the viewer must see is inside the slot's text area and band (`references/slots.md`).
 8. **Gold:** put a frame beside the closest gold sheet of the reel's look (The two looks). If yours is smaller, emptier, busier or greyer, that's the first fix: a real subject in colour filling the band, a flaw a pointer causes, its cost, and for a principle in a slower reel the same component without it beside it.
-9. **The look's own checks:** the studio look's six faults and `kit/studio/neighbours.py` (`looks/studio.md`, Steps).
+9. **The look's own checks:** the playful look's six faults and `kit/playful/neighbours.py` (`looks/playful.md`, Steps).
