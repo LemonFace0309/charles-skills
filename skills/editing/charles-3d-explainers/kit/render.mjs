@@ -31,6 +31,8 @@ const { pos, opt } = args(process.argv.slice(2), ['samples', 'scale', 'fps', 'fr
 if (!pos[0]) { console.error('usage: bun render.mjs <project> [--draft] [--from s --to s] [--stills a,b]'); process.exit(1); }
 const ROOT = path.resolve(pos[0]);
 const project = JSON.parse(fs.readFileSync(path.join(ROOT, 'project.json'), 'utf8'));
+// The reel's safe area for --audit: charles-claude-editing's numbers, from the copy that ships beside this kit.
+const SPEC = JSON.parse(fs.readFileSync(new URL('../reel-spec.json', import.meta.url), 'utf8'));
 const draft = !!opt.draft;
 const scale = Number(opt.scale ?? (draft ? 0.5 : 1));
 const samples = Number(opt.samples ?? (draft ? 1 : project.samples ?? 16));
@@ -172,7 +174,7 @@ if (opt.stills) {
     const f = path.join(dir, `${opt.out ? opt.out + '-' : ''}t${t.toFixed(2)}${draft ? '-draft' : ''}.png`);
     fs.writeFileSync(f, await shot('png'));
     console.log(f);
-    if (opt.audit) { const iss = await page.evaluate((t) => window.__audit(t), t); for (const i of iss) console.log(`  audit ${t.toFixed(2)}s: ${i}`); }
+    if (opt.audit) { const iss = await page.evaluate(([t, s]) => window.__audit(t, s), [t, SPEC]); for (const i of iss) console.log(`  audit ${t.toFixed(2)}s: ${i}`); }
     // tone of the 3D picture alone: the overlays are hidden for a second capture
     await page.evaluate(() => { document.getElementById('ui').style.visibility = 'hidden'; });
     const v = tone(await shot('png'));
@@ -238,7 +240,7 @@ for (let i = 0; i < frames; i++) {
   if (err) { ff.stdin.destroy(); ff.kill('SIGKILL'); dropPart(); await fail(t, err); }
   const buf = await shot(fmt);
   if (!ff.stdin.write(buf)) await new Promise((r) => ff.stdin.once('drain', r));
-  if (auditTimes.has(Math.round(t * fps))) for (const iss of await page.evaluate((t) => window.__audit(t), t)) audits.push(`${t.toFixed(2)}s ${iss}`);
+  if (auditTimes.has(Math.round(t * fps))) for (const iss of await page.evaluate(([t, s]) => window.__audit(t, s), [t, SPEC])) audits.push(`${t.toFixed(2)}s ${iss}`);
   const done = i + 1, el = (Date.now() - tStart) / 1000, per = el / done;
   if (done % 30 === 0 || done === frames) { lockInfo.done = done; if (isFinal) writeLockInfo(); }
   if (tty) { if (done % 30 === 0 || done === frames) process.stdout.write(`\r${name}: ${done}/${frames} frames  ${per.toFixed(2)} s/frame  eta ${Math.round(per * (frames - done))} s   `); }

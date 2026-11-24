@@ -28,8 +28,8 @@ The slot sizes the editor uses, the platform's safe area, the caption band and t
 charles-claude-editing's, in `<skill>/reel-spec.json` (an identical copy ships in this folder; where a number in this
 file and the spec ever disagree, the spec wins). Set `size` in project.json to the slot's size. Positions in this
 file are for 1080x1920: scale them, and keep text 60 px inside every edge of the slot (the overlay defaults already
-scale: type and x by W/1080, y by H/1920). `--audit` checks the 60 px in a slot asset; on a full 1080x1920 reel it
-lets text come within 40 px of the sides, so check a reel's sides by eye.
+scale: type and x by W/1080, y by H/1920). `--audit` checks the 60 px in a slot asset, and on a full 1080x1920 reel
+the spec's header, caption, sides and buttons column, with a corner HUD allowed 40 px from the sides.
 
 # Setup (once per machine)
 

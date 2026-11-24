@@ -347,11 +347,15 @@ async function boot() {
     await new Promise((r) => requestAnimationFrame(() => r()));
     return errors.length;
   };
-  // Layout audit at time t: overlay boxes that leave the safe area or collide. A reel (1080 x 1920) keeps clear of the
-  // platform's UI (status bar above y 200, caption band below H - 380); any other size keeps 60 px inside every edge.
+  // Layout audit at time t: overlay boxes that leave the safe area or collide. A reel (1080 x 1920) keeps its words
+  // where the platform's UI can't cover them, on the numbers in reel-spec.json (render.mjs passes it in): 60 px inside
+  // the sides, below the header (y 200), above the caption (y 1500) and left of the buttons (x 940 from y 840 down).
+  // A corner HUD is the exception the look allows: 40 px from the sides, and free of the header and buttons checks.
+  // Any other size keeps 60 px inside every edge.
   const probe = document.createElement('canvas'), pctx = probe.getContext('2d', { willReadFrequently: true });
-  window.__audit = (t) => {
-    const sc = scale, issues = [], reel = W === 1080 && H === 1920, edge = reel ? 40 : 60;
+  window.__audit = (t, spec) => {
+    const sc = scale, issues = [], reel = W === 1080 && H === 1920;
+    const P = spec?.platform ?? { top: 200, bottom: 1500, buttons: { left: 940, top: 840 } }, inset = spec?.text_inset?.px ?? 60;
     // ink: a box less 0.1 em of empty leading at top and bottom, so stacked type at a 1.0 line pitch does not "overlap";
     // a title line is as wide as its own text (its block is as wide as the longest line)
     const box = (el) => {
@@ -367,10 +371,12 @@ async function boot() {
       .flatMap((el) => (el.classList.contains('title') ? [...el.querySelectorAll('.ln')].filter((l) => op(l) > 0.05) : [el]).map((p) => ({ el, kind: el.classList[0], text: p.textContent.trim().slice(0, 40), b: box(p) })));
     for (const e of els) {
       const { x, y, w: bw, h: bh } = e.b;
-      if (x < edge || x + bw > W - edge) issues.push(`${e.kind} "${e.text}" runs off the side (x ${x.toFixed(0)}-${(x + bw).toFixed(0)})`);
-      if (reel ? y < 200 && e.kind !== 'hud' : y < edge) issues.push(`${e.kind} "${e.text}" ${reel ? 'sits under the status bar / top UI' : `sits within ${edge} px of the top`} (y ${y.toFixed(0)})`);
-      const floor = reel ? H - 380 : H - edge;
+      const hud = e.kind === 'hud', edge = reel && hud ? 40 : inset;
+      if (x < edge || x + bw > W - edge) issues.push(`${e.kind} "${e.text}" runs off the side (x ${x.toFixed(0)}-${(x + bw).toFixed(0)}, keep ${edge} px in)`);
+      if (reel ? y < P.top && !hud : y < edge) issues.push(`${e.kind} "${e.text}" ${reel ? 'sits under the status bar / top UI' : `sits within ${edge} px of the top`} (y ${y.toFixed(0)})`);
+      const floor = reel ? P.bottom : H - edge;
       if (y + bh > floor) issues.push(`${e.kind} "${e.text}" ${reel ? 'sits in the Reels caption band' : `sits within ${edge} px of the bottom`} (bottom ${(y + bh).toFixed(0)} > ${floor})`);
+      if (reel && !hud && x + bw > P.buttons.left && y + bh > P.buttons.top) issues.push(`${e.kind} "${e.text}" sits under the like/comment/share buttons (right ${(x + bw).toFixed(0)} > ${P.buttons.left} below y ${P.buttons.top})`);
     }
     // Type over bright 3D. The 3D canvas (no UI in it; preserveDrawingBuffer) is drawn once into a quarter-size probe
     // (layout px / 4, whatever the render scale), and each visible box counts its share of bright pixels (AUDIT): a

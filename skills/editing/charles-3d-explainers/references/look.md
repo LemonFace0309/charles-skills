@@ -350,9 +350,9 @@ frame:
    unit 0.3 to 0.4 x, sub-label 0.2 to 0.45 x.
 6. HUD: fixed corner, condensed, zero-padded, cyan, in the same place in every shot.
 7. Labels: 44 px or larger, two or fewer on screen, beside the anchor, no leader line unless the anchor is ambiguous.
-8. No text above y 200 or below the caption band (y 1500), none within 60 px of the sides, none over the subject.
-   `--audit` reports all four, but on a full 1080x1920 reel it lets text come within 40 px of the sides and down to
-   y 1540, so check a reel's sides and foot by eye.
+8. No text above y 200 or below the caption band (y 1500), none within 60 px of the sides, none under the buttons
+   (right of x 940 from y 840 down), none over the subject. `--audit` reports each from `reel-spec.json`; a corner
+   HUD may sit 40 px from the sides.
 9. Depth of field fits the shot: in an object shot only the subject is sharp, with discs behind it; a world shot is
    sharp across the floor or the planet and full of detail.
 10. Materials: visible bevels, at least two roughness levels, micro-detail at three scales on anything that fills more
