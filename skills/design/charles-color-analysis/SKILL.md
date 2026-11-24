@@ -1,6 +1,7 @@
 ---
 name: charles-color-analysis
-description: "Critique the colour of any visual and the palette behind it: graphics meant to wow (posters, hero images, ads, thumbnails, social posts), landing pages and onboarding, and product app screens. Routes by what the visual is for, measures the real colours (60/30/10 area split, lightness structure, hue gaps, chroma, temperature, text contrast, colour-blind views), and writes a ranked critique with exact OKLCH and hex fixes, alternative palette directions and before/after previews. Use when someone asks to critique, analyse, review, check or fix colours or a palette; asks why colours clash, feel off, muddy, washed out, garish, cheap, cold or out of place; asks whether a palette or accent works, or whether someone's colour critique is right; or wants colour feedback on a design, screenshot, website, app or brand."
+description: "Critiques the colour of a visual or palette with measurements: routes by what it's for (graphic, landing page, app, palette), measures area, lightness, hue gaps, chroma, temperature and contrast, and ranks fixes in exact OKLCH and hex with before/after previews. Use when colours clash or feel muddy, garish or off, when asked whether a palette or accent works, or to check someone's colour critique."
+compatibility: "Needs Python 3 with numpy and Pillow for scripts/color.py. Reading the text in an image uses macOS (Swift and Vision); without it, contrast is checked from colours you sample. Rendering a page (shot) needs Google Chrome or Chromium."
 ---
 
 # Colour analysis
@@ -139,6 +140,7 @@ Change two channels only when the finding names two problems.
 - When the intent is unclear, or a fix costs something the design may want, give 2–3 directions, each a full measured palette, picked from: keep the pop and make it belong, go harmonious, or move the accent. When the accent is the subject's own colour in a photo, keep it in every direction. Say what each direction costs.
 - Never fix by adding a colour, and never fix contrast by raising chroma.
 - In GRAPHIC, fix a weak accent by committing harder (bigger, purer, on the subject), never by toning it down. In APP, take colour away before adding any.
+- Calibrate against what generated pages default to. As of Nov 2026, a near-black field with one acid-green or vermilion accent, and a cream field with a terracotta accent, are among the commonest looks of AI-made pages, and committing harder can land a palette on either. When the brief leaves colour free and a recommended palette lands there, say so in that direction's cost, and add a direction that doesn't, measured like the others. When the brief or the brand asks for that look, keep it.
 
 ## 6. Write the critique
 

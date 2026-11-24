@@ -1,10 +1,12 @@
 # Colour principles
 
+Contents: Measured references · 1 Value carries the design · 2 One loudest thing · 3 60/30/10 · 4 Far hues need a second difference · 5 Pop or harmony · 6 Material and light · 7 Temperature and one light · 8 Neutrals · 9 Families, peers and ramps · 10 Contrast floors and the lightness-only repair · 11 Colour-blind safety and meaning · 12 Gradients, overlays and blending · 13 App specifics · Mood targets · Finding new palettes · The colour-wheel caveat
+
 Each principle gives the rule, why viewers feel it, the numbers, and how to measure and fix it. All values are OKLCH: L is lightness (0 black to 1 white, perceptually even), C is chroma (0 grey, up to about 0.32 at the sRGB limit), and H is the hue angle. "Vividness" is C as a share of the most chroma sRGB allows at that L and H, so a dark teal and a bright yellow can both be 100% vivid.
 
 ## Measured references
 
-Two sets of real palettes anchor the numbers below.
+Two sets of real palettes anchor the numbers below, measured in Nov 2026.
 
 **Sanzo Wada, *A Dictionary of Color Combinations*** (1930s; 348 combinations of 2–4 colours from 159 colours, measured here in OKLCH). These are harmony palettes:
 - Lightness carries them. The median combination spans 0.36 in L, 60% span at least 0.3, and only 14% span less than 0.15.
@@ -16,6 +18,7 @@ Two sets of real palettes anchor the numbers below.
 - The two regular colours are one dark and one light, at least 0.4 apart in L (median 0.48). Usually one is a real colour and the other near-neutral (17 of 21).
 - The accent is the most vivid colour on the page, at ≥80% of its hue's ceiling: about 0.2 for most hues, about 0.15 for greens and teals.
 - The accent sits 120–180° from every regular colour that has real chroma (C ≥0.04); 75° is the minimum. It lives on the subject.
+- The same recipe, run on autopilot, gives two of the commonest generated looks: a near-black field with one acid-green or vermilion accent, and a cream field with a terracotta accent. What separates the heroes is that their accent is the subject's own colour or its light. SKILL.md (Fix) says how to calibrate against those looks.
 
 ## 1. Value carries the design
 
