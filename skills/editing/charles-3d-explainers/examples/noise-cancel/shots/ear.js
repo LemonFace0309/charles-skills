@@ -34,7 +34,8 @@ export default async function (k) {
   const tPlay = k.word('plays'), tEar = k.word('ear.'), tTwo = k.word('two waves'), tC = k.word('cancel') + 0.05, tOut = k.word('out.'), tI = k.word('destructive');
   const A = 2.4 * mm, lam = 10 * mm, w = 2 * Math.PI * 1.6, kk = (2 * Math.PI) / lam; // schematic: 2.5 crests in the canal
   const front = (t) => k.ramp(t, tPlay - 0.05, tEar + 0.05, 'inOutSine');               // the amber wave's front, 0..1 along the path
-  k.ui.label('Speaker', { anchor: hp.anchor('driverL'), side: 'right', offset: [150, -40], at: k.word('speaker') - 0.1, until: tPlay + 0.9 });
+  k.ui.label('Speaker', { anchor: hp.anchor('driverL'), side: 'left', offset: [-60, -90],   // left of the driver: on its right, the text ran under the like/comment column (x 940+)
+    at: k.word('speaker') - 0.1, until: tPlay + 0.9 });
   k.ui.label('Eardrum', { anchor: D.clone().add(V(0, -2.5 * mm, 0.6 * mm)), side: 'below', offset: [0, 90], at: tEar - 0.15, until: tTwo - 0.15 });
   // "The two waves": name them, in their own colours, above and below the canal; they go when the waves cancel
   const cm = path.getPointAt(0.66);

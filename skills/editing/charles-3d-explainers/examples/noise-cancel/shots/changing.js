@@ -10,6 +10,7 @@ export default async function (k) {
   const V = (x = 0, y = 0, z = 0) => new THREE.Vector3(x, y, z);
   k.env('night', 0.55);
   k.fog(0.8);
+  k.post = { captionShade: 0.8 };                                // the light transition and the lit seat backs reach the caption band, under its two lines
   scene.add(nightSky(k));
   cabin(k, { rows: [-4, 3], windows: [-6, 6], shades: 0.62 }); // shades drawn: no bright horizon behind the caption
   k.rig({ keyPos: [-0.6, 2.1, 0.4], rimPos: [-2.4, 1.6, -1.4], target: [-1.0, 1.2, -0.3], keyScale: 0.2, rimScale: 0.6, fillScale: 0.45, soft: 0.6, shadowSize: 2 });

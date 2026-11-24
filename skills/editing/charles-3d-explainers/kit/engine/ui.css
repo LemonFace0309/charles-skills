@@ -31,8 +31,9 @@ html, body { margin: 0; padding: 0; background: #000; overflow: hidden; }
 .layer { position: absolute; inset: 0; }
 
 /* Captions: one line (sometimes two), centred at y ~1430, at most one highlighted word or phrase. Boxes hug their text
-   (centred, at most 900 px wide) so --audit measures the words, not the band. */
-.cap { position: absolute; left: 0; right: 0; margin: 0 auto; width: fit-content; max-width: calc(900px * var(--u)); text-align: center; font-weight: 700;
+   (centred, at most 800 px wide) so --audit measures the words, not the band. 800 px keeps a centred caption left of the
+   platform's buttons at x 940 (reel-spec.json); a longer chunk wraps onto two balanced lines. */
+.cap { position: absolute; left: 0; right: 0; margin: 0 auto; width: fit-content; max-width: calc(800px * var(--u)); text-align: center; font-weight: 700;
   font-size: calc(66px * var(--u)); line-height: 1.12; letter-spacing: -0.018em; text-shadow: var(--shadow); text-wrap: balance; isolation: isolate; }
 .cap .w { display: inline; }
 .cap .w.off { opacity: 0; }
