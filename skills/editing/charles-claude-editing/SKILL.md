@@ -179,7 +179,7 @@ What does the viewer get from this asset?
    * A pan across anything wider or taller than its slot (a canvas, a grid, a long page), ending on the part I'm naming
    * From the whole thing to the detail I name (the whole window, then the images pasted into it)
    * A busy asset cut into 2-4 crops instead of one long hold: four pages as four 0.6 s cuts, not a 2x2 grid for 2.4 s
-* Leave these still: words I'm reading out, since moving text is harder to read, and anything up for under ~1 s. Each asset gets one move with one destination, eased in and out. A push-in stays under ~15%, or it turns into a gimmick; a move from the whole to a detail can go further, because it lands on something
+* Leave these still: words I'm reading out, since moving text is harder to read, anything up for under ~1 s, and anything the viewer needs whole (ex: a full web page), since a push-in ruins its framing. Each asset gets one move with one destination, eased in and out. A push-in stays under ~15%, or it turns into a gimmick; a move from the whole to a detail can go further, because it lands on something
 
 
 # Choosing the Layout
