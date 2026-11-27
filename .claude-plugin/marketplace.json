@@ -10,12 +10,13 @@
   "plugins": [
     {
       "name": "design",
-      "description": "Make UI look designed and feel finished: unslop, polish, award-level craft, colour critique and App Store screenshots",
+      "description": "Make UI look designed and feel finished: unslop, polish, motion that feels right, award-level craft, colour critique and App Store screenshots",
       "source": "./",
       "strict": false,
       "skills": [
         "./skills/design/charles-unslop",
         "./skills/design/charles-polish",
+        "./skills/design/charles-ux-animation",
         "./skills/design/charles-unreasonable-craft",
         "./skills/design/charles-store-screenshots",
         "./skills/design/charles-color-analysis"
@@ -48,11 +49,10 @@
     },
     {
       "name": "drops",
-      "description": "Specialist skills that go deep on one craft: interface motion done right, poster-like landing-page heroes, posters for company moments in the Quartr style, and an audit of what could get an app hacked, sued or billed",
+      "description": "Specialist skills that go deep on one craft: poster-like landing-page heroes, posters for company moments in the Quartr style, and an audit of what could get an app hacked, sued or billed",
       "source": "./",
       "strict": false,
       "skills": [
-        "./skills/drops/charles-ux-animation",
         "./skills/drops/charles-hero-mockups",
         "./skills/drops/charles-design-tips",
         "./skills/drops/charles-design-laws",

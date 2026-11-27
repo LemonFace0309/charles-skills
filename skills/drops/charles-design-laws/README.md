@@ -34,7 +34,7 @@ Nothing beyond your agent. To review a screen it didn't build, give it a screens
 
 ## Pairs with
 
-[charles-ux-animation](../charles-ux-animation/) for how the screen moves and responds, and six more laws: Fitts's,
+[charles-ux-animation](../../design/charles-ux-animation/) for how the screen moves and responds, and six more laws: Fitts's,
 Hick's, Miller's, Jakob's and Postel's laws and the Doherty threshold. [charles-unslop](../../design/charles-unslop/)
 first if the screen looks AI-made, [charles-design-tips](../charles-design-tips/) for the type, colour and spacing
 fixes inside each part, and [charles-polish](../../design/charles-polish/) for the last pass on states and details.

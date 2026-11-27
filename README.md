@@ -19,7 +19,7 @@ them working in my reels on [Instagram](https://www.instagram.com/charles.unempl
 there lives here.
 
 <p align="center">
-<a href="skills/drops/charles-ux-animation/"><img src=".github/assets/ux-animation.jpg" width="49%" alt="charles-ux-animation: the 20 principles of UX and animation, shown before and after"></a>
+<a href="skills/design/charles-ux-animation/"><img src=".github/assets/ux-animation.jpg" width="49%" alt="charles-ux-animation: the 20 principles of UX and animation, shown before and after"></a>
 <a href="skills/drops/charles-hero-mockups/"><img src=".github/assets/hero-mockups.jpg" width="49%" alt="charles-hero-mockups: a poster-like hero for an electric motorcycle, with one line of signal red"></a>
 <a href="skills/design/charles-store-screenshots/"><img src=".github/assets/store-screenshots.jpg" width="49%" alt="charles-store-screenshots: Duolingo's store screenshots as AI makes them, and as the skill makes them"></a>
 <a href="skills/editing/charles-3d-explainers/"><img src=".github/assets/3d-explainers.jpg" width="49%" alt="charles-3d-explainers: 3D cutaways from my reel on the Instagram algorithm"></a>
@@ -85,22 +85,23 @@ Codex uses `$charles-unslop` instead of the slash.
 
 ### [Design](skills/design/): for the apps I build
 
+charles-ux-animation is the most requested skill I have: people have commented MOTION for it more than 4,000 times.
+
 | Skill | Use it when |
 | --- | --- |
 | [charles-unslop](skills/design/charles-unslop/) | A screen looks AI-generated and you want it to look designed |
 | [charles-polish](skills/design/charles-polish/) | The UI works but feels off, and it needs a last pass on states, spacing, contrast and motion |
+| [charles-ux-animation](skills/design/charles-ux-animation/) | Your interface works but doesn't feel good yet: taps, menus, modals and page changes that should move with intent |
 | [charles-color-analysis](skills/design/charles-color-analysis/) | Your colours clash, look muddy or just feel off, and you want exact fixes with before/after previews |
 | [charles-unreasonable-craft](skills/design/charles-unreasonable-craft/) | A site or app screen has to wow people, held to the bar of an Awwwards Site of the Day |
 | [charles-store-screenshots](skills/design/charles-store-screenshots/) | You need App Store screenshots that make people stop scrolling, rendered at Apple's exact sizes |
 
 ### [Drops](skills/drops/): specialist skills, one craft each
 
-Each drop goes deep on a single craft. charles-ux-animation is the most requested skill I have: people have commented
-MOTION for it more than 4,000 times.
+Each drop goes deep on a single craft.
 
 | Skill | Use it when |
 | --- | --- |
-| [charles-ux-animation](skills/drops/charles-ux-animation/) | Your interface works but doesn't feel good yet: taps, menus, modals and page changes that should move with intent |
 | [charles-hero-mockups](skills/drops/charles-hero-mockups/) | You want to see a landing page's look before you build it, or pitch a client three art directions as finished images |
 | [charles-design-tips](skills/drops/charles-design-tips/) | Your screen works but looks thrown together: long text centred, grey greys, one heavy shadow, buttons labelled Submit and empty states with nowhere to go |
 | [charles-design-laws](skills/drops/charles-design-laws/) | A screen or flow feels confusing or cluttered: too many choices, groups that don't read as groups, nothing that says what to do next |

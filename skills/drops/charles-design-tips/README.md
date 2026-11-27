@@ -39,7 +39,7 @@ Nothing beyond your agent.
 [charles-unslop](../../design/charles-unslop/) first if the screen still looks AI-made,
 [charles-color-analysis](../../design/charles-color-analysis/) when the colours themselves are the problem, and
 [charles-design-laws](../charles-design-laws/) for what belongs on the screen and how it's grouped, and
-[charles-ux-animation](../charles-ux-animation/) for how it moves and responds.
+[charles-ux-animation](../../design/charles-ux-animation/) for how it moves and responds.
 
 ## Credits
 

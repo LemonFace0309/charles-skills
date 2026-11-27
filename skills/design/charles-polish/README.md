@@ -33,7 +33,7 @@ Google Chrome and, for recordings, ffmpeg (Xcode for the iOS Simulator). Install
 ## Pairs with
 
 [charles-unslop](../charles-unslop/) first if the screen still looks AI-made, and
-[charles-ux-animation](../../drops/charles-ux-animation/) for how things move and respond.
+[charles-ux-animation](../charles-ux-animation/) for how things move and respond.
 
 ## Credits
 
