@@ -42,6 +42,10 @@ Playback · Voice · Research
 - 16 Nov: "Both of these are 50% lightness" was "boring" as a hook, and "if u can't just don't have a text hook".
 - 12 Nov: "keep captions underneath my mouth and above the demo". 23 Nov: "make sure the captions don't block my face
   when the full blur isn't on".
+- 26 Nov: "the captions and graphics actually sit kind of high in the page ... if you look at the preview it's
+  consistently covering my mouth. Maybe the solution is adjusting the blurred photo of me?" The stand-in had stayed at
+  eye_line 860 while plans set 820-850, and captions could rise to right under his mouth, which in his takes is his chin.
+  Now the stand-in follows `eye_line`, captions go no higher than just under his chin, and `below` starts there.
 
 ## Composing assets
 

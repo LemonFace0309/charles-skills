@@ -189,7 +189,7 @@
       case "split": { const seam = v.seam || 936; return v.side === "bottom" ? { x: 0, y: seam, w: 1080, h: 1920 - seam, fit: "cover", panel: true } : { x: 0, y: 0, w: 1080, h: seam, fit: "cover", panel: true }; }
       case "spotlight": return { x: 120, y: SAFE_TOP + 30, w: 840, h: capY - 90 - SAFE_TOP - 30, fit: "contain" };
       case "above": return zone(SAFE_TOP, eye);
-      case "below": return zone(eye + 150, capY - 40);
+      case "below": return zone(eye + (R.chin || 250), capY - 40);   // between his chin and the captions
       case "bottom": return zone(capY + 45, SAFE_BOTTOM);
       case "under-chin": { const [x, y, w, hh] = R.under_chin; return { x, y, w, h: hh, fit: "fill" }; }   // the collage canvas
       case "rect": return { x: v.rect[0], y: v.rect[1], w: v.rect[2], h: v.rect[3], fit: v.fit || "contain", sticker: true };
@@ -197,8 +197,11 @@
     }
   }
   const seamOf = (v) => (v && v.place === "split" ? v.seam || 936 : null);
-  // His face moves into the half a split leaves him, as the edit reframes it.
-  const faceShift = (v) => (!v || v.place !== "split" ? 0 : v.side === "bottom" ? (v.seam || 936) - 80 - 1110 : (v.seam || 936) + 80 - 640);
+  // His face sits where the plan says his eyes are: page.css draws him for eye_line 860, and build.py checks the captions
+  // and assets against eye_line, so a stand-in left at 860 showed captions on his mouth whenever a plan set his eyes
+  // higher. A split moves his face into the half it leaves him, as the edit reframes it.
+  const eyeShift = (R.eye_line || 860) - 860;
+  const faceShift = (v) => (!v || v.place !== "split" ? eyeShift : v.side === "bottom" ? (v.seam || 936) - 80 - 1110 : (v.seam || 936) + 80 - 640);
 
   /* ---- timeline ------------------------------------------------------------------------------------------------- */
   let t = 0;

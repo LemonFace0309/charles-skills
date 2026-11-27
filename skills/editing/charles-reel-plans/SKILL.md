@@ -100,7 +100,7 @@ Give each line of a talk reel a `place`: the layout charles-claude-editing would
 | The edit's layout | `place` |
 | --- | --- |
 | No new asset: the last one went up less than `pacing.max_without_new_s` ago | none, captions only |
-| Regular overlay between his chin and the captions | `below` (780×270) |
+| Regular overlay between his chin and the captions | `below` (780×170) |
 | Regular overlay over his head, when his face sits low | `above` (780×430) |
 | Overlay with blur: something big seen whole, or a list he reads out | `spotlight` |
 | Split 50/50: a tall video or a phone recording | `split`, seam 936 |
@@ -108,7 +108,7 @@ Give each line of a talk reel a `place`: the layout charles-claude-editing would
 | A new screen that replaces him | `screen` |
 | A list reel's item | `under-chin`, its collage (step 7) |
 
-A portrait asset (a phone screen, a tall post) in `below` draws about 137 px wide, so give it `spotlight` or a split.
+A portrait asset (a phone screen, a tall post) in `below` draws about 85 px wide, so give it `spotlight` or a split.
 
 Split a sentence into beats at its phrase breaks, so the mockup keeps the edit's pacing: no still up past `pacing.max_still_s`, and nothing on screen unchanged for `pacing.max_without_new_s`. Each beat's `say` is its phrase, and SCRIPT.md keeps the sentence whole for him to read. Never cut a word to make a beat fit: charles-scripting-voice keeps his small words ("which is", "so") on purpose. Why: his sentences run 15 to 35 words, longer than either limit.
 

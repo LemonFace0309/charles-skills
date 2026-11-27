@@ -112,7 +112,7 @@ When the repository has `tools/reelkit/` (Charles' claude-editing), its `reelkit
 
 * Helvetica Neue Bold, 66 px, white with a 3 px black outline and a soft shadow. Sentence case, apart from the comment keyword (below)
 * Centred at y 1380, inside the caption band (y 1320-1500). If an asset sits there, move the captions above or below it, never over it. While a split screen is up, they go on the seam
-* Never over my face unless everything behind them is blurred. When an asset pushes them up, right under my mouth is as high as they go
+* Never over my face unless everything behind them is blurred. When an asset pushes them up, just under my chin is as high as they go: their top under my chin at its lowest in the take. Right under my mouth still sat on my chin, and the previews kept showing them on my mouth
 * 2-3 words each line
 * No animations/transitions
 * Go over the captions yourself to make sure the ones coming back from a transcription service are accurate to the context of what I'm saying. Sometimes transcription services suffer with names too, so fix those
@@ -127,7 +127,7 @@ When the repository has `tools/reelkit/` (Charles' claude-editing), its `reelkit
 * Placement, for overlays that don't take over the whole screen with a blurred background:
    * Where my face sits decides it. If my face is closer to the top, put them below my face and move the captions lower with them. If it's closer to the bottom, put them above my eyes
    * Never cover my eyes or the captions
-   * Long screenshots can run off the bottom as long as the highlighted lines stay above y 1500
+   * Long screenshots can run off the bottom as long as the highlighted lines stay above y 1500. So can a card that the captions push down under my chin, as long as its words stay above y 1500
 * Don't blur anything more than it needs, and show assets whole. Don't crop one so part of it gets cut off (ex: the side of a phone screen)
 * Never leave black bars around an asset. If it doesn't fill its space (ex: a web page with side margins, a screenshot on a black background), fill the edges with a blur of that same page or asset, or something else related. It's more aesthetic
 * You can also place me in front of an image, with an AI cutout of my body in the foreground covering part of it. It adds depth. Only do it when nothing relevant gets covered

@@ -235,7 +235,9 @@ h1 { margin: 0; font-size: 26px; line-height: 1.15; font-weight: 600; letter-spa
   text-shadow: 0 3px 5px rgba(0, 0, 0, 0.55);
 }
 
-/* his take, as blurred shapes: a warm room, a door frame, a lamp, and him with a mic in a white tank top */
+/* his take, as blurred shapes: a warm room, a door frame, a lamp, and him with a mic in a white tank top. He's drawn with
+   build.py's face for eye_line 860 (the face's bottom, his chin, at 860 + CHIN = 1110) and page.js moves him to the plan's
+   eye_line, so change the two together. His torso runs well past the frame, so it still fills the bottom when he's up high. */
 .footage { position: absolute; inset: -60px; filter: blur(30px) saturate(0.95); }
 .footage > div, .room > div, .person > div { position: absolute; }
 .room, .person { position: absolute; inset: 60px; }
@@ -245,8 +247,8 @@ h1 { margin: 0; font-size: 26px; line-height: 1.15; font-weight: 600; letter-spa
 .lamp { left: 60px; top: 330px; width: 380px; height: 380px; border-radius: 50%; background: radial-gradient(circle, rgba(255, 228, 182, 0.95), rgba(255, 214, 160, 0) 68%); }
 .shade { right: -80px; top: 0; width: 420px; height: 1920px; background: linear-gradient(90deg, rgba(40, 32, 28, 0), rgba(40, 32, 28, 0.55)); }
 .person { transition: none; transform-origin: 540px 1200px; }
-.shoulders { left: 70px; top: 1210px; width: 940px; height: 900px; border-radius: 420px 420px 0 0; background: #b48466; }
-.tank { left: 250px; top: 1260px; width: 580px; height: 900px; border-radius: 200px 200px 0 0; background: #ece7df; }
+.shoulders { left: 70px; top: 1210px; width: 940px; height: 1200px; border-radius: 420px 420px 0 0; background: #b48466; }
+.tank { left: 250px; top: 1260px; width: 580px; height: 1200px; border-radius: 200px 200px 0 0; background: #ece7df; }
 .neck { left: 455px; top: 1010px; width: 170px; height: 290px; border-radius: 40px; background: #a8775b; }
 .face { left: 365px; top: 640px; width: 350px; height: 470px; border-radius: 48% 48% 46% 46%; background: #c49274; }
 .hair { background: #1e1714; }

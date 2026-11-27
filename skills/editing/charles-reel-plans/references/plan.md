@@ -17,7 +17,7 @@ Contents: The whole file · A beat · Places · Backdrops · A hook · The list 
 | `captions` | Whether lines get word captions unless a beat says otherwise | `false` for a list reel, else `true` |
 | `pace` | How lines are timed before there's a cut (Timing) | `list` for a list reel, else `talk` |
 | `caption_y`, `caption_size` | Where captions sit and how big they are | reel-spec.json's `captions.talking_head_centre_y` and `size_px` |
-| `eye_line` | His eyes' height, which sets the "above" and "below" boxes | 860 |
+| `eye_line` | His eyes' height, from the format's last video: where the page draws him, how high captions may go, and the "above" and "below" boxes | 860 |
 | `assets_dir` | The folder holding one folder per asset group | `assets/beats` |
 | `composites`, `composites_dir` | A list reel's collage spec and its rendered PNGs | none, `assets/collages` |
 | `reading` | One to three sentences on how to read the script, for the README | none |
@@ -58,7 +58,7 @@ The boxes `page.js` draws, from charles-claude-editing's layouts and reel-spec.j
 | `place` | Box (x, y, w, h) | Use |
 | --- | --- | --- |
 | `above` | 780 wide, at most 430 tall, centred between the platform's top zone and `eye_line`: (150, 315, 780, 430) by default | sticker-sized, over his head |
-| `below` | 780 wide, centred between `eye_line` + 150 and `caption_y` − 40: (150, 1040, 780, 270) by default | sticker-sized and wider than tall, between his chin and the captions |
+| `below` | 780 wide, centred between his chin (`eye_line` + 250) and `caption_y` − 40: (150, 1140, 780, 170) by default | sticker-sized and wider than tall, between his chin and the captions. With his eyes at 860 that leaves 170 px, so a wide asset; when it needs more, set `caption_y` lower in the caption band |
 | `bottom` | 780 wide, centred between `caption_y` + 45 and the platform's bottom zone. It needs 160 px there, so a low `caption_y` leaves no room; the build says how high to set it | under the captions (a big tweet) |
 | `spotlight` | 840 wide, from 30 px under the platform's top zone to 90 px above `caption_y`: (120, 230, 840, 1060) by default | centred and seen whole, with him blurred behind. Portrait assets go here |
 | `split` | the asset's side of the seam, full width; `seam` 936 (50/50) or 768 (40/60), `side` "top" or "bottom" | another video or a recording. Captions move to the seam, and his face to the other half |
@@ -68,7 +68,7 @@ The boxes `page.js` draws, from charles-claude-editing's layouts and reel-spec.j
 
 ### Backdrops
 
-What a layout does to everything behind its asset. An asset that covers his face (eyes to mouth) takes the whole reel behind it out of focus: `"backdrop": "blur"` on the visual is charles-claude-editing's overlay with blur, and it blurs his footage and the reel's own layers, the title, list, stopwatch and hook, so only the asset and the captions stay sharp. `spotlight` has it by default; a big `rect` over his face needs it set. An asset that doesn't take the whole screen's attention stays off his face instead. `kit/build.py` fails any visual over his face with no backdrop. Why: with the title and list still crisp over a face that's gone, the blur doesn't read as a layout, and the edit has to blur the same layers the plan blurs.
+What a layout does to everything behind its asset. An asset that covers his face (brows to chin) takes the whole reel behind it out of focus: `"backdrop": "blur"` on the visual is charles-claude-editing's overlay with blur, and it blurs his footage and the reel's own layers, the title, list, stopwatch and hook, so only the asset and the captions stay sharp. `spotlight` has it by default; a big `rect` over his face needs it set. An asset that doesn't take the whole screen's attention stays off his face instead. `kit/build.py` fails any visual over his face with no backdrop. Why: with the title and list still crisp over a face that's gone, the blur doesn't read as a layout, and the edit has to blur the same layers the plan blurs.
 
 The page draws a backdrop as one pane over everything below the asset, from the same table `kit/build.py` checks against (`BACKDROP_BY_PLACE` in both, one `.backdrop[data-kind]` rule per kind in `page.css`). When the editing skill's layouts change, change the table and its rule, never a single beat.
 
@@ -107,17 +107,24 @@ fails. They are: caption lines longer than `captions.words_per_line`, or of 1 wo
 the room at their height (inside the side insets, and clear of the button column below its top); a list that runs into
 the insets or the button column (the build stops); words TikTok blocks, on screen; one still up past `pacing.max_still_s`
 across consecutive lines without `long_ok`; longer than `pacing.max_without_new_s` with nothing new (talk reels);
-captions sitting on an asset; an asset over his face (brows to mouth) with nothing blurred behind it; captions on his face
-with nothing blurred behind them, where an asset at the caption line may push them up to right under his mouth but never
-onto it; "bottom" without room under the captions; an image stretched past its pixels (2x for `screen` kinds and
-`"text": true`), or drawn under 240×160 in its box; a hook of more than 2 lines, wider than the insets, or up less than
-2.5 s or more than 5.5 s; no music, music outside `audio.music_under_voice_db` under the voice, or (when the repository
-has `assets/music/`) a track outside a mood folder; more sound effects a minute than `audio.sfx_per_minute_max`, or more
-meme sounds than `audio.meme_sfx_per_reel_max`.
+captions sitting on an asset; an asset over his face (brows to chin) with nothing blurred behind it; captions on his
+face, chin included, with nothing blurred behind them, where an asset at the caption line may push them up to just under
+his chin but never onto it; "bottom" without room under the captions; an image stretched past its pixels (2x for
+`screen` kinds and `"text": true`), or drawn under 240×160 in its box; a hook of more than 2 lines, wider than the
+insets, or up less than 2.5 s or more than 5.5 s; no music, music outside `audio.music_under_voice_db` under the voice,
+or (when the repository has `assets/music/`) a track outside a mood folder; more sound effects a minute than
+`audio.sfx_per_minute_max`, or more meme sounds than `audio.meme_sfx_per_reel_max`.
 
 His face, for those checks, is measured from `eye_line`, his eyes' height: brows 70 px above it, lower lip 190 under it,
-chin 300 under it, 400 px wide around `face_x` (the medians of the face boxes on 34 of his cuts). `face_y` only moves the
-page's stand-in, so when he sits higher or lower, set `eye_line` too.
+chin 250 under it, 400 px wide around `face_x`. The chin is the median of his ten posted list reels, where a card under
+the captions pushes them up to it; a talk reel films him closer, chin 310-370 under his eyes, and keeps its captions at
+y 1380. The page draws the blurred stand-in of him from the same numbers at `eye_line`, so the mockup shows what the
+checks measure: set `eye_line` from the format's last video, and leave out `face_y`, which nothing reads. Why: the
+stand-in stayed at 860 while plans set his eyes at 820-850, and captions allowed right under his mouth landed on the
+stand-in's mouth ("it's consistently covering my mouth", 26 Nov 2026).
+
+Captions pushed up sit just under his chin, so a card under them starts lower too. It may run a little past y 1500 when
+it has to, as pictures may (reel-spec.json's `platform`), as long as its words stay above 1500.
 
 Captions written by the kit break at the sentence's own commas and full stops first, never end a line on a small word like
 "the" or "on" when the next line can take it, and drop commas and full stops at the end of a line. Write `caption` by hand
