@@ -64,6 +64,10 @@ Playback · Voice · Research
 - 24 Nov: he swapped those credit sentences for one "ib:" line of Instagram @handles, or websites for makers with no
   Instagram account (Graphite and Simplifying AI became `ib: graphite.io simplifyingai.co`), and the shorter
   alternative caption went with the old credit line.
+- 27 Nov: sessions had kept writing "S/o …" and "Shoutout …" sentences anyway, so he asked again: "remove the current
+  s/o and inspired by stuff. Instead just do IB: <name 1> and <name 2> (or whatever names are relevant) near the end of
+  the caption". The line is now `IB:` in capitals, names joined with "and", just above the hashtags, and a person with
+  no Instagram is named rather than linked to a site.
 
 ## Playback
 

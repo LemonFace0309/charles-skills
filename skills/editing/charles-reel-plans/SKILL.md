@@ -151,11 +151,11 @@ Split a sentence into beats at its phrase breaks, so the mockup keeps the edit's
 - When the format has a playbook, its caption shape wins: the Day reels' "More details on design/psychology techniques used:" with one "- principle: why it works + how it's applied here" line per technique and no comment ask, or the accent reels' one-line hook, `Comment “accent” for the skill 🎨` and five hashtags. Otherwise his caption is short, in this order:
   1. A hook line or a question, different from the reel's sign-off question, so the comments get two ways in.
   2. The comment ask, when the reel has a keyword: `Comment “SITES” for all ten links 🔗`.
-  3. One `ib:` line naming everyone whose idea, format or work the reel builds on: their Instagram @handles, or their websites where they have no Instagram (`ib: @offbrand.studio @lando jhey.dev`). Search Instagram for an account before falling back to the website. Never a credit sentence ("S/o … for …", "Shoutout … for the format").
+  3. One `IB:` line, just above the hashtags, naming everyone whose idea, format or work the reel builds on, joined with "and": `IB: @gigi.yaps and @hormozi`, or `IB: @nuhushaik, @offbrand.studio and @bunqlabs` for three. Use their Instagram @handle when they have one, and otherwise their name (`IB: Emil Kowalski and @joshpuckett`), or a company's website (`IB: appkittie.com`). Search Instagram for an account before falling back. Never a credit sentence ("S/o … for …", "Shoutout … for the format", "all 20 are from …"). Credits for footage or photos shown on screen go in the first comment, not here.
   4. Four or five hashtags.
 
   No em dashes, and no full stop at the end of a line. Write the caption in his voice (charles-scripting-voice's rules).
-- Every caption option (`caption` and each of `options`) keeps the `ib:` line. Never write a shorter alternative without it (`caption_alt`). Why: an option without the credit gets posted without it.
+- Every caption option (`caption` and each of `options`) keeps the `IB:` line. Never write a shorter alternative without it (`caption_alt`). Why: an option without the credit gets posted without it.
 - An optional first comment (`comment`) can credit artists whose work is on screen, in the same handle-or-website form.
 - Never reuse a caption line or a hashtag set he's already posted: check his posted captions when the repository keeps them (claude-editing's `repost/reels.json`). Without them, skip the check and say so in the README.
 
