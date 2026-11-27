@@ -105,7 +105,7 @@ What is the line doing?
 │       and with it (right, After), running from the same frame, under the definition tab
 ├── Naming a term the viewer may not know ("Kerning", "OKLCH", "Tabular numbers")
 │   └── DEMO + DEFINITION TAB: one move that shows the term, no Before/After; the tab says
-│       what it means or where to use it. A word most of my viewers already know gets the move alone
+│       what it is or does, in plain words. A word most of my viewers already know gets the move alone
 ├── Claiming something about real products or AI output ("AI loves eyebrows")
 │   └── THE REAL THING: a real page, screenshot, recording or the code itself, the claim
 │       marked in red (`references/real-instances.md` finds and crops it). A reveal shows
@@ -190,10 +190,10 @@ Every flip whose difference is a still property (a colour, a size, a gap, a word
 
 # Words on screen
 
-Every word on screen adds something I don't say: why a tip matters or what goes wrong without it, where to use it, what a term means, the value that changed, the principle's name, the code to copy. Never my own words back (a "Layered shadows" tag over "layer the shadows"), never the demo described back, and never more than one line.
+Every word on screen adds something I don't say: what a name is or does, why a tip matters or what goes wrong without it, the value that changed, the principle's name, the code to copy. Never my own words back (a "Layered shadows" tag over "layer the shadows"), never a guess at what something is "great for", never a clipped slogan ("One font file, any weight"), and one line unless my own words need two.
 
-- **Reading time:** aim for 15 characters a second the text is fully on screen, never over 20. A 1.2 s list item has about 1.1 s fully on screen: 16 characters, 22 at most. Why: subtitles cap adults at about 17-20 a second with nothing else to watch, and here they also watch the demo.
-- **Every term or principle keeps its tab.** Cut it to the shortest true line that still tells the viewer something new (`references/text.md`, Definition tab). If nothing true fits, ask the editor for more time on that item; if the cut is fixed, use the shortest true gloss and flag its rate in `explain.json`. Give the editor the full definition for the post caption.
+- **Reading time:** aim for 15 characters a second the text is fully on screen, never over 20. A 1.2 s list item has about 1.1 s fully on screen: 16 characters. Why: subtitles cap adults at about 17-20 a second with nothing else to watch, and here they also watch the demo. Clear beats fast, though: when the plain line needs more, let it run to about 30 characters and ask the editor for more time on that item. Never squeeze it into a fragment to fit (my note of 27 Nov 2026 on labels cut down to "Hides the restart" and "Choppy on purpose": "Stop with these ai sounding remarks").
+- **Every term or principle keeps its tab.** Write the plainest true line that tells the viewer something new (`references/text.md`, Definition tab). If nothing true fits, ask the editor for more time on that item; if the cut is fixed, use the shortest true gloss and flag its rate in `explain.json`. Give the editor the full definition for the post caption.
 - **Sizes, in the final 1080×1920 frame** after the slot's scale. Text that can't reach its size is dropped, not shrunk.
 
   | Text | Size | Why |
