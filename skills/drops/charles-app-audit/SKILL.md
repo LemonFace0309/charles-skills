@@ -6,7 +6,7 @@ compatibility: "Reads the code and its git history. Uses gitleaks, semgrep, osv-
 
 # App audit
 
-From Charles Liu's reel "10 Ways Your Vibecoded App Could Get Sued or Hacked". Its ten are all here, with the common
+From Charles Liu's reel "10 Ways Your Vibecoded App Could Get Sued or Exploited". Its ten are all here, with the common
 problems they miss, merged from the security skills of Anthropic, Cloudflare, OpenAI, Sentry and Trail of Bits, two
 vibe-coding security skills, the OWASP lists, the platforms' own guides and the regulators' rules. README.md credits
 and links each source.
