@@ -48,7 +48,7 @@
     },
     {
       "name": "drops",
-      "description": "Specialist skills that go deep on one craft: interface motion done right, poster-like landing-page heroes, and posters for company moments in the Quartr style",
+      "description": "Specialist skills that go deep on one craft: interface motion done right, poster-like landing-page heroes, posters for company moments in the Quartr style, and an audit of what could get an app hacked, sued or billed",
       "source": "./",
       "strict": false,
       "skills": [
@@ -56,7 +56,8 @@
         "./skills/drops/charles-hero-mockups",
         "./skills/drops/charles-design-tips",
         "./skills/drops/charles-design-laws",
-        "./skills/drops/charles-create-posters"
+        "./skills/drops/charles-create-posters",
+        "./skills/drops/charles-app-audit"
       ]
     }
   ]

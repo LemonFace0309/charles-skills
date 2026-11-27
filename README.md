@@ -105,6 +105,7 @@ MOTION for it more than 4,000 times.
 | [charles-design-tips](skills/drops/charles-design-tips/) | Your screen works but looks thrown together: long text centred, grey greys, one heavy shadow, buttons labelled Submit and empty states with nowhere to go |
 | [charles-design-laws](skills/drops/charles-design-laws/) | A screen or flow feels confusing or cluttered: too many choices, groups that don't read as groups, nothing that says what to do next |
 | [charles-create-posters](skills/drops/charles-create-posters/) | You want a poster people share for a company, brand or project: one witty picture that could only be that subject, with the art direction of Quartr's posters (earnings details only when you ask) |
+| [charles-app-audit](skills/drops/charles-app-audit/) | Your app is about to go live and you want to know what could get you hacked, sued or hit with a surprise bill: keys in the browser, a database anyone can read, texts or AI anyone can trigger, no spending cap, and the privacy and store rules |
 
 ### [Editing](skills/editing/): how I make my reels
 
@@ -141,6 +142,9 @@ MOTION for it more than 4,000 times.
 - `charles-design-laws` is built on Jon Yablonski's [Laws of UX](https://lawsofux.com), Jakob Nielsen's
   [progressive disclosure](https://www.nngroup.com/articles/progressive-disclosure/), Eric Johnson and Daniel
   Goldstein's 2003 study of defaults, and Raphael Salaja's [userinterface.wiki](https://www.userinterface.wiki).
+- `charles-app-audit` merges ideas from the security skills of Anthropic, Cloudflare, OpenAI, Sentry and Trail of
+  Bits, raroque's vibe-security-skill and BehiSecc's VibeSec-Skill, with OWASP's Top 10 lists and the platforms' and
+  regulators' own rules. Its README links each one.
 
 ## License
 
