@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="editor.css">
+</head>
+<body>
+  <div class="toolbar">
+    <button class="tool" aria-label="Bold"><b>B</b><span class="tooltip">Bold</span></button>
+    <button class="tool" aria-label="Italic"><i>I</i><span class="tooltip">Italic</span></button>
+    <button class="tool" aria-label="Underline"><u>U</u><span class="tooltip">Underline</span></button>
+    <button class="tool copy" id="copy" aria-label="Copy link">
+      <span class="icon">⧉</span><span class="check">✓</span><span class="tooltip">Copy link</span>
+    </button>
+    <button class="tool" id="more" aria-label="More">⋯<span class="tooltip">More</span></button>
+    <div class="menu" id="menu" role="menu">
+      <button role="menuitem">Insert table</button>
+      <button role="menuitem">Insert image</button>
+      <button role="menuitem">Page setup</button>
+    </div>
+  </div>
+
+  <main id="doc" contenteditable="true"><p>Start writing…</p></main>
+  <footer class="status"><span class="count" id="count">2</span> words</footer>
+
+  <div class="palette" id="palette" role="dialog" aria-label="Command palette">
+    <input placeholder="Type a command…">
+    <div class="palette-item" aria-selected="true">Heading 1</div>
+    <div class="palette-item">Heading 2</div>
+    <div class="palette-item">Bulleted list</div>
+    <div class="palette-item">Quote</div>
+  </div>
+
+  <div class="toast" id="toast">Saved <button class="toast-close" aria-label="Dismiss">×</button></div>
+
+  <script>
+    const palette = document.getElementById("palette");
+    const items = [...palette.querySelectorAll(".palette-item")];
+    let selected = 0;
+
+    document.addEventListener("keydown", (event) => {
+      if ((event.metaKey || event.ctrlKey) && event.key === "k") {
+        event.preventDefault();
+        palette.classList.toggle("open");
+      }
+      if (!palette.classList.contains("open")) return;
+      if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+        items[selected].removeAttribute("aria-selected");
+        selected = (selected + (event.key === "ArrowDown" ? 1 : items.length - 1)) % items.length;
+        items[selected].setAttribute("aria-selected", "true");
+      }
+      if (event.key === "Escape") palette.classList.remove("open");
+    });
+
+    document.getElementById("more").onclick = () => document.getElementById("menu").classList.toggle("open");
+
+    document.getElementById("copy").onclick = (event) => {
+      const button = event.currentTarget;
+      navigator.clipboard.writeText(location.href);
+      button.classList.add("copied");
+      setTimeout(() => button.classList.remove("copied"), 1500);
+    };
+
+    const doc = document.getElementById("doc");
+    doc.addEventListener("input", () => {
+      document.getElementById("count").textContent = doc.innerText.trim().split(/\s+/).filter(Boolean).length;
+    });
+  </script>
+</body>
+</html>

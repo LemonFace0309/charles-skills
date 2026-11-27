@@ -134,8 +134,10 @@ Each drop goes deep on a single craft.
 - `charles-polish` is built from Emil Kowalski's UI polish and animation skills and Josh Puckett's Interface Craft.
 - `charles-ux-animation` is built on Disney's 12 principles of animation (Frank Thomas and Ollie Johnston, *The
   Illusion of Life*), Raphael Salaja's [userinterface.wiki](https://www.userinterface.wiki), Jon Yablonski's
-  [Laws of UX](https://lawsofux.com), Emil Kowalski's animation skill and his rule on frequency of use, and Josh
-  Puckett's Interface Craft.
+  [Laws of UX](https://lawsofux.com), Emil Kowalski's animation skill and his
+  [Practical Animation Tips](https://animations.dev/learn/animation-theory/practical-animation-tips) lesson, and the
+  [Animations](https://www.interfacecraft.dev/library/animation-tips) lesson in Josh Puckett's Interface Craft. Its
+  README credits each one.
 - `charles-design-tips` takes twelve of its tips from Dan Liu's threads on
   [text layout](https://x.com/danliu/status/1576997489529344001) and
   [choosing colors](https://x.com/danliu/status/1579536039139758080), and eight from Emil Kowalski's design rules
