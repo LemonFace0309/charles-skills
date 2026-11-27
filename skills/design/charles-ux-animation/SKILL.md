@@ -1,25 +1,25 @@
 ---
 name: charles-ux-animation
-description: "Decides whether and how an interface moves and responds: easing, duration, origin, springs, stagger, arcs, icon swaps, press and hover states, tap targets and response time. Use when animating a modal, menu, tooltip, button, list or page change, reviewing an app's motion, or when it feels slow, janky or off. Layout and flow go to charles-design-laws, a final detail pass to charles-polish."
+description: "Decides how an interface moves and responds, and whether people can find, choose and finish things: easing, duration, origin, springs, stagger, arcs, icon swaps, press and hover states, tap targets, response time and the laws of UX. Use when animating a modal, menu, tooltip, button, list or page change, reviewing an app's motion or a flow, or when it feels slow, janky or off. A final detail pass goes to charles-polish."
 ---
 
 # UX & Animation
 
-From Charles Liu's reels "20 Principles of UX & Animation" and "20 Practical Animation Tips", merged with Emil Kowalski's rules for interface animation and Josh Puckett's Interface Craft, on top of Disney's 12 principles of animation.
+From Charles Liu's reels "20 Principles of UX & Animation" and "20 Practical Animation Tips", merged with Emil Kowalski's rules for interface animation and Josh Puckett's Interface Craft, on top of Disney's 12 principles of animation and Jon Yablonski's Laws of UX.
 
-Every interaction answers five questions, in this order: should it move, does it answer at once, where should the eye go, how should it move, and can people find it, hit it, choose it and type into it. A later answer never rescues an earlier one: the best curve on an animation that shouldn't exist is still wrong.
+Every interaction answers six questions, in this order: should it move, does it answer at once, where should the eye go, how should it move, can people find it, hit it, choose it and type into it, and can they finish. A later answer never rescues an earlier one: the best curve on an animation that shouldn't exist is still wrong.
 
 ## Run it
 
 1. **Match the stack.** Find what the project already animates with (CSS transitions, Tailwind, Motion as `motion` or `framer-motion`, React Spring, WAAPI) and write in that. State changes stay CSS transitions. Where Motion is installed, use it only for what CSS can't do: animating an element out as it unmounts, layout changes, and springs that follow a finger. A change a CSS transition can do never pulls in a library, and a project that has Motion never gets a hand-written spring. Why: two systems animating the same kind of change drift apart in timing and in how they handle interruption.
-2. **List the interactions** in scope. For each one, write what starts it (pointer, touch, keyboard, network, scroll), how often one person sets it off in a day, and what it has to tell them. Why: how often decides question 1, and what it tells decides what the motion has to show.
-3. **Walk questions 1–5** for every interaction. Each subsection says when it applies; skip one that nothing in scope can trigger (nothing travels across the screen, so no Arcs).
+2. **List the interactions** in scope. For each one, write what starts it (pointer, touch, keyboard, network, scroll), how often one person sets it off in a day, and what it has to tell them. Then cut, or in a review flag, every element and step that doesn't serve the task (Occam's razor, question 6) before polishing anything. Why: how often decides question 1, what it tells decides what the motion has to show, and polishing something that's about to be deleted is wasted work.
+3. **Walk questions 1–6** for every interaction. Each subsection says when it applies; skip one that nothing in scope can trigger (nothing travels across the screen, so no Arcs).
 4. **Name the numbers.** Durations, curves and springs live in named tokens (custom properties, the theme, or one constants file), every animation uses them, and elements that behave alike share them. A sequence of three or more stages gets a storyboard ([storyboards](references/techniques.md#storyboards)). Why: a number nobody can find is a number nobody tunes, and two durations 20ms apart read as a mistake.
 5. **Verify** with the checks at the end.
 
 [recipes.md](references/recipes.md) has exact values and code for modals, drawers, popovers, tooltips, toasts, entrances, exits, expanders, icon swaps, async buttons, press, number rolls, progress bars, sliders, carousels and the theme switch. [techniques.md](references/techniques.md) has the curve library, springs, interruptibility, arcs, mapping one value to another, rubber banding, loops, masks, cross-fades, storyboards, live tuning, performance and a symptom table. Both open with a contents line; read the section a rule links to.
 
-**Reviewing instead of building?** Unless asked to fix, change nothing. Open the report with the interaction list from step 2, then write one table row per finding: severity, rule, where (file and line, or the frame), before, after. Severity is **broken** (a wrong result, lost input, a blocked or skipped step, something a keyboard or screen-reader user can't reach, motion that hides what people need or ignores a reduced-motion setting), **friction** (slower or more confusing than it needs to be) or **polish**. Sort by severity, then by the five questions: a failed Verify check sorts under the question it serves (reduced motion under 4), and unnamed numbers (step 4) sort last. A bug no rule covers still gets a row, with "no rule" as its rule, so it sorts with the rest.
+**Reviewing instead of building?** Unless asked to fix, change nothing. Open the report with the interaction list from step 2, then write one table row per finding: severity, rule, where (file and line, or the frame), before, after. Severity is **broken** (a wrong result, lost input, a blocked or skipped step, something a keyboard or screen-reader user can't reach, motion that hides what people need or ignores a reduced-motion setting), **friction** (slower or more confusing than it needs to be) or **polish**. Sort by severity, then by the six questions: a failed Verify check sorts under the question it serves (reduced motion under 4), and unnamed numbers (step 4) sort last. A bug no rule covers still gets a row, with "no rule" as its rule, so it sorts with the rest.
 
 ## 1. Should it move?
 
@@ -77,6 +77,14 @@ One primary motion at a time: the element the person touched, or the one that an
 ### Stagger
 
 **Chain animations with a stagger.** When several copies of one element enter together (list rows, cards, menu items, a radial menu's buttons), start each a little after the one before instead of moving them as one block: 40–70ms apart, the longer gap when there are only 3 or 4, and only the first 6 offset (the rest arrive with the sixth). Distinct pieces of one section (the heading, then the copy, then the actions) enter 80–100ms apart. Content riding in on a container that's already moving (a drawer's rows, a modal's body) arrives with the container, in one piece. Why: a small offset reads as one gesture with an order and leads the eye through the group, a block reads as a slide, and a stagger inside a moving container competes with the container.
+
+### Von Restorff effect
+
+One element per view breaks the pattern around it: the primary action, filled in the accent colour. Never two. Pair the colour with size, weight or position, because colour alone fails people who can't see it. Why: people notice and remember the one thing that differs, and two "different" things cancel each other out.
+
+### Serial position effect
+
+People remember the first and last items of a sequence best. Put the most important items at the ends (the first and last tabs, the top of a menu) and the least-used in the middle, and open every screen with what it's for. Why: attention dips in the middle.
 
 ### Secondary action
 
@@ -195,7 +203,21 @@ Move and resize with `transform` and `opacity` only; colour and `stroke-dashoffs
 
 ## 5. Can people find it, hit it, choose it and type into it?
 
-Layout, grouping and flow (proximity, similarity, progress, how a flow ends) belong to charles-design-laws. These five laws are the ones about reaching and using a single control.
+### Law of proximity
+
+Space is the first grouping signal people read. Things that belong together sit closer to each other than to anything else: the gap between groups is at least twice the gap inside one, and a label sits closer to its own field than to the field above. Why: distance reads as relationship before a single word does.
+
+### Law of similarity
+
+Elements that look alike are read as working alike. Give each role one look and keep it everywhere: every link styled the same, every destructive action in one style, every card of a type with the same anatomy. Things that work differently look different. Motion follows the same rule: elements that behave alike share duration and curve tokens. Why: a pattern learned once works everywhere, and an odd one out reads as a bug.
+
+### Uniform connectedness
+
+A shared container or a connecting line groups more strongly than proximity or similarity. Tie a label, its value and its action together with one background or border, join the steps of a stepper or timeline with a line, and never put unrelated items in one container. Why: an edge around things says "these are one" before anything else does.
+
+### Law of Prägnanz
+
+People read a layout in its simplest possible form. Before adding a border, divider, card or icon, check whether spacing and alignment already show the structure; if they do, leave it out. Use the fewest alignment lines, sizes and colours that do the job, and simple, regular shapes. Why: every extra container is one more thing to read before the content.
 
 ### Fitts's law and hit areas
 
@@ -233,6 +255,39 @@ People spend most of their time in other products and expect yours to work the s
 
 Accept messy input and give back one clean format. A date picked from a range you know (a delivery day, a booking) uses a picker limited to valid days. Anything people type from what they already know (a birthday, a phone or card number, an email) is a text field that parses every common form: "15 jan 2026", "2026-01-15" and "1/15/26" in their locale, numbers with spaces, dashes or brackets, emails with stray spaces or capitals, pasted values with trailing whitespace. Free-form values show back normalized on blur ("Thursday, 15 January 2026"). Validate on blur or submit, never while someone is still typing a field for the first time; once an error shows, re-check on every keystroke so it clears the moment it's fixed. When parsing truly fails, keep what they typed and name the format that works, with an example. Why: a strict format moves your work onto the person.
 
+## 6. Can people finish?
+
+### Tesler's law
+
+Every task carries complexity that can't be removed, only moved, so the product takes it on. Pre-fill what you can infer (the country from the account or locale, the city from the postcode, the name and email from the account), default every choice to what most people pick, and never ask for something you already know. When an option costs extra or shares data, the default is the free, private one (standard delivery, sharing off). Why: whatever the product doesn't absorb, every person pays for, every time.
+
+### Parkinson's law
+
+A task expands to fill the time it's given, so shrink the time. Turn on autofill (`autocomplete` attributes), remember last-used values, offer the common answer as one tap, and keep optional fields off the main path. Say up front how long a long task takes ("About 2 minutes"). Why: every extra field is an invitation to deliberate.
+
+### Occam's razor and progressive disclosure
+
+Of two designs that both work, ship the one with fewer parts, and delete every element and step that doesn't serve the task. This is the cut in step 2 of "Run it", done before any polish. Then reveal complexity gradually: show the options most people need, put the rest behind "More options" or an expander, and show a follow-up field only once the answer that needs it is given. Never hide something most visits need. Why: complexity shown before it's needed is complexity everyone pays for.
+
+### Pareto principle
+
+Most use comes from a few features. Find them (from usage data, or from the product's core task) and give them the prime spots, the defaults and the first polish; move the rest one level down. Why: polish spread evenly is mostly spent where few people look.
+
+### Errors: prevent, then recover
+
+- **Prevent.** Constrain input to what's valid (a picker limited to valid days, a stepper for counts), disable impossible options with the reason beside them, and show the expected format before people type, not after they fail.
+- **Recover.** Anything reversible gets Undo instead of a confirmation (question 2). When something fails, keep everything the person entered, and say what happened and how to fix it in plain words, beside the field or action that failed.
+
+Why: an error that can't happen costs nobody anything, and one people can undo costs them a second.
+
+### Zeigarnik effect and goal gradient
+
+Unfinished tasks stay on people's minds, and people speed up as a goal gets close. Show where they are and what's left ("Step 2 of 4", "3 fields left", a checklist with finished items ticked), save partial progress, and offer to continue where they stopped. Count work already done: a step the person finished (creating the account) shows as done, and progress never reads 0% once they've done something. A step progress bar grows from its last value and never moves backward ([progress bar](references/recipes.md#progress-bar)). Why: visible remaining work pulls people back, and a goal that looks close gets finished.
+
+### Peak-end rule
+
+People judge an experience by its most intense moment and by its end. End every flow on a confirmation that says what happened and what comes next, never on a bare redirect. Save celebration for real milestones (the rare moments in question 1); routine completions get a quiet confirmation. Fix the worst moment (an error, a long wait) before polishing an average one. Why: the end is what people remember and tell others about.
+
 ## Verify
 
 Run every check you can: if the page runs as it is (open the file, or use a dev server that's already up), check it there. Don't build a harness or scaffolding to make something runnable; in a code-only review, list after the findings the checks you couldn't run and what each would catch.
@@ -243,6 +298,8 @@ Run every check you can: if the page runs as it is (open the file, or use a dev 
 - [ ] **Sweep the pointer** across every list, toolbar and row of tooltip triggers. Highlights follow at once, the tooltips after the first show instantly, and nothing under the pointer flickers.
 - [ ] **Slow the network** to 1s or more, and force each failure (offline, a server error). Presses register at once, nothing flashes a spinner under 300ms, optimistic changes roll back with a message, and nothing the person typed is lost.
 - [ ] **Tap the edges** of every small target on a phone. Each one hits, and no hover state sticks after a tap.
+- [ ] **Paste messy input** into every field (spaces, dashes, a date written three ways). Each value is parsed and shown back clean, and nothing typed is lost.
+- [ ] **Finish every flow** once as a new person. Defaults are filled in, progress is visible, and the last screen says what happened.
 - [ ] **Reduced motion** (`prefers-reduced-motion: reduce`; `useReducedMotion()` in Motion): every animation is off, fades included, autoplaying video waits for a play button, and every end state and piece of information is the same as with motion on. The one exception is an indicator that work is still happening (a spinner, a progress bar), which keeps moving, because a frozen spinner looks like a hang.
 - [ ] **Switch the theme.** No colour transitions fire across the page ([theme switch](references/recipes.md#theme-switch)).
 - [ ] **Tenth use:** run each animation at full speed as someone seeing it for the tenth time today. Cut or shorten the one that starts to feel slow.

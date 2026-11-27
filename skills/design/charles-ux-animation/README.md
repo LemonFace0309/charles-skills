@@ -16,7 +16,7 @@ Add `-g` to install it for every project, or copy this folder into `~/.claude/sk
 
 - Asks whether something should move at all, and makes every tap answer at once
 - Picks how it moves: easing, duration, origin, stagger, arcs and springs
-- Checks that people can hit, choose and type into what you built
+- Checks that people can find, hit and choose what you built, and get to the end of the task
 - Scrubs each animation slowly, interrupts it halfway and turns motion off before it calls it done
 
 ## Try it
@@ -76,12 +76,20 @@ Each tip links to the part of the skill that has it, with the reason behind it.
 19. [Jakob's law](SKILL.md#jakobs-law)
 20. [Frequency of use](SKILL.md#frequency-of-use)
 
+It also carries more laws of UX, for how a screen groups and how a flow ends:
+[Von Restorff effect](SKILL.md#von-restorff-effect), [serial position](SKILL.md#serial-position-effect),
+[proximity](SKILL.md#law-of-proximity), [similarity](SKILL.md#law-of-similarity),
+[uniform connectedness](SKILL.md#uniform-connectedness), [Prägnanz](SKILL.md#law-of-prägnanz),
+[Tesler's law](SKILL.md#teslers-law), [Parkinson's law](SKILL.md#parkinsons-law),
+[Occam's razor and progressive disclosure](SKILL.md#occams-razor-and-progressive-disclosure),
+[the Pareto principle](SKILL.md#pareto-principle),
+[the Zeigarnik effect and goal gradient](SKILL.md#zeigarnik-effect-and-goal-gradient) and the
+[peak-end rule](SKILL.md#peak-end-rule).
+
 ## Pairs with
 
-[charles-polish](../charles-polish/) for the last pass on the details, checked frame by frame,
-[charles-unslop](../charles-unslop/) if the screen still looks AI-made, and
-[charles-design-laws](../../drops/charles-design-laws/) for the layout and the flow: grouping, what stands out, and
-how people get to the end.
+[charles-polish](../charles-polish/) for the last pass on the details, checked frame by frame, and
+[charles-unslop](../charles-unslop/) if the screen still looks AI-made.
 
 ## Credits
 
@@ -101,4 +109,5 @@ I wrote every rule in my own words. The ideas come from:
 - Principles 1 to 18 are the ones on Raphael Salaja's [userinterface.wiki](https://www.userinterface.wiki): Disney's
   12 principles of animation from *The Illusion of Life* by Frank Thomas and Ollie Johnston, then six on targets,
   choices, memory, response time and input, which Jon Yablonski's [Laws of UX](https://lawsofux.com) covers in more
-  depth. Principle 19, Jakob's law, is Jakob Nielsen's.
+  depth. Principle 19, Jakob's law, is Jakob Nielsen's. The other laws of UX are as Laws of UX states them, and
+  progressive disclosure is Jakob Nielsen's.
