@@ -9,7 +9,7 @@ Why: clean, correct UI side by sides didn't hold a scroll on my principles reels
 ## The slot and its words
 
 - **The playful term card:** a transparent 1080x480 clip at reel y 1080, with the card at x 80-950, y 1150-1500 (`references/slots.md`). On a card that flips in place (the hack-reel card), the look goes on the one stage: `references/playful-flips.md`. Where an object causes the flaw, its move is the mark; otherwise pick the mark with `references/marks.md`, as the clean look does.
-- **Words:** the tab says what the principle means in plain words, on one line, inside SKILL.md's reading time (16 characters for a 1.2 s item, 22 at most). The words that carry the principle are 34 px or more in the final frame, and the Before and After labels are 24 px chrome that `L.stage` draws.
+- **Words:** the tab says what the principle gets you, or what goes wrong without it, in plain words (`references/text.md`, Definition tab), on one line, inside SKILL.md's reading time (16 characters for a 1.2 s item, 22 at most). The words that carry the principle are 34 px or more in the final frame, and the Before and After labels are 24 px chrome that `L.stage` draws.
 
 ## The playful layer
 
